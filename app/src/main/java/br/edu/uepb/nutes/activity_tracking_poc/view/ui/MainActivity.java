@@ -1,6 +1,9 @@
 package br.edu.uepb.nutes.activity_tracking_poc.view.ui;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.SwitchPreference;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -8,18 +11,17 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import br.edu.uepb.nutes.activity_tracking_poc.R;
-import br.edu.uepb.nutes.activity_tracking_poc.data.model.UserAccessMode;
-import br.edu.uepb.nutes.activity_tracking_poc.data.repository.local.pref.AppPreferencesHelper;
 import br.edu.uepb.nutes.activity_tracking_poc.data.repository.remote.ocariot.UserOcariotNetRepository;
+import br.edu.uepb.nutes.activity_tracking_poc.view.ui.preference.SettingsActivity;
+import br.edu.uepb.nutes.activity_tracking_poc.view.ui.preference.SettingsFragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.disposables.Disposable;
 
 public class MainActivity extends AppCompatActivity {
-    private final String TAG = MainActivity.class.getSimpleName();
+    private final String LOG_TAG = MainActivity.class.getSimpleName();
 
 
     @BindView(R.id.toolbar)
@@ -38,22 +40,21 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         setSupportActionBar(mToolbar);
 
-        userRepository = UserOcariotNetRepository.getInstance(this);
-
-        userDisposable = userRepository.getById("156")
-                .subscribe(user -> {
-                    mUserDetailsTextView.setText("Name: " + user.getName());
-                }, error -> {
-                    Log.d(TAG, error.getMessage());
-                    Toast.makeText(this, "ERROR: " + error.getMessage(), Toast.LENGTH_LONG).show();
-                });
-
-        AppPreferencesHelper appPref = AppPreferencesHelper.getInstance(this);
-        mUserDetailsTextView.setText(appPref.getUserAccessOcariot().toString());
-
-        Log.d(TAG, "OCARIOT " + appPref.getUserAccessOcariot().toString());
-        Log.d(TAG, "OCARIOT TOKEN" + appPref.getToken(UserAccessMode.OCARIOT).toString());
-
+//        userRepository = UserOcariotNetRepository.getInstance(this);
+//
+//        userDisposable = userRepository.getById("156")
+//                .subscribe(user -> {
+//                    mUserDetailsTextView.setText("Name: " + user.getName());
+//                }, error -> {
+//                    Log.d(TAG, error.getMessage());
+//                    Toast.makeText(this, "ERROR: " + error.getMessage(), Toast.LENGTH_LONG).show();
+//                });
+//
+//        AppPreferencesHelper appPref = AppPreferencesHelper.getInstance(this);
+//        mUserDetailsTextView.setText(appPref.getUserAccessOcariot().toString());
+//
+//        Log.d(TAG, "OCARIOT " + appPref.getUserAccessOcariot().toString());
+//        Log.d(TAG, "OCARIOT TOKEN" + appPref.getToken(UserAccessMode.OCARIOT).toString());
     }
 
     @Override
@@ -73,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
                 break;
             default:
                 break;

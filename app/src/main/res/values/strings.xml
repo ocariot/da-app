@@ -12,4 +12,22 @@
     <string name="title_login_in">Login in</string>
     <string name="title_ocariot">OCARIoT</string>
     <string name="title_settings">Settings</string>
+
+    <!-- SETTINGS -->
+    <string name="settings_title">Settings OCARIoT</string>
+    <string name="settings_account">Account</string>
+    <string name="settings_external_services">External Services</string>
+    <string name="key_fitibit">key_fitbit</string>
+    <string name="key_signout">key_signout</string>
+    <string name="settings_signout">Sign Out</string>
+    <string name="settings_fitbit">FitBit</string>
+    <string name="settings_summary_signout">You will be logged out of the application and redirected to login screen.</string>
+    <string name="settings_summary_fitbit">Shares activity and sleep data.</string>
+
+    <!-- DIALOGS -->
+    <string name="dialog_confirm_sign_out">Do you really want to quit the application?\nYou will be redirected to login screen&#8230;</string>
+    <string name="dialog_confirm_revoke_fitbit">Do you want to disconnect from FitBit?</string>
+
+    <!-- ERROR MESSAGES -->
+    <string name="error_oauth_fitbit">An internal error occurred with the FitBit OAuth server.</string>
 </resources>

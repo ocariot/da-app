@@ -76,9 +76,14 @@ public class LoginActivity extends AppCompatActivity {
     private void login() {
         if (!validateForm()) return;
 
-        userDisposable = userRepository.auth(
-                String.valueOf(mEmailEditText.getText()),
-                String.valueOf(mPasswordEditText.getText()))
+        // TODO - REMOVER!!! apenas para teste
+        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+        finish();
+
+        String username = String.valueOf(mEmailEditText.getText());
+        String password = String.valueOf(mPasswordEditText.getText());
+
+        userDisposable = userRepository.auth(username, password)
                 .doOnSubscribe((d) -> showProgress(true))
                 .subscribe(userAccess -> {
                     showProgress(false);

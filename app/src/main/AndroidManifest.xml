@@ -10,7 +10,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
 
         <activity
             android:name=".view.ui.MainActivity"
@@ -28,5 +28,24 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".view.ui.preference.SettingsActivity"
+            android:label="@string/settings_title"
+            android:theme="@style/AppTheme.Preferences" />
+
+        <activity android:name=".view.ui.LoginFitBit" />
+
+        <activity android:name="net.openid.appauth.RedirectUriReceiverActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="finished"
+                    android:scheme="fitbitauth" />
+            </intent-filter>
+        </activity>
     </application>
 </manifest>

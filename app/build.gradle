@@ -9,6 +9,10 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        manifestPlaceholders = [
+                'appAuthRedirectScheme': 'br.edu.uepb.nutes.activity_tracking_poc'
+        ]
     }
     buildTypes {
         release {
@@ -50,8 +54,8 @@ dependencies {
     implementation 'com.auth0.android:jwtdecode:1.1.1'
     implementation 'com.scottyab:secure-preferences-lib:0.1.4'
 
-//    implementation 'net.openid:appauth:0.7.1'
-//    implementation project(':library')
+    // OAuth2Client
+    implementation 'net.openid:appauth:0.7.1'
 
     // Test
     testImplementation 'junit:junit:4.12'
