@@ -11,6 +11,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Represents UserAccess object.
+ *
+ * @author Douglas Rafael <douglas.rafael@nutes.uepb.edu.br>
+ * @version 1.0
+ * @copyright Copyright (c) 2018, NUTES/UEPB
+ */
 public class UserAccess implements Serializable {
     public static final String ROLES_NAME = "scopes";
 

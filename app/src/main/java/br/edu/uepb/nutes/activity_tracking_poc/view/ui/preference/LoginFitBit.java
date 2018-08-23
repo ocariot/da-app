@@ -4,6 +4,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 
 import net.openid.appauth.AuthState;
 import net.openid.appauth.AuthorizationRequest;
@@ -16,6 +17,7 @@ import net.openid.appauth.ResponseTypeValues;
 
 import br.edu.uepb.nutes.activity_tracking_poc.data.repository.local.pref.AppPreferencesHelper;
 import io.reactivex.Single;
+import io.reactivex.disposables.Disposable;
 
 public class LoginFitBit {
     private final String LOG_TAG = "LoginFitBit";
@@ -25,6 +27,8 @@ public class LoginFitBit {
 
     private final Uri AUTHORIZATION_ENDPOINT = Uri.parse("https://www.fitbit.com/oauth2/authorize");
     private final Uri TOKEN_ENDPOINT = Uri.parse("https://api.fitbit.com/oauth2/token");
+    private final Uri REVOKE_TOKEN_ENDPOINT = Uri.parse("https://api.fitbit.com/oauth2/revoke");
+
     private final Uri REDIRECT_URI = Uri.parse("fitbitauth://finished");
 
     private final String CLIENT_ID = "22CY5N";
@@ -35,6 +39,7 @@ public class LoginFitBit {
 
     private AuthState mAuthState;
     private AppPreferencesHelper mPreferences;
+    private Disposable preferencesDisposable;
 
     private LoginFitBit() {
     }
@@ -119,8 +124,13 @@ public class LoginFitBit {
 
                         // Save object AuthState in sharedPreferences
                         mPreferences = AppPreferencesHelper.getInstance(mContext);
-                        mPreferences.addAuthStateFiBIt(mAuthState);
-                        emitter.onSuccess(mAuthState);
+                        mPreferences.addAuthStateFiBIt(mAuthState).subscribe(() -> {
+                            Log.w(LOG_TAG, "addAuthStateFiBIt() success: ");
+                            emitter.onSuccess(mAuthState);
+                        }, error -> {
+                            Log.w(LOG_TAG, "addAuthStateFiBIt() error: " + error.getMessage());
+                            emitter.onError(error);
+                        });
                     });
         });
 

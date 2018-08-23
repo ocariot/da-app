@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         if (userDisposable != null) userDisposable.dispose();
-        if (preferencesDisposable != null) preferencesDisposable.dispose();
+//        if (preferencesDisposable != null) preferencesDisposable.dispose();
     }
 
     @Override

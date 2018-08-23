@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import okhttp3.Cache;
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
@@ -16,10 +17,16 @@ public class BaseNetRepository {
     protected Context mContext;
     protected Retrofit retrofit;
     protected OkHttpClient mOkHttpClient;
+    protected Interceptor mInterceptor;
 
-    public BaseNetRepository(Context mContext, OkHttpClient mOkHttpClient, String baseUrl) {
+    public BaseNetRepository(Context mContext, String baseUrl) {
         this.mContext = mContext;
-        this.mOkHttpClient = mOkHttpClient;
+        this.retrofit = provideRetrofit(baseUrl);
+    }
+
+    public BaseNetRepository(Context mContext, Interceptor mInterceptor, String baseUrl) {
+        this.mContext = mContext;
+        this.mInterceptor = mInterceptor;
         this.retrofit = provideRetrofit(baseUrl);
     }
 
@@ -39,10 +46,14 @@ public class BaseNetRepository {
         if (mOkHttpClient == null)
             mOkHttpClient = new OkHttpClient();
 
-        return mOkHttpClient.newBuilder()
+        OkHttpClient.Builder clientBuilder = mOkHttpClient.newBuilder()
                 .followRedirects(false)
-                .cache(provideHttpCache())
-                .build();
+                .cache(provideHttpCache());
+
+        if (mInterceptor != null)
+            clientBuilder.addInterceptor(mInterceptor);
+
+        return clientBuilder.build();
     }
 
     protected Retrofit provideRetrofit(String baseUrl) {
