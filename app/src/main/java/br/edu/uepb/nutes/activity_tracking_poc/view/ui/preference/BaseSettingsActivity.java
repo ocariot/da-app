@@ -16,7 +16,7 @@ import android.view.ViewGroup;
  * A {@link PreferenceActivity} which implements and proxies the necessary calls
  * to be used with AppCompat.
  */
-public abstract class BaseSettingsActivity extends PreferenceActivity implements SettingsFragment.OnClickSettingsListener {
+public abstract class BaseSettingsActivity extends PreferenceActivity {
 
     private AppCompatDelegate mDelegate;
 

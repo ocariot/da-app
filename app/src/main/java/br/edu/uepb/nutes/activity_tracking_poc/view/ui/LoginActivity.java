@@ -89,7 +89,7 @@ public class LoginActivity extends AppCompatActivity {
                     showProgress(false);
                     Log.d(TAG, "userAccess" + userAccess.toString());
 
-                    appPref.setUserAccess(userAccess);
+                    appPref.addUserAccessOcariot(userAccess);
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
                     finish();
                 }, error -> {

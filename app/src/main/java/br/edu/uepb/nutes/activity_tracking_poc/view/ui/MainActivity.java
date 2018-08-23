@@ -11,8 +11,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import br.edu.uepb.nutes.activity_tracking_poc.R;
+import br.edu.uepb.nutes.activity_tracking_poc.data.repository.local.pref.AppPreferencesHelper;
 import br.edu.uepb.nutes.activity_tracking_poc.data.repository.remote.ocariot.UserOcariotNetRepository;
 import br.edu.uepb.nutes.activity_tracking_poc.view.ui.preference.SettingsActivity;
 import br.edu.uepb.nutes.activity_tracking_poc.view.ui.preference.SettingsFragment;
@@ -31,7 +33,8 @@ public class MainActivity extends AppCompatActivity {
     TextView mUserDetailsTextView;
 
     private UserOcariotNetRepository userRepository;
-    private Disposable userDisposable;
+    private Disposable userDisposable, preferencesDisposable;
+    private AppPreferencesHelper mPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,27 +43,23 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         setSupportActionBar(mToolbar);
 
-//        userRepository = UserOcariotNetRepository.getInstance(this);
-//
-//        userDisposable = userRepository.getById("156")
-//                .subscribe(user -> {
-//                    mUserDetailsTextView.setText("Name: " + user.getName());
-//                }, error -> {
-//                    Log.d(TAG, error.getMessage());
-//                    Toast.makeText(this, "ERROR: " + error.getMessage(), Toast.LENGTH_LONG).show();
-//                });
-//
-//        AppPreferencesHelper appPref = AppPreferencesHelper.getInstance(this);
-//        mUserDetailsTextView.setText(appPref.getUserAccessOcariot().toString());
-//
-//        Log.d(TAG, "OCARIOT " + appPref.getUserAccessOcariot().toString());
-//        Log.d(TAG, "OCARIOT TOKEN" + appPref.getToken(UserAccessMode.OCARIOT).toString());
+        mPreferences = AppPreferencesHelper.getInstance(this);
+
+        preferencesDisposable = mPreferences.getAuthStateFitBit()
+                .subscribe(authState -> {
+                    if (authState != null)
+                        mUserDetailsTextView.setText(authState.jsonSerializeString());
+                }, error -> {
+                    Log.w(LOG_TAG, "ERROR - " + error.getMessage());
+                    mUserDetailsTextView.setText(error.getMessage());
+                });
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         if (userDisposable != null) userDisposable.dispose();
+        if (preferencesDisposable != null) preferencesDisposable.dispose();
     }
 
     @Override

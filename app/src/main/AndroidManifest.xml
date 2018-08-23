@@ -33,7 +33,7 @@
             android:label="@string/settings_title"
             android:theme="@style/AppTheme.Preferences" />
 
-        <activity android:name=".view.ui.LoginFitBit" />
+        <activity android:name=".view.ui.preference.LoginFitBit" />
 
         <activity android:name="net.openid.appauth.RedirectUriReceiverActivity">
             <intent-filter>

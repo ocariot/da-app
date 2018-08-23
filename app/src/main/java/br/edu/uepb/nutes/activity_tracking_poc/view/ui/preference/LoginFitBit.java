@@ -1,13 +1,11 @@
-package br.edu.uepb.nutes.activity_tracking_poc.view.ui;
+package br.edu.uepb.nutes.activity_tracking_poc.view.ui.preference;
 
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.util.Log;
 
 import net.openid.appauth.AuthState;
-import net.openid.appauth.AuthorizationException;
 import net.openid.appauth.AuthorizationRequest;
 import net.openid.appauth.AuthorizationResponse;
 import net.openid.appauth.AuthorizationService;
@@ -16,17 +14,12 @@ import net.openid.appauth.ClientAuthentication;
 import net.openid.appauth.ClientSecretBasic;
 import net.openid.appauth.ResponseTypeValues;
 
-import java.util.Observable;
-
-import javax.inject.Singleton;
-
-import br.edu.uepb.nutes.activity_tracking_poc.view.ui.preference.SettingsActivity;
+import br.edu.uepb.nutes.activity_tracking_poc.data.repository.local.pref.AppPreferencesHelper;
 import io.reactivex.Single;
 
 public class LoginFitBit {
     private final String LOG_TAG = "LoginFitBit";
 
-    public static final int REQUEST_LOGIN_FITBIT = 1;
     public static final int REQUEST_LOGIN_FITBIT_SUCCESS = 2;
     public static final int REQUEST_LOGIN_FITBIT_CANCELED = 3;
 
@@ -41,23 +34,23 @@ public class LoginFitBit {
     private static Context mContext;
 
     private AuthState mAuthState;
+    private AppPreferencesHelper mPreferences;
 
     private LoginFitBit() {
     }
 
+    /**
+     * Recover single instance of class.
+     *
+     * @param context {@link Context}
+     * @return LoginFitBit
+     */
     public static synchronized LoginFitBit getInstance(Context context) {
         if (instance == null) instance = new LoginFitBit();
 
         LoginFitBit.mContext = context;
         return instance;
     }
-//
-//    @Override
-//    protected void onCreate(@Nullable Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//
-//        initConfig();
-//    }
 
     /**
      * Initialize settings to obtain authorization code.
@@ -86,7 +79,8 @@ public class LoginFitBit {
 
     /**
      * Initialize settings to get call answer.
-     * A startActivityForResult call using an Intention returned from the {@link AuthorizationService}.
+     * A startActivityForResult call using an Intention returned
+     * from the {@link AuthorizationService}.
      *
      * @param authRequest {@link AuthorizationRequest}
      * @param authRequest
@@ -102,22 +96,32 @@ public class LoginFitBit {
                         new Intent(mContext, SettingsActivity.class), 0));
     }
 
+    /**
+     * Retrieve access token based on authorization code.
+     *
+     * @param resp {@link AuthorizationResponse}
+     * @return Single<AuthState>
+     */
     public Single<AuthState> doAuthorizationToken(AuthorizationResponse resp) {
         AuthorizationResponse response = resp;
         ClientAuthentication clientAuth = new ClientSecretBasic(CLIENT_SECRET);
         AuthorizationService service = new AuthorizationService(mContext);
 
         return Single.create(emitter -> {
-            service.performTokenRequest(response.createTokenExchangeRequest(), clientAuth, (tokenResponse, exception) -> {
-                if (exception != null) {
-                    Log.w(LOG_TAG, "Token Exchange failed: " + exception.toJsonString());
-                    emitter.onError(exception);
-                    return;
-                }
+            service.performTokenRequest(response.createTokenExchangeRequest(),
+                    clientAuth, (tokenResponse, exception) -> {
+                        mAuthState.update(tokenResponse, exception);
 
-                mAuthState.update(tokenResponse, exception);
-                emitter.onSuccess(mAuthState);
-            });
+                        if (exception != null) {
+                            emitter.onError(exception);
+                            return;
+                        }
+
+                        // Save object AuthState in sharedPreferences
+                        mPreferences = AppPreferencesHelper.getInstance(mContext);
+                        mPreferences.addAuthStateFiBIt(mAuthState);
+                        emitter.onSuccess(mAuthState);
+                    });
         });
 
     }
