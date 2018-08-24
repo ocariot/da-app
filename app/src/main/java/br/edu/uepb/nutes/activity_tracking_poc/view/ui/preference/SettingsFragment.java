@@ -144,12 +144,9 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                                 AppPreferencesHelper.getInstance(getActivity())
                                         .removeUserAccessOcariot()
                                         .subscribe(() -> {
-                                                    getActivity().finish();
-                                                    startActivity(new Intent(getActivity(), LoginActivity.class));
-                                                }, error -> {
-                                                    Toast.makeText(getActivity(), R.string.error_logout, Toast.LENGTH_LONG).show();
-                                                }
-                                        );
+                                            startActivity(new Intent(getActivity(), LoginActivity.class));
+                                            getActivity().finish();
+                                        });
                             }
                     ).setNegativeButton(android.R.string.no, null)
                     .create().show();
