@@ -13,6 +13,8 @@ import br.edu.uepb.nutes.activity_tracking_poc.data.repository.remote.BaseNetRep
 import br.edu.uepb.nutes.activity_tracking_poc.data.repository.remote.ocariot.OcariotService;
 import io.reactivex.Observable;
 import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -20,13 +22,14 @@ import okhttp3.Response;
 public class UserFitBitNetRepository extends BaseNetRepository {
     private FitBitService fitBitService;
     private static UserFitBitNetRepository instance;
+    private static AuthorizationService authService;
+
     private AuthState authState;
-    private AuthorizationService authService;
 
     private UserFitBitNetRepository(Context context, AuthState authState) {
         super(context, provideInterceptor(authState), OcariotService.BASE_URL_OCARIOT);
         this.authState = authState;
-        this.authService = new AuthorizationService(context);
+        authService = new AuthorizationService(context);
 
         fitBitService = super.retrofit.create(FitBitService.class);
     }
@@ -49,8 +52,11 @@ public class UserFitBitNetRepository extends BaseNetRepository {
         });
     }
 
-    public Observable<Activity> listActivities() {
-
+    public Observable<Activity> listActivities(String beforeDate, String afterDate,
+                                               String sort, String offset, String limit) {
+        return fitBitService.listActivity(beforeDate, afterDate, sort, offset, limit)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     /**
@@ -62,16 +68,19 @@ public class UserFitBitNetRepository extends BaseNetRepository {
     private static Interceptor provideInterceptor(AuthState authState) {
         return chain -> {
             Request original = chain.request();
-
             Request.Builder requestBuilder = original.newBuilder()
                     .header("Accept", "application/json")
                     .header("Content-type", "application/json")
-                    .header("Authorization",
-                            authState.getLastTokenResponse().tokenType
-                                    .concat(" ")
-                                    .concat(authState.getAccessToken()))
                     .method(original.method(), original.body());
 
+            authState.performActionWithFreshTokens(authService, (accessToken, idToken, ex) -> {
+                if (accessToken != null) {
+                    requestBuilder.header("Authorization",
+                            authState.getLastTokenResponse().tokenType
+                                    .concat(" ")
+                                    .concat(authState.getAccessToken()));
+                }
+            });
             Request request = requestBuilder.build();
             return chain.proceed(request);
         };
