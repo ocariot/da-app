@@ -3,39 +3,37 @@ package br.edu.uepb.nutes.activity_tracking_poc.data.repository.remote.fitbit;
 import android.content.Context;
 
 import net.openid.appauth.AuthState;
-import net.openid.appauth.AuthorizationException;
 import net.openid.appauth.AuthorizationService;
 
-import java.io.IOException;
+import java.util.List;
 
+import br.edu.uepb.nutes.activity_tracking_poc.data.model.Activities;
 import br.edu.uepb.nutes.activity_tracking_poc.data.model.Activity;
 import br.edu.uepb.nutes.activity_tracking_poc.data.repository.remote.BaseNetRepository;
-import br.edu.uepb.nutes.activity_tracking_poc.data.repository.remote.ocariot.OcariotService;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.Interceptor;
 import okhttp3.Request;
-import okhttp3.Response;
 
-public class UserFitBitNetRepository extends BaseNetRepository {
+public class FitBitNetRepository extends BaseNetRepository {
     private FitBitService fitBitService;
-    private static UserFitBitNetRepository instance;
+    private static FitBitNetRepository instance;
     private static AuthorizationService authService;
 
     private AuthState authState;
 
-    private UserFitBitNetRepository(Context context, AuthState authState) {
-        super(context, provideInterceptor(authState), OcariotService.BASE_URL_OCARIOT);
+    private FitBitNetRepository(Context context, AuthState authState) {
+        super(context, provideInterceptor(authState), FitBitService.BASE_URL_FITBIT);
         this.authState = authState;
         authService = new AuthorizationService(context);
 
         fitBitService = super.retrofit.create(FitBitService.class);
     }
 
-    public static synchronized UserFitBitNetRepository getInstance(Context context, AuthState authState) {
-        if (instance == null) instance = new UserFitBitNetRepository(context, authState);
+    public static synchronized FitBitNetRepository getInstance(Context context, AuthState authState) {
+        if (instance == null) instance = new FitBitNetRepository(context, authState);
         return instance;
     }
 
@@ -52,8 +50,8 @@ public class UserFitBitNetRepository extends BaseNetRepository {
         });
     }
 
-    public Observable<Activity> listActivities(String beforeDate, String afterDate,
-                                               String sort, String offset, String limit) {
+    public Observable<Activities> listActivities(String beforeDate, String afterDate,
+                                                 String sort, int offset, int limit) {
         return fitBitService.listActivity(beforeDate, afterDate, sort, offset, limit)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());

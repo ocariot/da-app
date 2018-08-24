@@ -48,11 +48,11 @@ public class Activity {
 
     private int steps;
 
-    @SerializedName(value="activity_level", alternate={"activityLevel"})
+    @SerializedName(value="activitylevel", alternate={"activityLevel"})
     private List<ActivityLevel> activityLevel;
 
     @SerializedName(value="elevation_gain", alternate={"elevationGain"})
-    private int elevationGain;
+    private double elevationGain;
 
     @SerializedName(value="log_id", alternate={"logId"})
     private String logId;
@@ -63,7 +63,7 @@ public class Activity {
     public Activity(String id, long duration, String startTime, String endTime,
                     String intensityLevel, double distance, String userId, int heartRate,
                     String name, String location, int calories, int steps,
-                    List<ActivityLevel> activityLevel, int elevationGain, String logId) {
+                    List<ActivityLevel> activityLevel, double elevationGain, String logId) {
         this.id = id;
         this.duration = duration;
         this.startTime = startTime;
@@ -185,11 +185,11 @@ public class Activity {
         this.activityLevel = activityLevel;
     }
 
-    public int getElevationGain() {
+    public double getElevationGain() {
         return elevationGain;
     }
 
-    public void setElevationGain(int elevationGain) {
+    public void setElevationGain(double elevationGain) {
         this.elevationGain = elevationGain;
     }
 

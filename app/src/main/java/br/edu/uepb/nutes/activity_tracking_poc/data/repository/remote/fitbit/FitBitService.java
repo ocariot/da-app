@@ -1,5 +1,8 @@
 package br.edu.uepb.nutes.activity_tracking_poc.data.repository.remote.fitbit;
 
+import java.util.List;
+
+import br.edu.uepb.nutes.activity_tracking_poc.data.model.Activities;
 import br.edu.uepb.nutes.activity_tracking_poc.data.model.Activity;
 import io.reactivex.Observable;
 import retrofit2.http.GET;
@@ -14,10 +17,10 @@ public interface FitBitService {
      * @return
      */
     @GET("activities/list.json")
-    Observable<Activity> listActivity(
+    Observable<Activities> listActivity(
             @Query("beforeDate") String beforeDate,
             @Query("afterDate") String afterDate,
             @Query("sort") String sort,
-            @Query("offset ") String offset,
-            @Query("limit  ") String limit);
+            @Query("offset ") int offset,
+            @Query("limit  ") int limit);
 }
