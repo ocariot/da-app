@@ -15,6 +15,10 @@ import android.view.ViewGroup;
 /**
  * A {@link PreferenceActivity} which implements and proxies the necessary calls
  * to be used with AppCompat.
+ *
+ * @author Douglas Rafael <douglas.rafael@nutes.uepb.edu.br>
+ * @version 1.0
+ * @copyright Copyright (c) 2018, NUTES/UEPB
  */
 public abstract class BaseSettingsActivity extends PreferenceActivity {
 

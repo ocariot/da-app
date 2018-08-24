@@ -17,8 +17,14 @@ import net.openid.appauth.ResponseTypeValues;
 
 import br.edu.uepb.nutes.activity_tracking_poc.data.repository.local.pref.AppPreferencesHelper;
 import io.reactivex.Single;
-import io.reactivex.disposables.Disposable;
 
+/**
+ * LoginFitBit implementation.
+ *
+ * @author Douglas Rafael <douglas.rafael@nutes.uepb.edu.br>
+ * @version 1.0
+ * @copyright Copyright (c) 2018, NUTES/UEPB
+ */
 public class LoginFitBit {
     private final String LOG_TAG = "LoginFitBit";
 
@@ -39,7 +45,6 @@ public class LoginFitBit {
 
     private AuthState mAuthState;
     private AppPreferencesHelper mPreferences;
-    private Disposable preferencesDisposable;
 
     private LoginFitBit() {
     }

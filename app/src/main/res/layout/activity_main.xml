@@ -17,16 +17,10 @@
         android:gravity="center_horizontal"
         android:orientation="horizontal">
 
-        <LinearLayout
+        <FrameLayout
+            android:id="@+id/content"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:orientation="vertical">
+            android:layout_height="match_parent" />
 
-            <TextView
-                android:id="@+id/user_details"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

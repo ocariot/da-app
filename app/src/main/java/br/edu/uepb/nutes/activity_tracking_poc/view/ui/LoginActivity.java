@@ -20,7 +20,11 @@ import butterknife.ButterKnife;
 import io.reactivex.disposables.Disposable;
 
 /**
- * A login screen that offers login via email/password.
+ * LoginActivity implementation.
+ *
+ * @author Douglas Rafael <douglas.rafael@nutes.uepb.edu.br>
+ * @version 1.0
+ * @copyright Copyright (c) 2018, NUTES/UEPB
  */
 public class LoginActivity extends AppCompatActivity {
     private final String TAG = LoginActivity.class.getSimpleName();

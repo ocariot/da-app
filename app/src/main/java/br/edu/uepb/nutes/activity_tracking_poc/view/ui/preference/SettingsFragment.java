@@ -1,7 +1,7 @@
 package br.edu.uepb.nutes.activity_tracking_poc.view.ui.preference;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
@@ -13,6 +13,8 @@ import net.openid.appauth.AuthorizationException;
 import net.openid.appauth.AuthorizationResponse;
 
 import br.edu.uepb.nutes.activity_tracking_poc.R;
+import br.edu.uepb.nutes.activity_tracking_poc.data.repository.local.pref.AppPreferencesHelper;
+import br.edu.uepb.nutes.activity_tracking_poc.view.ui.LoginActivity;
 import io.reactivex.disposables.Disposable;
 
 /**
@@ -28,7 +30,6 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     private SwitchPreference switchPrefFitBit;
     private AuthorizationResponse authFitBitResponse;
     private AuthorizationException authFitBitException;
-    private ProgressDialog progressDialog;
 
     private LoginFitBit loginFitBit;
     private Disposable disposable;
@@ -122,7 +123,9 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
             mDialog.setMessage(R.string.dialog_confirm_revoke_fitbit)
                     .setPositiveButton(android.R.string.yes,
                             (dialogInterface, which) -> {
-                                switchPrefFitBit.setChecked(false);
+                                AppPreferencesHelper.getInstance(getActivity())
+                                        .removeAuthStateFitBit().subscribe(() ->
+                                        switchPrefFitBit.setChecked(false));
                             }
                     ).setNegativeButton(android.R.string.no, null)
                     .create().show();
@@ -138,7 +141,15 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
             mDialog.setMessage(R.string.dialog_confirm_sign_out)
                     .setPositiveButton(android.R.string.yes,
                             (dialogInterface, which) -> {
-
+                                AppPreferencesHelper.getInstance(getActivity())
+                                        .removeUserAccessOcariot()
+                                        .subscribe(() -> {
+                                                    getActivity().finish();
+                                                    startActivity(new Intent(getActivity(), LoginActivity.class));
+                                                }, error -> {
+                                                    Toast.makeText(getActivity(), R.string.error_logout, Toast.LENGTH_LONG).show();
+                                                }
+                                        );
                             }
                     ).setNegativeButton(android.R.string.no, null)
                     .create().show();

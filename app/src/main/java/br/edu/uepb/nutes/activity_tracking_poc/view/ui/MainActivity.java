@@ -22,16 +22,19 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.disposables.Disposable;
 
+/**
+ * MainActivity implementation.
+ *
+ * @author Douglas Rafael <douglas.rafael@nutes.uepb.edu.br>
+ * @version 1.0
+ * @copyright Copyright (c) 2018, NUTES/UEPB
+ */
 public class MainActivity extends AppCompatActivity {
     private final String LOG_TAG = MainActivity.class.getSimpleName();
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
 
-    @BindView(R.id.user_details)
-    TextView mUserDetailsTextView;
-
-    private FitBitNetRepository fitBitRepository;
     private Disposable fitBitDisposable, preferencesDisposable;
     private AppPreferencesHelper mPreferences;
 
@@ -47,31 +50,18 @@ public class MainActivity extends AppCompatActivity {
         preferencesDisposable = mPreferences.getAuthStateFitBit()
                 .subscribe(authState -> {
                     if (authState != null) {
-                        fitBitRepository = FitBitNetRepository.getInstance(this, authState);
-                        getActivities();
-                        mUserDetailsTextView.setText(authState.jsonSerializeString());
+                        Log.w(LOG_TAG, "USER ACCESS - " + authState.jsonSerializeString());
                     }
                 }, error -> {
                     Log.w(LOG_TAG, "ERROR - " + error.getMessage());
-                    mUserDetailsTextView.setText(error.getMessage());
                 });
 
-        replaceFragment(PhysicalActivityListFragment.newInstance(this));
-
+        replaceFragment(PhysicalActivityListFragment.newInstance());
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-    }
-
-    private void getActivities() {
-        fitBitDisposable = fitBitRepository.listActivities("2018-08-23",
-                null, "desc", 0, 10).subscribe(activities -> {
-            Log.w(LOG_TAG, "ACTIVITIES - " + Arrays.toString(activities.getActivities().toArray()));
-        }, error -> {
-            Log.w(LOG_TAG, "ERROR ACTIVITY - " + error.getMessage());
-        });
     }
 
     @Override
@@ -110,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
     private void replaceFragment(Fragment fragment) {
         if (fragment != null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.date_textview, fragment).commit();
+            transaction.replace(R.id.content, fragment).commit();
 //            transaction.replace(R.id.content, fragment).addToBackStack(null).commit();
         }
     }

@@ -12,6 +12,16 @@
     <string name="title_login_in">Login in</string>
     <string name="title_ocariot">OCARIoT</string>
     <string name="title_settings">Settings</string>
+    <string name="today_text">Today</string>
+    <string name="cals">cals</string>
+    <string name="min">min</string>
+
+    <!-- TITLES -->
+    <string name="title_physical_activity">Physical Activity</string>
+
+    <!-- FORMAT DATES -->
+    <string name="date_format1">yyyy-MM-dd</string>
+    <string name="date_time_abb">MMMM dd EEE \a\t HH:mm</string>
 
     <!-- SETTINGS -->
     <string name="settings_title">Settings OCARIoT</string>
@@ -30,4 +40,7 @@
 
     <!-- ERROR MESSAGES -->
     <string name="error_oauth_fitbit">An internal error occurred with the FitBit OAuth server.</string>
+    <string name="error_logout">There was an error while trying to logout. Try later.</string>
+
+
 </resources>

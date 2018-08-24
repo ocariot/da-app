@@ -1,72 +1,105 @@
 package br.edu.uepb.nutes.activity_tracking_poc.view.ui.adapter;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
-
-import br.edu.uepb.nutes.activity_tracking_poc.R;
-import br.edu.uepb.nutes.activity_tracking_poc.view.ui.PhysicalActivityListFragment.OnListFragmentInteractionListener;
 
 import java.util.List;
 
+import br.edu.uepb.nutes.activity_tracking_poc.R;
+import br.edu.uepb.nutes.activity_tracking_poc.data.model.Activity;
+import br.edu.uepb.nutes.activity_tracking_poc.data.model.ActivityType;
+import br.edu.uepb.nutes.activity_tracking_poc.view.ui.adapter.base.BaseAdapter;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
- * specified {@link OnListFragmentInteractionListener}.
- * TODO: Replace the implementation with code for your data type.
+ * PhysicalActivityListAdapter implementation.
+ *
+ * @author Douglas Rafael <douglas.rafael@nutes.uepb.edu.br>
+ * @version 1.0
+ * @copyright Copyright (c) 2018, NUTES/UEPB
  */
-public class PhysicalActivityListAdapter extends RecyclerView.Adapter<PhysicalActivityListAdapter.ViewHolder> {
+public class PhysicalActivityListAdapter extends BaseAdapter<Activity> {
+    private final Context context;
 
-    private final List<Object> mValues;
-    private final OnListFragmentInteractionListener mListener;
-
-    public PhysicalActivityListAdapter(List<Object> items, OnListFragmentInteractionListener listener) {
-        mValues = items;
-        mListener = listener;
+    public PhysicalActivityListAdapter(Context context) {
+        this.context = context;
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.physical_activity_item, parent, false);
+    public View createView(ViewGroup viewGroup, int viewType) {
+        return View.inflate(context, R.layout.physical_activity_item, null);
+    }
+
+    @Override
+    public RecyclerView.ViewHolder createViewHolder(View view) {
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void showData(RecyclerView.ViewHolder holder, int position, List<Activity> itemsList) {
+        if (holder instanceof ViewHolder) {
+            final Activity activity = itemsList.get(position);
+            ViewHolder h = (ViewHolder) holder;
 
-        holder.mView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
-                    //mListener.onListFragmentInteraction(holder.mItem);
-                }
+            h.name.setText(activity.getName());
+//            h.dateStart.setText(DateUtils.formatDateISO8601(activity.getStartTime(),
+//                    context.getResources().getString(R.string.date_time_abb)));
+
+            int duration = activity.getDuration() / 60;
+            h.duration.setText(String.valueOf(duration));
+            h.dateStart.setText(activity.getStartTime());
+            h.calories.setText(String.valueOf(activity.getCalories()));
+
+            String name = activity.getName();
+            if (name.equals(ActivityType.WALK)) {
+                h.image.setImageResource(R.drawable.ic_walk);
+            } else if (name.equals(ActivityType.RUN)) {
+                h.image.setImageResource(R.drawable.ic_run);
+            } else if (name.equals(ActivityType.BIKE)
+                    || name.equals(ActivityType.MOUNTAIN_BIKING)
+                    || name.equals(ActivityType.OUTDOOR_BIKE)) {
+                h.image.setImageResource(R.drawable.ic_bike);
+            } else if (name.equals(ActivityType.WORKOUT)) {
+                h.image.setImageResource(R.drawable.ic_workout);
+            } else if (name.equals(ActivityType.FITSTAR_PERSONAL)) {
+                h.image.setImageResource(R.drawable.ic_star);
             }
-        });
+        }
     }
 
     @Override
-    public int getItemCount() {
-        return mValues.size();
+    public void clearAnimation(RecyclerView.ViewHolder holder) {
+
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
+        final View mView;
+
+        @BindView(R.id.activity_img)
+        ImageView image;
+
+        @BindView(R.id.name_activity_tv)
+        TextView name;
+
+        @BindView(R.id.duration_tv)
+        TextView duration;
+
+        @BindView(R.id.date_tv)
+        TextView dateStart;
+
+        @BindView(R.id.calories_tv)
+        TextView calories;
 
         public ViewHolder(View view) {
             super(view);
-            mView = view;
-            mIdView = (TextView) view.findViewById(R.id.title_text_view);
-            mContentView = (TextView) view.findViewById(R.id.date_textview);
-        }
+            ButterKnife.bind(this, view);
 
-        @Override
-        public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            mView = view.getRootView();
         }
     }
 }

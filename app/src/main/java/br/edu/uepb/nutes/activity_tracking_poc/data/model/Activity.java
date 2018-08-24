@@ -15,7 +15,7 @@ public class Activity {
     private String id; // _id in server remote (UUID)
 
     @SerializedName(value="duration", alternate={"activeDuration"})
-    private long duration;
+    private int duration;
 
     @SerializedName(value="start_time", alternate={"startTime"})
     private String startTime;
@@ -60,7 +60,7 @@ public class Activity {
     public Activity() {
     }
 
-    public Activity(String id, long duration, String startTime, String endTime,
+    public Activity(String id, int duration, String startTime, String endTime,
                     String intensityLevel, double distance, String userId, int heartRate,
                     String name, String location, int calories, int steps,
                     List<ActivityLevel> activityLevel, double elevationGain, String logId) {
@@ -89,11 +89,11 @@ public class Activity {
         this.id = id;
     }
 
-    public long getDuration() {
+    public int getDuration() {
         return duration;
     }
 
-    public void setDuration(long duration) {
+    public void setDuration(int duration) {
         this.duration = duration;
     }
 

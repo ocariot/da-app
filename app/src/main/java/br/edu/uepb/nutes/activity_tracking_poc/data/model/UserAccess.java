@@ -1,12 +1,15 @@
 package br.edu.uepb.nutes.activity_tracking_poc.data.model;
 
 import com.auth0.android.jwt.JWT;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -129,74 +132,77 @@ public class UserAccess implements Serializable {
      * @return String
      */
     public String toJsonString() {
-        return String.valueOf(jsonSerialize());
+        return new Gson().toJson(this);
     }
 
-    /**
-     * Convert object to JSON.
-     *
-     * @return JSONObject
-     */
-    private JSONObject jsonSerialize() {
-        JSONObject json = new JSONObject();
-
-        try {
-            json.put(KEY_SUBJECT, this.subject);
-            json.put(KEY_ACCESS_TOKEN, this.accessToken);
-            json.put(KEY_REFRESH_TOKEN, this.refreshToken);
-            json.put(KEY_TOKEN_TYPE, this.tokenType);
-            json.put(KEY_EXPIRATION_DATE, this.expirationDate);
-
-            JSONArray arrayScopes = new JSONArray();
-            if (this.scopes != null) arrayScopes = new JSONArray(this.scopes);
-
-            json.put(KEY_SCOPES, arrayScopes);
-        } catch (JSONException e) {
-            throw new IllegalStateException("JSONException thrown in violation of contract!", e);
-        }
-
-        return json;
-    }
+//    /**
+//     * Convert object to JSON.
+//     *
+//     * @return JSONObject
+//     */
+//    private JSONObject jsonSerialize() {
+//        JSONObject json = new JSONObject();
+//
+//        try {
+//            json.put(KEY_SUBJECT, this.subject);
+//            json.put(KEY_ACCESS_TOKEN, this.accessToken);
+//            json.put(KEY_REFRESH_TOKEN, this.refreshToken);
+//            json.put(KEY_TOKEN_TYPE, this.tokenType);
+//            json.put(KEY_EXPIRATION_DATE, this.expirationDate);
+//
+//            JSONArray arrayScopes = new JSONArray();
+//            if (this.scopes != null) arrayScopes = new JSONArray(this.scopes);
+//
+//            json.put(KEY_SCOPES, arrayScopes);
+//        } catch (JSONException e) {
+//            throw new IllegalStateException("JSONException thrown in violation of contract!", e);
+//        }
+//
+//        return json;
+//    }
 
 
     public static UserAccess jsonDeserialize(String json) {
         UserAccess userAccess = new UserAccess();
-        JSONObject jsonObject;
+//        JSONObject jsonObject;
 
-        try {
-            jsonObject = new JSONObject(json);
+        Type typeUserAccess = new TypeToken<UserAccess>() {}.getType();
+        return new Gson().fromJson(json, typeUserAccess);
 
-            if (jsonObject.has(KEY_SUBJECT)) {
-                userAccess.setSubject(jsonObject.getString(KEY_SUBJECT));
-            }
-
-            if (jsonObject.has(KEY_ACCESS_TOKEN)) {
-                userAccess.setAccessToken(jsonObject.getString(KEY_ACCESS_TOKEN));
-            }
-
-            if (jsonObject.has(KEY_REFRESH_TOKEN)) {
-                userAccess.setRefreshToken(jsonObject.getString(KEY_REFRESH_TOKEN));
-            }
-
-            if (jsonObject.has(KEY_TOKEN_TYPE)) {
-                userAccess.setTokenType(jsonObject.getString(KEY_TOKEN_TYPE));
-            }
-
-            if (jsonObject.has(KEY_EXPIRATION_DATE)) {
-                userAccess.setExpirationDate(jsonObject.getLong(KEY_EXPIRATION_DATE));
-            }
-
-            if (jsonObject.has(KEY_SCOPES)) {
-                JSONArray scopes_array = jsonObject.getJSONArray(KEY_SCOPES);
-
-                for (int i = 0; i < scopes_array.length(); i++)
-                    userAccess.addScope(scopes_array.getString(i));
-            }
-        } catch (JSONException e) {
-            throw new IllegalStateException("JSONException thrown in violation of contract!", e);
-        }
-
-        return userAccess;
+//        try {
+//            jsonObject = new JSONObject(json);
+//
+//            if (jsonObject.has(KEY_SUBJECT)) {
+//                userAccess.setSubject(jsonObject.getString(KEY_SUBJECT));
+//            }
+//
+//            if (jsonObject.has(KEY_ACCESS_TOKEN)) {
+//                userAccess.setAccessToken(jsonObject.getString(KEY_ACCESS_TOKEN));
+//            }
+//
+//            if (jsonObject.has(KEY_REFRESH_TOKEN)) {
+//                userAccess.setRefreshToken(jsonObject.getString(KEY_REFRESH_TOKEN));
+//            }
+//
+//            if (jsonObject.has(KEY_TOKEN_TYPE)) {
+//                userAccess.setTokenType(jsonObject.getString(KEY_TOKEN_TYPE));
+//            }
+//
+//            if (jsonObject.has(KEY_EXPIRATION_DATE)) {
+//                userAccess.setExpirationDate(jsonObject.getLong(KEY_EXPIRATION_DATE));
+//            }
+//
+//            if (jsonObject.has(KEY_SCOPES)) {
+//                JSONArray scopes_array = jsonObject.getJSONArray(KEY_SCOPES);
+//
+//                for (int i = 0; i < scopes_array.length(); i++)
+//                    userAccess.addScope(scopes_array.getString(i));
+//            }
+//        } catch (JSONException e) {
+//            throw new IllegalStateException("JSONException thrown in violation of contract!", e);
+//        }
+//
+//        return userAccess;
     }
 
 
