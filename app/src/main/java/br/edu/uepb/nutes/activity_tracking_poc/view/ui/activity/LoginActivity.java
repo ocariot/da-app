@@ -1,16 +1,15 @@
-package br.edu.uepb.nutes.activity_tracking_poc.view.ui;
+package br.edu.uepb.nutes.activity_tracking_poc.view.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import br.edu.uepb.nutes.activity_tracking_poc.R;
 import br.edu.uepb.nutes.activity_tracking_poc.data.repository.local.pref.AppPreferencesHelper;
@@ -27,13 +26,13 @@ import io.reactivex.disposables.Disposable;
  * @copyright Copyright (c) 2018, NUTES/UEPB
  */
 public class LoginActivity extends AppCompatActivity {
-    private final String TAG = LoginActivity.class.getSimpleName();
+    private final String LOG_TAG = LoginActivity.class.getSimpleName();
 
     @BindView(R.id.login_progress)
     ProgressBar mProgressBar;
 
-    @BindView(R.id.email)
-    EditText mEmailEditText;
+    @BindView(R.id.username)
+    EditText mUsernameEditText;
 
     @BindView(R.id.password)
     EditText mPasswordEditText;
@@ -41,9 +40,12 @@ public class LoginActivity extends AppCompatActivity {
     @BindView(R.id.sign_in_button)
     Button mSignInButton;
 
+    @BindView(R.id.box_message_error)
+    LinearLayout mBoxMessageError;
+
     private UserOcariotNetRepository userRepository;
     private AppPreferencesHelper appPref;
-    private Disposable userDisposable;
+    private Disposable disposable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,42 +67,49 @@ public class LoginActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        if (appPref.getUserAccessOcariot() != null) {
-            startActivity(new Intent(getApplicationContext(), MainActivity.class));
-            finish();
-        }
+        disposable = appPref.getUserAccessOcariot()
+                .subscribe(userAccess -> {
+                    if (userAccess != null) openMainActivity();
+                }, error -> {});
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (userDisposable != null) userDisposable.dispose();
+        if (disposable != null) disposable.dispose();
     }
 
     private void login() {
         if (!validateForm()) return;
 
         // TODO - REMOVER!!! apenas para teste
-        startActivity(new Intent(getApplicationContext(), MainActivity.class));
-        finish();
+//        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+//        finish();
 
-        String username = String.valueOf(mEmailEditText.getText());
+        String username = String.valueOf(mUsernameEditText.getText());
         String password = String.valueOf(mPasswordEditText.getText());
 
-        userDisposable = userRepository.auth(username, password)
+        disposable = userRepository.auth(username, password)
                 .doOnSubscribe((d) -> showProgress(true))
                 .subscribe(userAccess -> {
                     showProgress(false);
-                    Log.d(TAG, "userAccess" + userAccess.toString());
 
-                    appPref.addUserAccessOcariot(userAccess);
-                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                    finish();
+                    // save user logged
+                    appPref.addUserAccessOcariot(userAccess).subscribe();
+
+                    openMainActivity();
                 }, error -> {
-                    Log.d(TAG, error.getMessage());
-                    Toast.makeText(this, error.getMessage(), Toast.LENGTH_LONG).show();
+                    mBoxMessageError.setVisibility(View.VISIBLE);
                     showProgress(false);
                 });
+    }
+
+    /**
+     * Open main activity.
+     */
+    private void openMainActivity() {
+        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+        finish();
     }
 
     /**
@@ -111,15 +120,6 @@ public class LoginActivity extends AppCompatActivity {
     private boolean validateForm() {
         boolean valid = true;
 
-        String email = mEmailEditText.getText().toString();
-
-        if (TextUtils.isEmpty(email) || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            mEmailEditText.setError(getString(R.string.error_invalid_email));
-            valid = false;
-        } else {
-            mEmailEditText.setError(null);
-        }
-
         return valid;
     }
 
@@ -127,7 +127,10 @@ public class LoginActivity extends AppCompatActivity {
      * Shows/hide the progress bar.
      */
     private void showProgress(final boolean show) {
-        runOnUiThread(() -> mProgressBar.setVisibility(show ? View.VISIBLE : View.GONE));
+        runOnUiThread(() -> {
+            if (show) mBoxMessageError.setVisibility(View.GONE);
+            mProgressBar.setVisibility(show ? View.VISIBLE : View.GONE);
+        });
     }
 }
 

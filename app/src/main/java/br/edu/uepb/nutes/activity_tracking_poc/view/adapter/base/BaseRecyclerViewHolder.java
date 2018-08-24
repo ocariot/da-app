@@ -1,4 +1,4 @@
-package br.edu.uepb.nutes.activity_tracking_poc.view.ui.adapter.base;
+package br.edu.uepb.nutes.activity_tracking_poc.view.adapter.base;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

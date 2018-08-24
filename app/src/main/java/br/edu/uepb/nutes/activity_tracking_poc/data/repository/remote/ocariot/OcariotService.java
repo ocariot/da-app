@@ -9,7 +9,7 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 public interface OcariotService {
-    String BASE_URL_OCARIOT = "http://192.168.31.113:3000/api/v1/";
+    String BASE_URL_OCARIOT = "http://192.168.50.120:3000/api/v1/";
 
     // User
     @POST("users/")

@@ -81,7 +81,7 @@ public class LoginFitBit {
         mAuthState = new AuthState(serviceConfig);
 
         AuthorizationRequest authRequest = authRequestBuilder
-                .setScopes("profile", "activity")
+                .setScopes("activity", "sleep")
                 .build();
 
         doAuthorizationCode(authRequest);

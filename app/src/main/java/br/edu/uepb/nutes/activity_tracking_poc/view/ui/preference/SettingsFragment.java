@@ -14,7 +14,7 @@ import net.openid.appauth.AuthorizationResponse;
 
 import br.edu.uepb.nutes.activity_tracking_poc.R;
 import br.edu.uepb.nutes.activity_tracking_poc.data.repository.local.pref.AppPreferencesHelper;
-import br.edu.uepb.nutes.activity_tracking_poc.view.ui.LoginActivity;
+import br.edu.uepb.nutes.activity_tracking_poc.view.ui.activity.LoginActivity;
 import io.reactivex.disposables.Disposable;
 
 /**

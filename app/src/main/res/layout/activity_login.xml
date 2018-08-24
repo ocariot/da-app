@@ -6,12 +6,12 @@
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    tools:context=".view.ui.LoginActivity">
+    tools:context=".view.ui.activity.LoginActivity">
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="130dp"
-        android:layout_marginBottom="40dp"
+        android:layout_marginBottom="30dp"
         android:layout_marginTop="60dp"
         app:srcCompat="@drawable/ocariot_logo" />
 
@@ -26,6 +26,23 @@
         android:visibility="gone" />
 
     <LinearLayout
+        android:id="@+id/box_message_error"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:background="@color/colorWarningLight"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16sp"
+            android:text="@string/error_login_invalid" />
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/email_login_form"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -38,11 +55,11 @@
             android:layout_marginBottom="20dp">
 
             <EditText
-                android:id="@+id/email"
+                android:id="@+id/username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/prompt_email"
-                android:inputType="textEmailAddress"
+                android:hint="@string/prompt_username"
+                android:inputType="text"
                 android:maxLines="1"
                 android:singleLine="true" />
 
@@ -51,7 +68,8 @@
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp">
+            android:layout_marginBottom="20dp"
+            app:passwordToggleEnabled="true">
 
             <EditText
                 android:id="@+id/password"

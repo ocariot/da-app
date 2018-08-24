@@ -3,12 +3,9 @@
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
+    <string name="prompt_username">Username</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in</string>
-    <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_field_required">This field is required</string>
-    <string name="error_server">Server Error!</string>
     <string name="title_login_in">Login in</string>
     <string name="title_ocariot">OCARIoT</string>
     <string name="title_settings">Settings</string>
@@ -41,6 +38,11 @@
     <!-- ERROR MESSAGES -->
     <string name="error_oauth_fitbit">An internal error occurred with the FitBit OAuth server.</string>
     <string name="error_logout">There was an error while trying to logout. Try later.</string>
+    <string name="error_login_invalid">Invalid username or password&#8230;</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="error_server">Server Error!</string>
 
 
 </resources>

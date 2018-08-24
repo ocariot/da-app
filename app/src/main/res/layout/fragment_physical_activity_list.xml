@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".view.ui.PhysicalActivityListFragment">
+    tools:context=".view.ui.fragment.PhysicalActivityListFragment">
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/data_swiperefresh"

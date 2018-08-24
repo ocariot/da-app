@@ -1,6 +1,5 @@
-package br.edu.uepb.nutes.activity_tracking_poc.view.ui;
+package br.edu.uepb.nutes.activity_tracking_poc.view.ui.fragment;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,14 +14,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import java.util.Arrays;
-
 import br.edu.uepb.nutes.activity_tracking_poc.R;
 import br.edu.uepb.nutes.activity_tracking_poc.data.model.Activity;
 import br.edu.uepb.nutes.activity_tracking_poc.data.repository.remote.fitbit.FitBitNetRepository;
 import br.edu.uepb.nutes.activity_tracking_poc.utils.DateUtils;
-import br.edu.uepb.nutes.activity_tracking_poc.view.ui.adapter.PhysicalActivityListAdapter;
-import br.edu.uepb.nutes.activity_tracking_poc.view.ui.adapter.base.OnRecyclerViewListener;
+import br.edu.uepb.nutes.activity_tracking_poc.view.adapter.PhysicalActivityListAdapter;
+import br.edu.uepb.nutes.activity_tracking_poc.view.adapter.base.OnRecyclerViewListener;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.disposables.Disposable;

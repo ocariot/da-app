@@ -132,6 +132,15 @@ public class UserAccess implements Serializable {
      * @return String
      */
     public String toJsonString() {
+        return String.valueOf(this.toJson());
+    }
+
+    /**
+     * Convert object to json format.
+     *
+     * @return String
+     */
+    public String toJson() {
         return new Gson().toJson(this);
     }
 
@@ -166,7 +175,8 @@ public class UserAccess implements Serializable {
         UserAccess userAccess = new UserAccess();
 //        JSONObject jsonObject;
 
-        Type typeUserAccess = new TypeToken<UserAccess>() {}.getType();
+        Type typeUserAccess = new TypeToken<UserAccess>() {
+        }.getType();
         return new Gson().fromJson(json, typeUserAccess);
 
 //        try {

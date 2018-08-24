@@ -1,6 +1,7 @@
 package br.edu.uepb.nutes.activity_tracking_poc.data.repository.remote.ocariot;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.auth0.android.jwt.JWT;
 
@@ -32,9 +33,10 @@ public class UserOcariotNetRepository extends BaseNetRepository {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Single<UserAccess> auth(String email, String password) {
-        return ocariotService.authUser(new User(email, password))
+    public Single<UserAccess> auth(String username, String password) {
+        return ocariotService.authUser(new User(username, password))
                 .map((UserAccess userAccess) -> {
+                    Log.w("TESTANDO", userAccess.toJsonString());
                     if (userAccess.getAccessToken() != null && !userAccess.getAccessToken().isEmpty()) {
                         JWT jwt = new JWT(userAccess.getAccessToken());
                         userAccess.setSubject(jwt.getSubject());

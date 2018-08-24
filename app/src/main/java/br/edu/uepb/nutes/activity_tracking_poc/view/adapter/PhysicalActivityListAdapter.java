@@ -1,4 +1,4 @@
-package br.edu.uepb.nutes.activity_tracking_poc.view.ui.adapter;
+package br.edu.uepb.nutes.activity_tracking_poc.view.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -12,7 +12,7 @@ import java.util.List;
 import br.edu.uepb.nutes.activity_tracking_poc.R;
 import br.edu.uepb.nutes.activity_tracking_poc.data.model.Activity;
 import br.edu.uepb.nutes.activity_tracking_poc.data.model.ActivityType;
-import br.edu.uepb.nutes.activity_tracking_poc.view.ui.adapter.base.BaseAdapter;
+import br.edu.uepb.nutes.activity_tracking_poc.view.adapter.base.BaseAdapter;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -50,7 +50,7 @@ public class PhysicalActivityListAdapter extends BaseAdapter<Activity> {
 //            h.dateStart.setText(DateUtils.formatDateISO8601(activity.getStartTime(),
 //                    context.getResources().getString(R.string.date_time_abb)));
 
-            int duration = activity.getDuration() / 60;
+            int duration = (int) Math.floor((activity.getDuration() / 60));
             h.duration.setText(String.valueOf(duration));
             h.dateStart.setText(activity.getStartTime());
             h.calories.setText(String.valueOf(activity.getCalories()));

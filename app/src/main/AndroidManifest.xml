@@ -13,12 +13,12 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".view.ui.MainActivity"
+            android:name=".view.ui.activity.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme" />
 
         <activity
-            android:name=".view.ui.LoginActivity"
+            android:name=".view.ui.activity.LoginActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme">
             <intent-filter>
@@ -32,8 +32,6 @@
             android:name=".view.ui.preference.SettingsActivity"
             android:label="@string/settings_title"
             android:theme="@style/AppTheme.Preferences" />
-
-        <activity android:name=".view.ui.preference.LoginFitBit" />
 
         <activity android:name="net.openid.appauth.RedirectUriReceiverActivity">
             <intent-filter>
