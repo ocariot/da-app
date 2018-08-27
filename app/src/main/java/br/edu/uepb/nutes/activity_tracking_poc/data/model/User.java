@@ -13,6 +13,7 @@ public class User implements Serializable {
     private String _id; // _id in server remote (UUID)
 
     private String name;
+    private String userName;
     private String email;
     private String password;
     private int gender;
@@ -23,13 +24,16 @@ public class User implements Serializable {
     public User() {
     }
 
-    public User(String email, String password) {
-        this.email = email;
+    public User(String userName, String password) {
+        this.userName = userName;
         this.password = password;
     }
 
-    public User(String name, String email, String password, int gender, long dateOfBirth, int height, int groupId) {
+    public User(String _id, String name, String userName, String email,
+                String password, int gender, long dateOfBirth, int height, int groupId) {
+        this._id = _id;
         this.name = name;
+        this.userName = userName;
         this.email = email;
         this.password = password;
         this.gender = gender;
@@ -52,6 +56,14 @@ public class User implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getEmail() {
@@ -117,6 +129,7 @@ public class User implements Serializable {
         return "User{" +
                 "_id='" + _id + '\'' +
                 ", name='" + name + '\'' +
+                ", userName='" + userName + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", gender=" + gender +

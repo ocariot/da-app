@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/settings_external_services">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:icon="@mipmap/logo_fitbit"
+            android:key="@string/key_fitibit"
+            android:summary="@string/settings_summary_fitbit"
+            android:title="@string/settings_fitbit" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/settings_account">
+        <PreferenceScreen
+            android:key="@string/key_signout"
+            android:summary="@string/settings_summary_signout"
+            android:title="@string/settings_signout" />
+
+    </PreferenceCategory>
+</PreferenceScreen>

@@ -9,6 +9,10 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        manifestPlaceholders = [
+                'appAuthRedirectScheme': 'br.edu.uepb.nutes.activity_tracking_poc'
+        ]
     }
     buildTypes {
         release {
@@ -20,7 +24,6 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
         sourceCompatibility JavaVersion.VERSION_1_8
     }
-    buildToolsVersion '27.0.3'
 }
 
 dependencies {
@@ -31,6 +34,8 @@ dependencies {
 
     // Butterknife
     implementation 'com.jakewharton:butterknife:8.8.1'
+    implementation 'com.android.support:support-v4:27.1.1'
+    implementation 'com.android.support:recyclerview-v7:27.1.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 
     // Dagger
@@ -50,8 +55,12 @@ dependencies {
     implementation 'com.auth0.android:jwtdecode:1.1.1'
     implementation 'com.scottyab:secure-preferences-lib:0.1.4'
 
-//    implementation 'net.openid:appauth:0.7.1'
-//    implementation project(':library')
+    // OAuth2Client
+    implementation 'net.openid:appauth:0.7.1'
+
+    // Alert
+    implementation 'com.tapadoo.android:alerter:3.0.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     // Test
     testImplementation 'junit:junit:4.12'

@@ -1,34 +1,33 @@
 package br.edu.uepb.nutes.activity_tracking_poc.data.repository.local.pref;
 
-import android.support.annotation.Nullable;
+import net.openid.appauth.AuthState;
 
 import br.edu.uepb.nutes.activity_tracking_poc.data.model.UserAccess;
+import io.reactivex.Completable;
+import io.reactivex.Single;
+import io.reactivex.SingleObserver;
+import io.reactivex.annotations.Nullable;
 
 public interface PreferencesHelper {
-    boolean setUserAccess(UserAccess userAccess);
+    Completable addUserAccessOcariot(UserAccess userAccess);
 
-    boolean setToken(String token);
+    Completable addAuthStateFiBIt(AuthState authState);
 
-    boolean setString(String key, String value);
+    Completable addString(String key, String value);
 
-    boolean setBoolean(String key, boolean value);
+    Completable addBoolean(String key, boolean value);
 
-    boolean setInt(String key, int value);
+    Completable addInt(String key, int value);
 
-    boolean setLong(String key, long value);
+    Completable addLong(String key, long value);
 
+    Single<UserAccess> getUserAccessOcariot();
 
-    @Nullable
-    String getToken(int mode);
+    Single<AuthState> getAuthStateFitBit();
 
-    @Nullable
-    UserAccess getUserAccessOcariot();
+    Completable removeUserAccessOcariot();
 
-    @Nullable
-    UserAccess getUserAccessFitBit();
+    Completable removeAuthStateFitBit();
 
-    boolean removeUserAccess(int mode);
-
-    boolean removeItem(String key);
-
+    Completable removeItem(String key);
 }
