@@ -40,32 +40,21 @@ public class LoginFitBit {
     private final String CLIENT_ID = "22CY5N";
     private final String CLIENT_SECRET = "fe3276dc3210391d3e234532278d8c33"; // TODO REMOVER!!!
 
-    public static LoginFitBit instance;
-    private static Context mContext;
+    private Context mContext;
 
     private AuthState mAuthState;
+    private AuthorizationService mAuthService;
+    private AuthorizationRequest mAuthRequest;
     private AppPreferencesHelper mPreferences;
 
-    private LoginFitBit() {
+    public LoginFitBit(Context context) {
+        this.mContext = context;
+        initConfig();
     }
-
-    /**
-     * Recover single instance of class.
-     *
-     * @param context {@link Context}
-     * @return LoginFitBit
-     */
-    public static synchronized LoginFitBit getInstance(Context context) {
-        if (instance == null) instance = new LoginFitBit();
-
-        LoginFitBit.mContext = context;
-        return instance;
-    }
-
     /**
      * Initialize settings to obtain authorization code.
      */
-    public void start() {
+    public void initConfig() {
         AuthorizationServiceConfiguration serviceConfig = new AuthorizationServiceConfiguration(
                 AUTHORIZATION_ENDPOINT, // authorization endpoint
                 TOKEN_ENDPOINT // token endpoint
@@ -80,11 +69,9 @@ public class LoginFitBit {
 
         mAuthState = new AuthState(serviceConfig);
 
-        AuthorizationRequest authRequest = authRequestBuilder
+        mAuthRequest = authRequestBuilder
                 .setScopes("activity", "sleep")
                 .build();
-
-        doAuthorizationCode(authRequest);
     }
 
     /**
@@ -92,14 +79,12 @@ public class LoginFitBit {
      * A startActivityForResult call using an Intention returned
      * from the {@link AuthorizationService}.
      *
-     * @param authRequest {@link AuthorizationRequest}
-     * @param authRequest
      */
-    private void doAuthorizationCode(AuthorizationRequest authRequest) {
-        AuthorizationService authService = new AuthorizationService(mContext);
+    public void doAuthorizationCode() {
+        mAuthService = new AuthorizationService(mContext);
 
-        authService.performAuthorizationRequest(
-                authRequest,
+        mAuthService.performAuthorizationRequest(
+                mAuthRequest,
                 PendingIntent.getActivity(mContext, REQUEST_LOGIN_FITBIT_SUCCESS,
                         new Intent(mContext, SettingsActivity.class), 0),
                 PendingIntent.getActivity(mContext, REQUEST_LOGIN_FITBIT_CANCELED,
@@ -109,18 +94,20 @@ public class LoginFitBit {
     /**
      * Retrieve access token based on authorization code.
      *
-     * @param resp {@link AuthorizationResponse}
+     * @param authResp {@link AuthorizationResponse}
      * @return Single<AuthState>
      */
-    public Single<AuthState> doAuthorizationToken(AuthorizationResponse resp) {
-        AuthorizationResponse response = resp;
+    public Single<AuthState> doAuthorizationToken(AuthorizationResponse authResp) {
         ClientAuthentication clientAuth = new ClientSecretBasic(CLIENT_SECRET);
-        AuthorizationService service = new AuthorizationService(mContext);
+        if (mAuthService == null) mAuthService = new AuthorizationService(mContext);
 
         return Single.create(emitter -> {
-            service.performTokenRequest(response.createTokenExchangeRequest(),
+            mAuthState.update(authResp, null);
+            mAuthService.performTokenRequest(authResp.createTokenExchangeRequest(),
                     clientAuth, (tokenResponse, exception) -> {
                         mAuthState.update(tokenResponse, exception);
+
+                        if (mAuthService != null) mAuthService.dispose();
 
                         if (exception != null) {
                             emitter.onError(exception);
@@ -138,6 +125,5 @@ public class LoginFitBit {
                         });
                     });
         });
-
     }
 }

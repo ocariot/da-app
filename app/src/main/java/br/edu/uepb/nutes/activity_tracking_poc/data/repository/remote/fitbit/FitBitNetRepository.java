@@ -10,7 +10,6 @@ import br.edu.uepb.nutes.activity_tracking_poc.data.model.ActivityList;
 import br.edu.uepb.nutes.activity_tracking_poc.data.repository.local.pref.AppPreferencesHelper;
 import br.edu.uepb.nutes.activity_tracking_poc.data.repository.remote.BaseNetRepository;
 import io.reactivex.Observable;
-import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.Interceptor;
@@ -20,20 +19,19 @@ public class FitBitNetRepository extends BaseNetRepository {
     private FitBitService fitBitService;
     private static FitBitNetRepository instance;
     private static AuthorizationService authService;
-    private static Context context;
 
     private AuthState authState;
 
     private FitBitNetRepository(Context context) {
         super(context, provideInterceptor(), FitBitService.BASE_URL_FITBIT);
 
-        authService = new AuthorizationService(context);
         fitBitService = super.retrofit.create(FitBitService.class);
     }
 
-    public static synchronized FitBitNetRepository getInstance(Context c) {
-        if (instance == null) instance = new FitBitNetRepository(c);
-        context = c;
+    public static synchronized FitBitNetRepository getInstance(Context context) {
+        if (instance == null) instance = new FitBitNetRepository(context);
+        if (authService == null) authService = new AuthorizationService(context);
+
         return instance;
     }
 
@@ -42,6 +40,13 @@ public class FitBitNetRepository extends BaseNetRepository {
         return fitBitService.listActivity(beforeDate, afterDate, sort, offset, limit)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    /**
+     * Prevents {@link AuthorizationService} memory leak
+     */
+    public void dispose() {
+        if (authService != null) authService.dispose();
     }
 
     /**
@@ -57,22 +62,21 @@ public class FitBitNetRepository extends BaseNetRepository {
                     .header("Content-type", "application/json")
                     .method(original.method(), original.body());
 
-            AppPreferencesHelper.getInstance(context)
-                    .getAuthStateFitBit().subscribe(authState -> {
-                authState.performActionWithFreshTokens(authService, (accessToken, idToken, ex) -> {
-                    if (accessToken != null) {
-                        requestBuilder.header("Authorization",
-                                authState.getLastTokenResponse().tokenType
-                                        .concat(" ")
-                                        .concat(accessToken));
-                    } else if (ex != null) {
-                        Log.w("TOKEN ERROR", ex.toJsonString());
-                    }
-                });
-            }, error -> Log.w("Interceptor", error.getMessage()));
+            AppPreferencesHelper.getInstance(BaseNetRepository.mContext).getAuthStateFitBit()
+                    .subscribe(authState -> {
+                        authState.performActionWithFreshTokens(authService, (accessToken, idToken, ex) -> {
+                            if(accessToken == null) return;
+                            requestBuilder.header(
+                                    "Authorization",
+                                    authState.getLastTokenResponse()
+                                            .tokenType
+                                            .concat(" ")
+                                            .concat(accessToken)
+                            );
+                        });
+                    }, error -> Log.w("Interceptor error", error.getMessage()));
 
             Request request = requestBuilder.build();
-            Log.w("Interceptor", request.toString());
             return chain.proceed(request);
         };
     }

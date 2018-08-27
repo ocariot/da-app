@@ -12,7 +12,9 @@ import java.util.List;
 import br.edu.uepb.nutes.activity_tracking_poc.R;
 import br.edu.uepb.nutes.activity_tracking_poc.data.model.Activity;
 import br.edu.uepb.nutes.activity_tracking_poc.data.model.ActivityType;
+import br.edu.uepb.nutes.activity_tracking_poc.utils.DateUtils;
 import br.edu.uepb.nutes.activity_tracking_poc.view.adapter.base.BaseAdapter;
+import br.edu.uepb.nutes.activity_tracking_poc.view.ui.fragment.PhysicalActivityDetail;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -47,12 +49,10 @@ public class PhysicalActivityListAdapter extends BaseAdapter<Activity> {
             ViewHolder h = (ViewHolder) holder;
 
             h.name.setText(activity.getName());
-//            h.dateStart.setText(DateUtils.formatDateISO8601(activity.getStartTime(),
-//                    context.getResources().getString(R.string.date_time_abb)));
-
-            int duration = (int) Math.floor((activity.getDuration() / 60));
+            h.dateStart.setText(DateUtils.formatDateISO8601(activity.getStartTime(),
+                    context.getResources().getString(R.string.date_time_abb), null));
+            int duration = (int) (activity.getDuration() / (60 * 1000));
             h.duration.setText(String.valueOf(duration));
-            h.dateStart.setText(activity.getStartTime());
             h.calories.setText(String.valueOf(activity.getCalories()));
 
             String name = activity.getName();
@@ -69,6 +69,15 @@ public class PhysicalActivityListAdapter extends BaseAdapter<Activity> {
             } else if (name.equals(ActivityType.FITSTAR_PERSONAL)) {
                 h.image.setImageResource(R.drawable.ic_star);
             }
+
+
+            /**
+             * OnClick Item
+             */
+            h.mView.setOnClickListener(v -> {
+                if (PhysicalActivityListAdapter.super.mListener != null)
+                    PhysicalActivityListAdapter.super.mListener.onItemClick(activity);
+            });
         }
     }
 

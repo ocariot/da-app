@@ -2,11 +2,11 @@ package br.edu.uepb.nutes.activity_tracking_poc.data.repository.local.pref;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import com.securepreferences.SecurePreferences;
 
 import net.openid.appauth.AuthState;
+import net.openid.appauth.AuthorizationRequest;
 
 import br.edu.uepb.nutes.activity_tracking_poc.data.model.UserAccess;
 import br.edu.uepb.nutes.activity_tracking_poc.exception.LocalPreferenceException;
@@ -35,7 +35,7 @@ public class AppPreferencesHelper implements PreferencesHelper {
     public Completable addUserAccessOcariot(UserAccess userAccess) {
         return Completable.create(emitter -> {
             if (userAccess.getAccessToken() == null || userAccess.getAccessToken().isEmpty())
-                throw new NullPointerException("attribute accessToken can not be null or empty!");
+                emitter.onError(new LocalPreferenceException("attribute accessToken can not be null or empty!"));
 
             mPrefs.edit().putString(PREF_KEY_AUTH_STATE_OCARIOT,
                     userAccess.toJsonString()).apply();

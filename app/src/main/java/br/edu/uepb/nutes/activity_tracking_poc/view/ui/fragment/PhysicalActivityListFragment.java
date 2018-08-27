@@ -14,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import java.util.Arrays;
+
 import br.edu.uepb.nutes.activity_tracking_poc.R;
 import br.edu.uepb.nutes.activity_tracking_poc.data.model.Activity;
 import br.edu.uepb.nutes.activity_tracking_poc.data.repository.remote.fitbit.FitBitNetRepository;
@@ -55,8 +57,7 @@ public class PhysicalActivityListFragment extends Fragment {
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public PhysicalActivityListFragment() {
-    }
+    public PhysicalActivityListFragment() { }
 
     public static PhysicalActivityListFragment newInstance() {
         PhysicalActivityListFragment fragment = new PhysicalActivityListFragment();
@@ -140,12 +141,15 @@ public class PhysicalActivityListFragment extends Fragment {
     private void loadData() {
         String currentDate = DateUtils.getCurrentDatetime(getResources().getString(R.string.date_format1));
         mAdapter.clearItems();
+        mDataSwipeRefresh.setRefreshing(true);
 
         disposable = fitBitRepository.listActivities(currentDate,
                 null, "desc", 0, 10)
                 .subscribe(activityList -> {
                     if (activityList != null)
                         mAdapter.addItems(activityList.getActivities());
+
+                    Log.w(LOG_TAG, "DATA: " + Arrays.toString(activityList.getActivities().toArray()));
                     mDataSwipeRefresh.setRefreshing(false);
                 }, error -> {
                     Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_LONG).show();
@@ -153,10 +157,10 @@ public class PhysicalActivityListFragment extends Fragment {
                 });
     }
 
-
     @Override
     public void onDetach() {
         super.onDetach();
         if (disposable != null) disposable = null;
+        if (fitBitRepository != null) fitBitRepository.dispose();
     }
 }

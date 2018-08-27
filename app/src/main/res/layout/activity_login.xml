@@ -33,11 +33,12 @@
         android:layout_marginRight="25dp"
         android:background="@color/colorWarningLight"
         android:gravity="center"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:padding="16sp"
             android:text="@string/error_login_invalid" />
     </LinearLayout>

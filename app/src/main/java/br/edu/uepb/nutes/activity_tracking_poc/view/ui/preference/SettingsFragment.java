@@ -1,6 +1,7 @@
 package br.edu.uepb.nutes.activity_tracking_poc.view.ui.preference;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -33,6 +34,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
 
     private LoginFitBit loginFitBit;
     private Disposable disposable;
+    private OnClickSettingsListener mListener;
 
     public SettingsFragment() {
     }
@@ -42,7 +44,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
 
-        loginFitBit = LoginFitBit.getInstance(getActivity());
+        loginFitBit = new LoginFitBit(getActivity().getApplicationContext());
 
         // FitBit
         Preference prefFitbit = findPreference(getString(R.string.key_fitibit));
@@ -63,11 +65,21 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        if (context instanceof OnClickSettingsListener)
+            mListener = (OnClickSettingsListener) context;
+        else throw new ClassCastException();
+    }
+
+    @Override
     public boolean onPreferenceClick(Preference preference) {
         if (preference.getKey().equals(getString(R.string.key_fitibit))) {
             if (!switchPrefFitBit.isChecked()) openDialogRevokeFitBit();
             else {
-                loginFitBit.start();
+                mListener.onPrefClick(preference);
+                loginFitBit.doAuthorizationCode();
             }
 
             // Activate the switch button only when you receive the action response.
@@ -168,5 +180,9 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                     switchPrefFitBit.setChecked(false);
                     Log.w("SETTIGNS", "error " + error.getMessage());
                 });
+    }
+
+    public interface OnClickSettingsListener {
+        void onPrefClick(Preference preference);
     }
 }

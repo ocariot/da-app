@@ -12,13 +12,14 @@
     <string name="today_text">Today</string>
     <string name="cals">cals</string>
     <string name="min">min</string>
+    <string name="calories">Calories</string>
 
     <!-- TITLES -->
     <string name="title_physical_activity">Physical Activity</string>
 
     <!-- FORMAT DATES -->
     <string name="date_format1">yyyy-MM-dd</string>
-    <string name="date_time_abb">MMMM dd EEE \a\t HH:mm</string>
+    <string name="date_time_abb">MMMM dd \'at\' hh:mm a</string>
 
     <!-- SETTINGS -->
     <string name="settings_title">Settings OCARIoT</string>
@@ -37,12 +38,12 @@
 
     <!-- ERROR MESSAGES -->
     <string name="error_oauth_fitbit">An internal error occurred with the FitBit OAuth server.</string>
+    <string name="error_oauth_fitbit_permission">We are having trouble capturing data from the fitbit server.\nClick here to grant authorization&#8230;</string>
     <string name="error_logout">There was an error while trying to logout. Try later.</string>
     <string name="error_login_invalid">Invalid username or password&#8230;</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_field_required">This field is required</string>
     <string name="error_server">Server Error!</string>
-
 
 </resources>

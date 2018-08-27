@@ -10,6 +10,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.tapadoo.alerter.Alerter;
+
 import br.edu.uepb.nutes.activity_tracking_poc.R;
 import br.edu.uepb.nutes.activity_tracking_poc.view.ui.fragment.PhysicalActivityListFragment;
 import br.edu.uepb.nutes.activity_tracking_poc.view.ui.preference.SettingsActivity;
@@ -36,7 +38,27 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         setSupportActionBar(mToolbar);
 
+        initComponents();
+
         replaceFragment(PhysicalActivityListFragment.newInstance());
+    }
+
+    private void initComponents() {
+        shorMessageError(null);
+    }
+
+    private void shorMessageError(String message) {
+        message = message != null ? message : getString(R.string.error_oauth_fitbit_permission);
+        Alerter.create(MainActivity.this)
+                .setText(message)
+                .setDuration(10000)
+                .setBackgroundColorRes(R.color.colorWarning)
+                .setIcon(R.drawable.ic_warning_dark)
+                .setOnClickListener(v -> {
+                    startActivity(new Intent(this, SettingsActivity.class));
+                    Alerter.hide();
+                })
+                .show();
     }
 
     @Override
@@ -69,7 +91,6 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
     /**
      * Replace fragment.
      *
@@ -79,7 +100,6 @@ public class MainActivity extends AppCompatActivity {
         if (fragment != null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.content, fragment).commit();
-//            transaction.replace(R.id.content, fragment).addToBackStack(null).commit();
         }
     }
 }

@@ -24,7 +24,7 @@ import br.edu.uepb.nutes.activity_tracking_poc.R;
  * @copyright Copyright (c) 2017, NUTES UEPB
  */
 public final class DateUtils {
-    public static final String DATE_FORMAT_ISO_8601 = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+    public static final String DATE_FORMAT_ISO_8601 = "yyyy-MM-dd'T'HH:mm:ss.SSS";
 
     /**
      * Get/Retrieve calendar instance.
@@ -150,24 +150,33 @@ public final class DateUtils {
 
     /**
      * Format date in ISO 8601 for the format passed in the "format_date" parameter.
-     * The default timezone will be used.
+     * If the time zone is null, UTC is used.
      *
      * @param str_date
      * @param format_date
+     * @param timeZone {@link TimeZone}
      * @return String
      */
-    public static String formatDateISO8601(String str_date, String format_date) {
+    public static String formatDateISO8601(String str_date, String format_date, TimeZone timeZone) {
         if (str_date == null || format_date == null)
             return null;
 
-        TimeZone timeZone = TimeZone.getDefault();
+        if (timeZone == null)
+            timeZone = TimeZone.getTimeZone("UTC");
 
         DateFormat dateFormat = new SimpleDateFormat(format_date);
         dateFormat.setTimeZone(timeZone);
         return dateFormat.format(DateUtils.fromISO8601(str_date));
     }
 
-    public static String getCurrentDateISO8601() {
+    /**
+     * Retrieve the current date according to timezone.
+     * If the time zone is null, UTC is used.
+     *
+     * @param timeZone {@link TimeZone}
+     * @return String
+     */
+    public static String getCurrentDateISO8601(TimeZone timeZone) {
         SimpleDateFormat dateFormat = new SimpleDateFormat(DateUtils.DATE_FORMAT_ISO_8601);
         dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 
