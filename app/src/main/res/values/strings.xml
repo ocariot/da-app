@@ -13,6 +13,7 @@
     <string name="cals">cals</string>
     <string name="cals_min">cals/min</string>
     <string name="min">min</string>
+    <string name="duration_min">%d min</string>
     <string name="calories">Calories</string>
     <string name="steps">Steps</string>
     <string name="level">Level</string>
@@ -27,7 +28,8 @@
 
     <!-- FORMAT DATES -->
     <string name="date_format1">yyyy-MM-dd</string>
-    <string name="date_time_abb">MMMM dd \'at\' hh:mm a</string>
+    <string name="date_time_abb1">MMMM dd \'at\' hh:mm a</string>
+    <string name="date_time_abb2">EEEE \'at\' hh:mm:ss a</string>
 
     <!-- SETTINGS -->
     <string name="settings_title">Settings OCARIoT</string>

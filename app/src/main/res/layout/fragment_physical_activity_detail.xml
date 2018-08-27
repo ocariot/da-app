@@ -19,10 +19,11 @@
                 android:id="@+id/date_start_tv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="2018-86-34"/>
+                android:textSize="16sp"
+                android:text="2018-86-34" />
 
             <TextView
-                android:id="@+id/date_start__details_tv"
+                android:id="@+id/datetime_start__details_tv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
@@ -33,10 +34,10 @@
                 android:id="@+id/line1_view"
                 android:layout_width="fill_parent"
                 android:layout_height="1dp"
-                android:layout_below="@+id/date_start__details_tv"
-                android:layout_marginTop="20dp"
+                android:layout_below="@+id/datetime_start__details_tv"
                 android:layout_marginBottom="20dp"
-                android:background="@android:color/darker_gray" />
+                android:layout_marginTop="20dp"
+                android:background="@color/colorLineDivider" />
 
             <ImageView
                 android:id="@+id/clock_img"
@@ -51,20 +52,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignTop="@+id/clock_img"
-                android:layout_marginTop="2dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="3dp"
                 android:layout_toEndOf="@+id/clock_img"
-                android:text="14"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/duration_unit_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/clock_img"
-                android:layout_marginStart="2dp"
-                android:layout_marginTop="2dp"
-                android:layout_toEndOf="@+id/duration_tv"
-                android:text="@string/min"
+                android:text="@string/duration_min"
                 android:textSize="18sp" />
 
             <TextView
@@ -112,10 +103,10 @@
                 android:id="@+id/calories_min_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBaseline="@+id/calories_tv"
                 android:layout_alignParentStart="true"
-                android:layout_marginStart="126dp"
-                android:text="14.5"
+                android:layout_below="@+id/calories_tv"
+                android:text="0"
+                android:layout_marginStart="3dp"
                 android:textSize="20sp" />
 
             <TextView
@@ -134,7 +125,7 @@
                 android:layout_below="@+id/title_calories__min_tv"
                 android:layout_marginBottom="20dp"
                 android:layout_marginTop="20dp"
-                android:background="@android:color/darker_gray" />
+                android:background="@color/colorLineDivider" />
 
             <TextView
                 android:id="@+id/levels_tv"
@@ -184,7 +175,6 @@
                 android:layout_marginLeft="@dimen/activity_padding"
                 android:layout_marginTop="5dp"
                 android:text="@string/level_very" />
-
 
         </RelativeLayout>
     </LinearLayout>

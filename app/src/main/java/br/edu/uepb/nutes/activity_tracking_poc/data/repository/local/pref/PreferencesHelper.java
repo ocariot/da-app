@@ -25,8 +25,6 @@ public interface PreferencesHelper {
 
     Single<AuthState> getAuthStateFitBit();
 
-    Single<String> getLoggedUserId();
-
     Completable removeUserAccessOcariot();
 
     Completable removeAuthStateFitBit();

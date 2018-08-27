@@ -42,26 +42,10 @@ public class MainActivity extends AppCompatActivity implements OnClickActivityLi
         setSupportActionBar(mToolbar);
 
         initComponents();
-
-        replaceFragment(PhysicalActivityListFragment.newInstance());
     }
 
     private void initComponents() {
-        shorMessageError(null);
-    }
-
-    private void shorMessageError(String message) {
-        message = message != null ? message : getString(R.string.error_oauth_fitbit_permission);
-        Alerter.create(MainActivity.this)
-                .setText(message)
-                .setDuration(10000)
-                .setBackgroundColorRes(R.color.colorWarning)
-                .setIcon(R.drawable.ic_warning_dark)
-                .setOnClickListener(v -> {
-                    startActivity(new Intent(this, SettingsActivity.class));
-                    Alerter.hide();
-                })
-                .show();
+        replaceFragment(PhysicalActivityListFragment.newInstance());
     }
 
     @Override
@@ -84,6 +68,9 @@ public class MainActivity extends AppCompatActivity implements OnClickActivityLi
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case android.R.id.home:
+                super.onBackPressed();
+                break;
             case R.id.action_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
                 break;
@@ -102,6 +89,13 @@ public class MainActivity extends AppCompatActivity implements OnClickActivityLi
     private void replaceFragment(Fragment fragment) {
         if (fragment != null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+
+            if (fragment instanceof PhysicalActivityDetail) {
+                transaction.replace(R.id.content, fragment).addToBackStack(null).commit();
+                return;
+            }
+
             transaction.replace(R.id.content, fragment).commit();
         }
     }
@@ -114,5 +108,19 @@ public class MainActivity extends AppCompatActivity implements OnClickActivityLi
         args.putParcelable(PhysicalActivityDetail.ACTIVITY_DETAIL, activity);
         physicalActivityDetail.setArguments(args);
         replaceFragment(physicalActivityDetail);
+    }
+
+    private void showMessageError(String message) {
+        message = message != null ? message : getString(R.string.error_oauth_fitbit_permission);
+        Alerter.create(MainActivity.this)
+                .setText(message)
+                .setDuration(10000)
+                .setBackgroundColorRes(R.color.colorWarning)
+                .setIcon(R.drawable.ic_warning_dark)
+                .setOnClickListener(v -> {
+                    startActivity(new Intent(this, SettingsActivity.class));
+                    Alerter.hide();
+                })
+                .show();
     }
 }

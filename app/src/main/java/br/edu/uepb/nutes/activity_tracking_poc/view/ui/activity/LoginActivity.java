@@ -14,7 +14,7 @@ import android.widget.ProgressBar;
 
 import br.edu.uepb.nutes.activity_tracking_poc.R;
 import br.edu.uepb.nutes.activity_tracking_poc.data.repository.local.pref.AppPreferencesHelper;
-import br.edu.uepb.nutes.activity_tracking_poc.data.repository.remote.ocariot.UserOcariotNetRepository;
+import br.edu.uepb.nutes.activity_tracking_poc.data.repository.remote.ocariot.OcariotNetRepository;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.disposables.Disposable;
@@ -44,7 +44,7 @@ public class LoginActivity extends AppCompatActivity {
     @BindView(R.id.box_message_error)
     LinearLayout mBoxMessageError;
 
-    private UserOcariotNetRepository userRepository;
+    private OcariotNetRepository userRepository;
     private AppPreferencesHelper appPref;
     private Disposable disposable;
     private Animation mAnimation;
@@ -54,7 +54,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-        userRepository = UserOcariotNetRepository.getInstance(this);
+        userRepository = OcariotNetRepository.getInstance(this);
         appPref = AppPreferencesHelper.getInstance(this);
 
         mAnimation = AnimationUtils.loadAnimation(this, android.R.anim.fade_out);

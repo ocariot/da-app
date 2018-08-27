@@ -9,4 +9,6 @@
 
     <color name="colorDanger">#a94442</color>
     <color name="colorDangerLight">#f2dede</color>
+
+    <color name="colorLineDivider">#e2e2e2</color>
 </resources>

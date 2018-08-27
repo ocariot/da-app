@@ -30,7 +30,7 @@ public class Activity implements Parcelable {
      * Adapt to the activityLevel
      * the highest level
      */
-    @SerializedName("activity_level")
+    @SerializedName("intensity_level")
     private String intensityLevel;
 
     private double distance;

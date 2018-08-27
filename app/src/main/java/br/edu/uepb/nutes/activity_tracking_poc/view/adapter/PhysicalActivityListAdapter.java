@@ -14,7 +14,6 @@ import br.edu.uepb.nutes.activity_tracking_poc.data.model.Activity;
 import br.edu.uepb.nutes.activity_tracking_poc.data.model.ActivityType;
 import br.edu.uepb.nutes.activity_tracking_poc.utils.DateUtils;
 import br.edu.uepb.nutes.activity_tracking_poc.view.adapter.base.BaseAdapter;
-import br.edu.uepb.nutes.activity_tracking_poc.view.ui.fragment.PhysicalActivityDetail;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -50,7 +49,7 @@ public class PhysicalActivityListAdapter extends BaseAdapter<Activity> {
 
             h.name.setText(activity.getName());
             h.dateStart.setText(DateUtils.formatDateISO8601(activity.getStartTime(),
-                    context.getResources().getString(R.string.date_time_abb), null));
+                    context.getResources().getString(R.string.date_time_abb1), null));
             int duration = (int) (activity.getDuration() / (60 * 1000));
             h.duration.setText(String.valueOf(duration));
             h.calories.setText(String.valueOf(activity.getCalories()));

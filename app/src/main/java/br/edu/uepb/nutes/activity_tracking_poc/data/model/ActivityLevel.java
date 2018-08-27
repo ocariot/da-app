@@ -11,6 +11,11 @@ import android.os.Parcelable;
  * @copyright Copyright (c) 2018, NUTES/UEPB
  */
 public class ActivityLevel implements Parcelable {
+    public static String SEDENTARY_LEVEL = "sedentary";
+    public static String LIGHTLY_LEVEL = "lightly";
+    public static String FAIRLY_LEVEL = "fairly";
+    public static String VERY_LEVEL = "very";
+
     private int minutes;
     private String name;
 

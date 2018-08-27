@@ -5,29 +5,59 @@ import android.util.Log;
 
 import com.auth0.android.jwt.JWT;
 
+import java.util.List;
+
+import br.edu.uepb.nutes.activity_tracking_poc.data.model.Activity;
 import br.edu.uepb.nutes.activity_tracking_poc.data.model.User;
 import br.edu.uepb.nutes.activity_tracking_poc.data.model.UserAccess;
 import br.edu.uepb.nutes.activity_tracking_poc.data.repository.local.pref.AppPreferencesHelper;
 import br.edu.uepb.nutes.activity_tracking_poc.data.repository.remote.BaseNetRepository;
+import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 
-public class UserOcariotNetRepository extends BaseNetRepository {
+public class OcariotNetRepository extends BaseNetRepository {
     private OcariotService ocariotService;
-    private static UserOcariotNetRepository instance;
+    private static OcariotNetRepository instance;
 
-    private UserOcariotNetRepository(Context context) {
+    private OcariotNetRepository(Context context) {
         super(context, provideInterceptor(), OcariotService.BASE_URL_OCARIOT);
 
         ocariotService = super.retrofit.create(OcariotService.class);
     }
 
-    public static synchronized UserOcariotNetRepository getInstance(Context context) {
-        if (instance == null) instance = new UserOcariotNetRepository(context);
+    public static synchronized OcariotNetRepository getInstance(Context context) {
+        if (instance == null) instance = new OcariotNetRepository(context);
         return instance;
+    }
+
+    /**
+     * Provide intercept with header according to fitbit.
+     *
+     * @return Interceptor
+     */
+    private static Interceptor provideInterceptor() {
+        return chain -> {
+            Request original = chain.request();
+            Request.Builder requestBuilder = original.newBuilder()
+                    .header("Accept", "application/json")
+                    .header("Content-type", "application/json")
+                    .method(original.method(), original.body());
+
+            AppPreferencesHelper.getInstance(BaseNetRepository.mContext).getUserAccessOcariot()
+                    .subscribe(userAccess -> {
+                        requestBuilder.header(
+                                "Authorization",
+                                "Bearer ".concat(userAccess.getAccessToken())
+                        );
+                    }, error -> Log.w("Interceptor error", error.getMessage()));
+
+            Request request = requestBuilder.build();
+            return chain.proceed(request);
+        };
     }
 
     public Single<User> signup(User user) {
@@ -58,31 +88,12 @@ public class UserOcariotNetRepository extends BaseNetRepository {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    /**
-     * Provide intercept with header according to fitbit.
-     *
-     * @return Interceptor
-     */
-    private static Interceptor provideInterceptor() {
-        return chain -> {
-            Request original = chain.request();
-            Request.Builder requestBuilder = original.newBuilder()
-                    .header("Accept", "application/json")
-                    .header("Content-type", "application/json")
-                    .method(original.method(), original.body());
-
-            AppPreferencesHelper.getInstance(BaseNetRepository.mContext).getUserAccessOcariot()
-                    .subscribe(userAccess -> {
-                        requestBuilder.header(
-                                "Authorization",
-                                userAccess.getTokenType()
-                                        .concat(" ")
-                                        .concat(userAccess.getAccessToken())
-                        );
-                    }, error -> Log.w("Interceptor error", error.getMessage()));
-
-            Request request = requestBuilder.build();
-            return chain.proceed(request);
-        };
+    public Observable<List<Activity>> listActivities(String userId) {
+        Log.w("TESTANDO", userId);
+        return ocariotService.getActivities(userId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
+
+
 }

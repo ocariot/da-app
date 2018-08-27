@@ -127,14 +127,6 @@ public class AppPreferencesHelper implements PreferencesHelper {
     }
 
     @Override
-    public Single<String> getLoggedUserId() {
-        return getUserAccessOcariot()
-                .map(UserAccess::getSubject)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
-    }
-
-    @Override
     public Completable removeUserAccessOcariot() {
         return Completable.create(emitter -> {
             mPrefs.edit().remove(PREF_KEY_AUTH_STATE_OCARIOT).apply();

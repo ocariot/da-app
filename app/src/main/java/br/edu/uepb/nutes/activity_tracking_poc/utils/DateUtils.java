@@ -154,7 +154,7 @@ public final class DateUtils {
      *
      * @param str_date
      * @param format_date
-     * @param timeZone {@link TimeZone}
+     * @param timeZone    {@link TimeZone}
      * @return String
      */
     public static String formatDateISO8601(String str_date, String format_date, TimeZone timeZone) {
@@ -219,6 +219,21 @@ public final class DateUtils {
         c.set(Calendar.SECOND, 1); // 1 second
 
         return c;
+    }
+
+    /**
+     * Add minutes in datetime.
+     *
+     * @param datetime
+     * @param minutes
+     * @return String
+     */
+    public static String addMinutesToString(String datetime, int minutes) {
+        Calendar calendar = GregorianCalendar.getInstance();
+        calendar.set(Calendar.MINUTE, minutes);
+
+        DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_ISO_8601);
+        return dateFormat.format(calendar.getTime());
     }
 
     /**

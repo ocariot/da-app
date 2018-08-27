@@ -24,6 +24,7 @@ import java.util.List;
 public class UserAccess implements Serializable {
     public static final String ROLES_NAME = "scopes";
 
+    private static final String KEY_ID= "_id";
     private static final String KEY_SUBJECT = "subject";
     private static final String KEY_ACCESS_TOKEN = "access_token";
     private static final String KEY_REFRESH_TOKEN = "refresh_token";

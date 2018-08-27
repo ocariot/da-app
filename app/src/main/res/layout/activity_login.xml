@@ -33,7 +33,7 @@
         android:layout_marginRight="25dp"
         android:background="@color/colorWarningLight"
         android:gravity="center"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <TextView
             android:layout_width="wrap_content"
