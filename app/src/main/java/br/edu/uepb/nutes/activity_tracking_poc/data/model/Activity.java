@@ -1,5 +1,8 @@
 package br.edu.uepb.nutes.activity_tracking_poc.data.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -11,13 +14,13 @@ import java.util.List;
  * @version 1.0
  * @copyright Copyright (c) 2018, NUTES/UEPB
  */
-public class Activity {
+public class Activity implements Parcelable {
     private String id; // _id in server remote (UUID)
 
-    @SerializedName(value="duration", alternate={"activeDuration"})
+    @SerializedName(value = "duration", alternate = {"activeDuration"})
     private long duration; // in milliseconds
 
-    @SerializedName(value="start_time", alternate={"startTime"})
+    @SerializedName(value = "start_time", alternate = {"startTime"})
     private String startTime;
 
     @SerializedName("end_time")
@@ -38,7 +41,7 @@ public class Activity {
     @SerializedName("heartrate")
     private int heartRate;
 
-    @SerializedName(value="name", alternate={"activityName"})
+    @SerializedName(value = "name", alternate = {"activityName"})
     private String name;
 
     @SerializedName("location")
@@ -48,13 +51,13 @@ public class Activity {
 
     private int steps;
 
-    @SerializedName(value="activitylevel", alternate={"activityLevel"})
+    @SerializedName(value = "activitylevel", alternate = {"activityLevel"})
     private List<ActivityLevel> activityLevel;
 
-    @SerializedName(value="elevation_gain", alternate={"elevationGain"})
+    @SerializedName(value = "elevation_gain", alternate = {"elevationGain"})
     private double elevationGain;
 
-    @SerializedName(value="log_id", alternate={"logId"})
+    @SerializedName(value = "log_id", alternate = {"logId"})
     private String logId;
 
     public Activity() {
@@ -80,6 +83,35 @@ public class Activity {
         this.elevationGain = elevationGain;
         this.logId = logId;
     }
+
+    protected Activity(Parcel in) {
+        id = in.readString();
+        duration = in.readLong();
+        startTime = in.readString();
+        endTime = in.readString();
+        intensityLevel = in.readString();
+        distance = in.readDouble();
+        userId = in.readString();
+        heartRate = in.readInt();
+        name = in.readString();
+        location = in.readString();
+        calories = in.readInt();
+        steps = in.readInt();
+        elevationGain = in.readDouble();
+        logId = in.readString();
+    }
+
+    public static final Creator<Activity> CREATOR = new Creator<Activity>() {
+        @Override
+        public Activity createFromParcel(Parcel in) {
+            return new Activity(in);
+        }
+
+        @Override
+        public Activity[] newArray(int size) {
+            return new Activity[size];
+        }
+    };
 
     public String getId() {
         return id;
@@ -199,6 +231,29 @@ public class Activity {
 
     public void setLogId(String logId) {
         this.logId = logId;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeLong(duration);
+        dest.writeString(startTime);
+        dest.writeString(endTime);
+        dest.writeString(intensityLevel);
+        dest.writeDouble(distance);
+        dest.writeString(userId);
+        dest.writeInt(heartRate);
+        dest.writeString(name);
+        dest.writeString(location);
+        dest.writeInt(calories);
+        dest.writeInt(steps);
+        dest.writeDouble(elevationGain);
+        dest.writeString(logId);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     @Override

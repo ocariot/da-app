@@ -1,5 +1,6 @@
 package br.edu.uepb.nutes.activity_tracking_poc.view.ui.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -39,6 +40,7 @@ public class PhysicalActivityListFragment extends Fragment {
     private Disposable disposable;
     private PhysicalActivityListAdapter mAdapter;
     private FitBitNetRepository fitBitRepository;
+    private OnClickActivityListener mListener;
 
     /**
      * We need this variable to lock and unlock loading more.
@@ -57,7 +59,8 @@ public class PhysicalActivityListFragment extends Fragment {
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public PhysicalActivityListFragment() { }
+    public PhysicalActivityListFragment() {
+    }
 
     public static PhysicalActivityListFragment newInstance() {
         PhysicalActivityListFragment fragment = new PhysicalActivityListFragment();
@@ -87,6 +90,23 @@ public class PhysicalActivityListFragment extends Fragment {
         initComponents();
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnClickActivityListener) {
+            mListener = (OnClickActivityListener) context;
+        } else {
+            throw new ClassCastException();
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        if (disposable != null) disposable = null;
+        if (fitBitRepository != null) fitBitRepository.dispose();
+    }
+
     /**
      * Initialize components
      */
@@ -108,6 +128,7 @@ public class PhysicalActivityListFragment extends Fragment {
             @Override
             public void onItemClick(Activity item) {
                 Log.w(LOG_TAG, "item: " + item.toString());
+                if (mListener != null) mListener.onClickActivity(item);
             }
 
             @Override
@@ -155,12 +176,5 @@ public class PhysicalActivityListFragment extends Fragment {
                     Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_LONG).show();
                     mDataSwipeRefresh.setRefreshing(false);
                 });
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        if (disposable != null) disposable = null;
-        if (fitBitRepository != null) fitBitRepository.dispose();
     }
 }

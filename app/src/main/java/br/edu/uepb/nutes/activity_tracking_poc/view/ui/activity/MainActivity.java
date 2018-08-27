@@ -13,6 +13,9 @@ import android.view.MenuItem;
 import com.tapadoo.alerter.Alerter;
 
 import br.edu.uepb.nutes.activity_tracking_poc.R;
+import br.edu.uepb.nutes.activity_tracking_poc.data.model.Activity;
+import br.edu.uepb.nutes.activity_tracking_poc.view.ui.fragment.OnClickActivityListener;
+import br.edu.uepb.nutes.activity_tracking_poc.view.ui.fragment.PhysicalActivityDetail;
 import br.edu.uepb.nutes.activity_tracking_poc.view.ui.fragment.PhysicalActivityListFragment;
 import br.edu.uepb.nutes.activity_tracking_poc.view.ui.preference.SettingsActivity;
 import butterknife.BindView;
@@ -25,7 +28,7 @@ import butterknife.ButterKnife;
  * @version 1.0
  * @copyright Copyright (c) 2018, NUTES/UEPB
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnClickActivityListener {
     private final String LOG_TAG = MainActivity.class.getSimpleName();
 
     @BindView(R.id.toolbar)
@@ -101,5 +104,15 @@ public class MainActivity extends AppCompatActivity {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.content, fragment).commit();
         }
+    }
+
+    @Override
+    public void onClickActivity(Activity activity) {
+        PhysicalActivityDetail physicalActivityDetail = PhysicalActivityDetail.newInstance();
+        Bundle args = new Bundle();
+
+        args.putParcelable(PhysicalActivityDetail.ACTIVITY_DETAIL, activity);
+        physicalActivityDetail.setArguments(args);
+        replaceFragment(physicalActivityDetail);
     }
 }

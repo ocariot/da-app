@@ -11,8 +11,16 @@
     <string name="title_settings">Settings</string>
     <string name="today_text">Today</string>
     <string name="cals">cals</string>
+    <string name="cals_min">cals/min</string>
     <string name="min">min</string>
     <string name="calories">Calories</string>
+    <string name="steps">Steps</string>
+    <string name="level">Level</string>
+    <string name="level_min">Level in minutes</string>
+    <string name="level_sedentary">Sedendary: %d</string>
+    <string name="level_lightly">Lightly: %d</string>
+    <string name="level_fairly">Fairly: %d</string>
+    <string name="level_very">Very: %d</string>
 
     <!-- TITLES -->
     <string name="title_physical_activity">Physical Activity</string>
@@ -45,5 +53,6 @@
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_field_required">This field is required</string>
     <string name="error_server">Server Error!</string>
+
 
 </resources>
