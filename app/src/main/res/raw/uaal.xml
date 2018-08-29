@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<application>
+    <permissions>
+        <mw.bus.context>
+            <advertisement>
+                <title>Measured heart-rate</title>
+                <description>CONTEXT PUBLISHER EVENT: New measured heart-rate</description>
+                <action>br.edu.uepb.nutes.ocariot.uaal_poc.ACTION_HEART_RATE_EVENT</action>
+                <category>android.intent.category.DEFAULT</category>
+                <input>
+                    <key>var1</key>
+                    <value>heartrate_value</value>
+                </input>
+                <serialization>
+                    <![CDATA[
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix ns: <http://ontology.universaal.org/PhThing.owl#> .
+@prefix ns1: <http://ontology.universaal.org/Measurement.owl#> .
+@prefix ns2: <http://ontology.universAAL.org/PersonalHealthDevice.owl#> .
+@prefix ns3: <http://ontology.universaal.org/HealthMeasurement.owl#> .
+@prefix ns4: <http://ontology.universAAL.org/Device.owl#> .
+@prefix : <http://ontology.universAAL.org/Context.owl#> .
+<urn:org.universAAL.middleware.context.rdf:ContextEvent#_:928cde1c320522ac:969>
+  a :ContextEvent ;
+  :hasProvider <urn:br.edu.uepb.nutes.ocariot.uaal_poc:heartRateProvider> ;
+  rdf:subject ns2:HeartRateSensor ;
+  rdf:predicate ns4:hasValue ;
+  rdf:objec t _:BN000000 ;
+  :hasTimestamp "1517578914848"^^xsd:long .
+ns2:HeartRateSensor a ns2:HeartRateSensor , ns:Device , ns:PhysicalThing ;
+  ns4:hasValue _:BN000000 .
+_:BN000000 a ns3:HeartRate , ns1:Measurement , ns3:HealthMeasurement ;
+  ns1:value "&var1;"^^xsd:int .
+<urn:br.edu.uepb.nutes.ocariot.uaal_poc:heartRateProvider> a :ContextProvider ;
+   :hasType :gauge ;
+   :myClassesOfEvents [
+      a :ContextEventPattern ;
+      <http://www.w3.org/2000/01/rdf-schema#subClassOf> [
+          a owl:Restriction ;
+          owl:allValuesFrom ns2:HeartRateSensor ;
+          owl:onProperty rdf:subject
+        ]
+    ] .
+]]>
+                </serialization>
+            </advertisement>
+        </mw.bus.context>
+    </permissions>
+</application>

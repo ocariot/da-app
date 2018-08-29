@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="gen_appname">uAAL</string>
+    <string name="test_title">universAAL</string>
+    <string name="test_button">Start Middleware</string>
+    <string name="stop_button">Stop Middleware</string>
+    <string name="UPnPServiceTitle">universAAL</string>
+    <string name="UPnPServiceDescription">universAAL Service</string>
+    <string name="title_activity_handler">HandlerActivity</string>
+    <string name="action_start">Start</string>
+    <string name="action_stop">Stop</string>
+    <string name="ok">OK</string>
+    <string name="pinTitle">Insert security PIN to modify settings</string>
+    <string name="pinError">Incorrect PIN</string>
+
+    <string name="uaal_warning_gplay">Google Play Services is not available</string>
+
+    <!-- uaal Settings -->
+    <string name="uaal_settings">uAAL Settings</string>
+    <string name="uaal_setting_stop">Stop uAAL service</string>
+    <string name="uaal_setting_stop_title">Stop uAAL</string>
+    <string name="uaal_setting_start">Start uAAL service</string>
+    <string name="uaal_setting_start_title">Start uAAL</string>
+    <string name="uaal_setting_service_title">universAAL</string>
+    <string name="uaal_setting_service_description">universAAL Service</string>
+    <string name="uaal_setting_resetwifi">Forget current home WiFi to be paired with a different one</string>
+    <string name="uaal_menu_settings">Settings</string>
+    <string name="uaal_setting_resetwifi_none">There is no home WiFi paired yet</string>
+    <string name="uaal_setting_resetwifi_title">Reset home WiFi</string>
+    <string name="uaal_setting_iscoord_title">Is Service coordinator</string>
+    <string name="uaal_setting_iscoord">Set this instance as the single Service Bus coordinator</string>
+    <string name="uaal_setting_uihandler_title">Enable uAAL User Interface</string>
+    <string name="uaal_setting_uihandler">Use this application as User Interface Handler with uAAL</string>
+    <string name="uaal_setting_connurl_instr">Full URL (protocol to context) of the server hosting the Remote API</string>
+    <string name="uaal_setting_connurl">URL of the server hosting the Remote API</string>
+    <string name="uaal_setting_connurl_title">Remote connection URL</string>
+    <string name="uaal_setting_conngcm_instr">Google Cloud Messaging Key Identificator of the server hosting the Remote API</string>
+    <string name="uaal_setting_conngcm">GCM Key of the server hosting the Remote API</string>
+    <string name="uaal_setting_conngcm_title">Remote connection identification</string>
+    <string name="uaal_setting_connusr_instr">String that uniquely identifies this universAAL node for the Remote API</string>
+    <string name="uaal_setting_connusr">Identifier of this node for the Remote API</string>
+    <string name="uaal_setting_connusr_title">Client identification</string>
+    <string name="uaal_setting_connpwd_instr">Password that uniquely identifies this universAAL node for the Remote API</string>
+    <string name="uaal_setting_connpwd">Password associated to this node for the Remote API</string>
+    <string name="uaal_setting_connpwd_title">Client password</string>
+    <string name="uaal_folder_settings">Folders</string>
+    <string name="uaal_setting_cfolder_instr">Path of the configuration folder, with folder separator "/" at the beginning and the end</string>
+    <string name="uaal_setting_cfolder">Where the configuration files of all modules must be stored</string>
+    <string name="uaal_setting_cfolder_title">Configuration folder</string>
+    <string name="uaal_setting_ofolder_instr">Path of the ontologies folder, with folder separator "/" at the beginning and the end</string>
+    <string name="uaal_setting_ofolder">Where the "Dexed" jar files of additional ontologies must be stored</string>
+    <string name="uaal_setting_ofolder_title">Ontology folder</string>
+    <string name="uaal_setting_ifolder_instr">Path of the images folder, with folder separator "/" at the beginning and the end</string>
+    <string name="uaal_setting_ifolder">Where the images to be displayed by the user interface must be stored</string>
+    <string name="uaal_setting_ifolder_title">Image folder</string>
+    <string name="uaal_settings_user">User</string>
+    <string name="uaal_setting_user_instr">Suffix of the user URI, after the # character</string>
+    <string name="uaal_setting_user">User of the AAL Space that is using this device</string>
+    <string name="uaal_setting_user_title">User identification</string>
+    <string name="uaal_setting_type">Type of role of the user</string>
+    <string name="uaal_setting_type_title">User type</string>
+    <string-array name="uaal_setting_type_entries">
+        <item>Assisted Person</item>
+        <item>Caregiver</item>
+    </string-array>
+    <!-- Reference values. DO NOT CHANGE, DO NOT TRANSLATE -->
+    <string-array name="uaal_setting_type_values">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+    <string name="uaal_conn_settings">Connectivity</string>
+    <string name="uaal_setting_connwifi">Connect to other devices running universAAL in the same WiFi network</string>
+    <string name="uaal_setting_connwifi_title">WiFi discovery</string>
+    <string name="uaal_setting_connmode">When to connect to the remote node</string>
+    <string name="uaal_setting_connmode_title">Remote connection mode</string>
+    <string-array name="uaal_setting_connmode_entries">
+        <item>Always</item>
+        <item>Only when WiFi is Off</item>
+        <item>Never</item>
+    </string-array>
+    <!-- Reference values. DO NOT CHANGE, DO NOT TRANSLATE -->
+    <string-array name="uaal_setting_connmode_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <string name="uaal_setting_conntype">What type of connection to use with the remote node</string>
+    <string name="uaal_setting_conntype_title">Remote connection type</string>
+    <string-array name="uaal_setting_conntype_entries">
+        <item>Gateway</item>
+        <item>Remote API (requires Google Play Services)</item>
+        <item>REST API (requires Google Play Services)</item>
+    </string-array>
+    <!-- Reference values. DO NOT CHANGE, DO NOT TRANSLATE -->
+    <string-array name="uaal_setting_conntype_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <!-- uaal settings keys -->
+    <string name="uaal_setting_start_key">uaal_setting_start_key</string>
+    <string name="uaal_setting_stop_key">uaal_setting_stop_key</string>
+    <string name="uaal_setting_iscoord_key">uaal_setting_iscoord_key</string>
+    <string name="uaal_setting_uihandler_key">uaal_setting_uihandler_key</string>
+    <string name="uaal_setting_connwifi_key">uaal_setting_connwifi_key</string>
+    <string name="uaal_setting_resetwifi_key">uaal_setting_resetwifi_key</string>
+    <string name="uaal_setting_cfolder_key">uaal_setting_cfolder_key</string>
+    <string name="uaal_setting_ofolder_key">uaal_setting_ofolder_key</string>
+    <string name="uaal_setting_ifolder_key">uaal_setting_ifolder_key</string>
+    <string name="uaal_setting_user_key">uaal_setting_user_key</string>
+    <string name="uaal_setting_type_key">uaal_setting_type_key</string>
+    <string name="uaal_setting_connmode_key">uaal_setting_connmode_key</string>
+    <string name="uaal_setting_conntype_key">uaal_setting_conntype_key</string>
+    <string name="uaal_setting_connurl_key">uaal_setting_connurl_key</string>
+    <string name="uaal_setting_conngcm_key">uaal_setting_conngcm_key</string>
+    <string name="uaal_setting_connusr_key">uaal_setting_connusr_key</string>
+    <string name="uaal_setting_connpwd_key">uaal_setting_connpwd_key</string>
+    
+    <string name="notif_title">universAAL</string>
+    <string name="notif_text">universAAL is up and running, tap to access the control panel</string>
+
+
+</resources>

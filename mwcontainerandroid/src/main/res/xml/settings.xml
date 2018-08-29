@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    <Preference
+        android:key="@string/uaal_setting_start_key"
+        android:summary="@string/uaal_setting_start"
+        android:title="@string/uaal_setting_start_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Preference
+        android:key="@string/uaal_setting_stop_key"
+        android:summary="@string/uaal_setting_stop"
+        android:title="@string/uaal_setting_stop_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <CheckBoxPreference
+        android:key="@string/uaal_setting_iscoord_key"
+        android:summary="@string/uaal_setting_iscoord"
+        android:title="@string/uaal_setting_iscoord_title"
+        android:defaultValue="@bool/uaal_setting_iscoord_def"/>
+
+    <CheckBoxPreference
+        android:key="@string/uaal_setting_uihandler_key"
+        android:summary="@string/uaal_setting_uihandler"
+        android:title="@string/uaal_setting_uihandler_title"
+        android:defaultValue="@bool/uaal_setting_uihandler_def"/>
+
+    <CheckBoxPreference
+        android:key="@string/uaal_setting_connwifi_key"
+        android:summary="@string/uaal_setting_connwifi"
+        android:title="@string/uaal_setting_connwifi_title"
+        android:defaultValue="@bool/uaal_setting_connwifi_def"/>
+
+    <Preference
+        android:key="@string/uaal_setting_resetwifi_key"
+        android:summary="@string/uaal_setting_resetwifi"
+        android:title="@string/uaal_setting_resetwifi_title" />
+
+    <PreferenceCategory android:title="@string/uaal_folder_settings" >
+        <EditTextPreference
+            android:key="@string/uaal_setting_cfolder_key"
+            android:summary="@string/uaal_setting_cfolder"
+            android:title="@string/uaal_setting_cfolder_title"
+            android:defaultValue="@string/uaal_setting_cfolder_def"
+            android:dialogMessage="@string/uaal_setting_cfolder_instr"/>
+
+        <EditTextPreference
+            android:key="@string/uaal_setting_ofolder_key"
+            android:summary="@string/uaal_setting_ofolder"
+            android:title="@string/uaal_setting_ofolder_title"
+            android:defaultValue="@string/uaal_setting_ofolder_def"
+            android:dialogMessage="@string/uaal_setting_ofolder_instr"/>
+
+        <EditTextPreference
+            android:defaultValue="@string/uaal_setting_ifolder_def"
+            android:dialogMessage="@string/uaal_setting_ifolder_instr"
+            android:key="@string/uaal_setting_ifolder_key"
+            android:summary="@string/uaal_setting_ifolder"
+            android:title="@string/uaal_setting_ifolder_title" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/uaal_settings_user" >
+        <EditTextPreference
+            android:key="@string/uaal_setting_user_key"
+            android:summary="@string/uaal_setting_user"
+            android:title="@string/uaal_setting_user_title"
+            android:defaultValue="@string/uaal_setting_user_def"
+            android:dialogMessage="@string/uaal_setting_user_instr"/>
+
+        <ListPreference
+            android:key="@string/uaal_setting_type_key"
+            android:summary="@string/uaal_setting_type"
+            android:title="@string/uaal_setting_type_title"
+            android:entryValues="@array/uaal_setting_type_values"
+            android:defaultValue="@integer/uaal_setting_type_def"
+            android:entries="@array/uaal_setting_type_entries"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/uaal_conn_settings" >
+        <ListPreference
+            android:key="@string/uaal_setting_connmode_key"
+            android:summary="@string/uaal_setting_connmode"
+            android:title="@string/uaal_setting_connmode_title"
+            android:entries="@array/uaal_setting_connmode_entries"
+            android:entryValues="@array/uaal_setting_connmode_values"
+            android:defaultValue="@integer/uaal_setting_connmode_def"/>
+
+        <ListPreference
+            android:key="@string/uaal_setting_conntype_key"
+            android:summary="@string/uaal_setting_conntype"
+            android:title="@string/uaal_setting_conntype_title"
+            android:entries="@array/uaal_setting_conntype_entries"
+            android:entryValues="@array/uaal_setting_conntype_values"
+            android:defaultValue="@integer/uaal_setting_conntype_def"/>
+
+        <EditTextPreference
+            android:key="@string/uaal_setting_connurl_key"
+            android:summary="@string/uaal_setting_connurl"
+            android:title="@string/uaal_setting_connurl_title"
+            android:defaultValue="@string/uaal_setting_connurl_def"
+            android:dialogMessage="@string/uaal_setting_connurl_instr"/>
+
+        <EditTextPreference
+            android:key="@string/uaal_setting_conngcm_key"
+            android:summary="@string/uaal_setting_conngcm"
+            android:title="@string/uaal_setting_conngcm_title"
+            android:defaultValue="@string/uaal_setting_conngcm_def"
+            android:dialogMessage="@string/uaal_setting_conngcm_instr"/>
+
+        <EditTextPreference
+            android:key="@string/uaal_setting_connusr_key"
+            android:summary="@string/uaal_setting_connusr"
+            android:title="@string/uaal_setting_connusr_title"
+            android:defaultValue="@string/uaal_setting_connusr_def"
+            android:dialogMessage="@string/uaal_setting_connusr_instr"/>
+
+        <EditTextPreference
+            android:key="@string/uaal_setting_connpwd_key"
+            android:summary="@string/uaal_setting_connpwd"
+            android:title="@string/uaal_setting_connpwd_title"
+            android:defaultValue="@string/uaal_setting_connpwd_def"
+            android:dialogMessage="@string/uaal_setting_connpwd_instr"/>
+    </PreferenceCategory>
+</PreferenceScreen>
