@@ -12,6 +12,7 @@ import android.view.MenuItem;
 
 import br.edu.uepb.nutes.ocariot.uaal_poc.R;
 import br.edu.uepb.nutes.ocariot.uaal_poc.data.model.Activity;
+import br.edu.uepb.nutes.ocariot.uaal_poc.utils.UaalAPI;
 import br.edu.uepb.nutes.ocariot.uaal_poc.view.ui.fragment.OnClickActivityListener;
 import br.edu.uepb.nutes.ocariot.uaal_poc.view.ui.fragment.PhysicalActivityDetail;
 import br.edu.uepb.nutes.ocariot.uaal_poc.view.ui.fragment.PhysicalActivityListFragment;
@@ -32,12 +33,16 @@ public class MainActivity extends AppCompatActivity implements OnClickActivityLi
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
 
+    private UaalAPI uaalAPI;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setSupportActionBar(mToolbar);
+
+        uaalAPI = UaalAPI.getInstance(this);
 
         initComponents();
     }
@@ -49,6 +54,9 @@ public class MainActivity extends AppCompatActivity implements OnClickActivityLi
     @Override
     protected void onRestart() {
         super.onRestart();
+
+        if(!uaalAPI.isStarted())
+            uaalAPI.startUaalService();
     }
 
     @Override

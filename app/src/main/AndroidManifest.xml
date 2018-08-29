@@ -39,16 +39,11 @@
             android:name="org.universAAL.android.metadata"
             android:resource="@raw/uaal" />
 
-        <activity android:name=".view.ui.activity.MainActivity"
-		      android:label="@string/app_name"
-            android:theme="@style/AppTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+        <activity
+            android:name=".view.ui.activity.MainActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-		
         <activity
             android:name=".view.ui.activity.LoginActivity"
             android:label="@string/app_name"

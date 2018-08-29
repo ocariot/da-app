@@ -34,7 +34,7 @@ public class UaalAPI {
         UaalConfig.load(context); //Sync Preferences in UaalConfig util
         UaalConfig.setmUAALUser(context, "Ocariot-user");
         UaalConfig.setmSettingRemoteType(context, AppConstants.REMOTE_TYPE_RESTAPI);
-        UaalConfig.setmServerURL(context, "http://192.168.50.167:9000/uaal");
+        UaalConfig.setmServerURL(context, "http://192.168.0.110:9000/uaal");
         UaalConfig.setmServerUSR(context, "Ocariot-client-ID");
         UaalConfig.setmServerPWD(context, "Ocariot-client123");
         UaalConfig.setmConfigFolder(context, "/data/ocariot/universAAL/configurations/etc/images/");

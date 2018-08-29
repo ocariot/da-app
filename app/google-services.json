@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "603831459103",
+    "firebase_url": "https://ocariot-5efd9.firebaseio.com",
+    "project_id": "ocariot-5efd9",
+    "storage_bucket": "ocariot-5efd9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:603831459103:android:349a2ff8f52786d4",
+        "android_client_info": {
+          "package_name": "br.edu.uepb.nutes.ocariot.uaal_poc"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "603831459103-0qd89ibp5iimfhp5j4ii42uvgjrrtvsv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBpFKuaCEVLbJNstXAi_dZgATG5YdQ_x24"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -44,20 +44,9 @@ repositories {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:26.1.0'
-    compile 'com.android.support:support-annotations:26.1.0'
     compile 'com.android.support:design:26.1.0'
-    compile 'com.android.support:cardview-v7:26.1.0'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.android.support:support-core-utils:26.1.0'
-    compile 'com.android.support:preference-v7:26.1.0'
-    compile 'com.mikhaellopez:circularprogressbar:1.1.1'
     compile 'com.android.support:recyclerview-v7:26.1.0'
-
     compile 'com.android.support:support-v4:26.1.0'
-    testCompile 'junit:junit:4.12'
-    androidTestCompile 'com.android.support:support-annotations:26.1.0'
-    androidTestCompile 'com.android.support.test:runner:1.0.1'
-    androidTestCompile 'com.android.support.test.espresso:espresso-core:3.0.1'
 
     /* Dependency to universAAL midleware*/
     compile project(":mwcontainerandroid")
@@ -85,8 +74,15 @@ dependencies {
     compile 'com.auth0.android:jwtdecode:1.1.1'
     compile 'com.scottyab:secure-preferences-lib:0.1.4'
 
+    // Activity Ontology by jefferson.medeiros@nutes.uepb.edu.br
+    compile 'org.universAAL.ontology:ont.activity:0.1.0-SNAPSHOT'
+
+    testCompile 'junit:junit:4.12'
+    androidTestCompile 'com.android.support:support-annotations:26.1.0'
+    androidTestCompile 'com.android.support.test:runner:1.0.1'
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:3.0.1'
 }
 
-//apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.gms.google-services'
 
 

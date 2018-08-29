@@ -8,7 +8,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.3'
-//        classpath 'com.google.gms:google-services:3.1.1'
+        classpath 'com.google.gms:google-services:3.1.1'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -19,6 +19,9 @@ allprojects {
     repositories {
         google()
         jcenter()
+        mavenCentral()
+        // Activity Ontology by jefferson.medeiros@nutes.uepb.edu.br
+        maven { url "https://mymavenrepo.com/repo/v3u3q6Kh6YTjEQkuCDVO/" }
     }
 }
 
