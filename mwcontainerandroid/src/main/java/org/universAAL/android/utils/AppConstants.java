@@ -137,8 +137,8 @@ public class AppConstants {
 	    public static final int CONNTYPE = REMOTE_TYPE_RESTAPI;
 	    public static final String CONNURL = "http://192.168.50.167:9000/uaal";
 	    public static final String CONNGCM = "102946860057";
-	    public static final String CONNUSR = "Ocariot-client-default";
-	    public static final String CONNPWD = "Ocariot-client123";
+	    public static final String CONNUSR = "admin";
+	    public static final String CONNPWD = "admin";
 	}
 	
 	public static class Keys {

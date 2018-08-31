@@ -3,46 +3,123 @@
     <permissions>
         <mw.bus.context>
             <advertisement>
-                <title>Measured heart-rate</title>
-                <description>CONTEXT PUBLISHER EVENT: New measured heart-rate</description>
-                <action>br.edu.uepb.nutes.ocariot.uaal_poc.ACTION_HEART_RATE_EVENT</action>
+                <title>physical-activity</title>
+                <description>CONTEXT PUBLISHER EVENT: physical activity tracked</description>
+                <action>br.edu.uepb.nutes.ocariot.uaal_poc.ACTION_PHYSICAL_ACTIVITY_EVENT</action>
                 <category>android.intent.category.DEFAULT</category>
                 <input>
-                    <key>var1</key>
-                    <value>heartrate_value</value>
+                    <key>userId</key>
+                    <value>user_id,</value>
+                </input>
+                <input>
+                    <key>name</key>
+                    <value>name</value>
+                </input>
+                <input>
+                    <key>startTime</key>
+                    <value>start_time</value>
+                </input>
+                <input>
+                    <key>endTime</key>
+                    <value>end_time</value>
+                </input>
+                <input>
+                    <key>duration</key>
+                    <value>duration</value>
+                </input>
+                <input>
+                    <key>maxIntensity</key>
+                    <value>max_intensity</value>
+                </input>
+                <input>
+                    <key>maxIntensityDuration</key>
+                    <value>max_intensity_duration</value>
+                </input>
+                <input>
+                    <key>calories</key>
+                    <value>calories</value>
+                </input>
+                <input>
+                    <key>steps</key>
+                    <value>steps</value>
                 </input>
                 <serialization>
                     <![CDATA[
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
-@prefix ns: <http://ontology.universaal.org/PhThing.owl#> .
+@prefix ns: <http://ontology.universAAL.org/Context.owl#> .
 @prefix ns1: <http://ontology.universaal.org/Measurement.owl#> .
-@prefix ns2: <http://ontology.universAAL.org/PersonalHealthDevice.owl#> .
-@prefix ns3: <http://ontology.universaal.org/HealthMeasurement.owl#> .
-@prefix ns4: <http://ontology.universAAL.org/Device.owl#> .
-@prefix : <http://ontology.universAAL.org/Context.owl#> .
-<urn:org.universAAL.middleware.context.rdf:ContextEvent#_:928cde1c320522ac:969>
-  a :ContextEvent ;
-  :hasProvider <urn:br.edu.uepb.nutes.ocariot.uaal_poc:heartRateProvider> ;
-  rdf:subject ns2:HeartRateSensor ;
-  rdf:predicate ns4:hasValue ;
-  rdf:objec t _:BN000000 ;
-  :hasTimestamp "1517578914848"^^xsd:long .
-ns2:HeartRateSensor a ns2:HeartRateSensor , ns:Device , ns:PhysicalThing ;
-  ns4:hasValue _:BN000000 .
-_:BN000000 a ns3:HeartRate , ns1:Measurement , ns3:HealthMeasurement ;
-  ns1:value "&var1;"^^xsd:int .
-<urn:br.edu.uepb.nutes.ocariot.uaal_poc:heartRateProvider> a :ContextProvider ;
-   :hasType :gauge ;
-   :myClassesOfEvents [
-      a :ContextEventPattern ;
-      <http://www.w3.org/2000/01/rdf-schema#subClassOf> [
-          a owl:Restriction ;
-          owl:allValuesFrom ns2:HeartRateSensor ;
-          owl:onProperty rdf:subject
-        ]
-    ] .
+@prefix ns2: <http://ontology.universAAL.org/Location.owl#> .
+@prefix ns3: <http://ontology.universaal.org/Unit.owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix ns4: <http://ontology.universaal.org/Unit.owl#Unit#> .
+@prefix : <http://ontology.universAAL.org/activity#> .
+<urn:org.universAAL.middleware.context.rdf:ContextEvent#_:c0a85502710c07da:edd> a ns:ContextEvent ;
+  ns:hasProvider <urn:br.edu.uepb.nutes.ocariot.uaal_poc:physicalActivityProvider> ;
+  rdf:subject :ActivityTrackingProfile ;
+  ns:hasTimestamp "1535734655887"^^xsd:long ;
+  rdf:predicate :hasActivities ;
+  rdf:object :WalkActivity .
+
+ns3:internationalSystemOfUnits a ns3:UnitSystem .
+
+ns4:calory a ns3:Unit ;
+  ns3:symbol "cal"^^xsd:string ;
+  ns3:dimension ns3:internationalSystemOfUnits ;
+  ns3:name "calories"^^xsd:string .
+
+:Intensity a :Intensity ;
+  :name "very"^^xsd:string ;
+  :duration "960000"^^xsd:long .
+
+ns4:meter a ns3:Unit ;
+  ns3:symbol "m"^^xsd:string ;
+  ns3:dimension ns3:internationalSystemOfUnits ;
+  ns3:name "meter"^^xsd:string .
+
+ns2:CityQuarter a ns2:CityQuarter ,
+    ns2:OutdoorPlace ,
+    ns2:Place ,
+    ns2:Location .
+
+:ActivityTrackingProfile a :ActivityTrackingProfile ;
+  :hasActivities :WalkActivity .
+
+:WalkActivity :duration "&duration;"^^xsd:long ;
+  :name "&name;"^^xsd:string ;
+  :start "&startTime;"^^xsd:dateTime ;
+  :stop "&endTime;"^^xsd:dateTime ;
+  :steps "&steps;"^^xsd:int ;
+  :location ns2:CityQuarter ;
+  :energyConsumption [
+    a :EnergyConsumption ,
+      ns1:Measurement ;
+    ns1:hasUnit ns4:calory ;
+    ns1:value "&calories;"^^xsd:int
+  ] ;
+  a :WalkActivity ,
+    :PhysicalExerciseActivity ,
+    :DisplacementActivity ,
+    :LocationBasedActivity ,
+    :Activity ;
+  :distanceValue [
+    a :DistanceValue ,
+      ns1:Measurement ;
+    ns1:hasUnit ns4:meter ;
+    ns1:value "25.8"^^xsd:double
+  ] ;
+  :hasIntensities :Intensity .
+
+<urn:br.edu.uepb.nutes.ocariot.uaal_poc:physicalActivityProvider> a ns:ContextProvider ;
+  ns:hasType :gauge ;
+  ns:myClassesOfEvents [
+    a ns:ContextEventPattern ;
+    <http://www.w3.org/2000/01/rdf-schema#subClassOf> [
+      a  owl:Restriction ;
+      owl:allValuesFrom  :ActivityTrackingProfile ;
+      owl:onProperty  rdf:subject
+    ]
+  ] .
 ]]>
                 </serialization>
             </advertisement>

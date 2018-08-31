@@ -310,9 +310,10 @@ public class UaalConfig {
     public static Dictionary getProperties(String file) {
         Properties prop = new Properties();
         try {
-            Log.e(TAG, " Loading Uaal properties file in folder:"
+            Log.d(TAG, " Loading Uaal properties file in folder:"
                     + EXTERNAL_STORAGE_PATH
                     + getConfigDir() + file + ".properties");
+
             File conf = new File(EXTERNAL_STORAGE_PATH
                     , getConfigDir() + file + ".properties");
 
@@ -349,7 +350,7 @@ public class UaalConfig {
 //				+ PreferenceManager.getDefaultSharedPreferences(ctxt)
 //						.getString(AppConstants.Keys.OFOLDER,
 //								AppConstants.Defaults.OFOLDER);
-        Log.d(TAG, "Creating default configuration files");
+        Log.d(TAG, "Creating default configuration files " + basepath);
         try {
             createFile(ctxt, R.raw.jgroups, basepath, "mw.connectors.communication.jgroups.core.properties");
             createFile(ctxt, R.raw.slp, basepath, "mw.connectors.discovery.slp.core.properties");

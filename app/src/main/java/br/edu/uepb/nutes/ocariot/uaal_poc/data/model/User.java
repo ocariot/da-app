@@ -14,7 +14,6 @@ public class User implements Serializable {
 
     private String name;
     private String userName;
-    private String email;
     private String password;
     private int gender;
     private long dateOfBirth;
@@ -34,7 +33,6 @@ public class User implements Serializable {
         this._id = _id;
         this.name = name;
         this.userName = userName;
-        this.email = email;
         this.password = password;
         this.gender = gender;
         this.dateOfBirth = dateOfBirth;
@@ -64,14 +62,6 @@ public class User implements Serializable {
 
     public void setUserName(String userName) {
         this.userName = userName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getPassword() {
@@ -121,7 +111,7 @@ public class User implements Serializable {
 
         User other = (User) o;
 
-        return other.getEmail().equals(this.getEmail());
+        return other.getUserName().equals(this.getUserName());
     }
 
     @Override
@@ -130,7 +120,6 @@ public class User implements Serializable {
                 "_id='" + _id + '\'' +
                 ", name='" + name + '\'' +
                 ", userName='" + userName + '\'' +
-                ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", gender=" + gender +
                 ", dateOfBirth=" + dateOfBirth +

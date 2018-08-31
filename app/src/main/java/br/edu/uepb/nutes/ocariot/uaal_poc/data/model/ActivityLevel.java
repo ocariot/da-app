@@ -16,15 +16,15 @@ public class ActivityLevel implements Parcelable {
     public static String FAIRLY_LEVEL = "fairly";
     public static String VERY_LEVEL = "very";
 
-    private int minutes;
     private String name;
+    private int minutes;
 
     public ActivityLevel() {
     }
 
-    public ActivityLevel(int minutes, String name) {
-        this.minutes = minutes;
+    public ActivityLevel(String name, int minutes) {
         this.name = name;
+        this.minutes = minutes;
     }
 
     protected ActivityLevel(Parcel in) {

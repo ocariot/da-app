@@ -13,6 +13,6 @@
     <item name="uaal_setting_conntype_def" format="integer" type="integer">2</item>
     <item name="uaal_setting_connurl_def" format="string" type="string">http://192.168.50.167:9000/uaal</item>
     <item name="uaal_setting_conngcm_def" format="string" type="string">102946860057</item>
-    <item name="uaal_setting_connusr_def" format="string" type="string">Ocariot-client-default</item>
-    <item name="uaal_setting_connpwd_def" format="string" type="string">Ocariot-client123</item>
+    <item name="uaal_setting_connusr_def" format="string" type="string">admin</item>
+    <item name="uaal_setting_connpwd_def" format="string" type="string">admin</item>
 </resources>

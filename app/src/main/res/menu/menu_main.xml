@@ -6,5 +6,13 @@
         <item
             android:id="@+id/action_settings"
             android:title="@string/title_settings" />
+
+        <item
+            android:id="@+id/action_start_uaal"
+            android:title="Start uAAL" />
+
+        <item
+            android:id="@+id/action_send_activity"
+            android:title="Send Activity" />
     </group>
 </menu>

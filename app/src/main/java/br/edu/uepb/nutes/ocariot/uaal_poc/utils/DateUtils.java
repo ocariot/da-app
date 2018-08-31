@@ -178,7 +178,9 @@ public final class DateUtils {
      */
     public static String getCurrentDateISO8601(TimeZone timeZone) {
         SimpleDateFormat dateFormat = new SimpleDateFormat(DateUtils.DATE_FORMAT_ISO_8601);
-        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        if (timeZone != null)
+            dateFormat.setTimeZone(timeZone);
+        else dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 
         return dateFormat.format(new Date());
     }

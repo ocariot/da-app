@@ -60,13 +60,16 @@ public class Activity implements Parcelable {
     @SerializedName(value = "log_id", alternate = {"logId"})
     private String logId;
 
+    private User user;
+
     public Activity() {
     }
 
     public Activity(String id, long duration, String startTime, String endTime,
                     String intensityLevel, double distance, String userId, int heartRate,
                     String name, String location, int calories, int steps,
-                    List<ActivityLevel> activityLevel, double elevationGain, String logId) {
+                    List<ActivityLevel> activityLevel, double elevationGain,
+                    String logId, User user) {
         this.id = id;
         this.duration = duration;
         this.startTime = startTime;
@@ -82,6 +85,7 @@ public class Activity implements Parcelable {
         this.activityLevel = activityLevel;
         this.elevationGain = elevationGain;
         this.logId = logId;
+        this.user = user;
     }
 
     protected Activity(Parcel in) {
@@ -231,6 +235,14 @@ public class Activity implements Parcelable {
 
     public void setLogId(String logId) {
         this.logId = logId;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @Override

@@ -1,17 +1,28 @@
 package br.edu.uepb.nutes.ocariot.uaal_poc.view.ui.activity;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import br.edu.uepb.nutes.ocariot.uaal_poc.R;
 import br.edu.uepb.nutes.ocariot.uaal_poc.data.model.Activity;
+import br.edu.uepb.nutes.ocariot.uaal_poc.data.model.ActivityLevel;
+import br.edu.uepb.nutes.ocariot.uaal_poc.data.model.User;
+import br.edu.uepb.nutes.ocariot.uaal_poc.utils.DateUtils;
 import br.edu.uepb.nutes.ocariot.uaal_poc.utils.UaalAPI;
 import br.edu.uepb.nutes.ocariot.uaal_poc.view.ui.fragment.OnClickActivityListener;
 import br.edu.uepb.nutes.ocariot.uaal_poc.view.ui.fragment.PhysicalActivityDetail;
@@ -29,11 +40,10 @@ import butterknife.ButterKnife;
  */
 public class MainActivity extends AppCompatActivity implements OnClickActivityListener {
     private final String LOG_TAG = MainActivity.class.getSimpleName();
+    private final int REQUEST_READ_WRITE_PERMISSION = 786;
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
-
-    private UaalAPI uaalAPI;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +52,11 @@ public class MainActivity extends AppCompatActivity implements OnClickActivityLi
         ButterKnife.bind(this);
         setSupportActionBar(mToolbar);
 
-        uaalAPI = UaalAPI.getInstance(this);
+        if (hasStoragePermissions()) {
+            Log.w(LOG_TAG, "onCreate() startUAAL");
+            UaalAPI.initUaal(this);
+        } else requestStoragePermissions();
+
 
         initComponents();
     }
@@ -54,9 +68,6 @@ public class MainActivity extends AppCompatActivity implements OnClickActivityLi
     @Override
     protected void onRestart() {
         super.onRestart();
-
-        if(!uaalAPI.isStarted())
-            uaalAPI.startUaalService();
     }
 
     @Override
@@ -80,6 +91,34 @@ public class MainActivity extends AppCompatActivity implements OnClickActivityLi
             case R.id.action_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
                 break;
+            case R.id.action_start_uaal:
+                UaalAPI.startUaalService(this);
+                break;
+            case R.id.action_send_activity: {
+                Activity a = new Activity();
+                a.setName("Run");
+                a.setCalories(1548);
+                List<ActivityLevel> activityLevels = new ArrayList<>();
+                activityLevels.add(new ActivityLevel(ActivityLevel.VERY_LEVEL, 4));
+                activityLevels.add(new ActivityLevel(ActivityLevel.FAIRLY_LEVEL, 2));
+                activityLevels.add(new ActivityLevel(ActivityLevel.LIGHTLY_LEVEL, 1));
+                activityLevels.add(new ActivityLevel(ActivityLevel.SEDENTARY_LEVEL, 0));
+
+                a.setActivityLevel(activityLevels);
+                a.setDuration(1256);
+                a.setHeartRate(1); // TODO REMOVER
+                a.setStartTime(DateUtils.getCurrentDateISO8601(null));
+                a.setEndTime(DateUtils.getCurrentDateISO8601(null));
+                User user = new User();
+                user.set_id("488YU984984ELKGU218A894849CD");
+                user.setName("João da Silva");
+                user.setUserName("joao");
+                a.setUser(user);
+
+                UaalAPI.publishPhysicalActivity(this, a);
+//                UaalAPI.publishHeartRate(getApplication(), 15);
+            }
+            break;
             default:
                 break;
         }
@@ -129,4 +168,36 @@ public class MainActivity extends AppCompatActivity implements OnClickActivityLi
 //                })
 //                .show();
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_READ_WRITE_PERMISSION) {
+            if (resultCode == android.app.Activity.RESULT_OK) {
+                /* initialize universaal */
+                Log.w(LOG_TAG, "onActivityResult()");
+                UaalAPI.initUaal(this);
+            } else {
+                finish();
+            }
+        }
+    }
+
+
+    private boolean hasStoragePermissions() {
+        PackageManager packageManager = getPackageManager();
+        return ((packageManager.checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, getPackageName())
+                == PackageManager.PERMISSION_GRANTED)
+                && (packageManager.checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, getPackageName())
+                == PackageManager.PERMISSION_GRANTED));
+    }
+
+    private void requestStoragePermissions() {
+        ActivityCompat.requestPermissions(this,
+                new String[]{
+                        android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        android.Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_READ_WRITE_PERMISSION);
+    }
+
 }

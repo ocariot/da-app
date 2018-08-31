@@ -19,9 +19,6 @@ allprojects {
     repositories {
         google()
         jcenter()
-        mavenCentral()
-        // Activity Ontology by jefferson.medeiros@nutes.uepb.edu.br
-        maven { url "https://mymavenrepo.com/repo/v3u3q6Kh6YTjEQkuCDVO/" }
     }
 }
 

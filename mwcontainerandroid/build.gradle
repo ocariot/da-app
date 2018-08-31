@@ -110,6 +110,9 @@ dependencies {
     compile files('libs/mw.schemas-3.4.1-SNAPSHOT.jar')
 //    compile files('libs/ri.gateway.multitenant-3.4.1-SNAPSHOT.jar')
 
+    // Ontoloy Physical Activity by jefferson.medeiros@nutes.uepb.edu.br
+    compile files('libs/ont.activity-0.1.0-SNAPSHOT.jar')
+
     /* Library used to support apps with more than 64k method references */
     compile 'com.android.support:multidex:1.0.1'
 }
