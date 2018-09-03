@@ -60,6 +60,24 @@
             android:label="@string/settings_title"
             android:theme="@style/AppTheme.Preferences" />
 
+        <activity
+            android:name=".view.ui.preference.UaalStatusActivity"
+            android:label="@string/settings_title_uall_connect"
+            android:theme="@style/AppTheme" />
+
+        <activity android:name="net.openid.appauth.RedirectUriReceiverActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="finished"
+                    android:scheme="fitbitauth" />
+            </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>

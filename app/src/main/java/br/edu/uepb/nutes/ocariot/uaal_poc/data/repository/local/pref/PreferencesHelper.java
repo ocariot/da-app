@@ -1,29 +1,32 @@
 package br.edu.uepb.nutes.ocariot.uaal_poc.data.repository.local.pref;
 
+import net.openid.appauth.AuthState;
+
 import br.edu.uepb.nutes.ocariot.uaal_poc.data.model.UserAccess;
+import br.edu.uepb.nutes.ocariot.uaal_poc.exception.LocalPreferenceException;
 import io.reactivex.Completable;
 import io.reactivex.Single;
 
 public interface PreferencesHelper {
-    Completable addUserAccessOcariot(final UserAccess userAccess);
+    boolean addUserAccessOcariot(final UserAccess userAccess);
 
-    Completable addAuthStateFiBIt(final String authState);
+    boolean addAuthStateFiBIt(final AuthState authState);
 
-    Completable addString(String key, String value);
+    boolean addString(String key, String value);
 
-    Completable addBoolean(String key, boolean value);
+    boolean addBoolean(String key, boolean value);
 
-    Completable addInt(String key, int value);
+    boolean addInt(String key, int value);
 
-    Completable addLong(String key, long value);
+    boolean addLong(String key, long value);
 
-    Single<UserAccess> getUserAccessOcariot();
+    UserAccess getUserAccessOcariot();
 
-    Single<String> getAuthStateFitBit();
+    AuthState getAuthStateFitBit();
 
-    Completable removeUserAccessOcariot();
+    boolean removeUserAccessOcariot();
 
-    Completable removeAuthStateFitBit();
+    boolean removeAuthStateFitBit();
 
-    Completable removeItem(String key);
+    boolean removeItem(String key);
 }

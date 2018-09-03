@@ -1,6 +1,6 @@
 package br.edu.uepb.nutes.ocariot.uaal_poc.exception;
 
-public class LocalPreferenceException extends Exception {
+public class LocalPreferenceException extends RuntimeException {
     public LocalPreferenceException() {
     }
 

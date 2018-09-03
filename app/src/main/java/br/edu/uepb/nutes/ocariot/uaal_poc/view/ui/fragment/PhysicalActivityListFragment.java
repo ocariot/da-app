@@ -80,23 +80,7 @@ public class PhysicalActivityListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AppPreferencesHelper.getInstance(getContext())
-                .getUserAccessOcariot().subscribe(new SingleObserver<UserAccess>() {
-            @Override
-            public void onSubscribe(Disposable d) {
-
-            }
-
-            @Override
-            public void onSuccess(UserAccess result) {
-                userAccess = result;
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-        });
+        userAccess = AppPreferencesHelper.getInstance(getContext()).getUserAccessOcariot();
     }
 
     @Override
@@ -207,7 +191,6 @@ public class PhysicalActivityListFragment extends Fragment {
 
                     @Override
                     public void onError(Throwable e) {
-
                     }
 
                     @Override
@@ -224,7 +207,7 @@ public class PhysicalActivityListFragment extends Fragment {
      */
     private void loadDataOcariot() {
         Log.w(LOG_TAG, "loadDataOcariot()");
-        if(userAccess == null) return;
+        if (userAccess == null) return;
 
         mAdapter.clearItems();
         mDataSwipeRefresh.setRefreshing(true);
@@ -255,7 +238,7 @@ public class PhysicalActivityListFragment extends Fragment {
     }
 
     private void sendUniverssAAl(ActivityList activityList) {
-        Log.w(LOG_TAG, "sendUniverssAAl()");
+        Log.w(LOG_TAG, "sendUniverssAAl() " + Arrays.toString(activityList.getActivities().toArray()));
     }
 
 }

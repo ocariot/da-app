@@ -6,8 +6,8 @@ android {
 
     defaultConfig {
         applicationId "br.edu.uepb.nutes.ocariot.uaal_poc"
-        minSdkVersion 21
-        targetSdkVersion 24
+        minSdkVersion 19
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -15,16 +15,16 @@ android {
         dexOptions {
             jumboMode = true
         }
+
+        manifestPlaceholders = [
+                'appAuthRedirectScheme': 'br.edu.uepb.nutes.activity_tracking_poc'
+        ]
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-    }
-    compileOptions {
-//        targetCompatibility 1.8
-//        sourceCompatibility 1.8
     }
     sourceSets { main { res.srcDirs = ['src/main/res', 'src/main/res/raw'] } }
 }
@@ -53,10 +53,6 @@ dependencies {
     /* Library used to support apps with more than 64k method references */
     compile 'com.android.support:multidex:1.0.1'
 
-    /* MQTT Paho Depndencies */
-    compile 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.1.0'
-    compile 'org.eclipse.paho:org.eclipse.paho.android.service:1.1.1'
-
     // Butterknife
     compile 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
@@ -73,6 +69,8 @@ dependencies {
     //  Encode/Decode
     compile 'com.auth0.android:jwtdecode:1.1.1'
     compile 'com.scottyab:secure-preferences-lib:0.1.4'
+
+    compile 'net.openid:appauth:0.6.1'
 
     testCompile 'junit:junit:4.12'
     androidTestCompile 'com.android.support:support-annotations:26.1.0'

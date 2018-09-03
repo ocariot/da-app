@@ -1,7 +1,6 @@
 package br.edu.uepb.nutes.ocariot.uaal_poc.data.repository.remote.ocariot;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.auth0.android.jwt.JWT;
 
@@ -15,9 +14,7 @@ import br.edu.uepb.nutes.ocariot.uaal_poc.data.repository.local.pref.AppPreferen
 import br.edu.uepb.nutes.ocariot.uaal_poc.data.repository.remote.BaseNetRepository;
 import io.reactivex.Observable;
 import io.reactivex.Single;
-import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.Interceptor;
@@ -55,26 +52,16 @@ public class OcariotNetRepository extends BaseNetRepository {
                         .header("Content-type", "application/json")
                         .method(original.method(), original.body());
 
-                AppPreferencesHelper.getInstance(BaseNetRepository.mContext)
-                        .getUserAccessOcariot()
-                        .subscribe(new SingleObserver<UserAccess>() {
-                            @Override
-                            public void onSubscribe(Disposable d) {
-                            }
+                UserAccess userAccess = AppPreferencesHelper
+                        .getInstance(BaseNetRepository.mContext)
+                        .getUserAccessOcariot();
 
-                            @Override
-                            public void onSuccess(UserAccess userAccess) {
-                                requestBuilder.header(
-                                        "Authorization",
-                                        "Bearer ".concat(userAccess.getAccessToken())
-                                );
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-                                Log.w("Interceptor error", e.getMessage());
-                            }
-                        });
+                if (userAccess != null) {
+                    requestBuilder.header(
+                            "Authorization",
+                            "Bearer ".concat(userAccess.getAccessToken())
+                    );
+                }
 
                 return chain.proceed(requestBuilder.build());
             }
@@ -97,7 +84,7 @@ public class OcariotNetRepository extends BaseNetRepository {
                             userAccess.setSubject(jwt.getSubject());
                             userAccess.setExpirationDate(jwt.getExpiresAt().getTime());
                             userAccess.setExpirationDate(jwt.getExpiresAt().getTime());
-                            userAccess.setScopes(jwt.getClaim(UserAccess.ROLES_NAME).asList(String.class));
+                            userAccess.setScopes(jwt.getClaim(UserAccess.KEY_SCOPES).asList(String.class));
                         }
                         return userAccess;
                     }
@@ -113,7 +100,6 @@ public class OcariotNetRepository extends BaseNetRepository {
     }
 
     public Observable<List<Activity>> listActivities(String userId) {
-        Log.w("TESTANDO", userId);
         return ocariotService.getActivities(userId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());

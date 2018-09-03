@@ -33,14 +33,19 @@
 
     <!-- SETTINGS -->
     <string name="settings_title">Settings OCARIoT</string>
+    <string name="settings_title_uall_connect">uAAL Connect</string>
     <string name="settings_account">Account</string>
     <string name="settings_external_services">External Services</string>
     <string name="key_fitibit">key_fitbit</string>
     <string name="key_signout">key_signout</string>
+    <string name="key_uaal">key_uaal</string>
     <string name="settings_signout">Sign Out</string>
+    <string name="settings_uaal">UniversAAL IoT</string>
     <string name="settings_fitbit">FitBit</string>
     <string name="settings_summary_signout">You will be logged out of the application and redirected to login screen.</string>
+    <string name="settings_summary_uaal">Enable or disable universal services on the device.</string>
     <string name="settings_summary_fitbit">Shares activity and sleep data.</string>
+    <string name="uaal_service_status">uAAL Service</string>
 
     <!-- DIALOGS -->
     <string name="dialog_confirm_sign_out">Do you really want to quit the application?\nYou will be redirected to login screen&#8230;</string>

@@ -51,7 +51,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private OcariotNetRepository userRepository;
     private AppPreferencesHelper appPref;
-    private Disposable disposable;
     private Animation mAnimation;
 
     @Override
@@ -85,29 +84,13 @@ public class LoginActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        appPref.getUserAccessOcariot()
-                .subscribe(new SingleObserver<UserAccess>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onSuccess(UserAccess userAccess) {
-                        if (userAccess != null) openMainActivity();
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-                });
+        UserAccess userAccess = appPref.getUserAccessOcariot();
+        if (userAccess != null) openMainActivity();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (disposable != null) disposable.dispose();
     }
 
     private void login() {
@@ -132,8 +115,8 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(UserAccess userAccess) {
                         // save user logged
-                        appPref.addUserAccessOcariot(userAccess).subscribe();
-                        openMainActivity();
+                        if (appPref.addUserAccessOcariot(userAccess))
+                            openMainActivity();
                     }
 
                     @Override

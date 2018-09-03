@@ -8,11 +8,18 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.SwitchPreference;
+import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.widget.Toast;
+
+import net.openid.appauth.AuthState;
+import net.openid.appauth.AuthorizationException;
+import net.openid.appauth.AuthorizationResponse;
 
 import br.edu.uepb.nutes.ocariot.uaal_poc.R;
 import br.edu.uepb.nutes.ocariot.uaal_poc.data.repository.local.pref.AppPreferencesHelper;
 import br.edu.uepb.nutes.ocariot.uaal_poc.view.ui.activity.LoginActivity;
-import io.reactivex.CompletableObserver;
+import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
 
 /**
@@ -25,14 +32,26 @@ import io.reactivex.disposables.Disposable;
 public class SettingsFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener {
     public final String LOG_TAG = "SettingsFragment";
 
-    private SwitchPreference switchPrefFitBit;
-//    private AuthorizationResponse authFitBitResponse;
-//    private AuthorizationException authFitBitException;
+    private SwitchPreference switchPrefFitBit, switchPrefUaal;
+    private AuthorizationResponse authFitBitResponse;
+    private AuthorizationException authFitBitException;
 
     private LoginFitBit loginFitBit;
     private OnClickSettingsListener mListener;
 
     public SettingsFragment() {
+    }
+
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @return A new instance of fragment SettingsFragment.
+     */
+    // TODO: Rename and change types and number of parameters
+    public static SettingsFragment newInstance() {
+        SettingsFragment fragment = new SettingsFragment();
+        return fragment;
     }
 
     @Override
@@ -46,6 +65,11 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         Preference prefFitbit = findPreference(getString(R.string.key_fitibit));
         prefFitbit.setOnPreferenceClickListener(this);
         switchPrefFitBit = (SwitchPreference) prefFitbit;
+
+        // uAAL
+        Preference prefUaal = findPreference(getString(R.string.key_uaal));
+        prefUaal.setOnPreferenceClickListener(this);
+        switchPrefUaal = (SwitchPreference) prefUaal;
 
         // Sign Out
         Preference prefSignout = findPreference(getString(R.string.key_signout));
@@ -88,6 +112,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
             return true;
         }
 
+        mListener.onPrefClick(preference);
         return false;
     }
 
@@ -100,24 +125,24 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
      * it means that some authorization problem has occurred
      */
     private void checkAuthFitBit() {
-//        authFitBitResponse = AuthorizationResponse.fromIntent(getActivity().getIntent());
-//        authFitBitException = AuthorizationException.fromIntent(getActivity().getIntent());
-//
-//        if (authFitBitException != null) {
-////            Log.w("SETTIGNS", "ex " + authFitBitException.toJsonString());
-//            switchPrefFitBit.setChecked(false);
-//
-//            /**
-//             * It only displays message if there is an internal error or with the fitbit server.
-//             * For other types of cases, such as the user canceled the operation,
-//             * no messages will be displayed.
-//             */
-////            if (authFitBitException.type != AuthorizationException.TYPE_GENERAL_ERROR)
-////                Toast.makeText(getActivity(), R.string.error_oauth_fitbit, Toast.LENGTH_LONG).show();
-//        } else if (authFitBitResponse != null) {
-//            // Request access token in server FitBit OAuth.
-////            getToken(authFitBitResponse);
-//        }
+        authFitBitResponse = AuthorizationResponse.fromIntent(getActivity().getIntent());
+        authFitBitException = AuthorizationException.fromIntent(getActivity().getIntent());
+
+        if (authFitBitException != null) {
+            Log.w("SETTIGNS", "ex " + authFitBitException.toJsonString());
+            switchPrefFitBit.setChecked(false);
+
+            /**
+             * It only displays message if there is an internal error or with the fitbit server.
+             * For other types of cases, such as the user canceled the operation,
+             * no messages will be displayed.
+             */
+            if (authFitBitException.type != AuthorizationException.TYPE_GENERAL_ERROR)
+                Toast.makeText(getActivity(), R.string.error_oauth_fitbit, Toast.LENGTH_LONG).show();
+        } else if (authFitBitResponse != null) {
+            // Request access token in server FitBit OAuth.
+            getToken(authFitBitResponse);
+        }
     }
 
     /**
@@ -133,24 +158,10 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                                 new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        AppPreferencesHelper.getInstance(getActivity())
-                                                .removeAuthStateFitBit().subscribe
-                                                (new CompletableObserver() {
-                                                    @Override
-                                                    public void onSubscribe(Disposable d) {
-
-                                                    }
-
-                                                    @Override
-                                                    public void onComplete() {
-                                                        switchPrefFitBit.setChecked(false);
-                                                    }
-
-                                                    @Override
-                                                    public void onError(Throwable e) {
-
-                                                    }
-                                                });
+                                        if (AppPreferencesHelper.getInstance(getActivity())
+                                                .removeAuthStateFitBit()) {
+                                            switchPrefFitBit.setChecked(false);
+                                        }
                                     }
                                 }
                         ).setNegativeButton(android.R.string.no, null)
@@ -168,29 +179,16 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
             public void run() {
                 AlertDialog.Builder mDialog = new AlertDialog.Builder(getActivity());
                 mDialog.setMessage(R.string.dialog_confirm_sign_out)
-                        .setPositiveButton(android.R.string.yes,
-                                new DialogInterface.OnClickListener() {
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        AppPreferencesHelper.getInstance(getActivity())
-                                                .removeUserAccessOcariot()
-                                                .subscribe(new CompletableObserver() {
-                                                    @Override
-                                                    public void onSubscribe(Disposable d) {
-
-                                                    }
-
-                                                    @Override
-                                                    public void onComplete() {
-                                                        startActivity(new Intent(getActivity(), LoginActivity.class));
-                                                        getActivity().finish();
-                                                    }
-
-                                                    @Override
-                                                    public void onError(Throwable e) {
-
-                                                    }
-                                                });
+                                        if (AppPreferencesHelper.getInstance(getActivity())
+                                                .removeUserAccessOcariot()) {
+                                            startActivity(
+                                                    new Intent(getActivity(), LoginActivity.class)
+                                            );
+                                            getActivity().finish();
+                                        }
                                     }
                                 }
                         ).setNegativeButton(android.R.string.no, null)
@@ -199,33 +197,34 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         });
     }
 
-//    /**
-//     * Run process to get fitbit access token.
-//     *
-//     * @param authFitBitResponse {@link AuthorizationResponse}
-//     */
-//    private void getToken(AuthorizationResponse authFitBitResponse) {
-//        loginFitBit.doAuthorizationToken(authFitBitResponse)
-//                .subscribe(new SingleObserver<AuthState>() {
-//                    @Override
-//                    public void onSubscribe(Disposable d) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onSuccess(AuthState authState) {
-//                        Log.w("SETTIGNS", "TOKEN BEST " + authState.jsonSerializeString());
-//
-//                        switchPrefFitBit.setChecked(true);
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//                        switchPrefFitBit.setChecked(false);
-//                        Log.w("SETTIGNS", "error " + e.getMessage());
-//                    }
-//                });
-//    }
+    /**
+     * Run process to get fitbit access token.
+     *
+     * @param authFitBitResponse {@link AuthorizationResponse}
+     */
+    private void getToken(AuthorizationResponse authFitBitResponse) {
+
+        loginFitBit.doAuthorizationToken(authFitBitResponse)
+                .subscribe(new SingleObserver<AuthState>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(AuthState authState) {
+                        Log.w("SETTIGNS", "TOKEN BEST " + authState.jsonSerializeString());
+
+                        switchPrefFitBit.setChecked(true);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        switchPrefFitBit.setChecked(false);
+                        Log.w("SETTIGNS", "error " + e.getMessage());
+                    }
+                });
+    }
 
     public interface OnClickSettingsListener {
         void onPrefClick(Preference preference);

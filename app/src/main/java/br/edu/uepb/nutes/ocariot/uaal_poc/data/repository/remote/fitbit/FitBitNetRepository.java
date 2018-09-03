@@ -1,10 +1,16 @@
 package br.edu.uepb.nutes.ocariot.uaal_poc.data.repository.remote.fitbit;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
+
+import net.openid.appauth.AuthState;
+import net.openid.appauth.AuthorizationException;
+import net.openid.appauth.AuthorizationService;
 
 import java.io.IOException;
 
 import br.edu.uepb.nutes.ocariot.uaal_poc.data.model.ActivityList;
+import br.edu.uepb.nutes.ocariot.uaal_poc.data.repository.local.pref.AppPreferencesHelper;
 import br.edu.uepb.nutes.ocariot.uaal_poc.data.repository.remote.BaseNetRepository;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -16,9 +22,7 @@ import okhttp3.Response;
 public class FitBitNetRepository extends BaseNetRepository {
     private FitBitService fitBitService;
     private static FitBitNetRepository instance;
-//    private static AuthorizationService authService;
-
-//    private AuthState authState;
+    private static AuthorizationService authService;
 
     private FitBitNetRepository(Context context) {
         super(context, provideInterceptor(), FitBitService.BASE_URL_FITBIT);
@@ -28,8 +32,7 @@ public class FitBitNetRepository extends BaseNetRepository {
 
     public static synchronized FitBitNetRepository getInstance(Context context) {
         if (instance == null) instance = new FitBitNetRepository(context);
-//        if (authService == null) authService = new AuthorizationService(context);
-
+        if (authService == null) authService = new AuthorizationService(context);
         return instance;
     }
 
@@ -61,35 +64,27 @@ public class FitBitNetRepository extends BaseNetRepository {
                         .header("Content-type", "application/json")
                         .method(original.method(), original.body());
 
-//                AppPreferencesHelper.getInstance(BaseNetRepository.mContext).getAuthStateFitBit()
-//                        .subscribe(new SingleObserver<AuthState>() {
-//                            @Override
-//                            public void onSubscribe(Disposable d) {
-//
-//                            }
-//
-//                            @Override
-//                            public void onSuccess(final AuthState authState) {
-//                                authState.performActionWithFreshTokens(authService, new AuthState.AuthStateAction() {
-//                                    @Override
-//                                    public void execute(@Nullable String accessToken, @Nullable String idToken, @Nullable AuthorizationException ex) {
-//                                        if (accessToken == null) return;
-//                                        requestBuilder.header(
-//                                                "Authorization",
-//                                                authState.getLastTokenResponse()
-//                                                        .tokenType
-//                                                        .concat(" ")
-//                                                        .concat(accessToken)
-//                                        );
-//                                    }
-//                                });
-//                            }
-//
-//                            @Override
-//                            public void onError(Throwable e) {
-//                                Log.w("Interceptor error", e.getMessage());
-//                            }
-//                        });
+
+                final AuthState authState = AppPreferencesHelper.getInstance(BaseNetRepository.mContext)
+                        .getAuthStateFitBit();
+
+                if (authState != null) {
+                    authState.performActionWithFreshTokens(authService, new AuthState.AuthStateAction() {
+                        @Override
+                        public void execute(@Nullable String accessToken, @
+                                Nullable String idToken, @Nullable AuthorizationException ex) {
+                            if (accessToken == null) return;
+                            requestBuilder.header(
+                                    "Authorization",
+                                    authState.getLastTokenResponse()
+                                            .tokenType
+                                            .concat(" ")
+                                            .concat(accessToken)
+                            );
+                        }
+                    });
+                }
+
                 return chain.proceed(requestBuilder.build());
             }
         };

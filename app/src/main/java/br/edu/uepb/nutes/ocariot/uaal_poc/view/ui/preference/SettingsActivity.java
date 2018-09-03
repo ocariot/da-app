@@ -1,5 +1,6 @@
 package br.edu.uepb.nutes.ocariot.uaal_poc.view.ui.preference;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.support.v7.app.ActionBar;
@@ -15,9 +16,7 @@ import br.edu.uepb.nutes.ocariot.uaal_poc.R;
  * @copyright Copyright (c) 2018, NUTES/UEPB
  */
 public class SettingsActivity extends BaseSettingsActivity implements SettingsFragment.OnClickSettingsListener {
-    private static final int RESULT_OCARIOT_LOGOFF = 1;
-    private static final int RESULT_FITBIT_LOGIN = 2;
-    private static final int RESULT_FITBIT_REVOKE = 3;
+    public static int REQUEST_CODE_UAAL_STATUS = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,10 +24,7 @@ public class SettingsActivity extends BaseSettingsActivity implements SettingsFr
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) actionBar.setDisplayHomeAsUpEnabled(true);
 
-        getFragmentManager()
-                .beginTransaction()
-                .replace(android.R.id.content, new SettingsFragment())
-                .commit();
+        replaceFragment(SettingsFragment.newInstance());
     }
 
     @Override
@@ -43,6 +39,20 @@ public class SettingsActivity extends BaseSettingsActivity implements SettingsFr
 
     @Override
     public void onPrefClick(Preference preference) {
-        if (preference.getKey() == getString(R.string.key_fitibit)) finish();
+        if (preference.getKey() == getString(R.string.key_fitibit)) {
+            finish();
+        } else if (preference.getKey().equals(getString(R.string.key_uaal))) {
+            startActivityForResult(new Intent(this, UaalStatusActivity.class),
+                    REQUEST_CODE_UAAL_STATUS);
+        }
+    }
+
+    private void replaceFragment(SettingsFragment fragment) {
+        if (fragment != null) {
+            getFragmentManager()
+                    .beginTransaction()
+                    .replace(android.R.id.content, fragment)
+                    .commit();
+        }
     }
 }
