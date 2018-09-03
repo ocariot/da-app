@@ -17,10 +17,14 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import br.edu.uepb.nutes.ocariot.uaal_poc.R;
 import br.edu.uepb.nutes.ocariot.uaal_poc.data.model.Activity;
+import br.edu.uepb.nutes.ocariot.uaal_poc.data.model.ActivityLevel;
 import br.edu.uepb.nutes.ocariot.uaal_poc.data.model.ActivityList;
 import br.edu.uepb.nutes.ocariot.uaal_poc.data.model.UserAccess;
 import br.edu.uepb.nutes.ocariot.uaal_poc.data.repository.local.pref.AppPreferencesHelper;
@@ -245,7 +249,14 @@ public class PhysicalActivityListFragment extends Fragment {
         if (activities == null) return;
         Log.w(LOG_TAG, "sendUniverssAAl() " + Arrays.toString(activities.toArray()));
 
-        for (Activity activity : activities)
+        for (Activity activity : activities) {
+            ActivityLevel activityLevelMax = Collections.max(activity.getActivityLevel());
+            activity.setMaxIntensity(activityLevelMax.getName());
+            activity.setMaxIntensityDuration(activityLevelMax.getMinutes());
+            activity.setEndTime(DateUtils.addMinutesToString(activity.getStartTime(),
+                    (int) activity.getDuration()));
+
             UaalAPI.publishPhysicalActivity(getContext(), activity);
+        }
     }
 }

@@ -60,6 +60,12 @@ public class Activity implements Parcelable {
     @SerializedName(value = "log_id", alternate = {"logId"})
     private String logId;
 
+    @SerializedName(value = "max_intensity")
+    private String maxIntensity;
+
+    @SerializedName(value = "max_intensity_duration")
+    private int maxIntensityDuration;
+
     public Activity() {
     }
 
@@ -234,6 +240,22 @@ public class Activity implements Parcelable {
         this.logId = logId;
     }
 
+    public String getMaxIntensity() {
+        return maxIntensity;
+    }
+
+    public void setMaxIntensity(String maxIntensity) {
+        this.maxIntensity = maxIntensity;
+    }
+
+    public int getMaxIntensityDuration() {
+        return maxIntensityDuration;
+    }
+
+    public void setMaxIntensityDuration(int maxIntensityDuration) {
+        this.maxIntensityDuration = maxIntensityDuration;
+    }
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
@@ -275,6 +297,8 @@ public class Activity implements Parcelable {
                 ", activityLevel=" + activityLevel +
                 ", elevationGain=" + elevationGain +
                 ", logId='" + logId + '\'' +
+                ", maxIntensity='" + maxIntensity + '\'' +
+                ", maxIntensityDuration=" + maxIntensityDuration +
                 '}';
     }
 }

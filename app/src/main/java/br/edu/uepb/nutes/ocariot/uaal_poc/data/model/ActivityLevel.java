@@ -2,6 +2,7 @@ package br.edu.uepb.nutes.ocariot.uaal_poc.data.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 /**
  * Represents ActivityLevel object.
@@ -10,7 +11,7 @@ import android.os.Parcelable;
  * @version 1.0
  * @copyright Copyright (c) 2018, NUTES/UEPB
  */
-public class ActivityLevel implements Parcelable {
+public class ActivityLevel implements Parcelable, Comparable<ActivityLevel> {
     public static String SEDENTARY_LEVEL = "sedentary";
     public static String LIGHTLY_LEVEL = "lightly";
     public static String FAIRLY_LEVEL = "fairly";
@@ -77,5 +78,12 @@ public class ActivityLevel implements Parcelable {
                 "minutes=" + minutes +
                 ", name='" + name + '\'' +
                 '}';
+    }
+
+    @Override
+    public int compareTo(@NonNull ActivityLevel o) {
+        if (this.minutes < o.minutes) return -1;
+        if (this.minutes > o.minutes) return 1;
+        return 0;
     }
 }

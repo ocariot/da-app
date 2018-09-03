@@ -17,7 +17,6 @@ import org.universAAL.android.utils.RESTManager;
 import org.universAAL.android.utils.UaalConfig;
 
 import br.edu.uepb.nutes.ocariot.uaal_poc.data.model.Activity;
-import br.edu.uepb.nutes.ocariot.uaal_poc.data.model.ActivityLevel;
 import br.edu.uepb.nutes.ocariot.uaal_poc.data.repository.local.pref.AppPreferencesHelper;
 
 /**
@@ -149,37 +148,14 @@ public class UaalAPI {
         Intent physicalActivityBroadcast = new Intent("br.edu.uepb.nutes.ocariot.uaal_poc.ACTION_PHYSICAL_ACTIVITY_EVENT");
         physicalActivityBroadcast.addCategory(Intent.CATEGORY_DEFAULT);
 
-        physicalActivityBroadcast.putExtra("user_id", activity.getUserId());
         physicalActivityBroadcast.putExtra("name", activity.getName());
         physicalActivityBroadcast.putExtra("start_time", activity.getStartTime());
         physicalActivityBroadcast.putExtra("end_time", activity.getEndTime());
         physicalActivityBroadcast.putExtra("duration", activity.getDuration());
-        physicalActivityBroadcast.putExtra("calories", 666);
-        physicalActivityBroadcast.putExtra("steps", String.valueOf(activity.getSteps()));
-        physicalActivityBroadcast.putExtra("max_intensity", ActivityLevel.VERY_LEVEL);
-        physicalActivityBroadcast.putExtra("max_intensity_duration", String.valueOf((1561)));
-
-//        if (activity.getActivityLevel() != null) {
-//            for (ActivityLevel activityLevel : activity.getActivityLevel()) {
-//                if (activityLevel.getName().toLowerCase()
-//                        .equals(ActivityLevel.SEDENTARY_LEVEL)) {
-//                    physicalActivityBroadcast.putExtra("intensity_sedentary_duration",
-//                            activityLevel.getMinutes());
-//                } else if (activityLevel.getName().toLowerCase()
-//                        .equals(ActivityLevel.FAIRLY_LEVEL)) {
-//                    physicalActivityBroadcast.putExtra("intensity_fairly_duration",
-//                            activityLevel.getMinutes());
-//                } else if (activityLevel.getName().toLowerCase()
-//                        .equals(ActivityLevel.LIGHTLY_LEVEL)) {
-//                    physicalActivityBroadcast.putExtra("intensity_lightly_duration",
-//                            activityLevel.getMinutes());
-//                } else if (activityLevel.getName().toLowerCase()
-//                        .equals(ActivityLevel.VERY_LEVEL)) {
-//                    physicalActivityBroadcast.putExtra("intensity_very_duration",
-//                            activityLevel.getMinutes());
-//                }
-//            }
-//        }
+        physicalActivityBroadcast.putExtra("calories", activity.getCalories());
+        physicalActivityBroadcast.putExtra("steps", activity.getSteps());
+        physicalActivityBroadcast.putExtra("max_intensity", activity.getMaxIntensity());
+        physicalActivityBroadcast.putExtra("max_intensity_duration", activity.getMaxIntensityDuration());
 
         context.sendBroadcast(physicalActivityBroadcast);
     }
