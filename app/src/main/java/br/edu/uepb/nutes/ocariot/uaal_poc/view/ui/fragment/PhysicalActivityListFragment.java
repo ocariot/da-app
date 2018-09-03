@@ -247,7 +247,9 @@ public class PhysicalActivityListFragment extends Fragment {
      */
     private void sendUniverssAAl(List<Activity> activities) {
         if (activities == null) return;
-        Log.w(LOG_TAG, "sendUniverssAAl() " + Arrays.toString(activities.toArray()));
+        Log.w(LOG_TAG, "sendUniverssAAl() " + Arrays.toString(activities.toArray())
+                + " TOTAL: " + activities.size());
+        Log.w(LOG_TAG, "sendUniverssAAl() TOTAL: " + activities.size());
 
         for (Activity activity : activities) {
             ActivityLevel activityLevelMax = Collections.max(activity.getActivityLevel());
