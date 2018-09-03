@@ -38,9 +38,9 @@ import android.util.Log;
 /**
  * Helper class that provides static methods for variable substitution in the
  * metadata.
- * 
+ *
  * @author alfiva
- * 
+ *
  */
 public class VariableSubstitution {
 	private static final String TAG="VariableSubstitution";
@@ -48,7 +48,7 @@ public class VariableSubstitution {
 	/**
 	 * Puts any type of object as an intent extra with a given ID in the given
 	 * intent, taking care of any possible variable substitution.
-	 * 
+	 *
 	 * @param intent
 	 *            The intent where to put the extra.
 	 * @param extrakey
@@ -141,7 +141,7 @@ public class VariableSubstitution {
 	/**
 	 * Removes variables delimiters from a serialized context event. Used in
 	 * CONTEXT PUBLISHER PROXY when registering.
-	 * 
+	 *
 	 * @param turtleEvent
 	 *            The serialized event.
 	 * @return The serialized event without variable delimiters.
@@ -150,12 +150,12 @@ public class VariableSubstitution {
 		String replaced=turtleEvent;
 		return replaced.replaceAll("&.*?;","");
 	}
-	
+
 	/**
 	 * Converts thanks to the metadata mappings the extras of an intent into
 	 * Output objects for a Service Response in uAAL. Used in SERVICE CALLEE
 	 * PROXY when when receiving intent.
-	 * 
+	 *
 	 * @param intent
 	 *            The intent containing the extras to transform.
 	 * @param response
@@ -218,11 +218,11 @@ public class VariableSubstitution {
 			Log.e(TAG,"Unexpected error placing values in outputs. Some or all outputs will not be added.", e);
 		}
 	}
-	
+
 	/**
 	 * Converts thanks to metadata mappings the uAAL Service Request Inputs to
 	 * intent extras. Used in SERVICE CALLEE PROXY when when receiving call.
-	 * 
+	 *
 	 * @param call
 	 *            The Service Call resulting from a Service Request, containing
 	 *            the Inputs.
@@ -240,12 +240,12 @@ public class VariableSubstitution {
 			Log.e(TAG,"Unexpected error putting extras from inputs. Some or all extras will be empty or not present.", e);
 		}
 	}
-	
+
 	/**
 	 * Converts thanks to the metadata mappings the Outputs of a Service
 	 * Response into intent extras. Used in SERVICE CALLER PROXY when when
 	 * receiving response.
-	 * 
+	 *
 	 * @param response
 	 *            The Service Response containing the Outputs.
 	 * @param intent
@@ -271,12 +271,12 @@ public class VariableSubstitution {
 			Log.e(TAG,"Unexpected error putting extras from outputs. Some or all extras will be empty or not present.", e);
 		}
 	}
-	 
+
 	/**
 	 * Converts thanks to the metadata mappings the intent extras into Inputs
 	 * for a Service Request. Used in SERVICE CALLER PROXY when when receiving
 	 * intent.
-	 * 
+	 *
 	 * @param intent
 	 *            The intent where the extras are.
 	 * @param turtleRequest
@@ -313,12 +313,12 @@ public class VariableSubstitution {
 		return replaced;
 		//TODO its the same as putIntentExtrasAsEventValues?
 	}
-	
+
 	/**
 	 * Converts thanks to the metadata mappings the intent extras into actual
 	 * values for a context event. Used in CONTEXT PUBLISHER PROXY when
 	 * receiving intent
-	 * 
+	 *
 	 * @param intent
 	 *            The intent where the extras are.
 	 * @param turtleEvent
@@ -339,11 +339,11 @@ public class VariableSubstitution {
 		}
 		return replaced;
 	}
-	
+
 	/**
 	 * Converts thanks to the metadata mappings the event values into intent
 	 * extras. Used in CONTEXT SUBSCRIBER PROXY when receiving event.
-	 * 
+	 *
 	 * @param event
 	 *            The Context Event where the values are.
 	 * @param intent

@@ -13,7 +13,7 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 public interface OcariotService {
-    String BASE_URL_OCARIOT = "http://ec2-34-227-109-115.compute-1.amazonaws.com/api/v1/";
+    String BASE_URL_OCARIOT = "http://192.168.0.117:8080/";
 
     // User
     @POST("users/")

@@ -8,10 +8,6 @@
                 <action>br.edu.uepb.nutes.ocariot.uaal_poc.ACTION_PHYSICAL_ACTIVITY_EVENT</action>
                 <category>android.intent.category.DEFAULT</category>
                 <input>
-                    <key>userId</key>
-                    <value>user_id,</value>
-                </input>
-                <input>
                     <key>name</key>
                     <value>name</value>
                 </input>
@@ -69,33 +65,27 @@ ns4:calory a ns3:Unit ;
   ns3:name "calories"^^xsd:string .
 
 :Intensity a :Intensity ;
-  :name "very"^^xsd:string ;
-  :duration "960000"^^xsd:long .
+  :name "&maxIntensity;undefined&maxIntensity;"^^xsd:string ;
+  :duration "&maxIntensityDuration;0.0&maxIntensityDuration;"^^xsd:long .
 
 ns4:meter a ns3:Unit ;
   ns3:symbol "m"^^xsd:string ;
   ns3:dimension ns3:internationalSystemOfUnits ;
   ns3:name "meter"^^xsd:string .
 
-ns2:CityQuarter a ns2:CityQuarter ,
-    ns2:OutdoorPlace ,
-    ns2:Place ,
-    ns2:Location .
-
 :ActivityTrackingProfile a :ActivityTrackingProfile ;
   :hasActivities :WalkActivity .
 
-:WalkActivity :duration "&duration;"^^xsd:long ;
-  :name "&name;"^^xsd:string ;
-  :start "&startTime;"^^xsd:dateTime ;
-  :stop "&endTime;"^^xsd:dateTime ;
-  :steps "&steps;"^^xsd:int ;
-  :location ns2:CityQuarter ;
+:WalkActivity :duration "&duration;0&duration;"^^xsd:long ;
+  :name "&name;undefined&name;"^^xsd:string ;
+  :start "&startTime;2018-09-03 11:39:21.975&startTime;"^^xsd:string ;
+  :stop "&endTime;2018-09-03 11:39:21.975&endTime;"^^xsd:string ;
+  :steps "&steps;0&steps;"^^xsd:int ;
   :energyConsumption [
     a :EnergyConsumption ,
       ns1:Measurement ;
     ns1:hasUnit ns4:calory ;
-    ns1:value "&calories;"^^xsd:int
+    ns1:value "&calories;0&calories;"^^xsd:int
   ] ;
   a :WalkActivity ,
     :PhysicalExerciseActivity ,
@@ -106,12 +96,12 @@ ns2:CityQuarter a ns2:CityQuarter ,
     a :DistanceValue ,
       ns1:Measurement ;
     ns1:hasUnit ns4:meter ;
-    ns1:value "25.8"^^xsd:double
+    ns1:value "0.0"^^xsd:double
   ] ;
   :hasIntensities :Intensity .
 
 <urn:br.edu.uepb.nutes.ocariot.uaal_poc:physicalActivityProvider> a ns:ContextProvider ;
-  ns:hasType :gauge ;
+  ns:hasType ns:gauge ;
   ns:myClassesOfEvents [
     a ns:ContextEventPattern ;
     <http://www.w3.org/2000/01/rdf-schema#subClassOf> [

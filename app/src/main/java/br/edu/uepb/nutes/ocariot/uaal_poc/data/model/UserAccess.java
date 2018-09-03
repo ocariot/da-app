@@ -18,20 +18,20 @@ import java.util.List;
  * @copyright Copyright (c) 2018, NUTES/UEPB
  */
 public class UserAccess implements Serializable {
-    public static final String KEY_SCOPES = "scopes";
+    public static final String KEY_SCOPES = "scope";
 
     private String subject;
     private String accessToken;
     private String refreshToken;
     private String tokenType;
     private long expirationDate; // in milliseconds
-    private List<String> scopes;
+    private String scopes;
 
     public UserAccess() {
     }
 
     public UserAccess(String subject, String accessToken, String refreshToken,
-                      String tokenType, long expirationDate, List<String> scopes, int mode) {
+                      String tokenType, long expirationDate, String scopes, int mode) {
         this.subject = subject;
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
@@ -41,14 +41,14 @@ public class UserAccess implements Serializable {
     }
 
     public UserAccess(String subject, String accessToken, long expirationDate,
-                      List<String> scopes, int mode) {
+                      String scopes, int mode) {
         this.subject = subject;
         this.accessToken = accessToken;
         this.expirationDate = expirationDate;
         this.scopes = scopes;
     }
 
-    public UserAccess(String subject, String accessToken, long expirationDate, List<String> scopes) {
+    public UserAccess(String subject, String accessToken, long expirationDate, String scopes) {
         this.subject = subject;
         this.accessToken = accessToken;
         this.expirationDate = expirationDate;
@@ -95,17 +95,12 @@ public class UserAccess implements Serializable {
         this.expirationDate = expirationDate;
     }
 
-    public List<String> getScopes() {
+    public String getScopes() {
         return scopes;
     }
 
-    public void setScopes(List<String> scopes) {
+    public void setScopes(String scopes) {
         this.scopes = scopes;
-    }
-
-    public void addScope(String scope) {
-        if (this.scopes == null) this.scopes = new ArrayList<>();
-        this.scopes.add(scope);
     }
 
     public boolean isExpired() {
@@ -140,7 +135,8 @@ public class UserAccess implements Serializable {
      * @return UserAccess
      */
     public static UserAccess jsonDeserialize(String json) {
-        Type typeUserAccess = new TypeToken<UserAccess>() {}.getType();
+        Type typeUserAccess = new TypeToken<UserAccess>() {
+        }.getType();
         return new Gson().fromJson(json, typeUserAccess);
     }
 
@@ -153,7 +149,7 @@ public class UserAccess implements Serializable {
                 ", refreshToken='" + refreshToken + '\'' +
                 ", tokenType='" + tokenType + '\'' +
                 ", expirationDate=" + expirationDate +
-                ", scopes=" + (scopes != null ? Arrays.toString(scopes.toArray()) : "") +
+                ", scopes=" + scopes +
                 '}';
     }
 }

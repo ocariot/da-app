@@ -57,7 +57,6 @@ public class MainActivity extends AppCompatActivity implements OnClickActivityLi
             UaalAPI.initUaal(this);
         } else requestStoragePermissions();
 
-
         initComponents();
     }
 
@@ -98,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements OnClickActivityLi
                 Activity a = new Activity();
                 a.setName("Run");
                 a.setCalories(1548);
+                a.setSteps(8541495);
                 List<ActivityLevel> activityLevels = new ArrayList<>();
                 activityLevels.add(new ActivityLevel(ActivityLevel.VERY_LEVEL, 4));
                 activityLevels.add(new ActivityLevel(ActivityLevel.FAIRLY_LEVEL, 2));
@@ -107,16 +107,11 @@ public class MainActivity extends AppCompatActivity implements OnClickActivityLi
                 a.setActivityLevel(activityLevels);
                 a.setDuration(1256);
                 a.setHeartRate(1); // TODO REMOVER
-                a.setStartTime(DateUtils.getCurrentDateISO8601(null));
+                a.setStartTime(DateUtils.getCurrentDateISO8601(null) );
                 a.setEndTime(DateUtils.getCurrentDateISO8601(null));
-                User user = new User();
-                user.set_id("488YU984984ELKGU218A894849CD");
-                user.setName("João da Silva");
-                user.setUserName("joao");
-                a.setUser(user);
+                a.setUserId("488YU984984ELKGU218A894849CD");
 
                 UaalAPI.publishPhysicalActivity(this, a);
-//                UaalAPI.publishHeartRate(getApplication(), 15);
             }
             break;
             default:

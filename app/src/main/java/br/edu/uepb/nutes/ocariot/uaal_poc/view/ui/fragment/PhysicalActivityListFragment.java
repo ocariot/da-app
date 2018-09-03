@@ -27,13 +27,12 @@ import br.edu.uepb.nutes.ocariot.uaal_poc.data.repository.local.pref.AppPreferen
 import br.edu.uepb.nutes.ocariot.uaal_poc.data.repository.remote.fitbit.FitBitNetRepository;
 import br.edu.uepb.nutes.ocariot.uaal_poc.data.repository.remote.ocariot.OcariotNetRepository;
 import br.edu.uepb.nutes.ocariot.uaal_poc.utils.DateUtils;
+import br.edu.uepb.nutes.ocariot.uaal_poc.utils.UaalAPI;
 import br.edu.uepb.nutes.ocariot.uaal_poc.view.adapter.PhysicalActivityListAdapter;
 import br.edu.uepb.nutes.ocariot.uaal_poc.view.adapter.base.OnRecyclerViewListener;
 import br.edu.uepb.nutes.ocariot.uaal_poc.view.ui.activity.MainActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.SingleObserver;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
 
 /**
@@ -186,11 +185,13 @@ public class PhysicalActivityListFragment extends Fragment {
                 .subscribe(new DisposableObserver<ActivityList>() {
                     @Override
                     public void onNext(ActivityList activityList) {
-                        sendUniverssAAl(activityList);
+                        sendUniverssAAl(activityList.getActivities());
                     }
 
                     @Override
                     public void onError(Throwable e) {
+                        Log.w(LOG_TAG, "FITIBIT - onError: " + e.getMessage());
+                        loadDataOcariot();
                     }
 
                     @Override
@@ -206,7 +207,6 @@ public class PhysicalActivityListFragment extends Fragment {
      * Otherwise it displays from the remote server.
      */
     private void loadDataOcariot() {
-        Log.w(LOG_TAG, "loadDataOcariot()");
         if (userAccess == null) return;
 
         mAdapter.clearItems();
@@ -220,7 +220,6 @@ public class PhysicalActivityListFragment extends Fragment {
                         if (activities != null)
                             mAdapter.addItems(activities);
 
-                        Log.w(LOG_TAG, "DATA OCARIoT: " + Arrays.toString(activities.toArray()));
                         mDataSwipeRefresh.setRefreshing(false);
                     }
 
@@ -237,8 +236,16 @@ public class PhysicalActivityListFragment extends Fragment {
                 });
     }
 
-    private void sendUniverssAAl(ActivityList activityList) {
-        Log.w(LOG_TAG, "sendUniverssAAl() " + Arrays.toString(activityList.getActivities().toArray()));
-    }
+    /**
+     * Publish Activity in UniversAAL.
+     *
+     * @param activities {@link List<Activity>}
+     */
+    private void sendUniverssAAl(List<Activity> activities) {
+        if (activities == null) return;
+        Log.w(LOG_TAG, "sendUniverssAAl() " + Arrays.toString(activities.toArray()));
 
+        for (Activity activity : activities)
+            UaalAPI.publishPhysicalActivity(getContext(), activity);
+    }
 }

@@ -60,8 +60,6 @@ public class Activity implements Parcelable {
     @SerializedName(value = "log_id", alternate = {"logId"})
     private String logId;
 
-    private User user;
-
     public Activity() {
     }
 
@@ -85,7 +83,6 @@ public class Activity implements Parcelable {
         this.activityLevel = activityLevel;
         this.elevationGain = elevationGain;
         this.logId = logId;
-        this.user = user;
     }
 
     protected Activity(Parcel in) {
@@ -235,14 +232,6 @@ public class Activity implements Parcelable {
 
     public void setLogId(String logId) {
         this.logId = logId;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     @Override

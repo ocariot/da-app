@@ -16,10 +16,9 @@ import org.universAAL.android.utils.RAPIManager;
 import org.universAAL.android.utils.RESTManager;
 import org.universAAL.android.utils.UaalConfig;
 
-import java.util.Date;
-
 import br.edu.uepb.nutes.ocariot.uaal_poc.data.model.Activity;
 import br.edu.uepb.nutes.ocariot.uaal_poc.data.model.ActivityLevel;
+import br.edu.uepb.nutes.ocariot.uaal_poc.data.repository.local.pref.AppPreferencesHelper;
 
 /**
  * Created by Nutes on 30/01/2018.
@@ -33,18 +32,14 @@ public class UaalAPI {
         stopUallService(context);
         UaalConfig.load(context); //Sync Preferences in UaalConfig util
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        UaalConfig.setmUAALUser(context, "Ocariot-user");
+        UaalConfig.setmUAALUser(context, AppPreferencesHelper.getInstance(context)
+                .getUserAccessOcariot().getSubject());
         UaalConfig.setmSettingRemoteType(context, AppConstants.REMOTE_TYPE_RESTAPI);
         UaalConfig.setmServerURL(context, "http://192.168.0.110:9000/ocariot_iot/uaal");
         UaalConfig.setmServerUSR(context, "admin");
         UaalConfig.setmServerPWD(context, "admin");
         UaalConfig.setmServerGCM(context, "102946860057");
-//        if(sharedPreferences.getBoolean(AppConstants.FIRST, true)){
-//            // first time we run the app (or app data has been cleared)
-//            sharedPreferences.edit().putBoolean(AppConstants.FIRST, false).commit();
-//            /* Initial Configuration */
-//            UaalConfig.createFiles(context);
-//        }
+
         /*Activate REST API*/
         activateRestAPI(context);
         Log.i(TAG, "UAAL service initialized with config:\n" + UaalConfig.printUaalConfig());
@@ -154,16 +149,15 @@ public class UaalAPI {
         Intent physicalActivityBroadcast = new Intent("br.edu.uepb.nutes.ocariot.uaal_poc.ACTION_PHYSICAL_ACTIVITY_EVENT");
         physicalActivityBroadcast.addCategory(Intent.CATEGORY_DEFAULT);
 
-        physicalActivityBroadcast.putExtra("user_id", activity.getUser().get_id());
+        physicalActivityBroadcast.putExtra("user_id", activity.getUserId());
         physicalActivityBroadcast.putExtra("name", activity.getName());
-        physicalActivityBroadcast.putExtra("start_time", DateUtils.fromISO8601(activity.getStartTime()));
-        physicalActivityBroadcast.putExtra("end_time", DateUtils.fromISO8601(activity.getEndTime()));
+        physicalActivityBroadcast.putExtra("start_time", activity.getStartTime());
+        physicalActivityBroadcast.putExtra("end_time", activity.getEndTime());
         physicalActivityBroadcast.putExtra("duration", activity.getDuration());
-        physicalActivityBroadcast.putExtra("distance", activity.getDistance());
-        physicalActivityBroadcast.putExtra("calories", "1235"); // TODO no rdf string?
-        physicalActivityBroadcast.putExtra("steps", activity.getSteps());
+        physicalActivityBroadcast.putExtra("calories", 666);
+        physicalActivityBroadcast.putExtra("steps", String.valueOf(activity.getSteps()));
         physicalActivityBroadcast.putExtra("max_intensity", ActivityLevel.VERY_LEVEL);
-        physicalActivityBroadcast.putExtra("max_intensity_duration", 1561L);
+        physicalActivityBroadcast.putExtra("max_intensity_duration", String.valueOf((1561)));
 
 //        if (activity.getActivityLevel() != null) {
 //            for (ActivityLevel activityLevel : activity.getActivityLevel()) {
