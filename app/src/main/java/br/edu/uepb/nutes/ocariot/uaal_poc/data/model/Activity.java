@@ -104,8 +104,11 @@ public class Activity implements Parcelable {
         location = in.readString();
         calories = in.readInt();
         steps = in.readInt();
+        activityLevel = in.createTypedArrayList(ActivityLevel.CREATOR);
         elevationGain = in.readDouble();
         logId = in.readString();
+        maxIntensity = in.readString();
+        maxIntensityDuration = in.readInt();
     }
 
     public static final Creator<Activity> CREATOR = new Creator<Activity>() {
@@ -257,26 +260,29 @@ public class Activity implements Parcelable {
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
-        dest.writeLong(duration);
-        dest.writeString(startTime);
-        dest.writeString(endTime);
-        dest.writeString(intensityLevel);
-        dest.writeDouble(distance);
-        dest.writeString(userId);
-        dest.writeInt(heartRate);
-        dest.writeString(name);
-        dest.writeString(location);
-        dest.writeInt(calories);
-        dest.writeInt(steps);
-        dest.writeDouble(elevationGain);
-        dest.writeString(logId);
+    public int describeContents() {
+        return 0;
     }
 
     @Override
-    public int describeContents() {
-        return 0;
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(id);
+        parcel.writeLong(duration);
+        parcel.writeString(startTime);
+        parcel.writeString(endTime);
+        parcel.writeString(intensityLevel);
+        parcel.writeDouble(distance);
+        parcel.writeString(userId);
+        parcel.writeInt(heartRate);
+        parcel.writeString(name);
+        parcel.writeString(location);
+        parcel.writeInt(calories);
+        parcel.writeInt(steps);
+        parcel.writeTypedList(activityLevel);
+        parcel.writeDouble(elevationGain);
+        parcel.writeString(logId);
+        parcel.writeString(maxIntensity);
+        parcel.writeInt(maxIntensityDuration);
     }
 
     @Override

@@ -13,6 +13,30 @@
         android:layout_height="wrap_content" />
 
     <LinearLayout
+        android:id="@+id/box_message_error"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/activity_padding"
+        android:layout_marginRight="@dimen/activity_padding"
+        android:layout_marginTop="@dimen/activity_padding"
+        android:background="@color/colorDangerLight"
+        android:clickable="true"
+        android:gravity="center"
+        android:padding="16dp"
+        android:visibility="visible">
+
+        <TextView
+            android:id="@+id/description_message_error_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/close_message_error_img_bt"
+            android:gravity="center"
+            android:text="@string/error_oauth_fitbit_permission" />
+
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_horizontal"

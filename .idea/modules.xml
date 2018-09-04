@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/ActivityTrackingPoC.iml" filepath="$PROJECT_DIR$/ActivityTrackingPoC.iml" />
       <module fileurl="file://$PROJECT_DIR$/activity-tracking-poc.iml" filepath="$PROJECT_DIR$/activity-tracking-poc.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/mwcontainerandroid/mwcontainerandroid.iml" filepath="$PROJECT_DIR$/mwcontainerandroid/mwcontainerandroid.iml" />

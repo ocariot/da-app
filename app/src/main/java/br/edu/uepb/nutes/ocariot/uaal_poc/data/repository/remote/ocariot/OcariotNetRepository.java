@@ -12,9 +12,11 @@ import br.edu.uepb.nutes.ocariot.uaal_poc.data.model.User;
 import br.edu.uepb.nutes.ocariot.uaal_poc.data.model.UserAccess;
 import br.edu.uepb.nutes.ocariot.uaal_poc.data.repository.local.pref.AppPreferencesHelper;
 import br.edu.uepb.nutes.ocariot.uaal_poc.data.repository.remote.BaseNetRepository;
+import br.edu.uepb.nutes.ocariot.uaal_poc.exception.LocalPreferenceException;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.Interceptor;
@@ -46,11 +48,11 @@ public class OcariotNetRepository extends BaseNetRepository {
         return new Interceptor() {
             @Override
             public Response intercept(Chain chain) throws IOException {
-                Request original = chain.request();
-                final Request.Builder requestBuilder = original.newBuilder()
+                Request request = chain.request();
+                final Request.Builder requestBuilder = request.newBuilder()
                         .header("Accept", "application/json")
                         .header("Content-type", "application/json")
-                        .method(original.method(), original.body());
+                        .method(request.method(), request.body());
 
                 UserAccess userAccess = AppPreferencesHelper
                         .getInstance(BaseNetRepository.mContext)
@@ -91,6 +93,7 @@ public class OcariotNetRepository extends BaseNetRepository {
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
+
     }
 
     public Single<User> getById(String userId) {

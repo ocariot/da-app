@@ -13,15 +13,18 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import br.edu.uepb.nutes.ocariot.uaal_poc.R;
 import br.edu.uepb.nutes.ocariot.uaal_poc.data.model.Activity;
 import br.edu.uepb.nutes.ocariot.uaal_poc.data.model.ActivityLevel;
-import br.edu.uepb.nutes.ocariot.uaal_poc.data.model.User;
 import br.edu.uepb.nutes.ocariot.uaal_poc.utils.DateUtils;
 import br.edu.uepb.nutes.ocariot.uaal_poc.utils.UaalAPI;
 import br.edu.uepb.nutes.ocariot.uaal_poc.view.ui.fragment.OnClickActivityListener;
@@ -30,6 +33,7 @@ import br.edu.uepb.nutes.ocariot.uaal_poc.view.ui.fragment.PhysicalActivityListF
 import br.edu.uepb.nutes.ocariot.uaal_poc.view.ui.preference.SettingsActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * MainActivity implementation.
@@ -44,6 +48,14 @@ public class MainActivity extends AppCompatActivity implements OnClickActivityLi
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
+
+    @BindView(R.id.box_message_error)
+    LinearLayout mBoxMessageAlert;
+
+    @BindView(R.id.description_message_error_tv)
+    TextView descriptionMessageAlert;
+
+    private Animation mAnimation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements OnClickActivityLi
                 a.setActivityLevel(activityLevels);
                 a.setDuration(1256);
                 a.setHeartRate(1); // TODO REMOVER
-                a.setStartTime(DateUtils.getCurrentDateISO8601(null) );
+                a.setStartTime(DateUtils.getCurrentDateISO8601(null));
                 a.setEndTime(DateUtils.getCurrentDateISO8601(null));
                 a.setUserId("488YU984984ELKGU218A894849CD");
 
@@ -150,20 +162,6 @@ public class MainActivity extends AppCompatActivity implements OnClickActivityLi
         replaceFragment(physicalActivityDetail);
     }
 
-    private void showMessageError(String message) {
-        message = message != null ? message : getString(R.string.error_oauth_fitbit_permission);
-//        Alerter.create(MainActivity.this)
-//                .setText(message)
-//                .setDuration(10000)
-//                .setBackgroundColorRes(R.color.colorWarning)
-//                .setIcon(R.drawable.ic_warning_dark)
-//                .setOnClickListener(v -> {
-//                    startActivity(new Intent(this, SettingsActivity.class));
-//                    Alerter.hide();
-//                })
-//                .show();
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -179,6 +177,10 @@ public class MainActivity extends AppCompatActivity implements OnClickActivityLi
         }
     }
 
+    @OnClick(R.id.box_message_error)
+    public void messageAlertAction() {
+        Log.w(LOG_TAG, "messageAlertAction()");
+    }
 
     private boolean hasStoragePermissions() {
         PackageManager packageManager = getPackageManager();
@@ -193,6 +195,19 @@ public class MainActivity extends AppCompatActivity implements OnClickActivityLi
                 new String[]{
                         android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
                         android.Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_READ_WRITE_PERMISSION);
+    }
+
+    private void showMessageAlert(boolean isVisible) {
+        if (isVisible) {
+            mAnimation = AnimationUtils.loadAnimation(this, android.R.anim.fade_in);
+            mBoxMessageAlert.startAnimation(mAnimation);
+            mBoxMessageAlert.setVisibility(View.VISIBLE);
+            return;
+        }
+
+        mAnimation = AnimationUtils.loadAnimation(this, android.R.anim.fade_out);
+        mBoxMessageAlert.startAnimation(mAnimation);
+        mBoxMessageAlert.setVisibility(View.GONE);
     }
 
 }

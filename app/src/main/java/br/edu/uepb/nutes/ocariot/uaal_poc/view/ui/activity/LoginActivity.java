@@ -3,6 +3,7 @@ package br.edu.uepb.nutes.ocariot.uaal_poc.view.ui.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
@@ -60,8 +61,6 @@ public class LoginActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         userRepository = OcariotNetRepository.getInstance(this);
         appPref = AppPreferencesHelper.getInstance(this);
-
-        mAnimation = AnimationUtils.loadAnimation(this, android.R.anim.fade_out);
 
         mSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,12 +120,11 @@ public class LoginActivity extends AppCompatActivity {
 
                     @Override
                     public void onError(Throwable e) {
-                        showMessageErrorAuth(true);
+                        Log.w(LOG_TAG, e.toString());
+                        showMessageInvalidAuth(true);
                         showProgress(false);
                     }
                 });
-
-        showProgress(false);
     }
 
     /**
@@ -152,17 +150,24 @@ public class LoginActivity extends AppCompatActivity {
      * Shows/hide the progress bar.
      */
     private void showProgress(final boolean show) {
-
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (show) showMessageErrorAuth(false);
+                if (show) showMessageInvalidAuth(false);
                 mProgressBar.setVisibility(show ? View.VISIBLE : View.GONE);
             }
         });
     }
 
-    private void showMessageErrorAuth(boolean isVisible) {
+    /**
+     * Displays or removes invalid login message:
+     * - True to display message;
+     * - False to remove message.
+     * Animation fadein and fadeout are applied.
+     *
+     * @param isVisible
+     */
+    private void showMessageInvalidAuth(boolean isVisible) {
         if (isVisible) {
             mAnimation = AnimationUtils.loadAnimation(this, android.R.anim.fade_in);
             mBoxMessageError.startAnimation(mAnimation);

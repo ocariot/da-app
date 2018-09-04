@@ -1,6 +1,7 @@
 package br.edu.uepb.nutes.ocariot.uaal_poc.data.model;
 
-import java.io.Serializable;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 /**
  * Represents User object.
@@ -9,14 +10,14 @@ import java.io.Serializable;
  * @version 2.0
  * @copyright Copyright (c) 2017, NUTES UEPB
  */
-public class User implements Serializable {
+public class User implements Parcelable {
     private String _id; // _id in server remote (UUID)
 
     private String name;
     private String userName;
     private String password;
     private int gender;
-    private long dateOfBirth;
+    private long dateBirth;
     private int height; // in cm
     private int groupId; // 1 super, 2 comum
 
@@ -29,16 +30,39 @@ public class User implements Serializable {
     }
 
     public User(String _id, String name, String userName, String email,
-                String password, int gender, long dateOfBirth, int height, int groupId) {
+                String password, int gender, long dateBirth, int height, int groupId) {
         this._id = _id;
         this.name = name;
         this.userName = userName;
         this.password = password;
         this.gender = gender;
-        this.dateOfBirth = dateOfBirth;
+        this.dateBirth = dateBirth;
         this.height = height;
         this.groupId = groupId;
     }
+
+    protected User(Parcel in) {
+        _id = in.readString();
+        name = in.readString();
+        userName = in.readString();
+        password = in.readString();
+        gender = in.readInt();
+        dateBirth = in.readLong();
+        height = in.readInt();
+        groupId = in.readInt();
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 
     public String get_id() {
         return _id;
@@ -80,12 +104,12 @@ public class User implements Serializable {
         this.gender = gender;
     }
 
-    public long getDateOfBirth() {
-        return dateOfBirth;
+    public long getdateBirth() {
+        return dateBirth;
     }
 
-    public void setDateOfBirth(long dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
+    public void setdateBirth(long dateBirth) {
+        this.dateBirth = dateBirth;
     }
 
     public int getHeight() {
@@ -102,6 +126,23 @@ public class User implements Serializable {
 
     public void setGroupId(int groupId) {
         this.groupId = groupId;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(_id);
+        parcel.writeString(name);
+        parcel.writeString(userName);
+        parcel.writeString(password);
+        parcel.writeInt(gender);
+        parcel.writeLong(dateBirth);
+        parcel.writeInt(height);
+        parcel.writeInt(groupId);
     }
 
     @Override
@@ -122,7 +163,7 @@ public class User implements Serializable {
                 ", userName='" + userName + '\'' +
                 ", password='" + password + '\'' +
                 ", gender=" + gender +
-                ", dateOfBirth=" + dateOfBirth +
+                ", dateBirth=" + dateBirth +
                 ", height=" + height +
                 ", groupId=" + groupId +
                 '}';

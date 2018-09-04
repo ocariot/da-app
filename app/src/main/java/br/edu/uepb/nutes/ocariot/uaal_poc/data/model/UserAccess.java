@@ -1,5 +1,8 @@
 package br.edu.uepb.nutes.ocariot.uaal_poc.data.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.auth0.android.jwt.JWT;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -17,7 +20,7 @@ import java.util.List;
  * @version 1.0
  * @copyright Copyright (c) 2018, NUTES/UEPB
  */
-public class UserAccess implements Serializable {
+public class UserAccess implements Parcelable {
     public static final String KEY_SCOPES = "scope";
 
     private String subject;
@@ -54,6 +57,27 @@ public class UserAccess implements Serializable {
         this.expirationDate = expirationDate;
         this.scopes = scopes;
     }
+
+    protected UserAccess(Parcel in) {
+        subject = in.readString();
+        accessToken = in.readString();
+        refreshToken = in.readString();
+        tokenType = in.readString();
+        expirationDate = in.readLong();
+        scopes = in.readString();
+    }
+
+    public static final Creator<UserAccess> CREATOR = new Creator<UserAccess>() {
+        @Override
+        public UserAccess createFromParcel(Parcel in) {
+            return new UserAccess(in);
+        }
+
+        @Override
+        public UserAccess[] newArray(int size) {
+            return new UserAccess[size];
+        }
+    };
 
     public String getSubject() {
         return subject;
@@ -140,6 +164,20 @@ public class UserAccess implements Serializable {
         return new Gson().fromJson(json, typeUserAccess);
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(subject);
+        parcel.writeString(accessToken);
+        parcel.writeString(refreshToken);
+        parcel.writeString(tokenType);
+        parcel.writeLong(expirationDate);
+        parcel.writeString(scopes);
+    }
 
     @Override
     public String toString() {
@@ -152,4 +190,5 @@ public class UserAccess implements Serializable {
                 ", scopes=" + scopes +
                 '}';
     }
+
 }
