@@ -46,7 +46,7 @@ public class FitBitNetRepository extends BaseNetRepository {
     /**
      */
     public void dispose() {
-//        if (authService != null) authService.dispose();
+        if (authService != null) authService.dispose();
     }
 
     /**
