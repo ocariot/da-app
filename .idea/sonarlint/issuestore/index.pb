@@ -1,0 +1,23 @@
+
+A
+gradle.properties,2\a\2afbb999f001938c88fa43fc2ef52abf0f8213e4
+@
+app/build.gradle,f\4\f4a01d6a4fcb971362ec00a83903fd3902f52164
+?
+settings.gradle,0\5\05efc8b1657769a27696d478ded1e95f38737233
+F
+app/proguard-rules.pro,9\e\9e08934d811afe28fbc77aaa3c0d747b94348db9
+O
+mwcontainerandroid/build.gradle,3\8\388cfce18a5eeebcc25b89abc2d3ca1f4dbfa29f
+ç
+]app/src/main/java/br/edu/uepb/nutes/ocariot/uaal_poc/view/ui/preference/SettingsActivity.java,5\6\564d78317af6f81c9dee45436b389bedb3aa0a5a
+ç
+]app/src/main/java/br/edu/uepb/nutes/ocariot/uaal_poc/view/ui/preference/SettingsFragment.java,c\f\cfac6fdca57d9914b0c487d96980d26d31004a97
+@
+local.properties,0\7\0712df971a99ac4d2fccb8e0fb19f377f3374cca
+X
+(gradle/wrapper/gradle-wrapper.properties,f\b\fbe448ebfc3eb2d4e308f6b8b043666f5b57235e
+T
+$app/src/main/res/xml/preferences.xml,d\5\d523c5f9a544775535a62275862e5be71ba0775f
+}
+Mapp/src/main/java/br/edu/uepb/nutes/ocariot/uaal_poc/data/model/Activity.java,0\6\061cdcf2db46e90f5367a296ad4bdbbb693146aa

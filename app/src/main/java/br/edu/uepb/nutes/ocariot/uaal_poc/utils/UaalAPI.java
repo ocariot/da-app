@@ -34,7 +34,7 @@ public class UaalAPI {
         UaalConfig.setmUAALUser(context, AppPreferencesHelper.getInstance(context)
                 .getUserAccessOcariot().getSubject());
         UaalConfig.setmSettingRemoteType(context, AppConstants.REMOTE_TYPE_RESTAPI);
-        UaalConfig.setmServerURL(context, "http://192.168.0.110:9000/ocariot_iot/uaal");
+        UaalConfig.setmServerURL(context, "http://192.168.0.117:9000/ocariot_iot/uaal");
         UaalConfig.setmServerUSR(context, "admin");
         UaalConfig.setmServerPWD(context, "admin");
         UaalConfig.setmServerGCM(context, "102946860057");

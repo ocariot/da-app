@@ -18,7 +18,7 @@
     <string name="steps">Steps</string>
     <string name="level">Level</string>
     <string name="level_min">Level in minutes</string>
-    <string name="level_sedentary">Sedendary: %d</string>
+    <string name="level_sedentary">Sedentary: %d</string>
     <string name="level_lightly">Lightly: %d</string>
     <string name="level_fairly">Fairly: %d</string>
     <string name="level_very">Very: %d</string>
@@ -61,5 +61,6 @@
     <string name="error_field_required">This field is required</string>
     <string name="error_server">Server Error!</string>
 
-
+    <!-- MESSAGES -->
+    <string name="message_no_data_display">No data to display!</string>
 </resources>

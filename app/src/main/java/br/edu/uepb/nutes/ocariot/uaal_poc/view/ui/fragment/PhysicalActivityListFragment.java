@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Arrays;
@@ -67,6 +68,9 @@ public class PhysicalActivityListFragment extends Fragment {
 
     @BindView(R.id.data_swiperefresh)
     SwipeRefreshLayout mDataSwipeRefresh;
+
+    @BindView(R.id.no_data_textView)
+    TextView mNoData;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -189,7 +193,9 @@ public class PhysicalActivityListFragment extends Fragment {
                 .subscribe(new DisposableObserver<ActivityList>() {
                     @Override
                     public void onNext(ActivityList activityList) {
-                        sendUniverssAAl(activityList.getActivities());
+                        if (activityList != null && activityList.getActivities().size() > 0) {
+                            sendUniverssAAl(activityList.getActivities());
+                        }
                     }
 
                     @Override
@@ -221,15 +227,19 @@ public class PhysicalActivityListFragment extends Fragment {
                 .subscribe(new DisposableObserver<List<Activity>>() {
                     @Override
                     public void onNext(List<Activity> activities) {
-                        if (activities != null)
+                        if (activities != null && activities.size() > 0) {
                             mAdapter.addItems(activities);
+                            mNoData.setVisibility(View.GONE);
+                        } else {
+                            mNoData.setVisibility(View.VISIBLE);
+                        }
 
                         mDataSwipeRefresh.setRefreshing(false);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                        mNoData.setVisibility(View.VISIBLE);
                         mDataSwipeRefresh.setRefreshing(false);
                     }
 

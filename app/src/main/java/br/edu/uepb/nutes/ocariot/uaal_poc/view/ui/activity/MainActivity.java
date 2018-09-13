@@ -72,9 +72,10 @@ public class MainActivity extends AppCompatActivity implements OnClickActivityLi
     }
 
     @Override
-    protected void onRestart() {
-        super.onRestart();
+    protected void onResume() {
+        super.onResume();
 
+        Log.w(LOG_TAG, "onRestart()");
         if (AppPreferencesHelper.getInstance(this).getAuthStateFitBit() == null) {
             showMessageAlert(true);
             return;
