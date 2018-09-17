@@ -22,10 +22,12 @@ import android.widget.TextView;
 import br.edu.uepb.nutes.ocariot.uaal_poc.R;
 import br.edu.uepb.nutes.ocariot.uaal_poc.data.model.Activity;
 import br.edu.uepb.nutes.ocariot.uaal_poc.data.repository.local.pref.AppPreferencesHelper;
+import br.edu.uepb.nutes.ocariot.uaal_poc.data.repository.remote.fitbit.FitBitNetRepository;
 import br.edu.uepb.nutes.ocariot.uaal_poc.utils.UaalAPI;
 import br.edu.uepb.nutes.ocariot.uaal_poc.view.ui.fragment.OnClickActivityListener;
 import br.edu.uepb.nutes.ocariot.uaal_poc.view.ui.fragment.PhysicalActivityDetail;
 import br.edu.uepb.nutes.ocariot.uaal_poc.view.ui.fragment.PhysicalActivityListFragment;
+import br.edu.uepb.nutes.ocariot.uaal_poc.view.ui.fragment.WelcomeFragment;
 import br.edu.uepb.nutes.ocariot.uaal_poc.view.ui.preference.LoginFitBit;
 import br.edu.uepb.nutes.ocariot.uaal_poc.view.ui.preference.SettingsActivity;
 import butterknife.BindView;
@@ -39,18 +41,13 @@ import butterknife.OnClick;
  * @version 1.0
  * @copyright Copyright (c) 2018, NUTES/UEPB
  */
-public class MainActivity extends AppCompatActivity implements OnClickActivityListener {
+public class MainActivity extends AppCompatActivity implements OnClickActivityListener,
+        WelcomeFragment.OnClickWelcomeListener {
     private final String LOG_TAG = MainActivity.class.getSimpleName();
     private final int REQUEST_READ_WRITE_PERMISSION = 786;
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
-
-    @BindView(R.id.box_message_error)
-    LinearLayout mBoxMessageAlert;
-
-    @BindView(R.id.description_message_error_tv)
-    TextView descriptionMessageAlert;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,24 +60,17 @@ public class MainActivity extends AppCompatActivity implements OnClickActivityLi
             Log.w(LOG_TAG, "onCreate() startUAAL");
             UaalAPI.initUaal(this);
         } else requestStoragePermissions();
-
-        initComponents();
-    }
-
-    private void initComponents() {
-        replaceFragment(PhysicalActivityListFragment.newInstance());
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        Log.w(LOG_TAG, "onRestart()");
         if (AppPreferencesHelper.getInstance(this).getAuthStateFitBit() == null) {
-            showMessageAlert(true);
+            replaceFragment(WelcomeFragment.newInstance());
             return;
         }
-        showMessageAlert(false);
+        replaceFragment(PhysicalActivityListFragment.newInstance());
     }
 
     @Override
@@ -119,10 +109,10 @@ public class MainActivity extends AppCompatActivity implements OnClickActivityLi
     private void replaceFragment(Fragment fragment) {
         if (fragment != null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.setCustomAnimations(android.R.anim.slide_in_left,
-                    android.R.anim.slide_out_right);
 
             if (fragment instanceof PhysicalActivityDetail) {
+                transaction.setCustomAnimations(android.R.anim.slide_in_left,
+                        android.R.anim.slide_out_right);
                 transaction.replace(R.id.content, fragment).addToBackStack(null).commit();
                 return;
             }
@@ -156,17 +146,6 @@ public class MainActivity extends AppCompatActivity implements OnClickActivityLi
         }
     }
 
-    @OnClick(R.id.box_message_error)
-    public void messageAlertAction(View view) {
-        View mView = mBoxMessageAlert.getChildAt(0);
-        if (mView instanceof TextView) {
-            TextView textView = (TextView) mView;
-            if (textView.getText().equals(getString(R.string.error_oauth_fitbit_permission))) {
-                new LoginFitBit(this).doAuthorizationCode();
-            }
-        }
-    }
-
     private boolean hasStoragePermissions() {
         PackageManager packageManager = getPackageManager();
         return ((packageManager.checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -183,18 +162,8 @@ public class MainActivity extends AppCompatActivity implements OnClickActivityLi
                 REQUEST_READ_WRITE_PERMISSION);
     }
 
-    /**
-     * Displays message or hides according to parameter.
-     * True to display and False to hide
-     *
-     * @param isVisible
-     */
-    private void showMessageAlert(boolean isVisible) {
-        if (isVisible) {
-            mBoxMessageAlert.setVisibility(View.VISIBLE);
-            return;
-        }
-        mBoxMessageAlert.setVisibility(View.GONE);
+    @Override
+    public void onClickFitBit() {
+        new LoginFitBit(this).doAuthorizationCode();
     }
-
 }

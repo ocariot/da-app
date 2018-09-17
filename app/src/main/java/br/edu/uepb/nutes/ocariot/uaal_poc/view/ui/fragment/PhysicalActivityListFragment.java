@@ -15,12 +15,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import br.edu.uepb.nutes.ocariot.uaal_poc.R;
@@ -132,8 +129,13 @@ public class PhysicalActivityListFragment extends Fragment {
     private void initComponents() {
         initRecyclerView();
         initDataSwipeRefresh();
-        loadDataFitBit();
         initToolBar();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadDataFitBit();
     }
 
     private void initToolBar() {
@@ -194,7 +196,7 @@ public class PhysicalActivityListFragment extends Fragment {
                     @Override
                     public void onNext(ActivityList activityList) {
                         if (activityList != null && activityList.getActivities().size() > 0) {
-                            sendUniverssAAl(activityList.getActivities());
+                            sendUniverssAAl(activityList.getActivities(), getContext());
                         }
                     }
 
@@ -255,7 +257,7 @@ public class PhysicalActivityListFragment extends Fragment {
      *
      * @param activities {@link List<Activity>}
      */
-    private void sendUniverssAAl(List<Activity> activities) {
+    private void sendUniverssAAl(List<Activity> activities, Context context) {
         if (activities == null) return;
         Log.w(LOG_TAG, "sendUniverssAAl() " + Arrays.toString(activities.toArray())
                 + " TOTAL: " + activities.size());
@@ -268,7 +270,7 @@ public class PhysicalActivityListFragment extends Fragment {
             activity.setEndTime(DateUtils.addMinutesToString(activity.getStartTime(),
                     (int) activity.getDuration()));
 
-            UaalAPI.publishPhysicalActivity(getContext(), activity);
+            UaalAPI.publishPhysicalActivity(context, activity);
         }
     }
 }

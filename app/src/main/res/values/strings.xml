@@ -22,9 +22,11 @@
     <string name="level_lightly">Lightly: %d</string>
     <string name="level_fairly">Fairly: %d</string>
     <string name="level_very">Very: %d</string>
+    <string name="login_with_fitbit">Login With FitBit</string>
 
     <!-- TITLES -->
     <string name="title_physical_activity">Physical Activity</string>
+    <string name="title_welcome">Welcome</string>
 
     <!-- FORMAT DATES -->
     <string name="date_format1">yyyy-MM-dd</string>
@@ -32,7 +34,7 @@
     <string name="date_time_abb2">EEEE \'at\' hh:mm:ss a</string>
 
     <!-- SETTINGS -->
-    <string name="settings_title">Settings OCARIoT</string>
+    <string name="settings_title">Settings OCARIoT PoC</string>
     <string name="settings_title_uall_connect">uAAL Connect</string>
     <string name="settings_account">Account</string>
     <string name="settings_external_services">External Services</string>
@@ -63,4 +65,6 @@
 
     <!-- MESSAGES -->
     <string name="message_no_data_display">No data to display!</string>
+    <string name="message_welcome">How it works\n\n1. First, log in with your FitBit account;\n\n2. Authorize the collection of activity data from your FitBit account;\n\n3. Boot the universAAL IoT service;\n\n4. Done! Your activities will be captured from fitbit and synchronized with the OCARIoT platform.</string>
+
 </resources>
