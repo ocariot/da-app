@@ -69,7 +69,6 @@ public class PhysicalActivityListAdapter extends BaseAdapter<Activity> {
                 h.image.setImageResource(R.drawable.ic_star);
             }
 
-
             /**
              * OnClick Item
              */

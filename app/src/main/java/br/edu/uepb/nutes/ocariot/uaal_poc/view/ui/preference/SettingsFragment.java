@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.SwitchPreference;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -65,11 +64,6 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         Preference prefFitbit = findPreference(getString(R.string.key_fitibit));
         prefFitbit.setOnPreferenceClickListener(this);
         switchPrefFitBit = (SwitchPreference) prefFitbit;
-
-        // uAAL
-        Preference prefUaal = findPreference(getString(R.string.key_uaal));
-        prefUaal.setOnPreferenceClickListener(this);
-        switchPrefUaal = (SwitchPreference) prefUaal;
 
         // Sign Out
         Preference prefSignout = findPreference(getString(R.string.key_signout));

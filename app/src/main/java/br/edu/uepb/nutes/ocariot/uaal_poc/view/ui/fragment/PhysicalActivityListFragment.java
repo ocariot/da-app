@@ -29,7 +29,6 @@ import br.edu.uepb.nutes.ocariot.uaal_poc.data.repository.local.pref.AppPreferen
 import br.edu.uepb.nutes.ocariot.uaal_poc.data.repository.remote.fitbit.FitBitNetRepository;
 import br.edu.uepb.nutes.ocariot.uaal_poc.data.repository.remote.ocariot.OcariotNetRepository;
 import br.edu.uepb.nutes.ocariot.uaal_poc.utils.DateUtils;
-import br.edu.uepb.nutes.ocariot.uaal_poc.utils.UaalAPI;
 import br.edu.uepb.nutes.ocariot.uaal_poc.view.adapter.PhysicalActivityListAdapter;
 import br.edu.uepb.nutes.ocariot.uaal_poc.view.adapter.base.OnRecyclerViewListener;
 import br.edu.uepb.nutes.ocariot.uaal_poc.view.ui.activity.MainActivity;
@@ -270,6 +269,7 @@ public class PhysicalActivityListFragment extends Fragment {
      *
      * @param activities {@link List<Activity>}
      */
+    // TODO Enviar para REST
     private void sendUniverssAAl(List<Activity> activities, Context context) {
         if (activities == null) return;
         Log.w(LOG_TAG, "sendUniverssAAl() " + Arrays.toString(activities.toArray())
@@ -282,8 +282,6 @@ public class PhysicalActivityListFragment extends Fragment {
             activity.setMaxIntensityDuration(activityLevelMax.getMinutes());
             activity.setEndTime(DateUtils.addMinutesToString(activity.getStartTime(),
                     (int) activity.getDuration()));
-
-            UaalAPI.publishPhysicalActivity(context, activity);
         }
     }
 }

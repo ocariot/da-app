@@ -1,6 +1,5 @@
 package br.edu.uepb.nutes.ocariot.uaal_poc.view.ui.preference;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.support.v7.app.ActionBar;
@@ -16,8 +15,6 @@ import br.edu.uepb.nutes.ocariot.uaal_poc.R;
  * @copyright Copyright (c) 2018, NUTES/UEPB
  */
 public class SettingsActivity extends BaseSettingsActivity implements SettingsFragment.OnClickSettingsListener {
-    public static int REQUEST_CODE_UAAL_STATUS = 1;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,9 +38,6 @@ public class SettingsActivity extends BaseSettingsActivity implements SettingsFr
     public void onPrefClick(Preference preference) {
         if (preference.getKey() == getString(R.string.key_fitibit)) {
             finish();
-        } else if (preference.getKey().equals(getString(R.string.key_uaal))) {
-            startActivityForResult(new Intent(this, UaalStatusActivity.class),
-                    REQUEST_CODE_UAAL_STATUS);
         }
     }
 
