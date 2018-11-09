@@ -2,6 +2,7 @@ package br.edu.uepb.nutes.ocariot.uaal_poc.data.repository.remote.fitbit;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import net.openid.appauth.AuthState;
 import net.openid.appauth.AuthorizationException;
@@ -67,6 +68,8 @@ public class FitBitNetRepository extends BaseNetRepository {
 
                 final AuthState authState = AppPreferencesHelper.getInstance(BaseNetRepository.mContext)
                         .getAuthStateFitBit();
+
+                Log.w("TOKEN", authState.jsonSerializeString());
 
                 if (authState != null) {
                     authState.performActionWithFreshTokens(authService, new AuthState.AuthStateAction() {

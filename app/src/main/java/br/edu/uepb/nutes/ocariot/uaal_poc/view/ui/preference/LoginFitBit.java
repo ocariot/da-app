@@ -38,7 +38,6 @@ public class LoginFitBit {
 
     private final Uri AUTHORIZATION_ENDPOINT = Uri.parse("https://www.fitbit.com/oauth2/authorize");
     private final Uri TOKEN_ENDPOINT = Uri.parse("https://api.fitbit.com/oauth2/token");
-    private final Uri REVOKE_TOKEN_ENDPOINT = Uri.parse("https://api.fitbit.com/oauth2/revoke");
 
     private final Uri REDIRECT_URI = Uri.parse("fitbitauth://finished");
 

@@ -1,14 +1,0 @@
-
-Asquid:S1659",Declare "switchPrefUaal" on a separate line.(µ×¬
-csquid:S1192"IDefine a constant instead of duplicating this literal "SETTIGNS" 3 times.(å¾ê¬ıÿÿÿÿ
-Gsquid:S1068"2Remove this unused "switchPrefUaal" private field.(µ×¬
-rsquid:S1450"]Remove the "switchPrefUaal" field and declare it as a local variable in the relevant methods.(µ×¬
-vsquid:S1450"aRemove the "authFitBitResponse" field and declare it as a local variable in the relevant methods.(Ìı¥Ú
-|squid:S1450"bRemove the "authFitBitException" field and declare it as a local variable in the relevant methods.(Èúàìûÿÿÿÿ
-zsquid:S1488"`Immediately return this expression instead of assigning it to the temporary variable "fragment".(§›’ëùÿÿÿÿ
-Lsquid:S1135"2Complete the task associated to this TODO comment.(ßíŠÿÿÿÿÿ
-5squid:S1170"!Make this final field static too.(“÷›n
-–squid:S1186"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(ÁÌŠ²
-–squid:S1186"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(úÑ¯¤
-Bsquid:S1185"(Remove this method to simply inherit it.(İßéàúÿÿÿÿ
-gsquid:S00116"RRename this field "LOG_TAG" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(“÷›n

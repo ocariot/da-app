@@ -130,11 +130,6 @@ public class PhysicalActivityListFragment extends Fragment {
         initRecyclerView();
         initDataSwipeRefresh();
         initToolBar();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
         loadDataFitBit();
     }
 
@@ -180,6 +175,7 @@ public class PhysicalActivityListFragment extends Fragment {
         mDataSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                Log.w(LOG_TAG, "onRefresh()");
                 if (itShouldLoadMore) loadDataFitBit();
             }
         });
@@ -189,9 +185,10 @@ public class PhysicalActivityListFragment extends Fragment {
      * Load data in FitBit Server.
      */
     private void loadDataFitBit() {
+        loading(true);
         String currentDate = DateUtils.getCurrentDatetime(getResources().getString(R.string.date_format1));
 
-        fitBitRepository.listActivities(currentDate, null, "desc", 0, 10)
+        fitBitRepository.listActivities(currentDate, null, "desc", 0, 100)
                 .subscribe(new DisposableObserver<ActivityList>() {
                     @Override
                     public void onNext(ActivityList activityList) {
@@ -222,13 +219,14 @@ public class PhysicalActivityListFragment extends Fragment {
         if (userAccess == null) return;
 
         mAdapter.clearItems();
-        mDataSwipeRefresh.setRefreshing(true);
+        loading(true);
 
         ocariotNetRepository
                 .listActivities(userAccess.getSubject())
                 .subscribe(new DisposableObserver<List<Activity>>() {
                     @Override
                     public void onNext(List<Activity> activities) {
+                        Log.w(LOG_TAG, "loadDataOcariot() -" + Arrays.toString(activities.toArray()));
                         if (activities != null && activities.size() > 0) {
                             mAdapter.addItems(activities);
                             mNoData.setVisibility(View.GONE);
@@ -236,7 +234,7 @@ public class PhysicalActivityListFragment extends Fragment {
                             mNoData.setVisibility(View.VISIBLE);
                         }
 
-                        mDataSwipeRefresh.setRefreshing(false);
+                        loading(false);
                     }
 
                     @Override
@@ -250,6 +248,21 @@ public class PhysicalActivityListFragment extends Fragment {
 
                     }
                 });
+    }
+
+    /**
+     * Enable/Disable display loading data.
+     *
+     * @param enabled boolean
+     */
+    private void loading(final boolean enabled) {
+        if (!enabled) {
+            mDataSwipeRefresh.setRefreshing(false);
+            itShouldLoadMore = true;
+        } else {
+            mDataSwipeRefresh.setRefreshing(true);
+            itShouldLoadMore = false;
+        }
     }
 
     /**
