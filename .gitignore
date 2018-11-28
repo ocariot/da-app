@@ -45,12 +45,12 @@ captures/
 .idea/tasks.xml
 .idea/gradle.xml
 .idea/assetWizardSettings.xml
-.idea/dictionaries
-.idea/libraries
-.idea/caches
+.idea/dictionaries/
+.idea/libraries/
+.idea/caches/
 .idea/copyright/profiles_settings.xml
 .idea/codeStyles/codeStyleConfig.xml
-.idea/sonarlint
+.idea/sonarlint/
 
 # External native build folder generated in Android Studio 2.2 and later
 .externalNativeBuild
