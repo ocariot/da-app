@@ -24,10 +24,6 @@ import butterknife.ButterKnife;
 
 /**
  * MainActivity implementation.
- *
- * @author Douglas Rafael <douglas.rafael@nutes.uepb.edu.br>
- * @version 1.0
- * @copyright Copyright (c) 2018, NUTES/UEPB
  */
 public class MainActivity extends AppCompatActivity implements OnClickActivityListener,
         WelcomeFragment.OnClickWelcomeListener {
@@ -49,11 +45,11 @@ public class MainActivity extends AppCompatActivity implements OnClickActivityLi
     protected void onResume() {
         super.onResume();
 
-        if (AppPreferencesHelper.getInstance(this).getAuthStateFitBit() == null) {
-            replaceFragment(WelcomeFragment.newInstance());
-            return;
-        }
-        replaceFragment(PhysicalActivityListFragment.newInstance());
+//        if (AppPreferencesHelper.getInstance(this).getAuthStateFitBit() == null) {
+//            replaceFragment(WelcomeFragment.newInstance());
+//            return;
+//        }
+//        replaceFragment(PhysicalActivityListFragment.newInstance());
     }
 
     @Override

@@ -55,6 +55,12 @@ dependencies {
     // OAuth2 Client
     implementation 'net.openid:appauth:0.7.1'
 
+    // Alert
+    implementation 'com.tapadoo.android:alerter:3.0.2'
+
+    // Cicle Progress Bar
+    implementation 'com.github.jakob-grabner:Circle-Progress-View:1.4'
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'

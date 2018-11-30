@@ -6,7 +6,7 @@
     android:background="?android:attr/selectableItemBackground"
     android:clickable="true"
     android:focusable="true"
-    android:paddingLeft="@dimen/activity_padding"
+    android:paddingLeft="@dimen/default_padding"
     android:orientation="horizontal">
 
     <RelativeLayout
