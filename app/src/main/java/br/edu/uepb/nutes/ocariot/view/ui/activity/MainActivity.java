@@ -2,20 +2,28 @@ package br.edu.uepb.nutes.ocariot.view.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import br.edu.uepb.nutes.ocariot.R;
 import br.edu.uepb.nutes.ocariot.data.model.Activity;
-import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
 import br.edu.uepb.nutes.ocariot.view.ui.fragment.OnClickActivityListener;
-import br.edu.uepb.nutes.ocariot.view.ui.fragment.PhysicalActivityDetail;
 import br.edu.uepb.nutes.ocariot.view.ui.fragment.PhysicalActivityListFragment;
+import br.edu.uepb.nutes.ocariot.view.ui.fragment.SleepListFragment;
 import br.edu.uepb.nutes.ocariot.view.ui.fragment.WelcomeFragment;
 import br.edu.uepb.nutes.ocariot.view.ui.preference.LoginFitBit;
 import br.edu.uepb.nutes.ocariot.view.ui.preference.SettingsActivity;
@@ -24,14 +32,24 @@ import butterknife.ButterKnife;
 
 /**
  * MainActivity implementation.
+ *
+ * @author Copyright (c) 2018, NUTES/UEPB
  */
 public class MainActivity extends AppCompatActivity implements OnClickActivityListener,
-        WelcomeFragment.OnClickWelcomeListener {
+        WelcomeFragment.OnClickWelcomeListener,
+        BottomNavigationView.OnNavigationItemSelectedListener {
     private final String LOG_TAG = MainActivity.class.getSimpleName();
-    private final int REQUEST_READ_WRITE_PERMISSION = 786;
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
+
+    @BindView(R.id.navigation)
+    BottomNavigationView mBuBottomNavigationView;
+
+    @BindView(R.id.viewpager)
+    ViewPager viewPager;
+
+    private MenuItem prevMenuItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +57,51 @@ public class MainActivity extends AppCompatActivity implements OnClickActivityLi
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setSupportActionBar(mToolbar);
+        mToolbar.setTitle(R.string.title_physical_activities);
+
+        mBuBottomNavigationView.setOnNavigationItemSelectedListener(this);
+        initViewPager();
+    }
+
+    /**
+     * Initialize View Pager.
+     */
+    private void initViewPager() {
+        viewPager.addOnPageChangeListener(new OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (prevMenuItem != null) {
+                    prevMenuItem.setChecked(false);
+                } else {
+                    mBuBottomNavigationView.getMenu().getItem(0).setChecked(false);
+                }
+                mBuBottomNavigationView.getMenu().getItem(position).setChecked(true);
+                prevMenuItem = mBuBottomNavigationView.getMenu().getItem(position);
+
+                switch (position) {
+                    case 1:
+                        mToolbar.setTitle(R.string.title_sleep);
+                        break;
+                    default:
+                        mToolbar.setTitle(R.string.title_physical_activities);
+                        break;
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int position) {
+            }
+        });
+
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter.addFragment(PhysicalActivityListFragment.newInstance());
+        adapter.addFragment(SleepListFragment.newInstance());
+        viewPager.setAdapter(adapter);
     }
 
     @Override
@@ -80,38 +143,55 @@ public class MainActivity extends AppCompatActivity implements OnClickActivityLi
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * Replace fragment.
-     *
-     * @param fragment {@link Fragment}
-     */
-    private void replaceFragment(Fragment fragment) {
-        if (fragment != null) {
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
-            if (fragment instanceof PhysicalActivityDetail) {
-                transaction.setCustomAnimations(android.R.anim.slide_in_left,
-                        android.R.anim.slide_out_right);
-                transaction.replace(R.id.content, fragment).addToBackStack(null).commit();
-                return;
-            }
-
-            transaction.replace(R.id.content, fragment).commit();
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case R.id.navigation_activities:
+                viewPager.setCurrentItem(0);
+                break;
+            case R.id.navigation_sleep:
+                viewPager.setCurrentItem(1);
+                break;
+            case R.id.navigation_temp_humi:
+                viewPager.setCurrentItem(2);
+                break;
+            default:
+                break;
         }
+        return false;
     }
 
     @Override
     public void onClickActivity(Activity activity) {
-        PhysicalActivityDetail physicalActivityDetail = PhysicalActivityDetail.newInstance();
-        Bundle args = new Bundle();
-
-        args.putParcelable(PhysicalActivityDetail.ACTIVITY_DETAIL, activity);
-        physicalActivityDetail.setArguments(args);
-        replaceFragment(physicalActivityDetail);
+        Intent intent = new Intent(this, PhysicalActivityDetail.class);
+        intent.putExtra(PhysicalActivityDetail.ACTIVITY_DETAIL, activity);
+        startActivity(intent);
     }
 
     @Override
     public void onClickFitBit() {
         new LoginFitBit(this).doAuthorizationCode();
+    }
+
+    private class ViewPagerAdapter extends FragmentStatePagerAdapter {
+        private final List<Fragment> mFragmentList = new ArrayList<>();
+
+        public ViewPagerAdapter(FragmentManager manager) {
+            super(manager);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mFragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragmentList.size();
+        }
+
+        public void addFragment(Fragment fragment) {
+            mFragmentList.add(fragment);
+        }
     }
 }

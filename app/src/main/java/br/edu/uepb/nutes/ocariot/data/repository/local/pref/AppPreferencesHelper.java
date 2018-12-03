@@ -12,11 +12,17 @@ import org.json.JSONException;
 import br.edu.uepb.nutes.ocariot.data.model.UserAccess;
 import br.edu.uepb.nutes.ocariot.exception.LocalPreferenceException;
 
+/**
+ * Class to perform operations on the device's shared preference.
+ * The data is saved encrypted.
+ *
+ * @author Copyright (c) 2018, NUTES/UEPB
+ */
 public class AppPreferencesHelper implements PreferencesHelper {
     private final String PREF_KEY_AUTH_STATE_OCARIOT = "pref_key_user_access_ocariot";
     private final String PREF_KEY_AUTH_STATE_FITBIT = "pref_key_access_fitbit";
 
-    public static AppPreferencesHelper instance;
+    private static AppPreferencesHelper instance;
     private SharedPreferences mPrefs;
 
     private AppPreferencesHelper(Context context) {

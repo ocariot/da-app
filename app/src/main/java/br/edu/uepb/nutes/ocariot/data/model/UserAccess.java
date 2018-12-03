@@ -5,25 +5,22 @@ import android.os.Parcelable;
 
 import com.auth0.android.jwt.JWT;
 import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 
-import java.io.Serializable;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Represents UserAccess object.
  *
- * @author Douglas Rafael <douglas.rafael@nutes.uepb.edu.br>
- * @version 1.0
- * @copyright Copyright (c) 2018, NUTES/UEPB
+ * @author Copyright (c) 2018, NUTES/UEPB
  */
 public class UserAccess implements Parcelable {
     public static final String KEY_SCOPES = "scope";
 
     private String subject;
+
+    @SerializedName(value = "access_token", alternate = {"token"})
     private String accessToken;
     private String refreshToken;
     private String tokenType;

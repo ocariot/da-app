@@ -5,11 +5,16 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class ActivityList {
+/**
+ * Represents list of activities.
+ *
+ * @author Copyright (c) 2018, NUTES/UEPB
+ */
+public class ActivitiesList {
     @SerializedName("activities")
     private List<Activity> activities;
 
-    public ActivityList(List<Activity> activities) {
+    public ActivitiesList(List<Activity> activities) {
         this.activities = activities;
     }
 

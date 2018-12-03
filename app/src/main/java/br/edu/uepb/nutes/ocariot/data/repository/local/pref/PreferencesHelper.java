@@ -4,6 +4,11 @@ import net.openid.appauth.AuthState;
 
 import br.edu.uepb.nutes.ocariot.data.model.UserAccess;
 
+/**
+ * Interface for Preferences Helper.
+ *
+ * @author Copyright (c) 2018, NUTES/UEPB
+ */
 public interface PreferencesHelper {
     boolean addUserAccessOcariot(final UserAccess userAccess);
 

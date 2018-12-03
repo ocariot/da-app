@@ -1,5 +1,6 @@
 package br.edu.uepb.nutes.ocariot.view.ui.preference;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;

@@ -188,7 +188,7 @@ public final class DateUtils {
     /**
      * Convert string datetime in UTC ISO 8601
      *
-     * @param str_date
+     * @param str_date String datetime.
      * @return String
      */
     public static Date fromISO8601(String str_date) {
@@ -226,8 +226,8 @@ public final class DateUtils {
     /**
      * Add minutes in datetime.
      *
-     * @param datetime
-     * @param minutes
+     * @param datetime Datetime.
+     * @param minutes Total in minutes.
      * @return String
      */
     public static String addMinutesToString(String datetime, int minutes) {

@@ -1,64 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:CircleProgressView="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="br.edu.uepb.nutes.ocariot.view.ui.activity.MainActivity">
+    tools:context=".view.ui.activity.MainActivity">
 
     <include
         layout="@layout/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:padding="@dimen/default_padding">
+        android:layout_height="match_parent">
 
-        <LinearLayout
+        <android.support.design.widget.BottomNavigationView
+            android:id="@+id/navigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            app:itemBackground="@color/colorBackgroundNavigation"
+            app:menu="@menu/navigation" />
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewpager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="20dp">
+            android:layout_above="@+id/navigation"
+            android:layout_alignParentTop="true"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Steeps" />
+        <!--<at.grabner.circleprogress.CircleProgressView-->
+        <!--android:id="@+id/circleView"-->
+        <!--android:layout_width="220dp"-->
+        <!--android:layout_height="220dp"-->
+        <!--CircleProgressView:cpv_autoTextSize="true"-->
+        <!--CircleProgressView:cpv_barColor="@color/colorPrimary"-->
+        <!--CircleProgressView:cpv_barColor1="@color/colorPrimaryDark"-->
+        <!--CircleProgressView:cpv_barColor2="@color/colorAccent"-->
+        <!--CircleProgressView:cpv_barColor3="@color/colorPrimary"-->
+        <!--CircleProgressView:cpv_barWidth="15dp"-->
+        <!--CircleProgressView:cpv_innerContourSize="0dp"-->
+        <!--CircleProgressView:cpv_maxValue="100"-->
+        <!--CircleProgressView:cpv_outerContourSize="0dp"-->
+        <!--CircleProgressView:cpv_rimColor="@color/colorPrimaryLight"-->
+        <!--CircleProgressView:cpv_rimWidth="12dp"-->
+        <!--CircleProgressView:cpv_seekMode="false"-->
+        <!--CircleProgressView:cpv_showUnit="true"-->
+        <!--CircleProgressView:cpv_spinColor="@color/colorPrimary"-->
+        <!--CircleProgressView:cpv_textColor="@color/colorPrimaryDark"-->
+        <!--CircleProgressView:cpv_textScale="0.8"-->
+        <!--CircleProgressView:cpv_unit="%"-->
+        <!--CircleProgressView:cpv_unitColor="@color/colorPrimaryLight"-->
+        <!--CircleProgressView:cpv_unitPosition="right_bottom"-->
+        <!--CircleProgressView:cpv_unitScale="0.8"-->
+        <!--CircleProgressView:cpv_value="65" />-->
 
-        </LinearLayout>
-
-        <at.grabner.circleprogress.CircleProgressView
-            android:id="@+id/circleView"
-            android:layout_width="220dp"
-            android:layout_height="220dp"
-            CircleProgressView:cpv_autoTextSize="true"
-            CircleProgressView:cpv_barColor="@color/colorPrimary"
-            CircleProgressView:cpv_barColor1="@color/colorPrimaryDark"
-            CircleProgressView:cpv_barColor2="@color/colorAccent"
-            CircleProgressView:cpv_barColor3="@color/colorPrimary"
-            CircleProgressView:cpv_barWidth="15dp"
-            CircleProgressView:cpv_innerContourSize="0dp"
-            CircleProgressView:cpv_maxValue="100"
-            CircleProgressView:cpv_outerContourSize="0dp"
-            CircleProgressView:cpv_rimColor="@color/colorPrimaryLight"
-            CircleProgressView:cpv_rimWidth="12dp"
-            CircleProgressView:cpv_seekMode="false"
-            CircleProgressView:cpv_showUnit="true"
-            CircleProgressView:cpv_spinColor="@color/colorPrimary"
-            CircleProgressView:cpv_textColor="@color/colorPrimaryDark"
-            CircleProgressView:cpv_textScale="0.8"
-            CircleProgressView:cpv_unit="%"
-            CircleProgressView:cpv_unitColor="@color/colorPrimaryLight"
-            CircleProgressView:cpv_unitPosition="right_bottom"
-            CircleProgressView:cpv_unitScale="0.8"
-            CircleProgressView:cpv_value="65" />
-
-    </LinearLayout>
+    </RelativeLayout>
     <!--<LinearLayout-->
     <!--android:layout_width="match_parent"-->
     <!--android:layout_height="match_parent"-->

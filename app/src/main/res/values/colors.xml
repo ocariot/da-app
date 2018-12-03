@@ -12,4 +12,5 @@
     <color name="colorDangerLight">#f2dede</color>
 
     <color name="colorLineDivider">#e2e2e2</color>
+    <color name="colorBackgroundNavigation">#f8f8f8</color>
 </resources>

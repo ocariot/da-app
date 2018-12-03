@@ -1,37 +1,34 @@
-package br.edu.uepb.nutes.ocariot.view.ui.fragment;
+package br.edu.uepb.nutes.ocariot.view.ui.activity;
 
 
-import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import br.edu.uepb.nutes.ocariot.R;
 import br.edu.uepb.nutes.ocariot.data.model.Activity;
 import br.edu.uepb.nutes.ocariot.data.model.ActivityLevel;
 import br.edu.uepb.nutes.ocariot.utils.DateUtils;
-import br.edu.uepb.nutes.ocariot.view.ui.activity.MainActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
  * A fragment to see the details of a physical activity.
  *
- * @author Douglas Rafael <douglas.rafael@nutes.uepb.edu.br>
- * @version 1.0
- * @copyright Copyright (c) 2018, NUTES/UEPB
+ * @author Copyright (c) 2018, NUTES/UEPB
  */
-public class PhysicalActivityDetail extends Fragment {
+public class PhysicalActivityDetail extends AppCompatActivity {
     private final String LOG_TAG = "PhysicalActivityDetail";
 
     public static String ACTIVITY_DETAIL = "activity_detail";
+
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
 
     @BindView(R.id.date_start_tv)
     TextView dateStartTextView;
@@ -63,39 +60,35 @@ public class PhysicalActivityDetail extends Fragment {
     @BindView(R.id.title_level_very_tv)
     TextView veryTextView;
 
+    @BindView(R.id.box_levels)
+    RelativeLayout boxLevels;
+
     private Activity activity;
-
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
-    public PhysicalActivityDetail() {
-
-    }
-
-    public static PhysicalActivityDetail newInstance() {
-        PhysicalActivityDetail fragment = new PhysicalActivityDetail();
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
+        setContentView(R.layout.fragment_physical_activity_detail);
+        ButterKnife.bind(this);
+        setSupportActionBar(mToolbar);
 
-        if (getArguments() != null && getArguments().size() != 0) {
-            activity = (Activity) getArguments().getParcelable(ACTIVITY_DETAIL);
+        if (getIntent() != null) {
+            activity = getIntent().getParcelableExtra(ACTIVITY_DETAIL);
         }
+        initComponents();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_physical_activity_detail, container, false);
-        ButterKnife.bind(this, view);
-        initComponents();
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                super.onBackPressed();
+                break;
+            default:
+                break;
+        }
 
-        return view;
+        return super.onOptionsItemSelected(item);
     }
 
     private void initComponents() {
@@ -119,57 +112,38 @@ public class PhysicalActivityDetail extends Fragment {
         if (duration > 0)
             caloriesMinuteTextView.setText(String.valueOf(a.getCalories() / duration));
 
-        if (a.getActivityLevel() != null && a.getActivityLevel().size() > 0) {
+        if (a.getLevels() != null && a.getLevels().size() > 0) {
             sedentaryTextView.setVisibility(View.VISIBLE);
             fairlyTextView.setVisibility(View.VISIBLE);
             lightlyTextView.setVisibility(View.VISIBLE);
 
-            for (ActivityLevel activityLevel : a.getActivityLevel()) {
+            for (ActivityLevel activityLevel : a.getLevels()) {
                 if (activityLevel.getName().equals(ActivityLevel.SEDENTARY_LEVEL)) {
                     sedentaryTextView.setText(getResources().getString(
-                            R.string.level_sedentary, activityLevel.getMinutes()));
+                            R.string.level_sedentary, activityLevel.getDuration() / 60000));
                 } else if (activityLevel.getName().equals(ActivityLevel.FAIRLY_LEVEL)) {
                     fairlyTextView.setText(getResources().getString(
-                            R.string.level_fairly, activityLevel.getMinutes()));
+                            R.string.level_fairly, activityLevel.getDuration() / 60000));
                 } else if (activityLevel.getName().equals(ActivityLevel.LIGHTLY_LEVEL)) {
                     lightlyTextView.setText(getResources().getString(
-                            R.string.level_lightly, activityLevel.getMinutes()));
+                            R.string.level_lightly, activityLevel.getDuration() / 60000));
                 } else if (activityLevel.getName().equals(ActivityLevel.VERY_LEVEL)) {
                     veryTextView.setText(getResources().getString(
-                            R.string.level_very, activityLevel.getMinutes()));
+                            R.string.level_very, activityLevel.getDuration() / 60000));
                 }
             }
         } else {
-            sedentaryTextView.setVisibility(View.GONE);
-            fairlyTextView.setVisibility(View.GONE);
-            lightlyTextView.setVisibility(View.GONE);
-            veryTextView.setText(a.getIntensityLevel());
+            boxLevels.setVisibility(View.GONE);
         }
     }
 
     private void initToobar() {
-        ActionBar mActionBar = ((MainActivity) getActivity()).getSupportActionBar();
+        ActionBar mActionBar = getSupportActionBar();
+        if (mActionBar == null) return;
+
         mActionBar.setDisplayHomeAsUpEnabled(true);
         mActionBar.setDisplayShowTitleEnabled(true);
         mActionBar.setHomeAsUpIndicator(R.drawable.ic_close_dark);
         mActionBar.setTitle(activity.getName());
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        Log.w(LOG_TAG, "ACTIVITY SELECTED: " + activity.toString());
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-    }
-
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-        menu.clear();
     }
 }

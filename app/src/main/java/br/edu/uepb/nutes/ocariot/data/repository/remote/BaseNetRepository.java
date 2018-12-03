@@ -13,27 +13,22 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class BaseNetRepository {
-    protected static Context mContext;
-    protected Retrofit retrofit;
-    protected OkHttpClient mOkHttpClient;
-    protected Interceptor mInterceptor;
+/**
+ * Base class to be inherited for repository implementation.
+ *
+ * @author Copyright (c) 2018, NUTES/UEPB
+ */
+public abstract class BaseNetRepository {
+    protected Context mContext;
+    private OkHttpClient.Builder mClient;
 
-    public BaseNetRepository(Context mContext, String baseUrl) {
+    public BaseNetRepository(Context mContext) {
         this.mContext = mContext;
-        this.retrofit = provideRetrofit(baseUrl);
-    }
-
-    public BaseNetRepository(Context mContext, Interceptor mInterceptor, String baseUrl) {
-        this.mContext = mContext;
-        this.mInterceptor = mInterceptor;
-        this.retrofit = provideRetrofit(baseUrl);
     }
 
     private Cache provideHttpCache() {
         int cacheSize = 10 * 1024 * 1024;
-        Cache cache = new Cache(mContext.getCacheDir(), cacheSize);
-        return cache;
+        return new Cache(mContext.getCacheDir(), cacheSize);
     }
 
     private Gson provideGson() {
@@ -42,18 +37,19 @@ public class BaseNetRepository {
         return gsonBuilder.create();
     }
 
-    protected OkHttpClient provideOkHttpClient() {
-        if (mOkHttpClient == null)
-            mOkHttpClient = new OkHttpClient();
-
-        OkHttpClient.Builder clientBuilder = mOkHttpClient.newBuilder()
-                .followRedirects(false)
+    private OkHttpClient provideOkHttpClient() {
+        if (mClient == null) mClient = new OkHttpClient().newBuilder();
+        mClient.followRedirects(false)
                 .cache(provideHttpCache());
 
-        if (mInterceptor != null)
-            clientBuilder.addInterceptor(mInterceptor);
+        return mClient.build();
+    }
 
-        return clientBuilder.build();
+    protected void addInterceptor(Interceptor interceptor) {
+        if (interceptor == null) return;
+        if (mClient == null) mClient = new OkHttpClient().newBuilder();
+
+        mClient.addInterceptor(interceptor);
     }
 
     protected Retrofit provideRetrofit(String baseUrl) {

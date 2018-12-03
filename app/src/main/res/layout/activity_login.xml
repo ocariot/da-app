@@ -11,8 +11,9 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="130dp"
-        android:layout_marginBottom="30dp"
         android:layout_marginTop="60dp"
+        android:layout_marginBottom="30dp"
+        android:contentDescription="@string/img_desc_ocariot"
         app:srcCompat="@drawable/ocariot_logo" />
 
     <!-- Login progress -->
@@ -36,11 +37,12 @@
         android:visibility="gone">
 
         <TextView
+            android:id="@+id/message_error"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:padding="16sp"
-            android:text="@string/error_login_invalid" />
+            android:text="@null" />
     </LinearLayout>
 
     <LinearLayout
@@ -59,6 +61,7 @@
                 android:id="@+id/username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:autofillHints="@string/prompt_username"
                 android:hint="@string/prompt_username"
                 android:inputType="text"
                 android:maxLines="1"
@@ -76,6 +79,7 @@
                 android:id="@+id/password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:autofillHints="@string/prompt_password"
                 android:hint="@string/prompt_password"
                 android:imeOptions="actionSend"
                 android:inputType="textPassword"

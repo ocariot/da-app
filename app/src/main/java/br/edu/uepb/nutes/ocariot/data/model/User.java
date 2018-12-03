@@ -2,20 +2,28 @@ package br.edu.uepb.nutes.ocariot.data.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
+
+import com.google.gson.annotations.SerializedName;
 
 /**
  * Represents User object.
  *
- * @author Douglas Rafael <douglas.rafael@nutes.uepb.edu.br>
- * @version 2.0
- * @copyright Copyright (c) 2017, NUTES UEPB
+ * @author Copyright (c) 2018, NUTES/UEPB
  */
 public class User implements Parcelable {
+    @SerializedName("id")
     private String _id; // _id in server remote (UUID)
 
+    @SerializedName("name")
     private String name;
+
+    @SerializedName("user_name")
     private String userName;
+
+    @SerializedName("password")
     private String password;
+
     private int gender;
     private long dateBirth;
     private int height; // in cm
@@ -41,7 +49,7 @@ public class User implements Parcelable {
         this.groupId = groupId;
     }
 
-    protected User(Parcel in) {
+    private User(Parcel in) {
         _id = in.readString();
         name = in.readString();
         userName = in.readString();
@@ -104,11 +112,11 @@ public class User implements Parcelable {
         this.gender = gender;
     }
 
-    public long getdateBirth() {
+    public long getDateBirth() {
         return dateBirth;
     }
 
-    public void setdateBirth(long dateBirth) {
+    public void setDateBirth(long dateBirth) {
         this.dateBirth = dateBirth;
     }
 
@@ -155,6 +163,7 @@ public class User implements Parcelable {
         return other.getUserName().equals(this.getUserName());
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "User{" +

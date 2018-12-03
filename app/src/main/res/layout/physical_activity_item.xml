@@ -6,8 +6,9 @@
     android:background="?android:attr/selectableItemBackground"
     android:clickable="true"
     android:focusable="true"
-    android:paddingLeft="@dimen/default_padding"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/default_padding"
+    android:paddingEnd="@dimen/default_padding">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -19,8 +20,9 @@
             android:id="@+id/activity_img"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="16dp"
             android:layout_marginTop="5dp"
+            android:layout_marginEnd="16dp"
+            android:contentDescription="@string/img_desc_activity"
             android:tint="@color/colorPrimaryDark"
             app:srcCompat="@drawable/ic_run" />
 
@@ -42,16 +44,16 @@
                 android:id="@+id/date_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/name_activity_tv"
                 android:layout_below="@+id/name_activity_tv"
+                android:layout_alignStart="@+id/name_activity_tv"
                 android:text="Aug 2 at 10:51"
-                android:textSize="11sp" />
+                android:textSize="12sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
                 android:layout_below="@+id/date_tv"
+                android:layout_alignParentStart="true"
                 android:layout_marginTop="10dp">
 
                 <LinearLayout
@@ -62,9 +64,8 @@
                         android:id="@+id/clock_img"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:layout_below="@+id/activity_img"
-                        android:layout_marginRight="2dp"
-                        android:layout_toEndOf="@+id/activity_img"
+                        android:layout_marginEnd="2dp"
+                        android:contentDescription="@string/img_desc_clock"
                         android:tint="@color/colorPrimary"
                         app:srcCompat="@drawable/ic_clock" />
 
@@ -72,19 +73,15 @@
                         android:id="@+id/duration_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/activity_img"
                         android:layout_marginTop="2dp"
-                        android:layout_toEndOf="@+id/imageView2"
                         android:text="15" />
 
                     <TextView
                         android:id="@+id/duration_unit_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/activity_img"
-                        android:layout_marginLeft="2dp"
+                        android:layout_marginStart="2dp"
                         android:layout_marginTop="2dp"
-                        android:layout_toEndOf="@+id/imageView2"
                         android:text="@string/min" />
                 </LinearLayout>
 
@@ -96,33 +93,26 @@
                         android:id="@+id/calories_img"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:layout_below="@+id/activity_img"
-                        android:layout_marginLeft="25dp"
-                        android:layout_toEndOf="@+id/activity_img"
+                        android:layout_marginStart="25dp"
+                        android:contentDescription="@string/img_desc_calories"
                         app:srcCompat="@mipmap/ic_calorie" />
 
                     <TextView
                         android:id="@+id/calories_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/activity_img"
                         android:layout_marginTop="2dp"
-                        android:layout_toEndOf="@+id/imageView2"
                         android:text="18" />
 
                     <TextView
                         android:id="@+id/calories_unit_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/activity_img"
-                        android:layout_marginLeft="2dp"
+                        android:layout_marginStart="2dp"
                         android:layout_marginTop="2dp"
-                        android:layout_toEndOf="@+id/imageView2"
                         android:text="@string/cals" />
                 </LinearLayout>
-
             </LinearLayout>
-
         </RelativeLayout>
     </RelativeLayout>
 </LinearLayout>

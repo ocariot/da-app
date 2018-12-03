@@ -1,10 +1,15 @@
 package br.edu.uepb.nutes.ocariot.data.repository.remote.fitbit;
 
-import br.edu.uepb.nutes.ocariot.data.model.ActivityList;
+import br.edu.uepb.nutes.ocariot.data.model.ActivitiesList;
 import io.reactivex.Observable;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
+/**
+ * Interface for FitBit API.
+ *
+ * @author Copyright (c) 2018, NUTES/UEPB
+ */
 public interface FitBitService {
     String BASE_URL_FITBIT = "https://api.fitbit.com/1/user/-/";
 
@@ -14,7 +19,7 @@ public interface FitBitService {
      * @return
      */
     @GET("activities/list.json")
-    Observable<ActivityList> listActivity(
+    Observable<ActivitiesList> listActivity(
             @Query("beforeDate") String beforeDate,
             @Query("afterDate") String afterDate,
             @Query("sort") String sort,

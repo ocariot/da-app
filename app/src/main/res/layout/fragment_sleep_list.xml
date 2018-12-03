@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".view.ui.activity.PhysicalActivityDetail">
+    tools:context=".view.ui.fragment.PhysicalActivityListFragment">
 
     <TextView
         android:id="@+id/no_data_textView"
@@ -18,7 +18,8 @@
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/data_swiperefresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingTop="@dimen/default_padding">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/activities_list"

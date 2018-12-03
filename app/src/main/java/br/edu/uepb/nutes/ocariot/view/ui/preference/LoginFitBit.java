@@ -41,8 +41,8 @@ public class LoginFitBit {
 
     private final Uri REDIRECT_URI = Uri.parse("fitbitauth://finished");
 
-    private final String CLIENT_ID = "22CY5N";
-    private final String CLIENT_SECRET = "fe3276dc3210391d3e234532278d8c33"; // TODO REMOVER!!!
+    private final String CLIENT_ID = "22DCVN";
+    private final String CLIENT_SECRET = "6327dcf9efdab5108c707bd01cc20aa9"; // TODO REMOVER!!!
 
     private Context mContext;
 

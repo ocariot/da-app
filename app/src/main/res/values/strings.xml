@@ -1,14 +1,24 @@
 <resources>
     <string name="app_name">OCARIoT</string>
 
+    <!-- TITLES -->
+    <string name="title_ocariot">OCARIoT</string>
+    <string name="title_physical_activities">Physical activities</string>
+    <string name="title_activities">Activities</string>
+    <string name="title_sleep">Sleep</string>
+    <string name="title_temp_humi">Temp/Humi</string>
+    <string name="title_welcome">Welcome</string>
+    <string name="title_settings">Settings</string>
+
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_username">Username</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in</string>
     <string name="title_login_in">Login in</string>
-    <string name="title_ocariot">OCARIoT</string>
-    <string name="title_settings">Settings</string>
+    <string name="img_desc_ocariot">OCARIoT logo</string>
+
+    <!-- ACTIVITIES -->
     <string name="today_text">Today</string>
     <string name="cals">cals</string>
     <string name="cals_min">cals/min</string>
@@ -16,17 +26,14 @@
     <string name="duration_min">%d min</string>
     <string name="calories">Calories</string>
     <string name="steps">Steps</string>
-    <string name="level">Level</string>
-    <string name="level_min">Level in minutes</string>
-    <string name="level_sedentary">Sedentary: %d</string>
-    <string name="level_lightly">Lightly: %d</string>
-    <string name="level_fairly">Fairly: %d</string>
-    <string name="level_very">Very: %d</string>
-    <string name="login_with_fitbit">Login With FitBit</string>
-
-    <!-- TITLES -->
-    <string name="title_physical_activity">Physical Activity</string>
-    <string name="title_welcome">Welcome</string>
+    <string name="levels">Levels</string>
+    <string name="level_sedentary">Sedentary: %d min</string>
+    <string name="level_lightly">Lightly: %d min</string>
+    <string name="level_fairly">Fairly: %d min</string>
+    <string name="level_very">Very: %d min</string>
+    <string name="img_desc_activity">Activity image</string>
+    <string name="img_desc_clock">Clock image</string>
+    <string name="img_desc_calories">Calories image</string>
 
     <!-- FORMAT DATES -->
     <string name="date_format1">yyyy-MM-dd</string>
@@ -34,7 +41,8 @@
     <string name="date_time_abb2">EEEE \'at\' hh:mm:ss a</string>
 
     <!-- SETTINGS -->
-    <string name="settings_title">Settings OCARIoT PoC</string>
+    <string name="login_with_fitbit">Login With FitBit</string>
+    <string name="settings_title">Settings OCARIoT</string>
     <string name="settings_account">Account</string>
     <string name="settings_external_services">External Services</string>
     <string name="key_fitibit">key_fitbit</string>
@@ -56,10 +64,13 @@
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_field_required">This field is required</string>
-    <string name="error_server">Server Error!</string>
+    <string name="error_500">There was an error communicating with the server. Please try again later&#8230;</string>
 
     <!-- MESSAGES -->
     <string name="message_no_data_display">No data to display!</string>
     <string name="message_welcome">How it works\n\n1. First, log in with your FitBit account;\n\n2. Authorize the collection of activity data from your FitBit account;\n\n3. Boot the universAAL IoT service;\n\n4. Done! Your activities will be captured from fitbit and synchronized with the OCARIoT platform.</string>
 
+    <!-- VALIDATION MESSAGES -->
+    <string name="required_username">Username is required</string>
+    <string name="required_password">Password is required</string>
 </resources>
