@@ -62,6 +62,8 @@ public interface OcariotService {
     Observable<List<Environment>> listEnvironments(
             @Query("sort") String sort,
             @Query("page") int page,
-            @Query("limit") int limit
+            @Query("limit") int limit,
+            @Query("location.school") String school,
+            @Query("location.room") String room
     );
 }

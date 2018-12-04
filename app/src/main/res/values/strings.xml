@@ -8,6 +8,8 @@
     <string name="title_sleep">Sleep</string>
     <string name="title_temp_humi">Temp/Humi</string>
     <string name="title_temperature_humidity">Temperature/Humidity</string>
+    <string name="title_temperature">Temperature</string>
+    <string name="title_humidity">Humidity</string>
     <string name="title_welcome">Welcome</string>
     <string name="title_settings">Settings</string>
 
@@ -35,6 +37,11 @@
     <string name="img_desc_activity">Activity image</string>
     <string name="img_desc_clock">Clock image</string>
     <string name="img_desc_calories">Calories image</string>
+
+    <!-- ENVIRONMENT -->
+    <string name="environment_location">Location: %s</string>
+    <string name="environment_last_measurement">Last Measurement</string>
+    <string name="environment_daily_average">Daily Average</string>
 
     <!-- FORMAT DATES -->
     <string name="date_format1">yyyy-MM-dd</string>
@@ -74,4 +81,10 @@
     <!-- VALIDATION MESSAGES -->
     <string name="required_username">Username is required</string>
     <string name="required_password">Password is required</string>
+
+    <string-array name="room_sample_array">
+        <item>Room 1</item>
+        <item>Room 2</item>
+        <item>Room 3</item>
+    </string-array>
 </resources>

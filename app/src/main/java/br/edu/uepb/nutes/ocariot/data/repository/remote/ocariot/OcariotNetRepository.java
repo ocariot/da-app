@@ -119,8 +119,9 @@ public class OcariotNetRepository extends BaseNetRepository {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Observable<List<Environment>> listEnvironments(String sort, int page, int limit) {
-        return ocariotService.listEnvironments(sort, page, limit)
+    public Observable<List<Environment>> listEnvironments(String sort, int page, int limit,
+                                                          String school, String room) {
+        return ocariotService.listEnvironments(sort, page, limit, school, room)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }

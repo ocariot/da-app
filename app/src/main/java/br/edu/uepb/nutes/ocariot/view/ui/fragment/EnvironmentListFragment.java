@@ -178,7 +178,7 @@ public class EnvironmentListFragment extends Fragment {
         loading(true);
 
         ocariotRepository
-                .listEnvironments("-timestamp",1, 100)
+                .listEnvironments("-timestamp", 1, 100, "UNIFOR", null)
                 .subscribe(new DisposableObserver<List<Environment>>() {
                     @Override
                     public void onNext(List<Environment> environments) {
