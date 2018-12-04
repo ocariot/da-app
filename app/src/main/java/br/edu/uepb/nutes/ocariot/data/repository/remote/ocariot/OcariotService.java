@@ -3,7 +3,9 @@ package br.edu.uepb.nutes.ocariot.data.repository.remote.ocariot;
 import java.util.List;
 
 import br.edu.uepb.nutes.ocariot.data.model.Activity;
+import br.edu.uepb.nutes.ocariot.data.model.Environment;
 import br.edu.uepb.nutes.ocariot.data.model.Sleep;
+import br.edu.uepb.nutes.ocariot.data.model.SleepList;
 import br.edu.uepb.nutes.ocariot.data.model.User;
 import br.edu.uepb.nutes.ocariot.data.model.UserAccess;
 import io.reactivex.Observable;
@@ -20,8 +22,8 @@ import retrofit2.http.Query;
  * @author Copyright (c) 2018, NUTES/UEPB
  */
 public interface OcariotService {
-    //    String BASE_URL_OCARIOT = "http://ocariot.nutes.uepb.edu.br:8080/"; // API GATEWAY
-    String BASE_URL_OCARIOT = "http://192.168.31.113:3000/api/v1/"; // TEMP TEST
+    String BASE_URL_OCARIOT = "http://ocariot.nutes.uepb.edu.br:8080/"; // API GATEWAY
+//    String BASE_URL_OCARIOT = "http://192.168.50.111:3000/api/v1/"; // API GATEWAY
 
     // User
     @POST("users/auth")
@@ -53,4 +55,13 @@ public interface OcariotService {
 
     @POST("users/{user_id}/sleep")
     Observable<Sleep> publishSleep(@Path("user_id") String userId, @Body Sleep sleep);
+
+
+    // Environments
+    @GET("environments")
+    Observable<List<Environment>> listEnvironments(
+            @Query("sort") String sort,
+            @Query("page") int page,
+            @Query("limit") int limit
+    );
 }

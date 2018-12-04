@@ -12,14 +12,14 @@ import retrofit2.http.Query;
  * @author Copyright (c) 2018, NUTES/UEPB
  */
 public interface FitBitService {
-    String BASE_URL_FITBIT = "https://api.fitbit.com/1/user/-/";
+    String BASE_URL_FITBIT = "https://api.fitbit.com/";
 
     /**
      * Retrieves a list of user’s activity log entries before or after a given day.
      *
      * @return Observable<ActivitiesList>
      */
-    @GET("activities/list.json")
+    @GET("1/user/-/activities/list.json")
     Observable<ActivitiesList> listActivity(
             @Query("beforeDate") String beforeDate,
             @Query("afterDate") String afterDate,
@@ -33,7 +33,7 @@ public interface FitBitService {
      *
      * @return Observable<SleepList>
      */
-    @GET("sleep/list.json")
+    @GET("1.2/user/-/sleep/list.json")
     Observable<SleepList> listSleep(
             @Query("beforeDate") String beforeDate,
             @Query("afterDate") String afterDate,

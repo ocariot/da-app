@@ -16,7 +16,7 @@ public class SleepPatternSummaryData implements Parcelable {
     @SerializedName("count")
     private int count;
 
-    @SerializedName("summary")
+    @SerializedName(value = "duration", alternate = {"minutes"})
     private int duration; // in minutes
 
     public SleepPatternSummaryData() {

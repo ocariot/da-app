@@ -22,7 +22,7 @@ public class Sleep implements Parcelable {
     @SerializedName(value = "end_time", alternate = {"endTime"})
     private String endTime;
 
-    @SerializedName(value = "duration", alternate = {"activeDuration"})
+    @SerializedName(value = "duration")
     private long duration; // in milliseconds
 
     @SerializedName(value = "pattern", alternate = {"levels"})
@@ -137,7 +137,7 @@ public class Sleep implements Parcelable {
 
         Sleep sleep = (Sleep) o;
         return Objects.equals(startTime, sleep.startTime) &&
-                Objects.equals(user.get_id(), sleep.user.get_id());
+                user.equals(sleep.getUser());
     }
 
     @Override
@@ -147,8 +147,8 @@ public class Sleep implements Parcelable {
                 ", startTime='" + startTime + '\'' +
                 ", endTime='" + endTime + '\'' +
                 ", duration=" + duration +
-                ", pattern=" + (pattern != null ? pattern.toString() : "null") +
-                ", user=" + (user != null ? user.toString() : "null") +
+                ", pattern=" + pattern +
+                ", user=" + user +
                 '}';
     }
 }

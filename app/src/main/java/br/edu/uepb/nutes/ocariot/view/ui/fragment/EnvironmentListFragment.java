@@ -16,14 +16,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.Arrays;
+import java.util.List;
+
 import br.edu.uepb.nutes.ocariot.R;
-import br.edu.uepb.nutes.ocariot.data.model.ActivitiesList;
 import br.edu.uepb.nutes.ocariot.data.model.Activity;
+import br.edu.uepb.nutes.ocariot.data.model.Environment;
 import br.edu.uepb.nutes.ocariot.data.model.UserAccess;
 import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
 import br.edu.uepb.nutes.ocariot.data.repository.remote.fitbit.FitBitNetRepository;
 import br.edu.uepb.nutes.ocariot.data.repository.remote.ocariot.OcariotNetRepository;
-import br.edu.uepb.nutes.ocariot.utils.DateUtils;
 import br.edu.uepb.nutes.ocariot.view.adapter.PhysicalActivityListAdapter;
 import br.edu.uepb.nutes.ocariot.view.adapter.base.OnRecyclerViewListener;
 import butterknife.BindView;
@@ -36,11 +38,11 @@ import io.reactivex.observers.DisposableObserver;
  * @author Copyright (c) 2018, NUTES/UEPB
  */
 public class EnvironmentListFragment extends Fragment {
-    private final String LOG_TAG = "PhysicalActivityList";
+    private final String LOG_TAG = "EnvListFragment";
 
     private PhysicalActivityListAdapter mAdapter;
     private FitBitNetRepository fitBitRepository;
-    private OcariotNetRepository ocariotNetRepository;
+    private OcariotNetRepository ocariotRepository;
     private OnClickActivityListener mListener;
     private UserAccess userAccess;
 
@@ -90,9 +92,9 @@ public class EnvironmentListFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         fitBitRepository = FitBitNetRepository.getInstance(getContext());
-        ocariotNetRepository = OcariotNetRepository.getInstance(getContext());
+        ocariotRepository = OcariotNetRepository.getInstance(getContext());
 
-       // initComponents();
+        initComponents();
     }
 
     @Override
@@ -119,36 +121,36 @@ public class EnvironmentListFragment extends Fragment {
     private void initComponents() {
         initRecyclerView();
         initDataSwipeRefresh();
-//        loadDataFitBit();
+        loadDataOcariot();
     }
 
     private void initRecyclerView() {
-        mAdapter = new PhysicalActivityListAdapter(getContext());
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(mRecyclerView.getContext(),
-                new LinearLayoutManager(getContext()).getOrientation()));
-
-        mAdapter.setListener(new OnRecyclerViewListener<Activity>() {
-            @Override
-            public void onItemClick(Activity item) {
-                Log.w(LOG_TAG, "item: " + item.toString());
-                if (mListener != null) mListener.onClickActivity(item);
-            }
-
-            @Override
-            public void onLongItemClick(View v, Activity item) {
-
-            }
-
-            @Override
-            public void onMenuContextClick(View v, Activity item) {
-
-            }
-        });
-
-        mRecyclerView.setAdapter(mAdapter);
+//        mAdapter = new PhysicalActivityListAdapter(getContext());
+//        mRecyclerView.setHasFixedSize(true);
+//        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+//        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+//        mRecyclerView.addItemDecoration(new DividerItemDecoration(mRecyclerView.getContext(),
+//                new LinearLayoutManager(getContext()).getOrientation()));
+//
+//        mAdapter.setListener(new OnRecyclerViewListener<Activity>() {
+//            @Override
+//            public void onItemClick(Activity item) {
+//                Log.w(LOG_TAG, "item: " + item.toString());
+//                if (mListener != null) mListener.onClickActivity(item);
+//            }
+//
+//            @Override
+//            public void onLongItemClick(View v, Activity item) {
+//
+//            }
+//
+//            @Override
+//            public void onMenuContextClick(View v, Activity item) {
+//
+//            }
+//        });
+//
+//        mRecyclerView.setAdapter(mAdapter);
     }
 
     /**
@@ -159,37 +161,9 @@ public class EnvironmentListFragment extends Fragment {
             @Override
             public void onRefresh() {
                 Log.w(LOG_TAG, "onRefresh()");
-                if (itShouldLoadMore) loadDataFitBit();
+                if (itShouldLoadMore) loadDataOcariot();
             }
         });
-    }
-
-    /**
-     * Load data in FitBit Server.
-     */
-    private void loadDataFitBit() {
-        loading(true);
-        String currentDate = DateUtils.getCurrentDatetime(getResources().getString(R.string.date_format1));
-
-        fitBitRepository.listActivities(currentDate, null, "desc", 0, 100)
-                .subscribe(new DisposableObserver<ActivitiesList>() {
-                    @Override
-                    public void onNext(ActivitiesList activityList) {
-                        if (activityList != null && activityList.getActivities().size() > 0) {
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.w(LOG_TAG, "FITIBIT - onError: " + e.getMessage());
-                        loadDataOcariot();
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        loadDataOcariot();
-                    }
-                });
     }
 
     /**
@@ -200,36 +174,30 @@ public class EnvironmentListFragment extends Fragment {
     private void loadDataOcariot() {
         if (userAccess == null) return;
 
-        mAdapter.clearItems();
+//        mAdapter.clearItems();
         loading(true);
 
-//        ocariotNetRepository
-//                .listActivities(userAccess.getSubject())
-//                .subscribe(new DisposableObserver<List<Activity>>() {
-//                    @Override
-//                    public void onNext(List<Activity> activities) {
-//                        Log.w(LOG_TAG, "loadDataOcariot() -" + Arrays.toString(activities.toArray()));
-//                        if (activities != null && activities.size() > 0) {
-//                            mAdapter.addItems(activities);
-//                            mNoData.setVisibility(View.GONE);
-//                        } else {
-//                            mNoData.setVisibility(View.VISIBLE);
-//                        }
-//
-//                        loading(false);
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//                        mNoData.setVisibility(View.VISIBLE);
-//                        mDataSwipeRefresh.setRefreshing(false);
-//                    }
-//
-//                    @Override
-//                    public void onComplete() {
-//
-//                    }
-//                });
+        ocariotRepository
+                .listEnvironments("-timestamp",1, 100)
+                .subscribe(new DisposableObserver<List<Environment>>() {
+                    @Override
+                    public void onNext(List<Environment> environments) {
+                        Log.w(LOG_TAG, "loadDataOcariot() -" + Arrays.toString(environments.toArray()));
+
+                        loading(false);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mNoData.setVisibility(View.VISIBLE);
+                        mDataSwipeRefresh.setRefreshing(false);
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     /**

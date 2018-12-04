@@ -76,7 +76,7 @@ public class SleepPattern implements Parcelable {
     public String toString() {
         return "SleepPattern{" +
                 "dataSet=" + (dataSet != null ? Arrays.toString(dataSet.toArray()) : "null") +
-                ", summary=" + (summary != null ? summary.toString() : "null") +
+                ", summary=" + summary +
                 '}';
     }
 }

@@ -183,7 +183,7 @@ public class Activity implements Parcelable {
 
         Activity activity = (Activity) o;
         return Objects.equals(startTime, activity.startTime) &&
-                Objects.equals(user.get_id(), activity.user.get_id());
+                user.equals(activity.getUser());
     }
 
     @NonNull

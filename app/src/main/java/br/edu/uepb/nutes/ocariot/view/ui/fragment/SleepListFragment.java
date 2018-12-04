@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import br.edu.uepb.nutes.ocariot.R;
@@ -41,10 +42,10 @@ import io.reactivex.observers.DisposableObserver;
 public class SleepListFragment extends Fragment {
     private final String LOG_TAG = "SleepListFragment";
 
-//    private PhysicalActivityListAdapter mAdapter;
+    //    private PhysicalActivityListAdapter mAdapter;
     private FitBitNetRepository fitBitRepository;
     private OcariotNetRepository ocariotRepository;
-//    private OnClickActivityListener mListener;
+    //    private OnClickActivityListener mListener;
     private UserAccess userAccess;
 
     /**
@@ -162,7 +163,7 @@ public class SleepListFragment extends Fragment {
             @Override
             public void onRefresh() {
                 Log.w(LOG_TAG, "onRefresh()");
-                if (itShouldLoadMore) loadDataFitBit();
+                if (itShouldLoadMore) loadDataOcariot();
             }
         });
     }
@@ -178,7 +179,9 @@ public class SleepListFragment extends Fragment {
                 .subscribe(new DisposableObserver<SleepList>() {
                     @Override
                     public void onNext(SleepList sleepList) {
-                        if (sleepList != null && sleepList.getSleepList().size() > 0) {
+                        Log.w(LOG_TAG, "fitbit" + sleepList.toJsonString());
+                        Log.w(LOG_TAG, "fitbit" + Arrays.toString(sleepList.getSleepList().toArray()));
+                        if (sleepList.getSleepList().size() > 0) {
                             sendSleepToOcariot(convertFitBitDataToOcariot(sleepList.getSleepList()));
                         }
                     }
@@ -195,6 +198,7 @@ public class SleepListFragment extends Fragment {
                         loadDataOcariot();
                     }
                 });
+
     }
 
     /**
@@ -212,6 +216,7 @@ public class SleepListFragment extends Fragment {
                 .subscribe(new DisposableObserver<List<Sleep>>() {
                     @Override
                     public void onNext(List<Sleep> sleep) {
+                        Log.w(LOG_TAG, "OC " + Arrays.toString(sleep.toArray()));
 //                        if (sleep.size() > 0) {
 //                            mAdapter.clearItems();
 ////                            mAdapter.addItems(sleep);
@@ -223,6 +228,7 @@ public class SleepListFragment extends Fragment {
 
                     @Override
                     public void onError(Throwable e) {
+                        Log.w(LOG_TAG, e.toString());
                         loading(false);
                         Toast.makeText(getContext(), R.string.error_500,
                                 Toast.LENGTH_SHORT).show();
@@ -266,7 +272,7 @@ public class SleepListFragment extends Fragment {
 
         // TODO Enviar lista completa na mesma requisição, quando o servidor oferecer suporte.
         int count = 0;
-        for (Sleep sleep: sleepList) {
+        for (Sleep sleep : sleepList) {
             count++;
             final int aux = count;
             Log.w(LOG_TAG, "SendSleep-pre" + new Gson().toJson(sleep));
