@@ -4,6 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Represents ActivityLevel object.
  *
@@ -15,8 +17,13 @@ public class ActivityLevel implements Parcelable, Comparable<ActivityLevel> {
     public static String FAIRLY_LEVEL = "fairly";
     public static String VERY_LEVEL = "very";
 
+    @SerializedName(value = "name")
     private String name; // Name of activity level (sedentary, light, fair or very).
-    private int duration; // Total time spent in milliseconds on the level.
+
+    // Total time spent in milliseconds on the level. FitBit API returns
+    // in minutes. Before publishing on the OCARIoT platform the conversion is made to milliseconds
+    @SerializedName(value = "duration", alternate = {"minutes"})
+    private int duration;
 
     public ActivityLevel() {
     }

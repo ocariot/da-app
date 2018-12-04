@@ -7,6 +7,7 @@ import net.openid.appauth.AuthState;
 import net.openid.appauth.AuthorizationService;
 
 import br.edu.uepb.nutes.ocariot.data.model.ActivitiesList;
+import br.edu.uepb.nutes.ocariot.data.model.SleepList;
 import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
 import br.edu.uepb.nutes.ocariot.data.repository.remote.BaseNetRepository;
 import io.reactivex.Observable;
@@ -35,13 +36,6 @@ public class FitBitNetRepository extends BaseNetRepository {
 
     public static FitBitNetRepository getInstance(Context context) {
         return new FitBitNetRepository(context);
-    }
-
-    public Observable<ActivitiesList> listActivities(String beforeDate, String afterDate,
-                                                     String sort, int offset, int limit) {
-        return fitBitService.listActivity(beforeDate, afterDate, sort, offset, limit)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
     }
 
     /**
@@ -78,5 +72,19 @@ public class FitBitNetRepository extends BaseNetRepository {
             Log.w("InterceptorFitBit", requestBuilder.build().headers().toString());
             return chain.proceed(requestBuilder.build());
         };
+    }
+
+    public Observable<ActivitiesList> listActivities(String beforeDate, String afterDate,
+                                                     String sort, int offset, int limit) {
+        return fitBitService.listActivity(beforeDate, afterDate, sort, offset, limit)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Observable<SleepList> listSleep(String beforeDate, String afterDate,
+                                           String sort, int offset, int limit) {
+        return fitBitService.listSleep(beforeDate, afterDate, sort, offset, limit)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 }

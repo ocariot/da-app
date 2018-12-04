@@ -230,9 +230,9 @@ public final class DateUtils {
      * @param minutes Total in minutes.
      * @return String
      */
-    public static String addMinutesToString(String datetime, int minutes) {
+    public static String addMillisecondsToString(String datetime, int minutes) {
         Calendar calendar = GregorianCalendar.getInstance();
-        calendar.set(Calendar.MINUTE, minutes);
+        calendar.set(Calendar.MILLISECOND, minutes);
 
         DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_ISO_8601);
         return dateFormat.format(calendar.getTime());

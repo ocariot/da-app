@@ -167,7 +167,7 @@ public class User implements Parcelable {
     @Override
     public String toString() {
         return "User{" +
-                "_id='" + _id + '\'' +
+                "id='" + _id + '\'' +
                 ", name='" + name + '\'' +
                 ", userName='" + userName + '\'' +
                 ", password='" + password + '\'' +

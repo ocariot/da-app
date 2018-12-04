@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -36,7 +37,7 @@ public class Activity implements Parcelable {
     @SerializedName(value = "steps")
     private int steps;
 
-    @SerializedName(value = "activitylevel", alternate = {"levels"})
+    @SerializedName(value = "levels", alternate = {"activityLevel"})
     private List<ActivityLevel> levels;
 
     @SerializedName(value = "user")
@@ -172,34 +173,32 @@ public class Activity implements Parcelable {
     }
 
     @Override
+    public int hashCode() {
+        return Objects.hash(startTime, user.get_id());
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (!(o instanceof Activity)) return false;
 
         Activity activity = (Activity) o;
-        return Objects.equals(_id, activity._id) &&
-                Objects.equals(startTime, activity.startTime) &&
-                Objects.equals(endTime, activity.endTime) &&
+        return Objects.equals(startTime, activity.startTime) &&
                 Objects.equals(user.get_id(), activity.user.get_id());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(_id, startTime, endTime, user.get_id());
     }
 
     @NonNull
     @Override
     public String toString() {
         return "Activity{" +
-                "_id='" + _id + '\'' +
+                "id='" + _id + '\'' +
                 ", name='" + name + '\'' +
                 ", startTime='" + startTime + '\'' +
                 ", endTime='" + endTime + '\'' +
                 ", duration=" + duration +
                 ", calories=" + calories +
                 ", steps=" + steps +
-                ", levels=" + levels +
-                ", user=" + user.toString() +
+                ", levels=" + (levels != null ? Arrays.toString(levels.toArray()) : "null") +
+                ", user=" + (user != null ? user.toString() : "null") +
                 '}';
     }
 }

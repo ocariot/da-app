@@ -1,6 +1,5 @@
 package br.edu.uepb.nutes.ocariot.view.ui.preference;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -182,7 +181,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
 
                     @Override
                     public void onSuccess(AuthState authState) {
-                        Log.w("SETTIGNS", "TOKEN BEST " + authState.jsonSerializeString());
+                        Log.w(LOG_TAG, "TOKEN BEST " + authState.jsonSerializeString());
 
                         switchPrefFitBit.setChecked(true);
                     }
@@ -190,7 +189,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                     @Override
                     public void onError(Throwable e) {
                         switchPrefFitBit.setChecked(false);
-                        Log.w("SETTIGNS", "error " + e.getMessage());
+                        Log.w(LOG_TAG, "onError " + e.getMessage());
                     }
                 });
     }

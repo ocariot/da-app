@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".view.ui.fragment.PhysicalActivityListFragment">
+    tools:context=".view.ui.fragment.SleepListFragment">
 
     <TextView
         android:id="@+id/no_data_textView"
@@ -16,19 +16,19 @@
         android:visibility="gone" />
 
     <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/data_swiperefresh"
+        android:id="@+id/data_swipe_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingTop="@dimen/default_padding">
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/activities_list"
+            android:id="@+id/sleep_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbarSize="3sp"
             android:scrollbarThumbVertical="@color/colorAccent"
             android:scrollbars="vertical"
-            tools:listitem="@layout/physical_activity_item" />
+            tools:listitem="@layout/sleep_item" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>

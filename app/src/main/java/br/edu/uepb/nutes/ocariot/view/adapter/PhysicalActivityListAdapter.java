@@ -63,6 +63,8 @@ public class PhysicalActivityListAdapter extends BaseAdapter<Activity> {
                 h.image.setImageResource(R.drawable.ic_workout);
             } else if (name.equals(ActivityType.FITSTAR_PERSONAL)) {
                 h.image.setImageResource(R.drawable.ic_star);
+            } else {
+                h.image.setImageResource(R.drawable.ic_workout);
             }
 
             /**

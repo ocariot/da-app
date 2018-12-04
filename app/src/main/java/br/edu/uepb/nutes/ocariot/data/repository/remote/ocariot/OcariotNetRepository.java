@@ -8,6 +8,7 @@ import com.auth0.android.jwt.JWT;
 import java.util.List;
 
 import br.edu.uepb.nutes.ocariot.data.model.Activity;
+import br.edu.uepb.nutes.ocariot.data.model.Sleep;
 import br.edu.uepb.nutes.ocariot.data.model.User;
 import br.edu.uepb.nutes.ocariot.data.model.UserAccess;
 import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
@@ -92,14 +93,26 @@ public class OcariotNetRepository extends BaseNetRepository {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Observable<List<Activity>> listActivities(String userId) {
-        return ocariotService.getActivities(userId)
+    public Observable<List<Activity>> listActivities(String userId, String sort, int page, int limit) {
+        return ocariotService.listActivities(userId, sort, page, limit)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
     public Observable<Activity> publishActivity(String userId, Activity activity) {
         return ocariotService.publishActivity(userId, activity)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Observable<List<Sleep>> listSleep(String userId, String sort, int page, int limit) {
+        return ocariotService.listSleep(userId, sort, page, limit)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Observable<Sleep> publishSleep(String userId, Sleep sleep) {
+        return ocariotService.publishSleep(userId, sleep)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }

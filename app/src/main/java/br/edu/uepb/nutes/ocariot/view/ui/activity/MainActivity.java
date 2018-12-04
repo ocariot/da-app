@@ -18,9 +18,11 @@ import android.view.MenuItem;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import br.edu.uepb.nutes.ocariot.R;
 import br.edu.uepb.nutes.ocariot.data.model.Activity;
+import br.edu.uepb.nutes.ocariot.view.ui.fragment.EnvironmentListFragment;
 import br.edu.uepb.nutes.ocariot.view.ui.fragment.OnClickActivityListener;
 import br.edu.uepb.nutes.ocariot.view.ui.fragment.PhysicalActivityListFragment;
 import br.edu.uepb.nutes.ocariot.view.ui.fragment.SleepListFragment;
@@ -57,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements OnClickActivityLi
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setSupportActionBar(mToolbar);
-        mToolbar.setTitle(R.string.title_physical_activities);
+        Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.title_physical_activities);
 
         mBuBottomNavigationView.setOnNavigationItemSelectedListener(this);
         initViewPager();
@@ -85,10 +87,16 @@ public class MainActivity extends AppCompatActivity implements OnClickActivityLi
 
                 switch (position) {
                     case 1:
-                        mToolbar.setTitle(R.string.title_sleep);
+                        Objects.requireNonNull(getSupportActionBar())
+                                .setTitle(R.string.title_sleep);
+                        break;
+                    case 2:
+                        Objects.requireNonNull(getSupportActionBar())
+                                .setTitle(R.string.title_temperature_humidity);
                         break;
                     default:
-                        mToolbar.setTitle(R.string.title_physical_activities);
+                        Objects.requireNonNull(getSupportActionBar())
+                                .setTitle(R.string.title_physical_activities);
                         break;
                 }
             }
@@ -101,6 +109,7 @@ public class MainActivity extends AppCompatActivity implements OnClickActivityLi
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(PhysicalActivityListFragment.newInstance());
         adapter.addFragment(SleepListFragment.newInstance());
+        adapter.addFragment(EnvironmentListFragment.newInstance());
         viewPager.setAdapter(adapter);
     }
 

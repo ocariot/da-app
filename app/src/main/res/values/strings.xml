@@ -7,6 +7,7 @@
     <string name="title_activities">Activities</string>
     <string name="title_sleep">Sleep</string>
     <string name="title_temp_humi">Temp/Humi</string>
+    <string name="title_temperature_humidity">Temperature/Humidity</string>
     <string name="title_welcome">Welcome</string>
     <string name="title_settings">Settings</string>
 
