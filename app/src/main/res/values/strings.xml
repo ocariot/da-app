@@ -47,6 +47,7 @@
     <string name="date_format1">yyyy-MM-dd</string>
     <string name="date_time_abb1">MMMM dd \'at\' hh:mm a</string>
     <string name="date_time_abb2">EEEE \'at\' hh:mm:ss a</string>
+    <string name="date_time_abb3">EEEE, MMMM dd, YYYY</string>
 
     <!-- SETTINGS -->
     <string name="login_with_fitbit">Login With FitBit</string>

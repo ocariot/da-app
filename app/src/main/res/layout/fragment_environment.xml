@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".view.ui.fragment.EnvironmentListFragment">
+    tools:context=".view.ui.fragment.EnvironmentFragment">
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/data_swipe_refresh"
@@ -13,23 +13,201 @@
         android:paddingTop="@dimen/default_padding">
 
         <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:padding="@dimen/default_padding">
 
             <TextView
                 android:id="@+id/location_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/environment_location" />
+                android:text="@null"
+                android:textSize="16sp" />
 
-            <Spinner
-                android:id="@+id/spinner"
+            <android.support.v7.widget.AppCompatSpinner
+                android:id="@+id/room_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/location_tv"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="30dp"
+                android:entries="@array/room_sample_array"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:visibility="visible" />
+
+            <LinearLayout
+                android:id="@+id/box_datetime"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_below="@id/room_spinner"
+                android:layout_marginTop="40dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:weightSum="3">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/prev_img_bt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="45dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_weight="1"
+                    android:adjustViewBounds="true"
+                    android:background="?android:selectableItemBackground"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_action_prev_light" />
+
+                <TextView
+                    android:id="@+id/datetime_tv"
+                    android:layout_width="260dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:gravity="center"
+                    android:text="segunda-feira, dezxemrp, 12, 2018"
+                    android:textSize="16sp" />
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/next_img_bt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="45dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_weight="1"
+                    android:adjustViewBounds="true"
+                    android:background="?android:selectableItemBackground"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_action_next_light" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/box_graph"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:layout_below="@id/box_datetime"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="30dp"
+                android:background="@color/colorPrimary"
+                android:orientation="horizontal" />
+
+            <LinearLayout
+                android:id="@+id/box_infors"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/location_tv"
-                android:layout_alignParentStart="true" />
-        </RelativeLayout>
+                android:layout_below="@+id/box_graph"
+                android:layout_marginTop="40dp"
+                android:baselineAligned="false"
+                android:orientation="horizontal"
+                android:weightSum="2">
 
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/last_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/environment_last_measurement"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/last_temp_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/last_tv"
+                        android:text="0"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="50sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/last_tv"
+                        android:layout_alignRight="@+id/last_temp_tv"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="-15dp"
+                        android:text="°C"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/last_title_hum_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/last_tv"
+                        android:layout_alignEnd="@+id/last_tv"
+                        android:layout_marginTop="10dp"
+                        android:text="@string/title_humidity"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/last_hum_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/last_title_hum_tv"
+                        android:layout_alignEnd="@+id/last_tv"
+                        android:text="0%"
+                        android:textColor="@color/colorWarning"
+                        android:textSize="25sp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/average_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/environment_daily_average"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/average_temp_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/average_tv"
+                        android:text="0"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="50sp" />
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/average_tv"
+                        android:layout_alignRight="@+id/average_temp_tv"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="-15dp"
+                        android:text="°C"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/average_title_hum_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/average_tv"
+                        android:layout_alignEnd="@+id/average_tv"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="-30dp"
+                        android:text="@string/title_humidity"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/average_hum_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/average_title_hum_tv"
+                        android:layout_alignRight="@+id/average_tv"
+                        android:layout_marginRight="-30dp"
+                        android:text="0%"
+                        android:textColor="@color/colorWarning"
+                        android:textSize="25sp" />
+                </RelativeLayout>
+            </LinearLayout>
+        </RelativeLayout>
     </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>

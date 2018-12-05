@@ -2,6 +2,9 @@ package br.edu.uepb.nutes.ocariot.data.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
+
+import java.util.Objects;
 
 /**
  * Represents the Location object.
@@ -86,6 +89,21 @@ public class Location implements Parcelable {
         dest.writeString(room);
         dest.writeString(country);
         dest.writeString(city);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(school, room, country, city);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Location)) return false;
+        Location location = (Location) o;
+        return Objects.equals(school, location.school) &&
+                Objects.equals(room, location.room) &&
+                Objects.equals(country, location.country) &&
+                Objects.equals(city, location.city);
     }
 
     @Override

@@ -12,14 +12,14 @@ import java.util.Objects;
  */
 public class Environment implements Parcelable {
     private String timestamp;
-    private double temperature;
-    private double humidity;
+    private float temperature;
+    private float humidity;
     private Location location;
 
     public Environment() {
     }
 
-    public Environment(String timestamp, double temperature, double humidity, Location location) {
+    public Environment(String timestamp, float temperature, float humidity, Location location) {
         this.timestamp = timestamp;
         this.temperature = temperature;
         this.humidity = humidity;
@@ -28,8 +28,8 @@ public class Environment implements Parcelable {
 
     protected Environment(Parcel in) {
         timestamp = in.readString();
-        temperature = in.readDouble();
-        humidity = in.readDouble();
+        temperature = in.readFloat();
+        humidity = in.readFloat();
         location = in.readParcelable(Location.class.getClassLoader());
     }
 
@@ -53,19 +53,19 @@ public class Environment implements Parcelable {
         this.timestamp = timestamp;
     }
 
-    public double getTemperature() {
+    public float getTemperature() {
         return temperature;
     }
 
-    public void setTemperature(double temperature) {
+    public void setTemperature(float temperature) {
         this.temperature = temperature;
     }
 
-    public double getHumidity() {
+    public float getHumidity() {
         return humidity;
     }
 
-    public void setHumidity(double humidity) {
+    public void setHumidity(float humidity) {
         this.humidity = humidity;
     }
 
@@ -88,7 +88,6 @@ public class Environment implements Parcelable {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(timestamp, location.getRoom());
     }
 
@@ -100,8 +99,8 @@ public class Environment implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(timestamp);
-        dest.writeDouble(temperature);
-        dest.writeDouble(humidity);
+        dest.writeFloat(temperature);
+        dest.writeFloat(humidity);
         dest.writeParcelable(location, flags);
     }
 

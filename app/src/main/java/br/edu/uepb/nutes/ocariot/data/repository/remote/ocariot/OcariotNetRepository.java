@@ -70,6 +70,8 @@ public class OcariotNetRepository extends BaseNetRepository {
                 );
             }
             Log.w("InterceptorOcariot", requestBuilder.build().headers().toString());
+            Log.w("InterceptorOcariot", "| REQUEST: " + requestBuilder.build().method() + " "
+                    + requestBuilder.build().url().toString());
             return chain.proceed(requestBuilder.build());
         };
     }

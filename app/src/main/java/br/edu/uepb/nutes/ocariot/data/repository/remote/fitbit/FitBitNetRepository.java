@@ -70,7 +70,8 @@ public class FitBitNetRepository extends BaseNetRepository {
                 }
             });
             Log.w("InterceptorFitBit", requestBuilder.build().headers().toString());
-            Log.w("InterceptorFitBit", requestBuilder.build().url().toString());
+            Log.w("InterceptorFitBit", "| REQUEST: " + requestBuilder.build().method() + " "
+                    + requestBuilder.build().url().toString());
             return chain.proceed(requestBuilder.build());
         };
     }

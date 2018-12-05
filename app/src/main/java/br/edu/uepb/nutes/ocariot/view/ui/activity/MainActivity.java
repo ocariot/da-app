@@ -7,7 +7,6 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.AppCompatActivity;
@@ -22,7 +21,7 @@ import java.util.Objects;
 
 import br.edu.uepb.nutes.ocariot.R;
 import br.edu.uepb.nutes.ocariot.data.model.Activity;
-import br.edu.uepb.nutes.ocariot.view.ui.fragment.EnvironmentListFragment;
+import br.edu.uepb.nutes.ocariot.view.ui.fragment.EnvironmentFragment;
 import br.edu.uepb.nutes.ocariot.view.ui.fragment.OnClickActivityListener;
 import br.edu.uepb.nutes.ocariot.view.ui.fragment.PhysicalActivityListFragment;
 import br.edu.uepb.nutes.ocariot.view.ui.fragment.SleepListFragment;
@@ -109,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements OnClickActivityLi
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(PhysicalActivityListFragment.newInstance());
         adapter.addFragment(SleepListFragment.newInstance());
-        adapter.addFragment(EnvironmentListFragment.newInstance());
+        adapter.addFragment(EnvironmentFragment.newInstance());
         viewPager.setAdapter(adapter);
     }
 
