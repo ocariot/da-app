@@ -308,6 +308,14 @@ public class EnvironmentFragment extends Fragment implements View.OnClickListene
         mLineChart.setDrawGridBackground(true);
         mLineChart.getAxisLeft().setDrawGridLines(true);
         mLineChart.getAxisLeft().setDrawAxisLine(true);
+        // ????
+        mLineChart.getAxisRight().setGranularityEnabled(true);
+        mLineChart.getAxisLeft().setGranularityEnabled(true);
+        mLineChart.getAxisRight().setGranularity(10f);
+        mLineChart.getAxisLeft().setGranularity(10f);
+        mLineChart.getAxisLeft().setMinWidth(3f);
+        mLineChart.getAxisRight().setMinWidth(3f);
+        mLineChart.getAxisLeft().setMaxWidth(2f);
 
         mLineChart.setDrawGridBackground(false);
         mLineChart.setGridBackgroundColor(Color.TRANSPARENT);
