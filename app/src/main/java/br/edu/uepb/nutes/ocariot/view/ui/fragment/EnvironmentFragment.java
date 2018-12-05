@@ -19,9 +19,12 @@ import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,6 +58,8 @@ public class EnvironmentFragment extends Fragment implements View.OnClickListene
     private OcariotNetRepository ocariotRepository;
     private UserAccess userAccess;
     private String currentDate;
+    private List<Entry> entries;
+    private List<Environment> environments;
 
     /**
      * We need this variable to lock and unlock loading more.
@@ -183,7 +188,8 @@ public class EnvironmentFragment extends Fragment implements View.OnClickListene
                 .listEnvironments("-timestamp", 1, 100, null, null)
                 .subscribe(new DisposableObserver<List<Environment>>() {
                     @Override
-                    public void onNext(List<Environment> environments) {
+                    public void onNext(List<Environment> environmentsList) {
+                        environments = environmentsList;
                         Log.w(LOG_TAG, "loadDataOcariot() -" + Arrays.toString(environments.toArray()));
                         populateView(environments);
 
@@ -205,7 +211,7 @@ public class EnvironmentFragment extends Fragment implements View.OnClickListene
     private void populateView(List<Environment> environments) {
         if (environments == null) return;
 
-        printChart(getData(environments));
+        printChart();
 
         Location location = environments.get(0).getLocation();
         mLocation.setText(getString(
@@ -285,7 +291,7 @@ public class EnvironmentFragment extends Fragment implements View.OnClickListene
         }
     }
 
-    private void printChart(LineData data) {
+    private void printChart() {
 //        ((LineDataSet) data.getDataSetByIndex(0)).setCircleColorHole(Color.RED);
 
         // no description text
@@ -295,31 +301,20 @@ public class EnvironmentFragment extends Fragment implements View.OnClickListene
         Legend l = mLineChart.getLegend();
         l.setEnabled(false);
 
-        mLineChart.getAxisLeft().setEnabled(false);
-//        mLineChart.getAxisLeft().setSpaceTop(40);
-//        mLineChart.getAxisLeft().setSpaceBottom(40);
-//        mLineChart.getAxisRight().setAxisMinimum(4f);
-//        mLineChart.getAxisRight().setAxisMaximum(3f);
-
-        mLineChart.getXAxis().setEnabled(false);
-
         mLineChart.getAxisLeft().setEnabled(true);
         mLineChart.getAxisLeft().setEnabled(true);
-        mLineChart.setDrawGridBackground(true);
-        mLineChart.getAxisLeft().setDrawGridLines(true);
-        mLineChart.getAxisLeft().setDrawAxisLine(true);
-        // ????
-        mLineChart.getAxisRight().setGranularityEnabled(true);
-        mLineChart.getAxisLeft().setGranularityEnabled(true);
-        mLineChart.getAxisRight().setGranularity(10f);
-        mLineChart.getAxisLeft().setGranularity(10f);
-        mLineChart.getAxisLeft().setMinWidth(3f);
-        mLineChart.getAxisRight().setMinWidth(3f);
-        mLineChart.getAxisLeft().setMaxWidth(2f);
+
+        //XAxis
+        mLineChart.getXAxis().setEnabled(true);
+        mLineChart.getXAxis().setDrawGridLines(false);
+        mLineChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+        mLineChart.getXAxis().setDrawAxisLine(true);
+        mLineChart.getXAxis().setGranularity(1f);
+        mLineChart.getXAxis().setValueFormatter(prepareVariablesLineData(environments));
+
 
         mLineChart.setDrawGridBackground(false);
         mLineChart.setGridBackgroundColor(Color.TRANSPARENT);
-//        mLineChart.getAxisLeft().setTextColor(Color.BLACK);
         mLineChart.getAxisRight().setEnabled(true);
         mLineChart.getAxisRight().setAxisLineColor(Color.TRANSPARENT);
         mLineChart.getAxisRight().setGridColor(Color.TRANSPARENT);
@@ -327,28 +322,56 @@ public class EnvironmentFragment extends Fragment implements View.OnClickListene
         mLineChart.getAxisLeft().setAxisLineColor(Color.TRANSPARENT);
         mLineChart.getAxisLeft().setGridColor(Color.TRANSPARENT);
         mLineChart.getAxisLeft().setTextColor(Color.TRANSPARENT);
-        mLineChart.setAutoScaleMinMaxEnabled(true);
+
+
+//        mLineChart.setVisibleXRangeMaximum(10f);
+
+//        mLineChart.setVisibleYRangeMaximum(50, YAxis.AxisDependency.LEFT);
+//        mLineChart.setVisibleYRangeMinimum(10.6f, YAxis.AxisDependency.LEFT);
+
+//        mLineChart.setVisibleXRangeMinimum(2f);
+//        mLineChart.setVisibleXRangeMaximum(10f);
+
+
+////        mLineChart.setVisibleXRangeMaximum(10f);
 
         // animate calls invalidate()...
         mLineChart.animateX(2500);
 
         // add data
-        mLineChart.setData(data);
+        mLineChart.setData(getData());
+
+        mLineChart.setAutoScaleMinMaxEnabled(false);
+        mLineChart.setVisibleXRangeMaximum(10f); // O maximo q posso diminuir
+        mLineChart.setVisibleXRangeMinimum(5f); // O máximo q posso esticar
+//        mLineChart.setVisibleYRangeMaximum(2f, YAxis.AxisDependency.RIGHT);
+//        mLineChart.setVisibleYRangeMinimum(0f, YAxis.AxisDependency.LEFT);
+//        mLineChart.getXAxis().setAxisMinValue(0);
+//        mLineChart.getXAxis().setAxisMaxValue(10);
+//        mLineChart.getAxisLeft().setAxisMinValue(-2);
+        mLineChart.getAxisLeft().setAxisMaximum(29f);
+        mLineChart.getAxisLeft().setAxisMinimum(0f);
+//        mLineChart.getAxisLeft().setAxisMaxValue(40);
+//        leftAxis.setAxisMaxValue(params.YMax);
+//        mLineChart.getXAxis().mAxisRange(5f, YAxis.AxisDependency.LEFT);
+//        mLineChart.getAxisLeft().setAxisMinimum(1.5f);
+//        mLineChart.getAxisLeft().setAxisMaximum(50f);
+        mLineChart.moveViewToX(environments.get(environments.size() - 1).getTemperature());
         mLineChart.invalidate();
     }
 
-    private LineData getData(List<Environment> environments) {
+    private LineData getData() {
         if (environments == null) return new LineData();
-        ArrayList<Entry> values = new ArrayList<>();
+        entries = new ArrayList<>();
 
-        for (int i = 0; i < environments.size(); i++) {
-            values.add(new Entry(i, Math.round(environments.get(i).getTemperature())));
+        for (int i = 0; i < this.environments.size(); i++) {
+            entries.add(new Entry(i, Math.round(this.environments.get(i).getTemperature())));
         }
 
         // create a dataset and give it a type
-        LineDataSet set1 = new LineDataSet(values, "DataSet 1");
-         set1.setColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryDark));
-         set1.setValueTextColor(Color.BLACK);
+        LineDataSet set1 = new LineDataSet(entries, "DataSet 1");
+        set1.setColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryDark));
+        set1.setValueTextColor(Color.BLACK);
 
         set1.setLineWidth(2f);
         set1.setCircleColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryDark));
@@ -363,4 +386,21 @@ public class EnvironmentFragment extends Fragment implements View.OnClickListene
         return new LineData(set1);
     }
 
+    public IAxisValueFormatter prepareVariablesLineData(List<Environment> environments) {
+        if (entries == null) entries = new ArrayList<>();
+        final String[] quarters = new String[environments.size()];
+
+        for (int i = 0; i < environments.size(); i++) {
+            String date = DateUtils.formatDateHour(environments.get(i).getTimestamp(), "HH:mm");
+            entries.add(new Entry((float) i, Math.round(environments.get(i).getTemperature())));
+
+            quarters[i] = date;
+        }
+
+        // Format date
+        return ((value, axis) -> {
+            if (value >= quarters.length || value < 0) return "";
+            return quarters[(int) value];
+        });
+    }
 }

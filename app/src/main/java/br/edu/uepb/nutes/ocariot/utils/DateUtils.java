@@ -104,6 +104,20 @@ public final class DateUtils {
         return getFormatDataTime(date, format_date, true, false);
     }
 
+    /**
+     * Convert string date in string format.
+     *
+     * @param date        {@link String}
+     * @param format_date {@link String}
+     * @return String
+     */
+    public static String formatDateHour(String date, @Nullable String format_date) {
+        if (format_date == null || format_date.length() == 0)
+            format_date = "HH:mm:ss";
+
+        return getFormatDataTime(date, format_date, false, true);
+    }
+
     private static String getFormatDataTime(String date_input, String format_date, boolean date, boolean time) {
         String result = "";
 

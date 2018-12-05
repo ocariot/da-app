@@ -48,7 +48,7 @@
                     android:id="@+id/box_datetime"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:layout_marginTop="40dp"
+                    android:layout_marginTop="20dp"
                     android:gravity="center"
                     android:orientation="horizontal"
                     android:weightSum="3">
@@ -89,10 +89,9 @@
             <LinearLayout
                 android:id="@+id/box_graph"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="150dp"
                 android:layout_below="@id/box_1"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="30dp"
                 android:orientation="horizontal">
 
                 <com.github.mikephil.charting.charts.LineChart
@@ -109,6 +108,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/box_graph"
                 android:layout_marginTop="40dp"
+                android:layout_marginBottom="40dp"
                 android:baselineAligned="false"
                 android:orientation="horizontal"
                 android:padding="@dimen/default_padding"
