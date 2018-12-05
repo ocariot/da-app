@@ -1,10 +1,12 @@
 package br.edu.uepb.nutes.ocariot.view.ui.fragment;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.AppCompatSpinner;
@@ -14,6 +16,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -84,6 +92,9 @@ public class EnvironmentFragment extends Fragment implements View.OnClickListene
 
     @BindView(R.id.next_img_bt)
     AppCompatImageButton mNextButton;
+
+    @BindView(R.id.env_chart)
+    LineChart mLineChart;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -194,6 +205,8 @@ public class EnvironmentFragment extends Fragment implements View.OnClickListene
     private void populateView(List<Environment> environments) {
         if (environments == null) return;
 
+        printChart(getData(environments));
+
         Location location = environments.get(0).getLocation();
         mLocation.setText(getString(
                 R.string.environment_location,
@@ -271,4 +284,75 @@ public class EnvironmentFragment extends Fragment implements View.OnClickListene
                 break;
         }
     }
+
+    private void printChart(LineData data) {
+//        ((LineDataSet) data.getDataSetByIndex(0)).setCircleColorHole(Color.RED);
+
+        // no description text
+        mLineChart.getDescription().setEnabled(false);
+
+        // get the legend (only possible after setting data)
+        Legend l = mLineChart.getLegend();
+        l.setEnabled(false);
+
+        mLineChart.getAxisLeft().setEnabled(false);
+//        mLineChart.getAxisLeft().setSpaceTop(40);
+//        mLineChart.getAxisLeft().setSpaceBottom(40);
+//        mLineChart.getAxisRight().setAxisMinimum(4f);
+//        mLineChart.getAxisRight().setAxisMaximum(3f);
+
+        mLineChart.getXAxis().setEnabled(false);
+
+        mLineChart.getAxisLeft().setEnabled(true);
+        mLineChart.getAxisLeft().setEnabled(true);
+        mLineChart.setDrawGridBackground(true);
+        mLineChart.getAxisLeft().setDrawGridLines(true);
+        mLineChart.getAxisLeft().setDrawAxisLine(true);
+
+        mLineChart.setDrawGridBackground(false);
+        mLineChart.setGridBackgroundColor(Color.TRANSPARENT);
+//        mLineChart.getAxisLeft().setTextColor(Color.BLACK);
+        mLineChart.getAxisRight().setEnabled(true);
+        mLineChart.getAxisRight().setAxisLineColor(Color.TRANSPARENT);
+        mLineChart.getAxisRight().setGridColor(Color.TRANSPARENT);
+        mLineChart.getAxisRight().setTextColor(Color.TRANSPARENT);
+        mLineChart.getAxisLeft().setAxisLineColor(Color.TRANSPARENT);
+        mLineChart.getAxisLeft().setGridColor(Color.TRANSPARENT);
+        mLineChart.getAxisLeft().setTextColor(Color.TRANSPARENT);
+        mLineChart.setAutoScaleMinMaxEnabled(true);
+
+        // animate calls invalidate()...
+        mLineChart.animateX(2500);
+
+        // add data
+        mLineChart.setData(data);
+        mLineChart.invalidate();
+    }
+
+    private LineData getData(List<Environment> environments) {
+        if (environments == null) return new LineData();
+        ArrayList<Entry> values = new ArrayList<>();
+
+        for (int i = 0; i < environments.size(); i++) {
+            values.add(new Entry(i, Math.round(environments.get(i).getTemperature())));
+        }
+
+        // create a dataset and give it a type
+        LineDataSet set1 = new LineDataSet(values, "DataSet 1");
+         set1.setColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryDark));
+         set1.setValueTextColor(Color.BLACK);
+
+        set1.setLineWidth(2f);
+        set1.setCircleColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryDark));
+        set1.setHighLightColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryDark));
+        set1.setCircleColorHole(ContextCompat.getColor(getContext(), R.color.colorPrimaryDark));
+        set1.setDrawValues(true);
+        set1.setDrawCircles(true);
+        set1.setDrawFilled(true);
+        set1.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+
+        // create a data object with the data sets
+        return new LineData(set1);
+    }
+
 }

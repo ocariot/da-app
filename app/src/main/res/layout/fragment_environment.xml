@@ -1,92 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/data_swipe_refresh"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".view.ui.fragment.EnvironmentFragment">
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/data_swipe_refresh"
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="@dimen/default_padding">
+        android:paddingTop="@dimen/default_padding"
+        android:scrollbarSize="2dp"
+        android:scrollbarThumbVertical="@color/colorPrimary">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/default_padding">
-
-            <TextView
-                android:id="@+id/location_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@null"
-                android:textSize="16sp" />
-
-            <android.support.v7.widget.AppCompatSpinner
-                android:id="@+id/room_spinner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/location_tv"
-                android:layout_centerInParent="true"
-                android:layout_marginTop="30dp"
-                android:entries="@array/room_sample_array"
-                android:gravity="center"
-                android:textAlignment="center"
-                android:visibility="visible" />
+            android:layout_height="match_parent">
 
             <LinearLayout
-                android:id="@+id/box_datetime"
+                android:id="@+id/box_1"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_below="@id/room_spinner"
-                android:layout_marginTop="40dp"
+                android:layout_height="wrap_content"
                 android:gravity="center"
-                android:orientation="horizontal"
-                android:weightSum="3">
-
-                <android.support.v7.widget.AppCompatImageButton
-                    android:id="@+id/prev_img_bt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="45dp"
-                    android:layout_marginTop="2dp"
-                    android:layout_weight="1"
-                    android:adjustViewBounds="true"
-                    android:background="?android:selectableItemBackground"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/ic_action_prev_light" />
+                android:orientation="vertical"
+                android:padding="@dimen/default_padding">
 
                 <TextView
-                    android:id="@+id/datetime_tv"
-                    android:layout_width="260dp"
+                    android:id="@+id/location_tv"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0"
-                    android:gravity="center"
-                    android:text="segunda-feira, dezxemrp, 12, 2018"
+                    android:layout_gravity="start"
+                    android:text="@null"
                     android:textSize="16sp" />
 
-                <android.support.v7.widget.AppCompatImageButton
-                    android:id="@+id/next_img_bt"
+                <android.support.v7.widget.AppCompatSpinner
+                    android:id="@+id/room_spinner"
                     android:layout_width="wrap_content"
-                    android:layout_height="45dp"
-                    android:layout_marginTop="2dp"
-                    android:layout_weight="1"
-                    android:adjustViewBounds="true"
-                    android:background="?android:selectableItemBackground"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/ic_action_next_light" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:entries="@array/room_sample_array"
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:visibility="visible" />
+
+                <LinearLayout
+                    android:id="@+id/box_datetime"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="40dp"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:weightSum="3">
+
+                    <android.support.v7.widget.AppCompatImageButton
+                        android:id="@+id/prev_img_bt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="45dp"
+                        android:layout_marginTop="2dp"
+                        android:layout_weight="1"
+                        android:adjustViewBounds="true"
+                        android:background="?android:selectableItemBackground"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_action_prev_light" />
+
+                    <TextView
+                        android:id="@+id/datetime_tv"
+                        android:layout_width="260dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:gravity="center"
+                        android:text="segunda-feira, dezxemrp, 12, 2018"
+                        android:textSize="16sp" />
+
+                    <android.support.v7.widget.AppCompatImageButton
+                        android:id="@+id/next_img_bt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="45dp"
+                        android:layout_marginTop="2dp"
+                        android:layout_weight="1"
+                        android:adjustViewBounds="true"
+                        android:background="?android:selectableItemBackground"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_action_next_light" />
+                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/box_graph"
                 android:layout_width="match_parent"
-                android:layout_height="120dp"
-                android:layout_below="@id/box_datetime"
+                android:layout_height="150dp"
+                android:layout_below="@id/box_1"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="30dp"
-                android:background="@color/colorPrimary"
-                android:orientation="horizontal" />
+                android:orientation="horizontal">
+
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/env_chart"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/box_infors"
@@ -96,6 +111,7 @@
                 android:layout_marginTop="40dp"
                 android:baselineAligned="false"
                 android:orientation="horizontal"
+                android:padding="@dimen/default_padding"
                 android:weightSum="2">
 
                 <RelativeLayout
@@ -209,5 +225,5 @@
                 </RelativeLayout>
             </LinearLayout>
         </RelativeLayout>
-    </android.support.v4.widget.SwipeRefreshLayout>
-</LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+</android.support.v4.widget.SwipeRefreshLayout>
