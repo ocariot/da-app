@@ -30,13 +30,13 @@ public class PhysicalActivityDetail extends AppCompatActivity {
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
 
-    @BindView(R.id.date_start_tv)
+    @BindView(R.id.sleep_period_tv)
     TextView dateStartTextView;
 
     @BindView(R.id.datetime_start__details_tv)
     TextView datetimeStartTextView;
 
-    @BindView(R.id.duration_tv)
+    @BindView(R.id.sleep_duration_tv)
     TextView durationTextView;
 
     @BindView(R.id.steps_tv)
@@ -68,7 +68,7 @@ public class PhysicalActivityDetail extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_physical_activity_detail);
+        setContentView(R.layout.activity_physical_activity_detail);
         ButterKnife.bind(this);
         setSupportActionBar(mToolbar);
 

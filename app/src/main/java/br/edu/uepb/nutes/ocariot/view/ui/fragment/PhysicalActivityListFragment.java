@@ -110,7 +110,8 @@ public class PhysicalActivityListFragment extends Fragment {
         if (context instanceof OnClickActivityListener) {
             mListener = (OnClickActivityListener) context;
         } else {
-            throw new ClassCastException();
+            throw new ClassCastException("The implementation of the " +
+                    "OnClickActivityListener interface is mandatory!");
         }
     }
 
@@ -211,7 +212,7 @@ public class PhysicalActivityListFragment extends Fragment {
         loading(true);
 
         ocariotRepository
-                .listActivities(userAccess.getSubject(), "start_time", 1, 100)
+                .listActivities(userAccess.getSubject(), "-start_time", 1, 100)
                 .subscribe(new DisposableObserver<List<Activity>>() {
                     @Override
                     public void onNext(List<Activity> activities) {
@@ -323,5 +324,9 @@ public class PhysicalActivityListFragment extends Fragment {
             activity.setUser(user);
         }
         return activities;
+    }
+
+    public interface OnClickActivityListener {
+        void onClickActivity(Activity activity);
     }
 }

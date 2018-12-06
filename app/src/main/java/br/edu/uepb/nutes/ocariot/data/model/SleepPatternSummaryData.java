@@ -52,6 +52,14 @@ public class SleepPatternSummaryData implements Parcelable {
         this.count = count;
     }
 
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+
     @Override
     public String toString() {
         return "SleepPatternSummaryData{" +

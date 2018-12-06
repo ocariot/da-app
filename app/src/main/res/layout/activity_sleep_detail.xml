@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".view.ui.activity.PhysicalActivityDetail">
+
+    <include
+        layout="@layout/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="@dimen/default_padding"
+        android:scrollbarSize="2dp"
+        android:scrollbarThumbVertical="@color/colorPrimary">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/default_padding"
+            android:paddingBottom="40dp">
+
+            <LinearLayout
+                android:id="@+id/box_1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false"
+                android:weightSum="2">
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.2">
+
+                    <ImageView
+                        android:id="@+id/sleep_bed_img"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:contentDescription="@string/img_desc_clock"
+                        android:tint="@color/colorAccent"
+                        app:srcCompat="@drawable/ic_bed" />
+
+                    <TextView
+                        android:id="@+id/sleep_period_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@+id/sleep_bed_img"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginStart="45dp"
+                        android:layout_marginTop="5dp"
+                        android:text="00:15 - 07:20"
+                        android:textSize="16sp" />
+
+                    <ImageView
+                        android:id="@+id/clock_img"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_below="@+id/sleep_period_tv"
+                        android:layout_marginTop="20dp"
+                        android:contentDescription="@string/img_desc_clock"
+                        android:tint="@color/colorAccent"
+                        app:srcCompat="@drawable/ic_clock" />
+
+                    <TextView
+                        android:id="@+id/sleep_duration_hour_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@+id/clock_img"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginStart="45dp"
+                        android:layout_marginTop="-2dp"
+                        android:text="07"
+                        android:textSize="24sp" />
+
+                    <TextView
+                        android:id="@+id/sleep_duration_hours_title_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/sleep_duration_hour_tv"
+                        android:layout_marginStart="75dp"
+                        android:text="@string/title_hours"
+                        android:textSize="16sp" />
+
+
+                    <TextView
+                        android:id="@+id/sleep_duration_minutes_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/sleep_duration_hour_tv"
+                        android:layout_marginStart="120dp"
+                        android:text="15"
+                        android:textSize="24sp" />
+
+                    <TextView
+                        android:id="@+id/sleep_duration_minutes_title_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/sleep_duration_hours_title_tv"
+                        android:layout_marginStart="150dp"
+                        android:text="@string/title_minutes"
+                        android:textSize="16sp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.8"
+                    android:gravity="right">
+
+                    <TextView
+                        android:id="@+id/sleep_efficiency_title_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:text="@string/title_sleep_efficiency"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/sleep_efficiency_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/sleep_efficiency_title_tv"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginTop="-8dp"
+                        android:text="81%"
+                        android:textColor="@color/colorWarning"
+                        android:textSize="50sp" />
+                    <!---->
+                </RelativeLayout>
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/box_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/box_1"
+                android:layout_marginTop="40dp">
+
+                <com.github.mikephil.charting.charts.BarChart
+                    android:id="@+id/sleep_chart_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:background="@color/colorPrimary" />
+
+                <TextView
+                    android:id="@+id/sleep_date_start_graph_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/sleep_chart_bar"
+                    android:layout_marginTop="5dp"
+                    android:text="00:15"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/sleep_date_end_graph_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/sleep_chart_bar"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="5dp"
+                    android:text="07:15"
+                    android:textSize="16sp" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/box_3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/box_2"
+                android:layout_marginTop="40dp"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/cicle"
+                        app:backgroundTint="@color/colorPrimaryDark" />
+
+                    <TextView
+                        android:id="@+id/title_asleep"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginStart="20dp"
+                        android:text="@string/title_asleep"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/asleep_count_times_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/title_asleep"
+                        android:layout_marginStart="20dp"
+                        android:text="7 times"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/asleep_duration_hours_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/asleep_count_times_tv"
+                        android:layout_marginStart="20dp"
+                        android:text="23"
+                        android:textSize="22sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/asleep_duration_hours_tv"
+                        android:layout_marginStart="50dp"
+                        android:text="@string/title_min"
+                        android:textSize="15sp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/cicle"
+                        app:backgroundTint="@color/colorPrimary" />
+
+                    <TextView
+                        android:id="@+id/title_restless"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginStart="20dp"
+                        android:text="@string/title_restless"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/restless_count_times_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/title_restless"
+                        android:layout_marginStart="20dp"
+                        android:text="7 times"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/restless_duration_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/restless_count_times_tv"
+                        android:layout_marginStart="20dp"
+                        android:text="23"
+                        android:textSize="22sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/restless_duration_tv"
+                        android:layout_marginStart="50dp"
+                        android:text="@string/title_min"
+                        android:textSize="15sp" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/box_4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/box_3"
+                android:layout_marginTop="40dp"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/cicle"
+                        app:backgroundTint="@color/colorWarning" />
+
+                    <TextView
+                        android:id="@+id/title_awake"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginStart="20dp"
+                        android:text="@string/title_awake"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/awake_count_times_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/title_awake"
+                        android:layout_marginStart="20dp"
+                        android:text="7 times"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/awake_duration_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/awake_count_times_tv"
+                        android:layout_marginStart="20dp"
+                        android:text="23"
+                        android:textSize="22sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/awake_duration_tv"
+                        android:layout_marginStart="50dp"
+                        android:text="@string/title_min"
+                        android:textSize="15sp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/cicle_awake"
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/cicle"
+                        app:backgroundTint="@color/colorPrimary" />
+
+                    <TextView
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:layout_alignBaseline="@+id/cicle_awake"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/cicle"
+                        app:backgroundTint="@color/colorWarning" />
+
+                    <TextView
+                        android:id="@+id/awake_restles_duration_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/cicle_awake"
+                        android:layout_marginStart="20dp"
+                        android:text="23"
+                        android:textSize="22sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/awake_restles_duration_tv"
+                        android:layout_marginStart="50dp"
+                        android:text="@string/title_min"
+                        android:textSize="15sp" />
+                </RelativeLayout>
+            </LinearLayout>
+        </RelativeLayout>
+    </android.support.v4.widget.NestedScrollView>
+</LinearLayout>

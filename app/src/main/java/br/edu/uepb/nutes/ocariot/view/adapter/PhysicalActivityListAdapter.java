@@ -19,6 +19,8 @@ import butterknife.ButterKnife;
 
 /**
  * PhysicalActivityListAdapter implementation.
+ *
+ * @author Copyright (c) 2018, NUTES/UEPB
  */
 public class PhysicalActivityListAdapter extends BaseAdapter<Activity> {
     private final Context context;
@@ -94,7 +96,7 @@ public class PhysicalActivityListAdapter extends BaseAdapter<Activity> {
         @BindView(R.id.name_activity_tv)
         TextView name;
 
-        @BindView(R.id.duration_tv)
+        @BindView(R.id.sleep_duration_tv)
         TextView duration;
 
         @BindView(R.id.date_tv)

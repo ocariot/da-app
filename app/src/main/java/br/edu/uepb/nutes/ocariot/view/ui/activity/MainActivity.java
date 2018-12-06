@@ -11,12 +11,9 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +21,8 @@ import java.util.Objects;
 
 import br.edu.uepb.nutes.ocariot.R;
 import br.edu.uepb.nutes.ocariot.data.model.Activity;
+import br.edu.uepb.nutes.ocariot.data.model.Sleep;
 import br.edu.uepb.nutes.ocariot.view.ui.fragment.EnvironmentFragment;
-import br.edu.uepb.nutes.ocariot.view.ui.fragment.OnClickActivityListener;
 import br.edu.uepb.nutes.ocariot.view.ui.fragment.PhysicalActivityListFragment;
 import br.edu.uepb.nutes.ocariot.view.ui.fragment.SleepListFragment;
 import br.edu.uepb.nutes.ocariot.view.ui.fragment.WelcomeFragment;
@@ -39,7 +36,8 @@ import butterknife.ButterKnife;
  *
  * @author Copyright (c) 2018, NUTES/UEPB
  */
-public class MainActivity extends AppCompatActivity implements OnClickActivityListener,
+public class MainActivity extends AppCompatActivity implements PhysicalActivityListFragment.OnClickActivityListener,
+        SleepListFragment.OnClickSleepListener,
         WelcomeFragment.OnClickWelcomeListener,
         BottomNavigationView.OnNavigationItemSelectedListener {
     private final String LOG_TAG = MainActivity.class.getSimpleName();
@@ -180,6 +178,13 @@ public class MainActivity extends AppCompatActivity implements OnClickActivityLi
     public void onClickActivity(Activity activity) {
         Intent intent = new Intent(this, PhysicalActivityDetail.class);
         intent.putExtra(PhysicalActivityDetail.ACTIVITY_DETAIL, activity);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onClickSleep(Sleep sleep) {
+        Intent intent = new Intent(this, SleepDetail.class);
+        intent.putExtra(SleepDetail.SLEEP_DETAIL, sleep);
         startActivity(intent);
     }
 

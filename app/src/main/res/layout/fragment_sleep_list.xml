@@ -18,8 +18,7 @@
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/data_swipe_refresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingTop="@dimen/default_padding">
+        android:layout_height="match_parent">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/sleep_list"

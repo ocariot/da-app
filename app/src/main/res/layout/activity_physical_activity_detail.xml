@@ -18,7 +18,7 @@
         android:padding="@dimen/default_padding">
 
         <TextView
-            android:id="@+id/date_start_tv"
+            android:id="@+id/sleep_period_tv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="2018-86-34"
@@ -28,7 +28,7 @@
             android:id="@+id/datetime_start__details_tv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/date_start_tv"
+            android:layout_below="@+id/sleep_period_tv"
             android:layout_alignParentStart="true"
             android:text="Quara-fiera at 22:33:22" />
 
@@ -51,7 +51,7 @@
             app:srcCompat="@drawable/ic_clock" />
 
         <TextView
-            android:id="@+id/duration_tv"
+            android:id="@+id/sleep_duration_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/clock_img"

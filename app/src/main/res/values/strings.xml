@@ -12,6 +12,15 @@
     <string name="title_humidity">Humidity</string>
     <string name="title_welcome">Welcome</string>
     <string name="title_settings">Settings</string>
+    <string name="title_hours">hours</string>
+    <string name="title_minutes">minutes</string>
+    <string name="title_min">min</string>
+    <string name="title_sleep_efficiency">Sleep Efficiency</string>
+    <string name="title_asleep">Asleep</string>
+    <string name="title_restless">Restless</string>
+    <string name="title_awake">Awake</string>
+    <string name="title_awake_restless">Awake/Restless</string>
+    <string name="title_times">times</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -45,9 +54,11 @@
 
     <!-- FORMAT DATES -->
     <string name="date_format1">yyyy-MM-dd</string>
-    <string name="date_time_abb1">MMMM dd \'at\' hh:mm a</string>
-    <string name="date_time_abb2">EEEE \'at\' hh:mm:ss a</string>
+    <string name="date_time_abb1">MMMM dd \'at\' HH:mm a</string>
+    <string name="date_time_abb2">EEEE \'at\' HH:mm:ss a</string>
     <string name="date_time_abb3">EEEE, MMMM dd, YYYY</string>
+    <string name="date_time_abb4">EEE, MMMM dd, YYYY</string>
+    <string name="hour_format1">HH:mm</string>
 
     <!-- SETTINGS -->
     <string name="login_with_fitbit">Login With FitBit</string>
@@ -86,6 +97,6 @@
     <string name="required_password">Password is required</string>
 
     <string-array name="room_sample_array">
-        <item>Select the room...</item>
+        <item>Select the room&#8230;</item>
     </string-array>
 </resources>

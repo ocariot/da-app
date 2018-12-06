@@ -6,6 +6,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,6 +33,8 @@ import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper
 import br.edu.uepb.nutes.ocariot.data.repository.remote.fitbit.FitBitNetRepository;
 import br.edu.uepb.nutes.ocariot.data.repository.remote.ocariot.OcariotNetRepository;
 import br.edu.uepb.nutes.ocariot.utils.DateUtils;
+import br.edu.uepb.nutes.ocariot.view.adapter.SleepListAdapter;
+import br.edu.uepb.nutes.ocariot.view.adapter.base.OnRecyclerViewListener;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.observers.DisposableObserver;
@@ -42,10 +47,10 @@ import io.reactivex.observers.DisposableObserver;
 public class SleepListFragment extends Fragment {
     private final String LOG_TAG = "SleepListFragment";
 
-    //    private PhysicalActivityListAdapter mAdapter;
+    private SleepListAdapter mAdapter;
     private FitBitNetRepository fitBitRepository;
     private OcariotNetRepository ocariotRepository;
-    //    private OnClickActivityListener mListener;
+    private OnClickSleepListener mListener;
     private UserAccess userAccess;
 
     /**
@@ -102,19 +107,19 @@ public class SleepListFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-//        if (context instanceof OnClickActivityListener) {
-//            mListener = (OnClickActivityListener) context;
-//        } else {
-//            throw new ClassCastException();
-//        }
+        if (context instanceof OnClickSleepListener) {
+            mListener = (OnClickSleepListener) context;
+        } else {
+            throw new ClassCastException("The implementation of the " +
+                    "OnClickSleepListener interface is mandatory!");
+        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         if (fitBitRepository != null) fitBitRepository.dispose();
-
-//        mListener = null;
+        mListener = null;
     }
 
     /**
@@ -127,44 +132,40 @@ public class SleepListFragment extends Fragment {
     }
 
     private void initRecyclerView() {
-//        mAdapter = new PhysicalActivityListAdapter(getContext());
-//        mRecyclerView.setHasFixedSize(true);
-//        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-//        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-//        mRecyclerView.addItemDecoration(new DividerItemDecoration(mRecyclerView.getContext(),
-//                new LinearLayoutManager(getContext()).getOrientation()));
-//
-//        mAdapter.setListener(new OnRecyclerViewListener<Activity>() {
-//            @Override
-//            public void onItemClick(Activity item) {
-//                Log.w(LOG_TAG, "item: " + item.toString());
-//                if (mListener != null) mListener.onClickActivity(item);
-//            }
-//
-//            @Override
-//            public void onLongItemClick(View v, Activity item) {
-//
-//            }
-//
-//            @Override
-//            public void onMenuContextClick(View v, Activity item) {
-//
-//            }
-//        });
-//
-//        mRecyclerView.setAdapter(mAdapter);
+        mAdapter = new SleepListAdapter(getContext());
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(mRecyclerView.getContext(),
+                new LinearLayoutManager(getContext()).getOrientation()));
+
+        mAdapter.setListener(new OnRecyclerViewListener<Sleep>() {
+            @Override
+            public void onItemClick(Sleep item) {
+                Log.w(LOG_TAG, "item: " + item.toString());
+                if (mListener != null) mListener.onClickSleep(item);
+            }
+
+            @Override
+            public void onLongItemClick(View v, Sleep item) {
+
+            }
+
+            @Override
+            public void onMenuContextClick(View v, Sleep item) {
+
+            }
+        });
+
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     /**
      * Initialize SwipeRefresh
      */
     private void initDataSwipeRefresh() {
-        mDataSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                Log.w(LOG_TAG, "onRefresh()");
-                if (itShouldLoadMore) loadDataOcariot();
-            }
+        mDataSwipeRefresh.setOnRefreshListener(() -> {
+            if (itShouldLoadMore) loadDataOcariot();
         });
     }
 
@@ -179,8 +180,6 @@ public class SleepListFragment extends Fragment {
                 .subscribe(new DisposableObserver<SleepList>() {
                     @Override
                     public void onNext(SleepList sleepList) {
-                        Log.w(LOG_TAG, "fitbit" + sleepList.toJsonString());
-                        Log.w(LOG_TAG, "fitbit" + Arrays.toString(sleepList.getSleepList().toArray()));
                         if (sleepList.getSleepList().size() > 0) {
                             sendSleepToOcariot(convertFitBitDataToOcariot(sleepList.getSleepList()));
                         }
@@ -217,24 +216,26 @@ public class SleepListFragment extends Fragment {
                     @Override
                     public void onNext(List<Sleep> sleep) {
                         Log.w(LOG_TAG, "OC " + Arrays.toString(sleep.toArray()));
-//                        if (sleep.size() > 0) {
-//                            mAdapter.clearItems();
-////                            mAdapter.addItems(sleep);
-//                            mNoData.setVisibility(View.GONE);
-//                        } else if (mAdapter.itemsIsEmpty()) {
-//                            mNoData.setVisibility(View.VISIBLE);
-//                        }
+                        if (sleep.size() > 0) {
+                            mAdapter.clearItems();
+                            mAdapter.addItems(sleep);
+                            mNoData.setVisibility(View.GONE);
+                        } else if (mAdapter.itemsIsEmpty()) {
+                            mNoData.setVisibility(View.VISIBLE);
+                        }
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         Log.w(LOG_TAG, e.toString());
                         loading(false);
+                        if (getContext() == null) return;
+
                         Toast.makeText(getContext(), R.string.error_500,
                                 Toast.LENGTH_SHORT).show();
-//                        if (mAdapter.itemsIsEmpty()) {
-//                            mNoData.setVisibility(View.VISIBLE);
-//                        }
+                        if (mAdapter.itemsIsEmpty()) {
+                            mNoData.setVisibility(View.VISIBLE);
+                        }
                     }
 
                     @Override
@@ -324,5 +325,9 @@ public class SleepListFragment extends Fragment {
             sleep.setUser(user);
         }
         return sleepList;
+    }
+
+    public interface OnClickSleepListener {
+        void onClickSleep(Sleep sleep);
     }
 }

@@ -36,6 +36,17 @@
                 android:value=".view.ui.activity.MainActivity" />
         </activity>
 
+
+        <activity
+            android:name=".view.ui.activity.SleepDetail"
+            android:parentActivityName=".view.ui.activity.MainActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".view.ui.activity.MainActivity" />
+        </activity>
+
+
         <activity
             android:name=".view.ui.preference.SettingsActivity"
             android:label="@string/settings_title"
