@@ -87,28 +87,33 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/box_graph"
+                android:id="@+id/box_graph_temp"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="wrap_content"
                 android:layout_below="@id/box_1"
                 android:layout_centerHorizontal="true"
-                android:orientation="horizontal">
+                android:layout_marginTop="20dp"
+                android:orientation="vertical">
 
                 <com.github.mikephil.charting.charts.LineChart
-                    android:id="@+id/env_chart"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
+                    android:id="@+id/env_chart_temp"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp" />
 
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/env_chart_humi"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_marginTop="20dp" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/box_infors"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/box_graph"
+                android:layout_below="@+id/box_graph_temp"
                 android:layout_marginTop="40dp"
-                android:layout_marginBottom="40dp"
+                android:layout_marginBottom="50dp"
                 android:baselineAligned="false"
                 android:orientation="horizontal"
                 android:padding="@dimen/default_padding"

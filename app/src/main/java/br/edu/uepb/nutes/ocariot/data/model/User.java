@@ -4,7 +4,11 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 
 /**
  * Represents User object.
@@ -24,6 +28,9 @@ public class User implements Parcelable {
     @SerializedName("password")
     private String password;
 
+    @SerializedName("school")
+    private School school;
+
     private int gender;
     private long dateBirth;
     private int height; // in cm
@@ -37,23 +44,25 @@ public class User implements Parcelable {
         this.password = password;
     }
 
-    public User(String _id, String name, String userName, String email,
-                String password, int gender, long dateBirth, int height, int groupId) {
+    public User(String _id, String name, String userName, String password, School school,
+                int gender, long dateBirth, int height, int groupId) {
         this._id = _id;
         this.name = name;
         this.userName = userName;
         this.password = password;
+        this.school = school;
         this.gender = gender;
         this.dateBirth = dateBirth;
         this.height = height;
         this.groupId = groupId;
     }
 
-    private User(Parcel in) {
+    protected User(Parcel in) {
         _id = in.readString();
         name = in.readString();
         userName = in.readString();
         password = in.readString();
+        school = in.readParcelable(School.class.getClassLoader());
         gender = in.readInt();
         dateBirth = in.readLong();
         height = in.readInt();
@@ -136,21 +145,61 @@ public class User implements Parcelable {
         this.groupId = groupId;
     }
 
+    public School getSchool() {
+        return school;
+    }
+
+    public void setSchool(School school) {
+        this.school = school;
+    }
+
+
+    /**
+     * Convert object to string in json format.
+     *
+     * @return String
+     */
+    public String toJsonString() {
+        return String.valueOf(this.toJson());
+    }
+
+    /**
+     * Convert object to json format.
+     *
+     * @return String
+     */
+    public String toJson() {
+        return new Gson().toJson(this);
+    }
+
+    /**
+     * Convert json to Object.
+     *
+     * @param json String
+     * @return User
+     */
+    public static User jsonDeserialize(String json) {
+        Type typeUser = new TypeToken<User>() {
+        }.getType();
+        return new Gson().fromJson(json, typeUser);
+    }
+
     @Override
     public int describeContents() {
         return 0;
     }
 
     @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(_id);
-        parcel.writeString(name);
-        parcel.writeString(userName);
-        parcel.writeString(password);
-        parcel.writeInt(gender);
-        parcel.writeLong(dateBirth);
-        parcel.writeInt(height);
-        parcel.writeInt(groupId);
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(_id);
+        dest.writeString(name);
+        dest.writeString(userName);
+        dest.writeString(password);
+        dest.writeParcelable(school, flags);
+        dest.writeInt(gender);
+        dest.writeLong(dateBirth);
+        dest.writeInt(height);
+        dest.writeInt(groupId);
     }
 
     @Override
@@ -167,10 +216,11 @@ public class User implements Parcelable {
     @Override
     public String toString() {
         return "User{" +
-                "id='" + _id + '\'' +
+                "_id='" + _id + '\'' +
                 ", name='" + name + '\'' +
                 ", userName='" + userName + '\'' +
                 ", password='" + password + '\'' +
+                ", school=" + school +
                 ", gender=" + gender +
                 ", dateBirth=" + dateBirth +
                 ", height=" + height +

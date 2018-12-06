@@ -2,6 +2,7 @@ package br.edu.uepb.nutes.ocariot.data.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import java.util.Objects;
@@ -11,7 +12,7 @@ import java.util.Objects;
  *
  * @author Copyright (c) 2018, NUTES/UEPB
  */
-public class Location implements Parcelable {
+public class Location implements Parcelable, Comparable<Location> {
     private String school;
     private String room;
     private String country;
@@ -99,6 +100,7 @@ public class Location implements Parcelable {
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof Location)) return false;
+
         Location location = (Location) o;
         return Objects.equals(school, location.school) &&
                 Objects.equals(room, location.room) &&
@@ -106,6 +108,7 @@ public class Location implements Parcelable {
                 Objects.equals(city, location.city);
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Location{" +
@@ -114,5 +117,19 @@ public class Location implements Parcelable {
                 ", country='" + country + '\'' +
                 ", city='" + city + '\'' +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Location o) {
+        int value = this.room.compareTo(o.room);
+        if (value < 0) {
+            return -1;
+        }
+
+        if (value > 0) {
+            return 1;
+        }
+
+        return 0;
     }
 }

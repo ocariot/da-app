@@ -74,6 +74,8 @@
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_field_required">This field is required</string>
     <string name="error_500">There was an error communicating with the server. Please try again later&#8230;</string>
+    <string name="error_401">There was an error in the authentication of your data. Please try again the login&#8230;</string>
+    <string name="error_403">You do not have permission to access this feature. Please contact the administrator&#8230;</string>
 
     <!-- MESSAGES -->
     <string name="message_no_data_display">No data to display!</string>
@@ -84,8 +86,6 @@
     <string name="required_password">Password is required</string>
 
     <string-array name="room_sample_array">
-        <item>Room 1</item>
-        <item>Room 2</item>
-        <item>Room 3</item>
+        <item>Select the room...</item>
     </string-array>
 </resources>

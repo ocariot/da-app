@@ -91,7 +91,7 @@ public class OcariotNetRepository extends BaseNetRepository {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Single<User> getById(String userId) {
+    public Single<User> getUserById(String userId) {
         return ocariotService.getUserById(userId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
@@ -122,8 +122,9 @@ public class OcariotNetRepository extends BaseNetRepository {
     }
 
     public Observable<List<Environment>> listEnvironments(String sort, int page, int limit,
-                                                          String school, String room) {
-        return ocariotService.listEnvironments(sort, page, limit, school, room)
+                                                          String school, String room,
+                                                          String dateStart, String dateEnd) {
+        return ocariotService.listEnvironments(sort, page, limit, school, room, dateStart, dateEnd)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }

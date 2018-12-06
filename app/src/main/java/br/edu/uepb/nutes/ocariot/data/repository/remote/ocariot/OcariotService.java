@@ -22,8 +22,8 @@ import retrofit2.http.Query;
  * @author Copyright (c) 2018, NUTES/UEPB
  */
 public interface OcariotService {
-    String BASE_URL_OCARIOT = "http://ocariot.nutes.uepb.edu.br:8080/"; // API GATEWAY
-//    String BASE_URL_OCARIOT = "http://192.168.50.111:3000/api/v1/"; // API GATEWAY
+        String BASE_URL_OCARIOT = "http://ocariot.nutes.uepb.edu.br:8080/"; // API GATEWAY
+//    String BASE_URL_OCARIOT = "http://192.168.31.113:3000/api/v1/"; // API GATEWAY
 
     // User
     @POST("users/auth")
@@ -64,6 +64,8 @@ public interface OcariotService {
             @Query("page") int page,
             @Query("limit") int limit,
             @Query("location.school") String school,
-            @Query("location.room") String room
+            @Query("location.room") String room,
+            @Query("timestamp") String dateStart,
+            @Query("timestamp") String dateEnd
     );
 }

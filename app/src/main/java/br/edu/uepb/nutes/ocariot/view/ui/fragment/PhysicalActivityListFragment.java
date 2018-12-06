@@ -34,6 +34,7 @@ import br.edu.uepb.nutes.ocariot.data.repository.remote.ocariot.OcariotNetReposi
 import br.edu.uepb.nutes.ocariot.utils.DateUtils;
 import br.edu.uepb.nutes.ocariot.view.adapter.PhysicalActivityListAdapter;
 import br.edu.uepb.nutes.ocariot.view.adapter.base.OnRecyclerViewListener;
+import br.edu.uepb.nutes.ocariot.view.ui.activity.MainActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.observers.DisposableObserver;
@@ -210,7 +211,7 @@ public class PhysicalActivityListFragment extends Fragment {
         loading(true);
 
         ocariotRepository
-                .listActivities(userAccess.getSubject(), "-start_time", 1, 100)
+                .listActivities(userAccess.getSubject(), "start_time", 1, 100)
                 .subscribe(new DisposableObserver<List<Activity>>() {
                     @Override
                     public void onNext(List<Activity> activities) {
@@ -226,6 +227,7 @@ public class PhysicalActivityListFragment extends Fragment {
                     @Override
                     public void onError(Throwable e) {
                         loading(false);
+                        if (getContext() == null) return;
                         Toast.makeText(getContext(), R.string.error_500,
                                 Toast.LENGTH_SHORT).show();
                         if (mAdapter.itemsIsEmpty()) {

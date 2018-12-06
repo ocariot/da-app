@@ -14,32 +14,33 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.formatter.IValueFormatter;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
 import br.edu.uepb.nutes.ocariot.R;
 import br.edu.uepb.nutes.ocariot.data.model.Environment;
 import br.edu.uepb.nutes.ocariot.data.model.Location;
-import br.edu.uepb.nutes.ocariot.data.model.UserAccess;
+import br.edu.uepb.nutes.ocariot.data.model.User;
 import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
 import br.edu.uepb.nutes.ocariot.data.repository.remote.fitbit.FitBitNetRepository;
 import br.edu.uepb.nutes.ocariot.data.repository.remote.ocariot.OcariotNetRepository;
 import br.edu.uepb.nutes.ocariot.utils.DateUtils;
-import br.edu.uepb.nutes.ocariot.view.adapter.PhysicalActivityListAdapter;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.observers.DisposableObserver;
@@ -53,13 +54,15 @@ public class EnvironmentFragment extends Fragment implements View.OnClickListene
     private final String LOG_TAG = "EnvListFragment";
     private final String FOMART_DATE_DEFAULT = "yyyy-MM-dd";
 
-    private PhysicalActivityListAdapter mAdapter;
     private FitBitNetRepository fitBitRepository;
     private OcariotNetRepository ocariotRepository;
-    private UserAccess userAccess;
-    private String currentDate;
-    private List<Entry> entries;
+    private String dateStart, dateEnd = null;
+    private List<Entry> entriesTemperature, entriesHumididy;
     private List<Environment> environments;
+    private LineChart[] mCharts;
+    private User userProfile;
+    private boolean isFirstRequest;
+    private String currentRoom;
 
     /**
      * We need this variable to lock and unlock loading more.
@@ -98,8 +101,11 @@ public class EnvironmentFragment extends Fragment implements View.OnClickListene
     @BindView(R.id.next_img_bt)
     AppCompatImageButton mNextButton;
 
-    @BindView(R.id.env_chart)
-    LineChart mLineChart;
+    @BindView(R.id.env_chart_temp)
+    LineChart mLineChartTemperature;
+
+    @BindView(R.id.env_chart_humi)
+    LineChart mLineChartHumidity;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -115,8 +121,6 @@ public class EnvironmentFragment extends Fragment implements View.OnClickListene
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        userAccess = AppPreferencesHelper.getInstance(getContext()).getUserAccessOcariot();
-        currentDate = DateUtils.getCurrentDatetime(FOMART_DATE_DEFAULT);
     }
 
     @Override
@@ -131,8 +135,12 @@ public class EnvironmentFragment extends Fragment implements View.OnClickListene
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        dateStart = DateUtils.getCurrentDatetime(FOMART_DATE_DEFAULT);
         fitBitRepository = FitBitNetRepository.getInstance(getContext());
         ocariotRepository = OcariotNetRepository.getInstance(getContext());
+        userProfile = AppPreferencesHelper.getInstance(getContext()).getUserProfile();
+        isFirstRequest = true;
+        currentRoom = null;
 
         initComponents();
     }
@@ -152,13 +160,17 @@ public class EnvironmentFragment extends Fragment implements View.OnClickListene
      * Initialize components
      */
     private void initComponents() {
+        mCharts = new LineChart[2];
+        mCharts[0] = mLineChartTemperature;
+        mCharts[1] = mLineChartHumidity;
+
         mPrevButton.setOnClickListener(this);
         mNextButton.setOnClickListener(this);
         mDatetime.setOnClickListener(this);
-        mDatetime.setText(DateUtils.formatDate(currentDate, getString(R.string.date_time_abb3)));
+        mDatetime.setText(DateUtils.formatDate(dateStart, getString(R.string.date_time_abb3)));
 
         initDataSwipeRefresh();
-        loadDataOcariot(currentDate);
+        loadDataOcariot();
     }
 
     /**
@@ -169,7 +181,7 @@ public class EnvironmentFragment extends Fragment implements View.OnClickListene
             @Override
             public void onRefresh() {
                 Log.w(LOG_TAG, "onRefresh()");
-                if (itShouldLoadMore) loadDataOcariot(currentDate);
+                if (itShouldLoadMore) loadDataOcariot();
             }
         });
     }
@@ -179,13 +191,16 @@ public class EnvironmentFragment extends Fragment implements View.OnClickListene
      * If there is no internet connection, we can display the local database.
      * Otherwise it displays from the remote server.
      */
-    private void loadDataOcariot(String date) {
-        if (userAccess == null) return;
-
+    private void loadDataOcariot() {
         loading(true);
+        if (userProfile.getSchool() == null) return;
 
         ocariotRepository
-                .listEnvironments("-timestamp", 1, 100, null, null)
+                .listEnvironments("timestamp", 1, 1000,
+                        userProfile.getSchool().getName(),
+                        currentRoom,
+                        "gte:".concat(dateStart),
+                        (dateEnd != null ? "lt:".concat(dateEnd) : null))
                 .subscribe(new DisposableObserver<List<Environment>>() {
                     @Override
                     public void onNext(List<Environment> environmentsList) {
@@ -194,6 +209,7 @@ public class EnvironmentFragment extends Fragment implements View.OnClickListene
                         populateView(environments);
 
                         loading(false);
+                        isFirstRequest = false;
                     }
 
                     @Override
@@ -209,14 +225,18 @@ public class EnvironmentFragment extends Fragment implements View.OnClickListene
     }
 
     private void populateView(List<Environment> environments) {
-        if (environments == null) return;
-
-        printChart();
-
-        Location location = environments.get(0).getLocation();
         mLocation.setText(getString(
                 R.string.environment_location,
-                location.getCity().concat(", ").concat(location.getCountry())));
+                userProfile.getSchool()
+                        .getCity().concat(", ")
+                        .concat(userProfile.getSchool().getCountry())));
+
+        if (environments == null || environments.isEmpty()) {
+            cleanCharts();
+            cleanSummary();
+            return;
+        }
+        printCharts();
 
         populateRoomAndSummary(environments);
     }
@@ -234,15 +254,32 @@ public class EnvironmentFragment extends Fragment implements View.OnClickListene
             sumTemp += env.getTemperature();
             sumHum += env.getHumidity();
         }
+
         // Room
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(Objects.requireNonNull(getContext()),
-                android.R.layout.simple_spinner_item, rooms);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mRoomSpinner.setAdapter(adapter);
+        if (isFirstRequest) {
+            Collections.sort(rooms);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(Objects.requireNonNull(getContext()),
+                    android.R.layout.simple_spinner_item, rooms);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            mRoomSpinner.setAdapter(adapter);
+            currentRoom = rooms.get(0).split(", ")[1];
+            mRoomSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    currentRoom = String.valueOf(parent.getAdapter().getItem(position)).split(", ")[1];
+                    loadDataOcariot();
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+        }
 
         // Summary
-        mLastTemp.setText(String.valueOf(Math.round(environments.get(0).getTemperature())));
-        mLastHumidity.setText(String.valueOf(Math.round(environments.get(0).getHumidity())).concat("%"));
+        mLastTemp.setText(String.valueOf(Math.round(environments.get(environments.size() - 1).getTemperature())));
+        mLastHumidity.setText(String.valueOf(Math.round(environments.get(environments.size() - 1).getHumidity())).concat("%"));
         mAverageTemp.setText(String.valueOf(Math.round((float) (sumTemp / environments.size()))));
         mAverageHumidity.setText(String.valueOf(Math.round((float) (sumHum / environments.size()))).concat("%"));
     }
@@ -266,22 +303,24 @@ public class EnvironmentFragment extends Fragment implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.prev_img_bt: {
-                currentDate = DateUtils.addDaysToDateString(currentDate, -1);
-                Log.w("DATE", " - " + currentDate);
-                mDatetime.setText(DateUtils.formatDate(currentDate, getString(R.string.date_time_abb3)));
+                dateEnd = dateStart;
+                dateStart = DateUtils.addDaysToDateString(dateStart, -1);
+                Log.w("DATE", " - " + dateStart);
 
-                mDatetime.setText(DateUtils.formatDate(currentDate, getString(R.string.date_time_abb3)));
-
-                loadDataOcariot(currentDate);
+                mDatetime.setText(DateUtils.formatDate(dateStart, getString(R.string.date_time_abb3)));
+                loadDataOcariot();
             }
             break;
             case R.id.next_img_bt: {
                 String dateToday = DateUtils.getCurrentDatetime(FOMART_DATE_DEFAULT);
-                if (currentDate.equals(dateToday)) return;
+                if (dateStart.equals(dateToday)) return;
 
-                currentDate = DateUtils.addDaysToDateString(currentDate, 1);
-                mDatetime.setText(DateUtils.formatDate(currentDate, getString(R.string.date_time_abb3)));
-                loadDataOcariot(currentDate);
+                dateStart = DateUtils.addDaysToDateString(dateStart, 1);
+                if (dateStart.equals(dateToday)) dateEnd = null;
+                else dateEnd = DateUtils.addDaysToDateString(dateStart, 1);
+
+                mDatetime.setText(DateUtils.formatDate(dateStart, getString(R.string.date_time_abb3)));
+                loadDataOcariot();
             }
             break;
             case R.id.datetime_tv:
@@ -291,116 +330,151 @@ public class EnvironmentFragment extends Fragment implements View.OnClickListene
         }
     }
 
-    private void printChart() {
-//        ((LineDataSet) data.getDataSetByIndex(0)).setCircleColorHole(Color.RED);
+    private void printCharts() {
+        for (int i = 0; i < mCharts.length; i++) {
+            final int chartId = i;
+            mCharts[i].getXAxis().setValueFormatter(prepareLineData()[i]);
+            mCharts[i].setData(getData()[i]);
 
-        // no description text
-        mLineChart.getDescription().setEnabled(false);
+            mCharts[i].getDescription().setEnabled(false);
 
-        // get the legend (only possible after setting data)
-        Legend l = mLineChart.getLegend();
-        l.setEnabled(false);
+            // get the legend (only possible after setting data)
+            mCharts[i].getLegend().setEnabled(true);
 
-        mLineChart.getAxisLeft().setEnabled(true);
-        mLineChart.getAxisLeft().setEnabled(true);
+            mCharts[i].getXAxis().setEnabled(true);
+            mCharts[i].getXAxis().setDrawGridLines(false);
+            mCharts[i].getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+            mCharts[i].getXAxis().setDrawAxisLine(true);
+            mCharts[i].getXAxis().setGranularity(1f);
 
-        //XAxis
-        mLineChart.getXAxis().setEnabled(true);
-        mLineChart.getXAxis().setDrawGridLines(false);
-        mLineChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
-        mLineChart.getXAxis().setDrawAxisLine(true);
-        mLineChart.getXAxis().setGranularity(1f);
-        mLineChart.getXAxis().setValueFormatter(prepareVariablesLineData(environments));
+            mCharts[i].setDrawGridBackground(false);
+            mCharts[i].setGridBackgroundColor(Color.TRANSPARENT);
+            mCharts[i].getAxisRight().setEnabled(true);
+            mCharts[i].getAxisRight().setAxisLineColor(Color.TRANSPARENT);
+            mCharts[i].getAxisRight().setGridColor(Color.TRANSPARENT);
+            mCharts[i].getAxisRight().setTextColor(Color.TRANSPARENT);
+            mCharts[i].setExtraOffsets(-15f, 0f, -5f, 0f);
 
+            if (chartId == 0) { // temperature
+                mCharts[i].getAxisLeft().setAxisMinimum(0);
+                mCharts[i].getAxisLeft().setAxisMaximum(getData()[i].getYMax());
+                mCharts[i].getAxisRight().setAxisMinimum(0);
+                mCharts[i].getAxisRight().setAxisMaximum(getData()[i].getYMax());
+            } else { // humidity
+                mCharts[i].getAxisLeft().setAxisMinimum(0);
+                mCharts[i].getAxisLeft().setAxisMaximum(getData()[i].getYMax() + 2);
+                mCharts[i].getAxisRight().setAxisMinimum(0);
+                mCharts[i].getAxisRight().setAxisMaximum(getData()[i].getYMax() + 2);
+            }
 
-        mLineChart.setDrawGridBackground(false);
-        mLineChart.setGridBackgroundColor(Color.TRANSPARENT);
-        mLineChart.getAxisRight().setEnabled(true);
-        mLineChart.getAxisRight().setAxisLineColor(Color.TRANSPARENT);
-        mLineChart.getAxisRight().setGridColor(Color.TRANSPARENT);
-        mLineChart.getAxisRight().setTextColor(Color.TRANSPARENT);
-        mLineChart.getAxisLeft().setAxisLineColor(Color.TRANSPARENT);
-        mLineChart.getAxisLeft().setGridColor(Color.TRANSPARENT);
-        mLineChart.getAxisLeft().setTextColor(Color.TRANSPARENT);
+            mCharts[i].getAxisLeft().setEnabled(true);
+            mCharts[i].getAxisLeft().setAxisLineColor(Color.TRANSPARENT);
+            mCharts[i].getAxisLeft().setGridColor(Color.TRANSPARENT);
+            mCharts[i].getAxisLeft().setTextColor(Color.TRANSPARENT);
 
-
-//        mLineChart.setVisibleXRangeMaximum(10f);
-
-//        mLineChart.setVisibleYRangeMaximum(50, YAxis.AxisDependency.LEFT);
-//        mLineChart.setVisibleYRangeMinimum(10.6f, YAxis.AxisDependency.LEFT);
-
-//        mLineChart.setVisibleXRangeMinimum(2f);
-//        mLineChart.setVisibleXRangeMaximum(10f);
-
-
-////        mLineChart.setVisibleXRangeMaximum(10f);
-
-        // animate calls invalidate()...
-        mLineChart.animateX(2500);
-
-        // add data
-        mLineChart.setData(getData());
-
-        mLineChart.setAutoScaleMinMaxEnabled(false);
-        mLineChart.setVisibleXRangeMaximum(10f); // O maximo q posso diminuir
-        mLineChart.setVisibleXRangeMinimum(5f); // O máximo q posso esticar
-//        mLineChart.setVisibleYRangeMaximum(2f, YAxis.AxisDependency.RIGHT);
-//        mLineChart.setVisibleYRangeMinimum(0f, YAxis.AxisDependency.LEFT);
-//        mLineChart.getXAxis().setAxisMinValue(0);
-//        mLineChart.getXAxis().setAxisMaxValue(10);
-//        mLineChart.getAxisLeft().setAxisMinValue(-2);
-        mLineChart.getAxisLeft().setAxisMaximum(29f);
-        mLineChart.getAxisLeft().setAxisMinimum(0f);
-//        mLineChart.getAxisLeft().setAxisMaxValue(40);
-//        leftAxis.setAxisMaxValue(params.YMax);
-//        mLineChart.getXAxis().mAxisRange(5f, YAxis.AxisDependency.LEFT);
-//        mLineChart.getAxisLeft().setAxisMinimum(1.5f);
-//        mLineChart.getAxisLeft().setAxisMaximum(50f);
-        mLineChart.moveViewToX(environments.get(environments.size() - 1).getTemperature());
-        mLineChart.invalidate();
-    }
-
-    private LineData getData() {
-        if (environments == null) return new LineData();
-        entries = new ArrayList<>();
-
-        for (int i = 0; i < this.environments.size(); i++) {
-            entries.add(new Entry(i, Math.round(this.environments.get(i).getTemperature())));
+            mCharts[i].setAutoScaleMinMaxEnabled(false);
+            mCharts[i].setVisibleXRangeMaximum(7f); // O maximo q posso diminuir
+            mCharts[i].setVisibleXRangeMinimum(2f); // O máximo q posso esticar
+            mCharts[i].animateX(1000);
+            mCharts[i].moveViewToX(environments.size());
+            mCharts[i].getLineData().setValueFormatter(new IValueFormatter() {
+                @Override
+                public String getFormattedValue(float value, Entry entry, int dataSetIndex,
+                                                ViewPortHandler viewPortHandler) {
+                    if (chartId == 0) return Math.round(value) + "°C";
+                    return Math.round(value) + "%";
+                }
+            });
         }
 
-        // create a dataset and give it a type
-        LineDataSet set1 = new LineDataSet(entries, "DataSet 1");
-        set1.setColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryDark));
-        set1.setValueTextColor(Color.BLACK);
-
-        set1.setLineWidth(2f);
-        set1.setCircleColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryDark));
-        set1.setHighLightColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryDark));
-        set1.setCircleColorHole(ContextCompat.getColor(getContext(), R.color.colorPrimaryDark));
-        set1.setDrawValues(true);
-        set1.setDrawCircles(true);
-        set1.setDrawFilled(true);
-        set1.setMode(LineDataSet.Mode.CUBIC_BEZIER);
-
-        // create a data object with the data sets
-        return new LineData(set1);
+        mCharts[0].invalidate(); // print graph temperature
+        mCharts[1].invalidate(); // print graph humidity
     }
 
-    public IAxisValueFormatter prepareVariablesLineData(List<Environment> environments) {
-        if (entries == null) entries = new ArrayList<>();
-        final String[] quarters = new String[environments.size()];
+    private LineData[] getData() {
+        LineData[] lineData = new LineData[mCharts.length];
+        if (lineData.length == 0) return lineData;
+
+        LineDataSet[] lineDataSets = new LineDataSet[lineData.length];
+        for (int i = 0; i < mCharts.length; i++) {
+            lineData[i] = new LineData();
+
+            int color = 0;
+            if (i == 0) { // temperature
+                lineDataSets[i] = new LineDataSet(entriesTemperature,
+                        getString(R.string.title_temperature));
+                color = ContextCompat.getColor(
+                        Objects.requireNonNull(getContext()), R.color.colorPrimaryDark);
+                lineDataSets[i].setFillColor(ContextCompat.getColor(
+                        Objects.requireNonNull(getContext()), R.color.colorPrimary));
+            } else { // humidity
+                lineDataSets[i] = new LineDataSet(entriesHumididy,
+                        getString(R.string.title_humidity));
+                color = ContextCompat.getColor(
+                        Objects.requireNonNull(getContext()), R.color.colorWarningDark);
+                lineDataSets[i].setFillColor(ContextCompat.getColor(
+                        Objects.requireNonNull(getContext()), R.color.colorWarning));
+            }
+
+            lineDataSets[i].setValueTextColor(Color.BLACK);
+            lineDataSets[i].setLineWidth(2.5f);
+            lineDataSets[i].setValueTextSize(12f);
+            lineDataSets[i].setDrawValues(true);
+            lineDataSets[i].setDrawCircles(true);
+            lineDataSets[i].setDrawFilled(true);
+            lineDataSets[i].setMode(LineDataSet.Mode.CUBIC_BEZIER);
+            lineDataSets[i].setColor(color);
+            lineDataSets[i].setCircleColor(color);
+            lineDataSets[i].setHighLightColor(color);
+            lineDataSets[i].setCircleColorHole(color);
+            lineData[i].addDataSet(lineDataSets[i]);
+        }
+
+        return lineData;
+    }
+
+    private IAxisValueFormatter[] prepareLineData() {
+        final String[] quartersTemperature = new String[environments.size()];
+        final String[] quartersHumidity = new String[environments.size()];
+        entriesTemperature = new ArrayList<>();
+        entriesHumididy = new ArrayList<>();
 
         for (int i = 0; i < environments.size(); i++) {
-            String date = DateUtils.formatDateHour(environments.get(i).getTimestamp(), "HH:mm");
-            entries.add(new Entry((float) i, Math.round(environments.get(i).getTemperature())));
+            Environment env = environments.get(i);
 
-            quarters[i] = date;
+            String date = DateUtils.formatDateHour(env.getTimestamp(), "HH\'h\':mm\'m\'");
+            entriesTemperature.add(new Entry(i, Math.round(environments.get(i).getTemperature())));
+            entriesHumididy.add(new Entry(i, Math.round(environments.get(i).getHumidity())));
+
+            quartersTemperature[i] = date;
+            quartersHumidity[i] = date;
         }
 
-        // Format date
-        return ((value, axis) -> {
-            if (value >= quarters.length || value < 0) return "";
-            return quarters[(int) value];
+        IAxisValueFormatter[] axisValueFormatters = new IAxisValueFormatter[2];
+        axisValueFormatters[0] = ((value, axis) -> {
+            if (value >= quartersTemperature.length || value < 0) return "";
+            return quartersTemperature[(int) value];
         });
+
+        axisValueFormatters[1] = ((value, axis) -> {
+            if (value >= quartersHumidity.length || value < 0) return "";
+            return quartersHumidity[(int) value];
+        });
+
+        return axisValueFormatters;
+    }
+
+    private void cleanCharts() {
+        for (int i = 0; i < mCharts.length; i++) {
+            mCharts[i].clear();
+            mCharts[i].invalidate();
+        }
+    }
+
+    private void cleanSummary() {
+        mLastTemp.setText("0");
+        mLastHumidity.setText("0");
+        mAverageTemp.setText("0");
+        mAverageHumidity.setText("0");
     }
 }

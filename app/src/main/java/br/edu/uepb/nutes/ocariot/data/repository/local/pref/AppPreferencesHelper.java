@@ -9,6 +9,7 @@ import net.openid.appauth.AuthState;
 
 import org.json.JSONException;
 
+import br.edu.uepb.nutes.ocariot.data.model.User;
 import br.edu.uepb.nutes.ocariot.data.model.UserAccess;
 import br.edu.uepb.nutes.ocariot.exception.LocalPreferenceException;
 
@@ -21,6 +22,7 @@ import br.edu.uepb.nutes.ocariot.exception.LocalPreferenceException;
 public class AppPreferencesHelper implements PreferencesHelper {
     private final String PREF_KEY_AUTH_STATE_OCARIOT = "pref_key_user_access_ocariot";
     private final String PREF_KEY_AUTH_STATE_FITBIT = "pref_key_access_fitbit";
+    private final String PREF_KEY_USER_PROFILE = "pref_key_user_profile";
 
     private static AppPreferencesHelper instance;
     private SharedPreferences mPrefs;
@@ -50,6 +52,16 @@ public class AppPreferencesHelper implements PreferencesHelper {
 
         return mPrefs.edit().putString(PREF_KEY_AUTH_STATE_FITBIT,
                 authState.jsonSerializeString()).commit();
+    }
+
+    @Override
+    public boolean addUserProfile(User user) {
+        if (user == null) {
+            throw new LocalPreferenceException("attribute user can not be null or empty!");
+        }
+
+        return mPrefs.edit().putString(PREF_KEY_USER_PROFILE,
+                user.toJsonString()).commit();
     }
 
     @Override
@@ -92,6 +104,12 @@ public class AppPreferencesHelper implements PreferencesHelper {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public User getUserProfile() {
+        String user = mPrefs.getString(PREF_KEY_USER_PROFILE, null);
+        return User.jsonDeserialize(user);
     }
 
     @Override

@@ -102,8 +102,9 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(UserAccess userAccess) {
                         // save user logged
-                        if (appPref.addUserAccessOcariot(userAccess))
-                            openMainActivity();
+                        if (appPref.addUserAccessOcariot(userAccess)) {
+                            getUserProfile(userAccess.getSubject());
+                        }
                     }
 
                     @Override
@@ -122,11 +123,8 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
-    /**
-     * Open main activity.
-     */
-    private void openMainActivity() {
-        userRepository.getById(appPref.getUserAccessOcariot().getSubject())
+    private void getUserProfile(String userId) {
+        userRepository.getUserById(userId)
                 .subscribe(new SingleObserver<User>() {
                     @Override
                     public void onSubscribe(Disposable d) {
@@ -135,15 +133,36 @@ public class LoginActivity extends AppCompatActivity {
 
                     @Override
                     public void onSuccess(User user) {
-                        Log.w(LOG_TAG, user.toString());
+                        appPref.addUserProfile(user);
+                        openMainActivity();
+                        showProgress(false);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.w(LOG_TAG, e.toString());
+                        if (e instanceof HttpException) {
+                            HttpException httpEx = ((HttpException) e);
+                            if (httpEx.code() == 401) {
+                                showMessageInvalidAuth(getString(R.string.error_401));
+                                showProgress(false);
+                                return;
+                            } else if (httpEx.code() == 403) {
+                                showMessageInvalidAuth(getString(R.string.error_403));
+                                showProgress(false);
+                                return;
+                            }
+
+                            showMessageInvalidAuth(getString(R.string.error_500));
+                            showProgress(false);
+                        }
                     }
                 });
+    }
 
+    /**
+     * Open main activity.
+     */
+    private void openMainActivity() {
         startActivity(new Intent(getApplicationContext(), MainActivity.class));
         finish();
     }

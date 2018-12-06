@@ -11,9 +11,12 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +64,10 @@ public class MainActivity extends AppCompatActivity implements OnClickActivityLi
         Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.title_physical_activities);
 
         mBuBottomNavigationView.setOnNavigationItemSelectedListener(this);
+        mBuBottomNavigationView.setSelected(false);
+        mBuBottomNavigationView.setEnabled(false);
+        mBuBottomNavigationView.setFocusable(false);
+        mBuBottomNavigationView.setClickable(false);
         initViewPager();
     }
 
