@@ -96,7 +96,7 @@ public class PhysicalActivityListAdapter extends BaseAdapter<Activity> {
         @BindView(R.id.name_activity_tv)
         TextView name;
 
-        @BindView(R.id.sleep_duration_tv)
+        @BindView(R.id.duration_tv)
         TextView duration;
 
         @BindView(R.id.date_tv)

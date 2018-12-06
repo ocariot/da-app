@@ -20,7 +20,6 @@
     <string name="title_restless">Restless</string>
     <string name="title_awake">Awake</string>
     <string name="title_awake_restless">Awake/Restless</string>
-    <string name="title_times">times</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -46,6 +45,9 @@
     <string name="img_desc_activity">Activity image</string>
     <string name="img_desc_clock">Clock image</string>
     <string name="img_desc_calories">Calories image</string>
+
+    <!-- SLEEP -->
+    <string name="times_count">%s times</string>
 
     <!-- ENVIRONMENT -->
     <string name="environment_location">Location: %s</string>

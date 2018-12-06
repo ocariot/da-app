@@ -30,37 +30,37 @@ public class PhysicalActivityDetail extends AppCompatActivity {
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
 
-    @BindView(R.id.sleep_period_tv)
+    @BindView(R.id.activity_period_tv)
     TextView dateStartTextView;
 
-    @BindView(R.id.datetime_start__details_tv)
+    @BindView(R.id.activity_datetime_start_details_tv)
     TextView datetimeStartTextView;
 
-    @BindView(R.id.sleep_duration_tv)
+    @BindView(R.id.activity_duration_tv)
     TextView durationTextView;
 
-    @BindView(R.id.steps_tv)
+    @BindView(R.id.activity_steps_tv)
     TextView stepsTextView;
 
-    @BindView(R.id.calories_tv)
+    @BindView(R.id.activity_calories_tv)
     TextView caloriesTextView;
 
-    @BindView(R.id.calories_min_tv)
+    @BindView(R.id.activity_calories_min_tv)
     TextView caloriesMinuteTextView;
 
-    @BindView(R.id.title_level_sedentary_tv)
+    @BindView(R.id.activity_title_level_sedentary_tv)
     TextView sedentaryTextView;
 
-    @BindView(R.id.title_level_fairly_tv)
+    @BindView(R.id.activity_title_level_fairly_tv)
     TextView fairlyTextView;
 
-    @BindView(R.id.title_level_lightly_tv)
+    @BindView(R.id.activity_title_level_lightly_tv)
     TextView lightlyTextView;
 
-    @BindView(R.id.title_level_very_tv)
+    @BindView(R.id.activity_title_level_very_tv)
     TextView veryTextView;
 
-    @BindView(R.id.box_levels)
+    @BindView(R.id.activity_box_levels)
     RelativeLayout boxLevels;
 
     private Activity activity;
