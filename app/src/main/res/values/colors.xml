@@ -12,6 +12,8 @@
     <color name="colorDanger">#a94442</color>
     <color name="colorDangerLight">#f2dede</color>
 
+    <color name="colorBlackLight">#757575</color>
+
     <color name="colorLineDivider">#e2e2e2</color>
     <color name="colorBackgroundNavigation">#f0f0f0</color>
 </resources>

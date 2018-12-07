@@ -48,10 +48,10 @@ public class SleepListAdapter extends BaseAdapter<Sleep> {
 
             h.dateStart.setText(DateUtils.formatDateISO8601(sleep.getStartTime(),
                     context.getResources().getString(R.string.date_time_abb4), null));
-            h.period.setText(DateUtils.formatDateISO8601(sleep.getStartTime(),
-                    context.getResources().getString(R.string.hour_format1), null)
-                    .concat(" - ")
-                    .concat(DateUtils.formatDateISO8601(sleep.getEndTime(),
+            h.period.setText(String.format(Locale.getDefault(), "%s - %s",
+                    DateUtils.formatDateISO8601(sleep.getStartTime(),
+                            context.getResources().getString(R.string.hour_format1), null),
+                    DateUtils.formatDateISO8601(sleep.getEndTime(),
                             context.getResources().getString(R.string.hour_format1), null)));
             h.duration.setText(String.format(Locale.getDefault(), "%02dhrs %02dmin",
                     sleep.getDuration() / 3600000, (sleep.getDuration() / 60000) % 60));
@@ -65,8 +65,6 @@ public class SleepListAdapter extends BaseAdapter<Sleep> {
                         (sleep.getPattern().getSummary().getAsleep().getDuration() / (float) divider) * 100
                 );
             }
-            Log.w("EFFICYENCY", "EFF " + efficiency + " diviver " + divider + " asleep" +
-                    sleep.getPattern().getSummary().getAsleep().getDuration());
             if (efficiency >= 90) {
                 h.efficiency.setTextColor(ContextCompat.getColor(context, R.color.colorAccent));
             } else if (efficiency > 80) {
@@ -75,7 +73,7 @@ public class SleepListAdapter extends BaseAdapter<Sleep> {
                 h.efficiency.setTextColor(ContextCompat.getColor(context, R.color.colorDanger));
             }
 
-            h.efficiency.setText(String.format(Locale.getDefault(), "%02d%%", efficiency));
+            h.efficiency.setText(String.format(Locale.getDefault(), "%01d%%", efficiency));
 
             /**
              * OnClick Item

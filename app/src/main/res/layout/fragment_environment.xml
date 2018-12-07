@@ -38,7 +38,7 @@
                     android:id="@+id/room_spinner"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="30dp"
+                    android:layout_marginTop="20dp"
                     android:entries="@array/room_sample_array"
                     android:gravity="center"
                     android:textAlignment="center"
@@ -48,7 +48,7 @@
                     android:id="@+id/box_datetime"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="10dp"
                     android:gravity="center"
                     android:orientation="horizontal"
                     android:weightSum="3">
@@ -92,7 +92,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/box_1"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:orientation="vertical">
 
                 <com.github.mikephil.charting.charts.LineChart
@@ -112,7 +112,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/box_graph_temp"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginBottom="50dp"
                 android:baselineAligned="false"
                 android:orientation="horizontal"

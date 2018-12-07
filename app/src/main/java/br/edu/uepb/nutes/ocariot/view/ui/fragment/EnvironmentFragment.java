@@ -60,7 +60,7 @@ public class EnvironmentFragment extends Fragment implements View.OnClickListene
     private List<Environment> environments;
     private LineChart[] mCharts;
     private User userProfile;
-    private boolean isFirstRequest;
+    private boolean isFirstRequest, isLoadBlocked = true;
     private String currentRoom;
 
     /**
@@ -166,7 +166,7 @@ public class EnvironmentFragment extends Fragment implements View.OnClickListene
         mPrevButton.setOnClickListener(this);
         mNextButton.setOnClickListener(this);
         mDatetime.setOnClickListener(this);
-        mDatetime.setText(DateUtils.formatDate(dateStart, getString(R.string.date_time_abb3)));
+        mDatetime.setText(getString(R.string.today_text));
 
         initDataSwipeRefresh();
         loadDataOcariot();
@@ -262,11 +262,14 @@ public class EnvironmentFragment extends Fragment implements View.OnClickListene
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             mRoomSpinner.setAdapter(adapter);
             currentRoom = rooms.get(0).split(", ")[1];
+
             mRoomSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     currentRoom = String.valueOf(parent.getAdapter().getItem(position)).split(", ")[1];
-                    loadDataOcariot();
+                    if (!isLoadBlocked) loadDataOcariot();
+
+                    isLoadBlocked = false;
                 }
 
                 @Override
@@ -318,7 +321,11 @@ public class EnvironmentFragment extends Fragment implements View.OnClickListene
                 if (dateStart.equals(dateToday)) dateEnd = null;
                 else dateEnd = DateUtils.addDaysToDateString(dateStart, 1);
 
-                mDatetime.setText(DateUtils.formatDate(dateStart, getString(R.string.date_time_abb3)));
+                if (!dateToday.equals(dateToday)) {
+                    mDatetime.setText(DateUtils.formatDate(dateStart, getString(R.string.date_time_abb3)));
+                } else {
+                    mDatetime.setText(getString(R.string.title_today));
+                }
                 loadDataOcariot();
             }
             break;
@@ -372,8 +379,8 @@ public class EnvironmentFragment extends Fragment implements View.OnClickListene
             mCharts[i].getAxisLeft().setTextColor(Color.TRANSPARENT);
 
             mCharts[i].setAutoScaleMinMaxEnabled(false);
-            mCharts[i].setVisibleXRangeMaximum(7f); // O maximo q posso diminuir
-            mCharts[i].setVisibleXRangeMinimum(2f); // O máximo q posso esticar
+            mCharts[i].setVisibleXRangeMaximum(7f); // The most I can decrease
+            mCharts[i].setVisibleXRangeMinimum(2f); // The most I can stretch
             mCharts[i].animateX(1000);
             mCharts[i].moveViewToX(environments.size());
             mCharts[i].getLineData().setValueFormatter(new IValueFormatter() {
@@ -417,7 +424,7 @@ public class EnvironmentFragment extends Fragment implements View.OnClickListene
 
             lineDataSets[i].setValueTextColor(Color.BLACK);
             lineDataSets[i].setLineWidth(2.5f);
-            lineDataSets[i].setValueTextSize(12f);
+            lineDataSets[i].setValueTextSize(10f);
             lineDataSets[i].setDrawValues(true);
             lineDataSets[i].setDrawCircles(true);
             lineDataSets[i].setDrawFilled(true);

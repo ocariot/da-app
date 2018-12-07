@@ -102,7 +102,7 @@ public class PhysicalActivityDetail extends AppCompatActivity {
         dateStartTextView.setText(DateUtils.formatDateISO8601(a.getStartTime(),
                 getResources().getString(R.string.date_format1), null));
         datetimeStartTextView.setText(DateUtils.formatDateISO8601(a.getStartTime(),
-                getResources().getString(R.string.date_time_abb2), null));
+                getResources().getString(R.string.date_time_abb3), null));
 
         int duration = (int) (a.getDuration() / (60 * 1000));
         durationTextView.setText(getResources().getString(R.string.duration_min, duration));

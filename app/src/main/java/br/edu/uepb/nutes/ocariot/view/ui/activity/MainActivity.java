@@ -11,6 +11,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -40,7 +41,10 @@ public class MainActivity extends AppCompatActivity implements PhysicalActivityL
         SleepListFragment.OnClickSleepListener,
         WelcomeFragment.OnClickWelcomeListener,
         BottomNavigationView.OnNavigationItemSelectedListener {
+
     private final String LOG_TAG = MainActivity.class.getSimpleName();
+    private MenuItem prevMenuItem;
+    private int currentPageNumber;
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -49,9 +53,8 @@ public class MainActivity extends AppCompatActivity implements PhysicalActivityL
     BottomNavigationView mBuBottomNavigationView;
 
     @BindView(R.id.viewpager)
-    ViewPager viewPager;
+    ViewPager mViewPager;
 
-    private MenuItem prevMenuItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,13 +70,15 @@ public class MainActivity extends AppCompatActivity implements PhysicalActivityL
         mBuBottomNavigationView.setFocusable(false);
         mBuBottomNavigationView.setClickable(false);
         initViewPager();
+
+        Log.w(LOG_TAG, "onCreate() " + currentPageNumber);
     }
 
     /**
      * Initialize View Pager.
      */
     private void initViewPager() {
-        viewPager.addOnPageChangeListener(new OnPageChangeListener() {
+        mViewPager.addOnPageChangeListener(new OnPageChangeListener() {
             @Override
             public void onPageScrolled(int i, float v, int i1) {
 
@@ -81,6 +86,8 @@ public class MainActivity extends AppCompatActivity implements PhysicalActivityL
 
             @Override
             public void onPageSelected(int position) {
+                currentPageNumber = position;
+
                 if (prevMenuItem != null) {
                     prevMenuItem.setChecked(false);
                 } else {
@@ -114,18 +121,13 @@ public class MainActivity extends AppCompatActivity implements PhysicalActivityL
         adapter.addFragment(PhysicalActivityListFragment.newInstance());
         adapter.addFragment(SleepListFragment.newInstance());
         adapter.addFragment(EnvironmentFragment.newInstance());
-        viewPager.setAdapter(adapter);
+        mViewPager.setAdapter(adapter);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
-//        if (AppPreferencesHelper.getInstance(this).getAuthStateFitBit() == null) {
-//            replaceFragment(WelcomeFragment.newInstance());
-//            return;
-//        }
-//        replaceFragment(PhysicalActivityListFragment.newInstance());
+        Log.w(LOG_TAG, "onResume() " + currentPageNumber);
     }
 
     @Override
@@ -160,13 +162,13 @@ public class MainActivity extends AppCompatActivity implements PhysicalActivityL
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.navigation_activities:
-                viewPager.setCurrentItem(0);
+                mViewPager.setCurrentItem(0);
                 break;
             case R.id.navigation_sleep:
-                viewPager.setCurrentItem(1);
+                mViewPager.setCurrentItem(1);
                 break;
             case R.id.navigation_temp_humi:
-                viewPager.setCurrentItem(2);
+                mViewPager.setCurrentItem(2);
                 break;
             default:
                 break;

@@ -38,6 +38,7 @@
                 android:layout_alignParentTop="true"
                 android:text="Run"
                 android:textAppearance="?attr/textAppearanceListItem"
+                android:textColor="@color/colorBlackLight"
                 android:textStyle="bold" />
 
             <TextView
@@ -47,7 +48,7 @@
                 android:layout_below="@+id/name_activity_tv"
                 android:layout_alignStart="@+id/name_activity_tv"
                 android:text="Aug 2 at 10:51"
-                android:textSize="12sp" />
+                android:textAppearance="?attr/textAppearanceListItemSecondary" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -74,7 +75,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
-                        android:text="15" />
+                        android:text="15"
+                        android:textAppearance="?attr/textAppearanceListItemSecondary" />
 
                     <TextView
                         android:id="@+id/duration_unit_tv"
@@ -102,7 +104,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
-                        android:text="18" />
+                        android:text="18"
+                        android:textAppearance="?attr/textAppearanceListItemSecondary" />
 
                     <TextView
                         android:id="@+id/calories_unit_tv"

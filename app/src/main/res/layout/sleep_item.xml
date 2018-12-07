@@ -26,7 +26,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Wed, August 15, 2018"
-                android:textSize="16sp"
+                android:textAppearance="?attr/textAppearanceListItem"
+                android:textColor="@color/colorBlackLight"
                 android:textStyle="bold" />
 
             <LinearLayout
@@ -56,8 +57,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="2dp"
+                        android:layout_marginTop="2dp"
                         android:text="00:51 - 07-31"
-                        android:textSize="14sp" />
+                        android:textAppearance="?attr/textAppearanceListItemSecondary" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -70,8 +72,9 @@
                         android:id="@+id/sleep_duration_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
                         android:text="07hrs 15min"
-                        android:textSize="14sp" />
+                        android:textAppearance="?attr/textAppearanceListItemSecondary" />
 
                 </LinearLayout>
 
@@ -85,11 +88,10 @@
                         android:id="@+id/sleep_efficiency_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="-6dp"
                         android:gravity="center_horizontal"
                         android:text="81%"
-                        android:textColor="@color/colorWarning"
-                        android:textSize="20sp" />
+                        android:textAppearance="?android:textAppearanceMedium"
+                        android:textColor="@color/colorWarning" />
 
                 </LinearLayout>
             </LinearLayout>
