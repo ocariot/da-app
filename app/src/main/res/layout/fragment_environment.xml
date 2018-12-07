@@ -169,7 +169,7 @@
                         android:layout_below="@+id/last_title_hum_tv"
                         android:layout_alignEnd="@+id/last_tv"
                         android:text="0%"
-                        android:textColor="@color/colorWarning"
+                        android:textColor="@color/colorBlackLight"
                         android:textSize="25sp" />
                 </RelativeLayout>
 
@@ -193,7 +193,6 @@
                         android:text="0"
                         android:textColor="@color/colorAccent"
                         android:textSize="50sp" />
-
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -225,7 +224,7 @@
                         android:layout_alignRight="@+id/average_tv"
                         android:layout_marginRight="-30dp"
                         android:text="0%"
-                        android:textColor="@color/colorWarning"
+                        android:textColor="@color/colorBlackLight"
                         android:textSize="25sp" />
                 </RelativeLayout>
             </LinearLayout>

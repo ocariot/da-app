@@ -27,10 +27,12 @@ import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import br.edu.uepb.nutes.ocariot.R;
@@ -383,13 +385,12 @@ public class EnvironmentFragment extends Fragment implements View.OnClickListene
             mCharts[i].setVisibleXRangeMinimum(2f); // The most I can stretch
             mCharts[i].animateX(1000);
             mCharts[i].moveViewToX(environments.size());
-            mCharts[i].getLineData().setValueFormatter(new IValueFormatter() {
-                @Override
-                public String getFormattedValue(float value, Entry entry, int dataSetIndex,
-                                                ViewPortHandler viewPortHandler) {
-                    if (chartId == 0) return Math.round(value) + "°C";
-                    return Math.round(value) + "%";
-                }
+            mCharts[i].getLineData().setValueFormatter((value, entry, dataSetIndex, viewPortHandler) -> {
+                if (chartId == 0) return String.format(Locale.getDefault(), "%.1f°C", value);
+                return String.format(Locale.getDefault(), "%.1f%%", value);
+
+//                if (chartId == 0) return Math.round(value) + "°C";
+//                return Math.round(value) + "%";
             });
         }
 
@@ -410,16 +411,16 @@ public class EnvironmentFragment extends Fragment implements View.OnClickListene
                 lineDataSets[i] = new LineDataSet(entriesTemperature,
                         getString(R.string.title_temperature));
                 color = ContextCompat.getColor(
-                        Objects.requireNonNull(getContext()), R.color.colorPrimaryDark);
+                        Objects.requireNonNull(getContext()), R.color.colorWarningDark);
                 lineDataSets[i].setFillColor(ContextCompat.getColor(
-                        Objects.requireNonNull(getContext()), R.color.colorPrimary));
+                        Objects.requireNonNull(getContext()), R.color.colorWarning));
             } else { // humidity
                 lineDataSets[i] = new LineDataSet(entriesHumididy,
                         getString(R.string.title_humidity));
                 color = ContextCompat.getColor(
-                        Objects.requireNonNull(getContext()), R.color.colorWarningDark);
+                        Objects.requireNonNull(getContext()), R.color.colorPrimaryDark);
                 lineDataSets[i].setFillColor(ContextCompat.getColor(
-                        Objects.requireNonNull(getContext()), R.color.colorWarning));
+                        Objects.requireNonNull(getContext()), R.color.colorPrimary));
             }
 
             lineDataSets[i].setValueTextColor(Color.BLACK);
@@ -449,8 +450,10 @@ public class EnvironmentFragment extends Fragment implements View.OnClickListene
             Environment env = environments.get(i);
 
             String date = DateUtils.formatDateHour(env.getTimestamp(), "HH\'h\':mm\'m\'");
-            entriesTemperature.add(new Entry(i, Math.round(environments.get(i).getTemperature())));
-            entriesHumididy.add(new Entry(i, Math.round(environments.get(i).getHumidity())));
+//            entriesTemperature.add(new Entry(i, Math.round(environments.get(i).getTemperature())));
+//            entriesHumididy.add(new Entry(i, Math.round(environments.get(i).getHumidity())));
+            entriesTemperature.add(new Entry(i, environments.get(i).getTemperature()));
+            entriesHumididy.add(new Entry(i, environments.get(i).getHumidity()));
 
             quartersTemperature[i] = date;
             quartersHumidity[i] = date;
