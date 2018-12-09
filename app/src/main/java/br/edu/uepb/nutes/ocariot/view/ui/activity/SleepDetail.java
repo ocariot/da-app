@@ -1,8 +1,11 @@
 package br.edu.uepb.nutes.ocariot.view.ui.activity;
 
 
+import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -11,33 +14,26 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
-import com.github.mikephil.charting.formatter.IValueFormatter;
-import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
-import com.github.mikephil.charting.utils.ColorTemplate;
-import com.github.mikephil.charting.utils.ViewPortHandler;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.utils.MPPointF;
+import com.github.mikephil.charting.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 import br.edu.uepb.nutes.ocariot.R;
-import br.edu.uepb.nutes.ocariot.data.model.Environment;
 import br.edu.uepb.nutes.ocariot.data.model.Sleep;
-import br.edu.uepb.nutes.ocariot.data.model.SleepPattern;
 import br.edu.uepb.nutes.ocariot.data.model.SleepPatternDataSet;
 import br.edu.uepb.nutes.ocariot.data.model.SleepPatternSummaryData;
 import br.edu.uepb.nutes.ocariot.utils.DateUtils;
@@ -118,8 +114,11 @@ public class SleepDetail extends AppCompatActivity {
     @BindView(R.id.restless_awake_duration_min_tv)
     TextView mRestlessAwakeDurationMinTextView;
 
-    @BindView(R.id.sleep_chart_bar)
-    BarChart mSleepChartBar;
+//    @BindView(R.id.sleep_chart_bar)
+//    BarChart mSleepChartBar;
+
+    @BindView(R.id.sleep_chart)
+    LineChart mSleepChart;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -196,7 +195,7 @@ public class SleepDetail extends AppCompatActivity {
         mDurationHourTextView.setText(String.format(Locale.getDefault(), "%02d",
                 (int) (sleep.getDuration() / 3600000)));
         mDurationMinuteTextView.setText(String.format(Locale.getDefault(), "%02d",
-                (int) ((sleep.getDuration() / 60000) % 60)));
+                (int) (sleep.getDuration() / 60000 % 60)));
         mDateStartGraph.setText(date_start);
         mDateEndGraph.setText(date_end);
 
@@ -243,143 +242,292 @@ public class SleepDetail extends AppCompatActivity {
         printChart();
     }
 
-
     private void printChart() {
-        mSleepChartBar.getDescription().setEnabled(false);
+        final List<Entry> entries = new ArrayList<>();
 
-        // o escalonamento agora só pode ser feito nos eixos x e y separadamente
-        mSleepChartBar.setPinchZoom(false);
-        mSleepChartBar.setDrawGridBackground(false);
-
-        mSleepChartBar.getAxisLeft().setDrawGridLines(false);
-        mSleepChartBar.getAxisRight().setDrawGridLines(false);
-        mSleepChartBar.getAxisRight().setEnabled(false);
-        mSleepChartBar.getAxisLeft().setEnabled(false);
-        mSleepChartBar.setDrawValueAboveBar(false);
-
-        //XAxis
-        mSleepChartBar.getXAxis().setEnabled(false);
-        mSleepChartBar.getXAxis().setDrawGridLines(false);
-        mSleepChartBar.getXAxis().setDrawAxisLine(false);
-
-        mSleepChartBar.setHighlightFullBarEnabled(false);
-
-        mSleepChartBar.getAxisLeft().setDrawLabels(false);
-        mSleepChartBar.getAxisRight().setDrawLabels(false);
-        mSleepChartBar.getXAxis().setDrawLabels(false);
-
-        mSleepChartBar.getLegend().setEnabled(false);   // Hide the legend
-
-//        mSleepChartBar.setScaleEnabled(false);
-//        mSleepChartBar.setFitBars(true);
-//        mSleepChartBar.getXAxis().setSpaceMax(0.1f);
-//
-//        // Settings for Y-Axis
-//        YAxis leftAxis = mSleepChartBar.getAxisLeft();
-//        YAxis rightAxis = mSleepChartBar.getAxisRight();
-//
-//        leftAxis.setAxisMinimum(0f);
-//        rightAxis.setAxisMinimum(0f);
-
-//        mSleepChartBar.setVisibleXRangeMinimum(400);
-
-        setData();
-    }
-
-    private void setData() {
-        int valueYMaxRestless = 3;
-        int valueYMaxAsleep = 2;
-        int valueYMaxAwake = 1;
-        List<BarEntry> entries = new ArrayList<>(); // yValues
-        List<BarEntry> entries1 = new ArrayList<>(); // yValues
-        List<BarEntry> entries2 = new ArrayList<>(); // yValues
-        List<BarEntry> entries3 = new ArrayList<>(); // yValues
-
-        List<SleepPatternDataSet> dataSet = sleep.getPattern().getDataSet();
-
-//        int totalAsleep = 0, totalRestless = 0, totalAwake = 0;
-//
-//        // Pego os totais em minutos
-//        for (SleepPatternDataSet item : dataSet) {
-//            if (item.getName().toLowerCase().equals("restless")) {
-//                totalRestless += (int) item.getDuration() / 60000;
-//            } else if (item.getName().toLowerCase().equals("asleep")) {
-//                totalAsleep += (int) item.getDuration() / 60000;
-//            } else if (item.getName().toLowerCase().equals("awake")) {
-//                totalAwake += (int) item.getDuration() / 60000;
-//            }
-//        }
-        int totalBars = sleep.getPattern().getSummary().getAsleep().getCount()
-                + sleep.getPattern().getSummary().getRestless().getCount()
-                + sleep.getPattern().getSummary().getAwake().getCount();
-
+        int aux = -1;
         List<Integer> colors = new ArrayList<>();
-        for (int i = 0; i < dataSet.size(); i++) {
-            SleepPatternDataSet item = dataSet.get(i);
-            int total = 0;
-            if (item.getName().toLowerCase().equals("restless")) {
-                total = (int) item.getDuration() / 60000;
-                for (int j = 0; j < total; j++) {
+        for (int i = 0; i < sleep.getPattern().getDataSet().size(); i++) {
+            // turn your data into Entry objects
+            SleepPatternDataSet item = sleep.getPattern().getDataSet().get(i);
+            int total = (int) item.getDuration() / 60000;
+            for (int j = 0; j < total; j++) {
+                aux++;
+                if (item.getName().equalsIgnoreCase("restless")) {
+                    entries.add(new Entry(aux, 3, item));
                     colors.add(ContextCompat.getColor(this, R.color.colorPrimary));
-                    entries.add(new BarEntry(i, valueYMaxRestless));
-                    entries1.add(new BarEntry(i, valueYMaxRestless));
-                }
-            } else if (item.getName().toLowerCase().equals("asleep")) {
-                total = (int) item.getDuration() / 60000;
-                for (int j = 0; j < total; j++) {
+                } else if (item.getName().equalsIgnoreCase("asleep")) {
+                    entries.add(new Entry(aux, 2, item));
                     colors.add(ContextCompat.getColor(this, R.color.colorPrimaryDark));
-                    entries.add(new BarEntry(i, valueYMaxAsleep));
-                    entries2.add(new BarEntry(i, valueYMaxRestless));
-                }
-            } else if (item.getName().toLowerCase().equals("awake")) {
-                total = (int) item.getDuration() / 60000;
-                for (int j = 0; j < total; j++) {
-                    entries3.add(new BarEntry(i, valueYMaxRestless));
+                } else {
+                    entries.add(new Entry(aux, 1, item));
                     colors.add(ContextCompat.getColor(this, R.color.colorWarning));
-                    entries.add(new BarEntry(i, valueYMaxAwake));
                 }
             }
         }
+        // if disabled, scaling can be done on x- and y-axis separately
+        mSleepChart.setPinchZoom(false);
+        mSleepChart.getLegend().setEnabled(false);
+        mSleepChart.setDrawGridBackground(false);
+        mSleepChart.getDescription().setEnabled(false);
+        mSleepChart.setDoubleTapToZoomEnabled(false);
 
-//        List<BarEntry> entries1 = new ArrayList<>();
-//        entries.add(new BarEntry(0, 1));
+        mSleepChart.getAxisRight().setDrawGridLines(false);
+        mSleepChart.getAxisRight().setEnabled(false);
 
-        Log.w(LOG_TAG, "TOTAIS: " + entries.size());
-        BarDataSet barDataSet1 = new BarDataSet(entries, "restless");
-        BarDataSet barDataSet2 = new BarDataSet(entries, "asleep");
-        BarDataSet barDataSet3 = new BarDataSet(entries, "awake");
+        mSleepChart.getAxisLeft().setDrawGridLines(false);
+        mSleepChart.getAxisLeft().setEnabled(true);
+        mSleepChart.getAxisLeft().setDrawLabels(true);
+        mSleepChart.getAxisLeft().setLabelCount(3);
+        mSleepChart.getAxisLeft().setAxisMinimum(0f);
+        mSleepChart.getAxisLeft().setAxisMaximum(4f);
+        mSleepChart.getXAxis().setAxisMinimum(1f);
+        mSleepChart.getXAxis().setAxisMaximum(entries.size() - 1);
+        mSleepChart.getXAxis().setEnabled(false);
+        mSleepChart.getXAxis().setDrawGridLines(false);
+        mSleepChart.getXAxis().setDrawAxisLine(false);
 
-//        colors.add(ContextCompat.getColor(this, R.color.colorWarning));
-//        colors.add(ContextCompat.getColor(this, R.color.colorPrimaryDark));
-        barDataSet1.setColors(colors);
-        barDataSet2.setColors(colors);
-        barDataSet3.setColors(colors);
-//        barDataSet2.setColor(ContextCompat.getColor(this, R.color.colorWarning));
-//        barDataSet2.setColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
-        BarData data = new BarData(barDataSet1, barDataSet2, barDataSet3);
 
-        data.setValueFormatter((value, entry, dataSetIndex, viewPortHandler) -> {
-            return value + "!";
-        });
-//        XAxis xAxis = mSleepChartBar.getXAxis();
-//        xAxis.setSpaceMin(data.getBarWidth() / 2f);
-//        xAxis.setSpaceMax(data.getBarWidth() / 2f);
-        data.setBarWidth(1f);
-        mSleepChartBar.setData(data);
-        mSleepChartBar.animateY(1500);
+        Log.w("RESULT", "TOTAL - " + entries.size());
 
-        mSleepChartBar.getXAxis().setSpaceMax(0f);
-        mSleepChartBar.getXAxis().setSpaceMin(0f);
-//        mSleepChartBar.getXAxis().setAxisMinimum(0);
-        mSleepChartBar.getXAxis().setAxisMaximum(entries.size());
-        mSleepChartBar.setVisibleXRangeMaximum(entries.size());
-        mSleepChartBar.setVisibleXRangeMinimum(0f);
-        mSleepChartBar.getXAxis().setGranularity(1f);
 
-//        for (IBarDataSet set : mSleepChartBar.getData().getDataSets())
-//            ((BarDataSet) set).setBarBorderWidth(set.getBarBorderWidth() == 1.f ? 0.f : 1.f);
-        mSleepChartBar.groupBars(0, 0f, 0f);
+        LineDataSet dataSet = new LineDataSet(entries, "");
+        dataSet.setDrawCircles(false);
+        dataSet.setDrawValues(false);
+        dataSet.setMode(LineDataSet.Mode.STEPPED);
+        dataSet.setDrawHighlightIndicators(false);
+        dataSet.setLineWidth(1f);
+        dataSet.setColors(colors);
+        dataSet.setDrawFilled(true);
 
-        mSleepChartBar.invalidate();
+        LineData lineData = new LineData(dataSet);
+        mSleepChart.setData(lineData);
+        mSleepChart.setDrawGridBackground(false);
+        mSleepChart.setHardwareAccelerationEnabled(false);
+        mSleepChart.getXAxis().setGranularity(1f);
+
+        mSleepChart.getAxisLeft().setLabelCount(3);
+
+        if (Utils.getSDKInt() >= 18) {
+            // fill drawable only supported on api level 18 and above
+            Drawable drawable = ContextCompat.getDrawable(this, R.drawable.fade_sleep_chart);
+            dataSet.setFillDrawable(drawable);
+        } else {
+            dataSet.setFillColor(ContextCompat.getColor(this, R.color.colorWarningDark));
+        }
+
+        mSleepChart.getAxisLeft().setValueFormatter(new MyXAxisValueFormatter());
+        mSleepChart.getAxisLeft().setAxisLineColor(Color.TRANSPARENT);
+
+        mSleepChart.setMarker(new MyMarkerView(this, R.layout.sleep_chart_marker_view));
+
+        mSleepChart.invalidate(); // refresh
     }
+
+    private class MyXAxisValueFormatter implements IAxisValueFormatter {
+        @Override
+        public String getFormattedValue(float value, AxisBase axis) {
+            String result = "";
+            if (value == 1f) {
+                result = "Awake";
+            } else if (value == 2f) {
+                result = "Asleep";
+            } else if (value == 3f) {
+                result = "Restless";
+            }
+
+            return result;
+        }
+    }
+
+    private class MyMarkerView extends MarkerView {
+        private MPPointF mOffset;
+
+        private TextView mTitle;
+        private TextView mSubtitle;
+
+        public MyMarkerView(Context context, int layoutResource) {
+            super(context, layoutResource);
+
+            mTitle = findViewById(R.id.marker_title_tv);
+            mSubtitle = findViewById(R.id.marker_subtitle_tv);
+        }
+
+        @Override
+        public void refreshContent(Entry e, Highlight highlight) {
+            if (e.getData() instanceof SleepPatternDataSet) {
+                SleepPatternDataSet pattern = (SleepPatternDataSet) e.getData();
+                String title = "";
+                if (pattern.getName().equalsIgnoreCase("restless")) {
+                    title = getString(R.string.title_restless);
+                } else if (pattern.getName().equalsIgnoreCase("asleep")) {
+                    title = getString(R.string.title_asleep);
+                } else if (pattern.getName().equalsIgnoreCase("awake")) {
+                    title = getString(R.string.title_awake);
+                }
+
+                mTitle.setText(title.concat(String.format(Locale.getDefault(), " %d min",
+                        pattern.getDuration() / 60000)));
+
+                mSubtitle.setText(DateUtils
+                        .formatDateHour(pattern.getStartTime(), getString(R.string.hour_format1))
+                        .concat(" - ")
+                        .concat(DateUtils.formatDateHour(DateUtils.addMinutesToString(
+                                pattern.getStartTime(), (int) pattern.getDuration() / 60000),
+                                getString(R.string.hour_format1))
+                        )
+                );
+            }
+
+            super.refreshContent(e, highlight);
+        }
+
+        @Override
+        public MPPointF getOffset() {
+            if (mOffset == null) {
+                // center the marker horizontally and vertically
+                mOffset = new MPPointF(-(getWidth() / 2), -getHeight());
+            }
+            return mOffset;
+        }
+    }
+
+//    private void printChart() {
+//        mSleepChartBar.getDescription().setEnabled(false);
+//
+//        // o escalonamento agora só pode ser feito nos eixos x e y separadamente
+//        mSleepChartBar.setPinchZoom(false);
+//        mSleepChartBar.setDrawGridBackground(false);
+//
+//        mSleepChartBar.getAxisLeft().setDrawGridLines(false);
+//        mSleepChartBar.getAxisRight().setDrawGridLines(false);
+//        mSleepChartBar.getAxisRight().setEnabled(false);
+//        mSleepChartBar.getAxisLeft().setEnabled(false);
+//        mSleepChartBar.setDrawValueAboveBar(false);
+//
+//        //XAxis
+//        mSleepChartBar.getXAxis().setEnabled(false);
+//        mSleepChartBar.getXAxis().setDrawGridLines(false);
+//        mSleepChartBar.getXAxis().setDrawAxisLine(false);
+//
+//        mSleepChartBar.setHighlightFullBarEnabled(false);
+//
+//        mSleepChartBar.getAxisLeft().setDrawLabels(false);
+//        mSleepChartBar.getAxisRight().setDrawLabels(false);
+//        mSleepChartBar.getXAxis().setDrawLabels(false);
+//
+//        mSleepChartBar.getLegend().setEnabled(false);   // Hide the legend
+//
+////        mSleepChartBar.setScaleEnabled(false);
+////        mSleepChartBar.setFitBars(true);
+////        mSleepChartBar.getXAxis().setSpaceMax(0.1f);
+////
+////        // Settings for Y-Axis
+////        YAxis leftAxis = mSleepChartBar.getAxisLeft();
+////        YAxis rightAxis = mSleepChartBar.getAxisRight();
+////
+////        leftAxis.setAxisMinimum(0f);
+////        rightAxis.setAxisMinimum(0f);
+//
+////        mSleepChartBar.setVisibleXRangeMinimum(400);
+//
+//        setData();
+//    }
+
+//    private void setData() {
+//        int valueYMaxRestless = 3;
+//        int valueYMaxAsleep = 2;
+//        int valueYMaxAwake = 1;
+//        List<BarEntry> entries = new ArrayList<>(); // yValues
+//        List<BarEntry> entries1 = new ArrayList<>(); // yValues
+//        List<BarEntry> entries2 = new ArrayList<>(); // yValues
+//        List<BarEntry> entries3 = new ArrayList<>(); // yValues
+//
+//        List<SleepPatternDataSet> dataSet = sleep.getPattern().getDataSet();
+//
+////        int totalAsleep = 0, totalRestless = 0, totalAwake = 0;
+////
+////        // Pego os totais em minutos
+////        for (SleepPatternDataSet item : dataSet) {
+////            if (item.getName().toLowerCase().equals("restless")) {
+////                totalRestless += (int) item.getDuration() / 60000;
+////            } else if (item.getName().toLowerCase().equals("asleep")) {
+////                totalAsleep += (int) item.getDuration() / 60000;
+////            } else if (item.getName().toLowerCase().equals("awake")) {
+////                totalAwake += (int) item.getDuration() / 60000;
+////            }
+////        }
+//        int totalBars = sleep.getPattern().getSummary().getAsleep().getCount()
+//                + sleep.getPattern().getSummary().getRestless().getCount()
+//                + sleep.getPattern().getSummary().getAwake().getCount();
+//
+//        List<Integer> colors = new ArrayList<>();
+//        for (int i = 0; i < dataSet.size(); i++) {
+//            SleepPatternDataSet item = dataSet.get(i);
+//            int total = 0;
+//            if (item.getName().toLowerCase().equals("restless")) {
+//                total = (int) item.getDuration() / 60000;
+//                for (int j = 0; j < total; j++) {
+//                    colors.add(ContextCompat.getColor(this, R.color.colorPrimary));
+//                    entries.add(new BarEntry(i, valueYMaxRestless));
+//                    entries1.add(new BarEntry(i, valueYMaxRestless));
+//                }
+//            } else if (item.getName().toLowerCase().equals("asleep")) {
+//                total = (int) item.getDuration() / 60000;
+//                for (int j = 0; j < total; j++) {
+//                    colors.add(ContextCompat.getColor(this, R.color.colorPrimaryDark));
+//                    entries.add(new BarEntry(i, valueYMaxAsleep));
+//                    entries2.add(new BarEntry(i, valueYMaxRestless));
+//                }
+//            } else if (item.getName().toLowerCase().equals("awake")) {
+//                total = (int) item.getDuration() / 60000;
+//                for (int j = 0; j < total; j++) {
+//                    entries3.add(new BarEntry(i, valueYMaxRestless));
+//                    colors.add(ContextCompat.getColor(this, R.color.colorWarning));
+//                    entries.add(new BarEntry(i, valueYMaxAwake));
+//                }
+//            }
+//        }
+//
+////        List<BarEntry> entries1 = new ArrayList<>();
+////        entries.add(new BarEntry(0, 1));
+//
+//        Log.w(LOG_TAG, "TOTAIS: " + entries.size());
+//        BarDataSet barDataSet1 = new BarDataSet(entries, "restless");
+//        BarDataSet barDataSet2 = new BarDataSet(entries, "asleep");
+//        BarDataSet barDataSet3 = new BarDataSet(entries, "awake");
+//
+////        colors.add(ContextCompat.getColor(this, R.color.colorWarning));
+////        colors.add(ContextCompat.getColor(this, R.color.colorPrimaryDark));
+//        barDataSet1.setColors(colors);
+//        barDataSet2.setColors(colors);
+//        barDataSet3.setColors(colors);
+////        barDataSet2.setColor(ContextCompat.getColor(this, R.color.colorWarning));
+////        barDataSet2.setColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
+//        BarData data = new BarData(barDataSet1, barDataSet2, barDataSet3);
+//
+//        data.setValueFormatter((value, entry, dataSetIndex, viewPortHandler) -> {
+//            return value + "!";
+//        });
+////        XAxis xAxis = mSleepChartBar.getXAxis();
+////        xAxis.setSpaceMin(data.getBarWidth() / 2f);
+////        xAxis.setSpaceMax(data.getBarWidth() / 2f);
+//        data.setBarWidth(1f);
+//        mSleepChartBar.setData(data);
+//        mSleepChartBar.animateY(1500);
+//
+//        mSleepChartBar.getXAxis().setSpaceMax(0f);
+//        mSleepChartBar.getXAxis().setSpaceMin(0f);
+////        mSleepChartBar.getXAxis().setAxisMinimum(0);
+//        mSleepChartBar.getXAxis().setAxisMaximum(entries.size());
+//        mSleepChartBar.setVisibleXRangeMaximum(entries.size());
+//        mSleepChartBar.setVisibleXRangeMinimum(0f);
+//        mSleepChartBar.getXAxis().setGranularity(1f);
+//
+////        for (IBarDataSet set : mSleepChartBar.getData().getDataSets())
+////            ((BarDataSet) set).setBarBorderWidth(set.getBarBorderWidth() == 1.f ? 0.f : 1.f);
+//        mSleepChartBar.groupBars(0, 0f, 0f);
+//
+//        mSleepChartBar.invalidate();
+//    }
 }

@@ -137,8 +137,8 @@
                 android:layout_below="@+id/box_1"
                 android:layout_marginTop="40dp">
 
-                <com.github.mikephil.charting.charts.BarChart
-                    android:id="@+id/sleep_chart_bar"
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/sleep_chart"
                     android:layout_width="match_parent"
                     android:layout_height="200dp" />
 
@@ -146,7 +146,7 @@
                     android:id="@+id/sleep_date_start_graph_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/sleep_chart_bar"
+                    android:layout_below="@+id/sleep_chart"
                     android:layout_marginTop="5dp"
                     android:text="00:15"
                     android:textSize="16sp" />
@@ -155,7 +155,7 @@
                     android:id="@+id/sleep_date_end_graph_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/sleep_chart_bar"
+                    android:layout_below="@+id/sleep_chart"
                     android:layout_alignParentEnd="true"
                     android:layout_marginTop="5dp"
                     android:text="07:15"

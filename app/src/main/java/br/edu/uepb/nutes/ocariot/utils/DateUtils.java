@@ -274,17 +274,31 @@ public final class DateUtils {
     /**
      * Add minutes in datetime.
      *
+     * @param datetime     Datetime.
+     * @param milliseconds Total in milliseconds.
+     * @return String
+     */
+    public static String addMillisecondsToString(String datetime, int milliseconds) {
+        Calendar calendar = convertStringDateToCalendar(datetime, DATE_FORMAT_ISO_8601);
+        calendar.add(Calendar.MILLISECOND, milliseconds);
+
+        return formatDate(calendar.getTimeInMillis(), DATE_FORMAT_ISO_8601);
+    }
+
+    /**
+     * Add minutes in datetime.
+     *
      * @param datetime Datetime.
      * @param minutes  Total in minutes.
      * @return String
      */
-    public static String addMillisecondsToString(String datetime, int minutes) {
-        Calendar calendar = GregorianCalendar.getInstance();
-        calendar.set(Calendar.MILLISECOND, minutes);
+    public static String addMinutesToString(String datetime, int minutes) {
+        Calendar calendar = convertStringDateToCalendar(datetime, DATE_FORMAT_ISO_8601);
+        calendar.add(Calendar.MINUTE, minutes);
 
-        DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_ISO_8601, Locale.getDefault());
-        return dateFormat.format(calendar.getTime());
+        return formatDate(calendar.getTimeInMillis(), DATE_FORMAT_ISO_8601);
     }
+
 
     /**
      * returns the current year in milliseconds.
