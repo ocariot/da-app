@@ -22,6 +22,7 @@
     <string name="title_awake">Awake</string>
     <string name="title_awake_restless">Awake/Restless</string>
     <string name="title_today">Today</string>
+    <string name="title_ops">:(</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -66,15 +67,20 @@
 
     <!-- SETTINGS -->
     <string name="login_with_fitbit">Login With FitBit</string>
-    <string name="settings_title">Settings OCARIoT</string>
+    <string name="login_do_not_user_fitbit">I don\'t want to use FitBit</string>
+    <string name="settings_title">Settings</string>
     <string name="settings_account">Account</string>
     <string name="settings_external_services">External Services</string>
     <string name="key_fitibit">key_fitbit</string>
     <string name="key_signout">key_signout</string>
+    <string name="key_version">key_version</string>
     <string name="settings_signout">Sign Out</string>
     <string name="settings_fitbit">FitBit</string>
     <string name="settings_summary_signout">You will be logged out of the application and redirected to login screen.</string>
     <string name="settings_summary_fitbit">Shares activity and sleep data.</string>
+    <string name="settings_version">Version</string>
+    <string name="settings_summary_version">1.1.2</string>
+    <string name="settings_about">About</string>
 
     <!-- DIALOGS -->
     <string name="dialog_confirm_sign_out">Do you really want to quit the application?\nYou will be redirected to login screen&#8230;</string>
@@ -82,7 +88,7 @@
 
     <!-- ERROR MESSAGES -->
     <string name="error_oauth_fitbit">An internal error occurred with the FitBit OAuth server.</string>
-    <string name="error_oauth_fitbit_permission">We are having trouble capturing data from the fitbit server.\nClick here to grant authorization&#8230;</string>
+    <string name="error_oauth_fitbit_permission">We are having trouble capturing data from the FitBit server. The authorization may have expired.\nClick here to grant authorization again&#8230;</string>
     <string name="error_logout">There was an error while trying to logout. Try later.</string>
     <string name="error_login_invalid">Invalid username or password&#8230;</string>
     <string name="error_invalid_email">This email address is invalid</string>
@@ -94,11 +100,18 @@
 
     <!-- MESSAGES -->
     <string name="message_no_data_display">No data to display!</string>
-    <string name="message_welcome">How it works\n\n1. First, log in with your FitBit account;\n\n2. Authorize the collection of activity data from your FitBit account;\n\n3. Boot the universAAL IoT service;\n\n4. Done! Your activities will be captured from fitbit and synchronized with the OCARIoT platform.</string>
+    <string name="message_welcome">How it works\n\n1. Log in first with your FitBit account;\n\n2. Authorize the collection of activity and sleep data from your FitBit account;\n\n3. Done! the records of their activities and sleep will be captured from the FitBit Flex 2 and synchronized with the OCARIoT platform.</string>
 
     <!-- VALIDATION MESSAGES -->
     <string name="required_username">Username is required</string>
     <string name="required_password">Password is required</string>
+
+    <!-- DELETE DATA -->
+    <string name="delete_data_title">Delete Data</string>
+    <string name="delete_data_invalid_select">Please select at least one data type.</string>
+    <string name="delete_data_confirm">I confirm that I am erasing the data.</string>
+    <string name="delete_data_description">Select the data types that you want to delete, and then click confirm.</string>
+    <string name="delete_data_obs">Attention! Make sure what you are doing. Because, after the delete request is made, you will not be able to cancel or recover the data again&#8230;</string>
 
     <string-array name="room_sample_array">
         <item>Select the room&#8230;</item>

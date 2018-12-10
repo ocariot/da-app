@@ -14,7 +14,7 @@
         android:layout_marginTop="20dp"
         android:gravity="center"
         android:text="@string/title_welcome"
-        android:textSize="26sp" />
+        android:textSize="28sp" />
 
     <TextView
         android:id="@+id/textView"
@@ -26,17 +26,25 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:gravity="bottom"
+        android:orientation="vertical">
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/fitbit_button"
             style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_gravity="bottom"
-            android:layout_marginTop="24dp"
-            android:layout_weight="1"
             android:text="@string/login_with_fitbit" />
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/do_not_login_fitbit_button"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_gravity="bottom"
+            android:backgroundTint="@color/colorWarning"
+            android:text="@string/login_do_not_user_fitbit" />
     </LinearLayout>
 
 </LinearLayout>

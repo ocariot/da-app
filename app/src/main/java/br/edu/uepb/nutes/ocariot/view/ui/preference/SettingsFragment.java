@@ -57,6 +57,9 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         // Sign Out
         findPreference(getString(R.string.key_signout)).setOnPreferenceClickListener(this);
 
+        // Version
+        findPreference(getString(R.string.key_version)).setOnPreferenceClickListener(this);
+
         checkAuthFitBit();
     }
 
@@ -109,6 +112,11 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     private void checkAuthFitBit() {
         AuthorizationResponse authFitBitResponse = AuthorizationResponse.fromIntent(getActivity().getIntent());
         AuthorizationException authFitBitException = AuthorizationException.fromIntent(getActivity().getIntent());
+        if (AppPreferencesHelper.getInstance(getActivity()).getAuthStateFitBit() == null) {
+            switchPrefFitBit.setChecked(false);
+        } else {
+            switchPrefFitBit.setChecked(true);
+        }
 
         if (authFitBitException != null) {
             Log.w(LOG_TAG, authFitBitException.toJsonString());

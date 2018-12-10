@@ -10,7 +10,6 @@ import java.util.List;
 import br.edu.uepb.nutes.ocariot.data.model.Activity;
 import br.edu.uepb.nutes.ocariot.data.model.Environment;
 import br.edu.uepb.nutes.ocariot.data.model.Sleep;
-import br.edu.uepb.nutes.ocariot.data.model.SleepList;
 import br.edu.uepb.nutes.ocariot.data.model.User;
 import br.edu.uepb.nutes.ocariot.data.model.UserAccess;
 import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
@@ -38,8 +37,6 @@ public class OcariotNetRepository extends BaseNetRepository {
         super.addInterceptor(provideInterceptor());
         ocariotService = super.provideRetrofit(OcariotService.BASE_URL_OCARIOT)
                 .create(OcariotService.class);
-
-
     }
 
     public static OcariotNetRepository getInstance(Context context) {
@@ -115,6 +112,12 @@ public class OcariotNetRepository extends BaseNetRepository {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
+    public Observable<Void> deleteActivity(String userId, String activityId) {
+        return ocariotService.deleteActivity(userId, activityId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
     public Observable<Sleep> publishSleep(String userId, Sleep sleep) {
         return ocariotService.publishSleep(userId, sleep)
                 .subscribeOn(Schedulers.io())
@@ -125,6 +128,18 @@ public class OcariotNetRepository extends BaseNetRepository {
                                                           String school, String room,
                                                           String dateStart, String dateEnd) {
         return ocariotService.listEnvironments(sort, page, limit, school, room, dateStart, dateEnd)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Observable<Void> deleteSleep(String userId, String sleepId) {
+        return ocariotService.deleteSleep(userId, sleepId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Observable<Environment> publishEnvironment(Environment environment) {
+        return ocariotService.publishEnvironment(environment)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }

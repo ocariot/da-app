@@ -7,6 +7,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +16,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +28,7 @@ import java.util.Objects;
 import br.edu.uepb.nutes.ocariot.R;
 import br.edu.uepb.nutes.ocariot.data.model.Activity;
 import br.edu.uepb.nutes.ocariot.data.model.Sleep;
+import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
 import br.edu.uepb.nutes.ocariot.view.ui.fragment.EnvironmentFragment;
 import br.edu.uepb.nutes.ocariot.view.ui.fragment.PhysicalActivityListFragment;
 import br.edu.uepb.nutes.ocariot.view.ui.fragment.SleepListFragment;
@@ -37,14 +43,17 @@ import butterknife.ButterKnife;
  *
  * @author Copyright (c) 2018, NUTES/UEPB
  */
-public class MainActivity extends AppCompatActivity implements PhysicalActivityListFragment.OnClickActivityListener,
+public class MainActivity extends AppCompatActivity implements
+        PhysicalActivityListFragment.OnClickActivityListener,
         SleepListFragment.OnClickSleepListener,
         WelcomeFragment.OnClickWelcomeListener,
         BottomNavigationView.OnNavigationItemSelectedListener {
-
     private final String LOG_TAG = MainActivity.class.getSimpleName();
+    public final String KEY_DO_NOT_LOGIN_FITBIT = "key_do_not_login_fitbit";
+
     private MenuItem prevMenuItem;
     private int currentPageNumber;
+    private AppPreferencesHelper appPref;
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -55,6 +64,14 @@ public class MainActivity extends AppCompatActivity implements PhysicalActivityL
     @BindView(R.id.viewpager)
     ViewPager mViewPager;
 
+    @BindView(R.id.box_content_welcome)
+    LinearLayout mBoxWelcomeFraLinearLayout;
+
+    @BindView(R.id.welcome_content)
+    FrameLayout mWelcomeContent;
+
+    @BindView(R.id.box_content_main)
+    RelativeLayout mBoxContentMain;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +80,8 @@ public class MainActivity extends AppCompatActivity implements PhysicalActivityL
         ButterKnife.bind(this);
         setSupportActionBar(mToolbar);
         Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.title_physical_activities);
+
+        appPref = AppPreferencesHelper.getInstance(this);
 
         mBuBottomNavigationView.setOnNavigationItemSelectedListener(this);
         mBuBottomNavigationView.setSelected(false);
@@ -128,6 +147,15 @@ public class MainActivity extends AppCompatActivity implements PhysicalActivityL
     protected void onResume() {
         super.onResume();
         Log.w(LOG_TAG, "onResume() " + currentPageNumber);
+
+        if (appPref.getAuthStateFitBit() == null && !appPref.getBoolean(KEY_DO_NOT_LOGIN_FITBIT)) {
+            replaceFragment(WelcomeFragment.newInstance());
+            mBoxContentMain.setVisibility(View.GONE);
+            mBoxWelcomeFraLinearLayout.setVisibility(View.VISIBLE);
+        } else {
+            mBoxContentMain.setVisibility(View.VISIBLE);
+            mBoxWelcomeFraLinearLayout.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -193,6 +221,26 @@ public class MainActivity extends AppCompatActivity implements PhysicalActivityL
     @Override
     public void onClickFitBit() {
         new LoginFitBit(this).doAuthorizationCode();
+    }
+
+    @Override
+    public void onDoNotLoginFitBitClick() {
+        mBoxContentMain.setVisibility(View.VISIBLE);
+        mBoxWelcomeFraLinearLayout.setVisibility(View.GONE);
+
+        appPref.addBoolean(KEY_DO_NOT_LOGIN_FITBIT, true);
+    }
+
+    /**
+     * Replace fragment.
+     *
+     * @param fragment {@link Fragment}
+     */
+    private void replaceFragment(Fragment fragment) {
+        if (fragment != null) {
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.welcome_content, fragment).commit();
+        }
     }
 
     private class ViewPagerAdapter extends FragmentStatePagerAdapter {

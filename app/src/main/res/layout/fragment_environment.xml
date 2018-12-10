@@ -92,7 +92,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/box_1"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="10dp"
+                android:padding="5dp"
                 android:orientation="vertical">
 
                 <com.github.mikephil.charting.charts.LineChart

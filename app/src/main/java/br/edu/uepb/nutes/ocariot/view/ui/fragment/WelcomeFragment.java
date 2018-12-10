@@ -22,6 +22,9 @@ public class WelcomeFragment extends Fragment {
     @BindView(R.id.fitbit_button)
     AppCompatButton mFitBitButton;
 
+    @BindView(R.id.do_not_login_fitbit_button)
+    AppCompatButton mDoNotLoginFitBitButton;
+
     public WelcomeFragment() {
         // Required empty public constructor
     }
@@ -50,11 +53,12 @@ public class WelcomeFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         initComponents();
 
-        mFitBitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mListener != null) mListener.onClickFitBit();
-            }
+        mFitBitButton.setOnClickListener(view -> {
+            if (mListener != null) mListener.onClickFitBit();
+        });
+
+        mDoNotLoginFitBitButton.setOnClickListener(v -> {
+            if (mListener != null) mListener.onDoNotLoginFitBitClick();
         });
     }
 
@@ -90,5 +94,7 @@ public class WelcomeFragment extends Fragment {
 
     public interface OnClickWelcomeListener {
         void onClickFitBit();
+
+        void onDoNotLoginFitBitClick();
     }
 }

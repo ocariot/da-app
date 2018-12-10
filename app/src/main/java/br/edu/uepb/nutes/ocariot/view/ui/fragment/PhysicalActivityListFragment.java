@@ -34,10 +34,10 @@ import br.edu.uepb.nutes.ocariot.data.repository.remote.ocariot.OcariotNetReposi
 import br.edu.uepb.nutes.ocariot.utils.DateUtils;
 import br.edu.uepb.nutes.ocariot.view.adapter.PhysicalActivityListAdapter;
 import br.edu.uepb.nutes.ocariot.view.adapter.base.OnRecyclerViewListener;
-import br.edu.uepb.nutes.ocariot.view.ui.activity.MainActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.observers.DisposableObserver;
+import retrofit2.HttpException;
 
 /**
  * A fragment representing a list of Items.
@@ -46,12 +46,15 @@ import io.reactivex.observers.DisposableObserver;
  */
 public class PhysicalActivityListFragment extends Fragment {
     private final String LOG_TAG = "PhysicalActivityList";
+    public final String KEY_ACTIVITY_LAST_DATE = "key_activity_last_key";
 
     private PhysicalActivityListAdapter mAdapter;
     private FitBitNetRepository fitBitRepository;
     private OcariotNetRepository ocariotRepository;
+    private AppPreferencesHelper appPref;
     private OnClickActivityListener mListener;
     private UserAccess userAccess;
+    private String fitBitLastDateRegister;
 
     /**
      * We need this variable to lock and unlock loading more.
@@ -83,7 +86,10 @@ public class PhysicalActivityListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        userAccess = AppPreferencesHelper.getInstance(getContext()).getUserAccessOcariot();
+        fitBitRepository = FitBitNetRepository.getInstance(getActivity());
+        ocariotRepository = OcariotNetRepository.getInstance(getActivity());
+        appPref = AppPreferencesHelper.getInstance(getContext());
+        userAccess = appPref.getUserAccessOcariot();
     }
 
     @Override
@@ -98,9 +104,8 @@ public class PhysicalActivityListFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        fitBitRepository = FitBitNetRepository.getInstance(getActivity());
-        ocariotRepository = OcariotNetRepository.getInstance(getActivity());
 
+        fitBitLastDateRegister = appPref.getString(KEY_ACTIVITY_LAST_DATE);
         initComponents();
     }
 
@@ -176,13 +181,22 @@ public class PhysicalActivityListFragment extends Fragment {
     private void loadDataFitBit() {
         Log.w(LOG_TAG, "loadDataFitBit()");
         loading(true);
-        String currentDate = DateUtils.getCurrentDatetime(getResources().getString(R.string.date_format1));
 
-        fitBitRepository.listActivities(currentDate, null, "desc", 0, 100)
+        String currentDate = null;
+        fitBitLastDateRegister = appPref.getString(KEY_ACTIVITY_LAST_DATE);
+        if (fitBitLastDateRegister == null) {
+            currentDate = DateUtils.getCurrentDatetime(getResources().getString(R.string.date_format1));
+        }
+
+        Log.w(LOG_TAG, "LAST " + appPref.getString(KEY_ACTIVITY_LAST_DATE));
+        Log.w(LOG_TAG, "LAST2 " + currentDate + " " + fitBitLastDateRegister);
+        fitBitRepository.listActivities(currentDate, fitBitLastDateRegister,
+                "desc", 0, 100)
                 .subscribe(new DisposableObserver<ActivitiesList>() {
                     @Override
                     public void onNext(ActivitiesList activityList) {
                         if (activityList != null && activityList.getActivities().size() > 0) {
+                            fitBitLastDateRegister = activityList.getActivities().get(0).getStartTime();
                             sendActivitiesToOcariot(convertFitBitDataToOcariot(activityList.getActivities()));
                         }
                     }
@@ -191,12 +205,27 @@ public class PhysicalActivityListFragment extends Fragment {
                     public void onError(Throwable e) {
                         Log.w(LOG_TAG, "FITIBIT - onError: " + e);
                         loadDataOcariot();
+
+                        if (e instanceof HttpException) {
+                            HttpException httpEx = ((HttpException) e);
+//                            if (httpEx.code() == 401) {
+//                                if (getActivity() == null) return;
+//                                Alerter.create(getActivity())
+//                                        .setTitle(getActivity().getResources().getString(R.string.title_ops))
+//                                        .setText(getActivity().getResources().getString(R.string.error_oauth_fitbit_permission))
+//                                        .setIcon(R.drawable.ic_warning_dark)
+//                                        .setBackgroundColorRes(R.color.colorWarning)
+//                                        .setIconColorFilter(0) // Optional - Removes white tint
+//                                        .setOnClickListener(v -> {
+//                                            new LoginFitBit(getActivity()).doAuthorizationCode();
+//                                        })
+//                                        .show();
+//                            }
+                        }
                     }
 
                     @Override
                     public void onComplete() {
-                        Log.w(LOG_TAG, "LOAD Fitbit - onComplete()");
-                        loadDataOcariot();
                     }
                 });
     }
@@ -264,9 +293,14 @@ public class PhysicalActivityListFragment extends Fragment {
      * @param activities {@link List<Activity>} List of activities to be published.
      */
     private void sendActivitiesToOcariot(List<Activity> activities) {
+        Log.w(LOG_TAG, "sendOcariot() TOTAL: " + activities.size());
         if (activities == null) return;
         int total = activities.size();
-        Log.w(LOG_TAG, "sendOcariot() TOTAL: " + activities.size());
+
+        if (total == 0) {
+            loadDataOcariot();
+            return;
+        }
 
         // TODO Enviar lista completa na mesma requisição, quando o servidor oferecer suporte.
         int count = 0;
@@ -279,7 +313,16 @@ public class PhysicalActivityListFragment extends Fragment {
                         @Override
                         public void onNext(Activity acty) {
                             Log.w(LOG_TAG, "Activity Published: " + acty);
-                            if (aux == total) loadDataOcariot();
+                            if (aux == total) {
+                                loadDataOcariot();
+
+                                // last activity
+                                appPref.addString(
+                                        KEY_ACTIVITY_LAST_DATE,
+                                        DateUtils.formatDateTime(fitBitLastDateRegister, null)
+                                );
+                                Log.w(LOG_TAG, "LAST " + appPref.getString(KEY_ACTIVITY_LAST_DATE));
+                            }
                         }
 
                         @Override

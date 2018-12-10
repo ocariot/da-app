@@ -129,6 +129,19 @@ public class AppPreferencesHelper implements PreferencesHelper {
         return mPrefs.edit().remove(key).commit();
     }
 
+    @Override
+    public String getString(String key) {
+        checkKey(key);
+        return mPrefs.getString(key, null);
+    }
+
+
+    @Override
+    public boolean getBoolean(String key) {
+        checkKey(key);
+        return mPrefs.getBoolean(key, false);
+    }
+
     private void checkKey(String key) {
         if (key == null || key.isEmpty())
             throw new NullPointerException("key can not be null or empty!");

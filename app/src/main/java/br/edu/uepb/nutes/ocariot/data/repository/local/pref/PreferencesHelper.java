@@ -36,4 +36,8 @@ public interface PreferencesHelper {
     boolean removeAuthStateFitBit();
 
     boolean removeItem(String key);
+
+    String getString(String key);
+
+    boolean getBoolean(String key);
 }

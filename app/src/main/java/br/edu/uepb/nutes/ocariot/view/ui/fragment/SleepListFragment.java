@@ -193,8 +193,6 @@ public class SleepListFragment extends Fragment {
 
                     @Override
                     public void onComplete() {
-                        Log.w(LOG_TAG, "LOAD Fitbit - onComplete()");
-                        loadDataOcariot();
                     }
                 });
 

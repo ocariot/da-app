@@ -11,6 +11,7 @@ import br.edu.uepb.nutes.ocariot.data.model.UserAccess;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -22,7 +23,7 @@ import retrofit2.http.Query;
  * @author Copyright (c) 2018, NUTES/UEPB
  */
 public interface OcariotService {
-        String BASE_URL_OCARIOT = "http://ocariot.nutes.uepb.edu.br:8080/"; // API GATEWAY
+    String BASE_URL_OCARIOT = "http://ocariot.nutes.uepb.edu.br:8080/"; // API GATEWAY
 //    String BASE_URL_OCARIOT = "http://192.168.31.113:3000/api/v1/"; // API GATEWAY
 
     // User
@@ -44,6 +45,9 @@ public interface OcariotService {
     @POST("users/{user_id}/activities")
     Observable<Activity> publishActivity(@Path("user_id") String userId, @Body Activity activity);
 
+    @DELETE("users/{user_id}/activities/{activity_id}")
+    Observable<Void> deleteActivity(@Path("user_id") String userId, @Path("activity_id") String activityId);
+
     // Sleep
     @GET("users/{user_id}/sleep")
     Observable<List<Sleep>> listSleep(
@@ -56,6 +60,8 @@ public interface OcariotService {
     @POST("users/{user_id}/sleep")
     Observable<Sleep> publishSleep(@Path("user_id") String userId, @Body Sleep sleep);
 
+    @DELETE("users/{user_id}/sleep/{sleep_id}")
+    Observable<Void> deleteSleep(@Path("user_id") String userId, @Path("sleep_id") String sleepId);
 
     // Environments
     @GET("environments")
@@ -68,4 +74,7 @@ public interface OcariotService {
             @Query("timestamp") String dateStart,
             @Query("timestamp") String dateEnd
     );
+
+    @POST("environments")
+    Observable<Environment> publishEnvironment(@Body Environment environment);
 }

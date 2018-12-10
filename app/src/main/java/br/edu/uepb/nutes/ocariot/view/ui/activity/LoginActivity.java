@@ -3,12 +3,11 @@ package br.edu.uepb.nutes.ocariot.view.ui.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.support.v7.widget.AppCompatButton;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -43,7 +42,7 @@ public class LoginActivity extends AppCompatActivity {
     EditText mPasswordEditText;
 
     @BindView(R.id.sign_in_button)
-    Button mSignInButton;
+    AppCompatButton mSignInButton;
 
     @BindView(R.id.box_message_error)
     LinearLayout mBoxMessageError;
@@ -51,7 +50,7 @@ public class LoginActivity extends AppCompatActivity {
     @BindView(R.id.message_error)
     TextView mMessageError;
 
-    private OcariotNetRepository userRepository;
+    private OcariotNetRepository ocariotRepository;
     private AppPreferencesHelper appPref;
 
     @Override
@@ -59,7 +58,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-        userRepository = OcariotNetRepository.getInstance(this);
+        ocariotRepository = OcariotNetRepository.getInstance(this);
         appPref = AppPreferencesHelper.getInstance(this);
 
         mSignInButton.setOnClickListener(v -> login());
@@ -91,7 +90,7 @@ public class LoginActivity extends AppCompatActivity {
         String password = String.valueOf(mPasswordEditText.getText());
 
 
-        userRepository.auth(username, password)
+        ocariotRepository.auth(username, password)
                 .doOnSubscribe(disposable -> showProgress(true))
                 .subscribe(new SingleObserver<UserAccess>() {
                     @Override
@@ -124,7 +123,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void getUserProfile(String userId) {
-        userRepository.getUserById(userId)
+        ocariotRepository.getUserById(userId)
                 .subscribe(new SingleObserver<User>() {
                     @Override
                     public void onSubscribe(Disposable d) {

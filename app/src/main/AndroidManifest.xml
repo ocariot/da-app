@@ -11,11 +11,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
             android:name=".view.ui.activity.MainActivity"
             android:theme="@style/AppTheme" />
-
         <activity
             android:name=".view.ui.activity.LoginActivity"
             android:label="@string/app_name"
@@ -26,7 +24,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".view.ui.activity.PhysicalActivityDetail"
             android:parentActivityName=".view.ui.activity.MainActivity"
@@ -35,8 +32,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".view.ui.activity.MainActivity" />
         </activity>
-
-
         <activity
             android:name=".view.ui.activity.SleepDetail"
             android:parentActivityName=".view.ui.activity.MainActivity"
@@ -45,13 +40,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".view.ui.activity.MainActivity" />
         </activity>
-
-
         <activity
             android:name=".view.ui.preference.SettingsActivity"
             android:label="@string/settings_title"
             android:theme="@style/AppTheme.Preferences" />
-
         <activity android:name="net.openid.appauth.RedirectUriReceiverActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -64,7 +56,14 @@
                     android:scheme="fitbitauth" />
             </intent-filter>
         </activity>
-
+        <activity
+            android:name=".view.ui.activity.DeleteDataActivity"
+            android:label="@string/delete_data_title"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".view.ui.preference.SettingsActivity" />
+        </activity>
     </application>
 
 </manifest>

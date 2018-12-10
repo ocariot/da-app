@@ -16,7 +16,7 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -55,8 +55,8 @@ dependencies {
     // OAuth2 Client
     implementation 'net.openid:appauth:0.7.1'
 
-    // Alert
-    implementation 'com.tapadoo.android:alerter:3.0.2'
+//    // Alert
+//    implementation 'com.tapadoo.android:alerter:4.0.0'
 
     // Graphs
     implementation 'com.github.jakob-grabner:Circle-Progress-View:1.4'

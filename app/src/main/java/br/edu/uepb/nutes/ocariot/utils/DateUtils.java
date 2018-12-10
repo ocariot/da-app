@@ -111,6 +111,20 @@ public final class DateUtils {
      * @param format_date {@link String}
      * @return String
      */
+    public static String formatDateTime(String date, @Nullable String format_date) {
+        if (format_date == null || format_date.length() == 0)
+            format_date = "yyyy-MM-dd'T'HH:mm:ss";
+
+        return getFormatDataTime(date, format_date, true, true);
+    }
+
+    /**
+     * Convert string date in string format.
+     *
+     * @param date        {@link String}
+     * @param format_date {@link String}
+     * @return String
+     */
     public static String formatDateHour(String date, @Nullable String format_date) {
         if (format_date == null || format_date.length() == 0)
             format_date = "HH:mm:ss";

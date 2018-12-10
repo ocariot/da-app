@@ -14,6 +14,13 @@
             android:key="@string/key_signout"
             android:summary="@string/settings_summary_signout"
             android:title="@string/settings_signout" />
-
     </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/settings_about">
+        <PreferenceScreen
+            android:key="@string/key_version"
+            android:summary="@string/settings_summary_version"
+            android:title="@string/settings_version" />
+    </PreferenceCategory>
+
 </PreferenceScreen>
