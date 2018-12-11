@@ -165,7 +165,7 @@ public class SleepListFragment extends Fragment {
      */
     private void initDataSwipeRefresh() {
         mDataSwipeRefresh.setOnRefreshListener(() -> {
-            if (itShouldLoadMore) loadDataOcariot();
+            if (itShouldLoadMore) loadDataFitBit();
         });
     }
 
@@ -174,12 +174,14 @@ public class SleepListFragment extends Fragment {
      */
     private void loadDataFitBit() {
         loading(true);
-        String currentDate = DateUtils.getCurrentDatetime(getResources().getString(R.string.date_format1));
+        String currentDate = DateUtils.formatDate(DateUtils.addDays(1).getTimeInMillis(),
+                getResources().getString(R.string.date_format1));
 
-        fitBitRepository.listSleep(currentDate, null, "desc", 0, 100)
+        fitBitRepository.listSleep(currentDate, null, "desc",0,100)
                 .subscribe(new DisposableObserver<SleepList>() {
                     @Override
                     public void onNext(SleepList sleepList) {
+                        Log.w("FITBIT-LOAD", sleepList.toJsonString());
                         if (sleepList.getSleepList().size() > 0) {
                             sendSleepToOcariot(convertFitBitDataToOcariot(sleepList.getSleepList()));
                         }

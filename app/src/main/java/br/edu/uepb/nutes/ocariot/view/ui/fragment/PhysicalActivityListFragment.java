@@ -54,7 +54,6 @@ public class PhysicalActivityListFragment extends Fragment {
     private AppPreferencesHelper appPref;
     private OnClickActivityListener mListener;
     private UserAccess userAccess;
-    private String fitBitLastDateRegister;
 
     /**
      * We need this variable to lock and unlock loading more.
@@ -105,7 +104,6 @@ public class PhysicalActivityListFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        fitBitLastDateRegister = appPref.getString(KEY_ACTIVITY_LAST_DATE);
         initComponents();
     }
 
@@ -182,21 +180,21 @@ public class PhysicalActivityListFragment extends Fragment {
         Log.w(LOG_TAG, "loadDataFitBit()");
         loading(true);
 
+        // TODO COrrigir problema do afeter e befora
         String currentDate = null;
-        fitBitLastDateRegister = appPref.getString(KEY_ACTIVITY_LAST_DATE);
-        if (fitBitLastDateRegister == null) {
-            currentDate = DateUtils.getCurrentDatetime(getResources().getString(R.string.date_format1));
+        String fitBitLastDateRegister = getLastDateSaved();
+        if (!DateUtils.isDateTimeValid(fitBitLastDateRegister)) {
+            currentDate = DateUtils.formatDateTime(DateUtils.addDays(1).getTimeInMillis(), null);
         }
+        Log.w("FitBit", "current: " + currentDate + " before: " + fitBitLastDateRegister + " | " + DateUtils.isDateTimeValid(fitBitLastDateRegister));
+        Log.w("FitBit", "current: " + currentDate + " before: " + fitBitLastDateRegister + " | " + DateUtils.isDateTimeValid(fitBitLastDateRegister));
 
-        Log.w(LOG_TAG, "LAST " + appPref.getString(KEY_ACTIVITY_LAST_DATE));
-        Log.w(LOG_TAG, "LAST2 " + currentDate + " " + fitBitLastDateRegister);
         fitBitRepository.listActivities(currentDate, fitBitLastDateRegister,
                 "desc", 0, 100)
                 .subscribe(new DisposableObserver<ActivitiesList>() {
                     @Override
                     public void onNext(ActivitiesList activityList) {
                         if (activityList != null && activityList.getActivities().size() > 0) {
-                            fitBitLastDateRegister = activityList.getActivities().get(0).getStartTime();
                             sendActivitiesToOcariot(convertFitBitDataToOcariot(activityList.getActivities()));
                         }
                     }
@@ -314,29 +312,46 @@ public class PhysicalActivityListFragment extends Fragment {
                         public void onNext(Activity acty) {
                             Log.w(LOG_TAG, "Activity Published: " + acty);
                             if (aux == total) {
+                                saveLastDateSaved(activity.getStartTime());
                                 loadDataOcariot();
-
-                                // last activity
-                                appPref.addString(
-                                        KEY_ACTIVITY_LAST_DATE,
-                                        DateUtils.formatDateTime(fitBitLastDateRegister, null)
-                                );
-                                Log.w(LOG_TAG, "LAST " + appPref.getString(KEY_ACTIVITY_LAST_DATE));
                             }
                         }
 
                         @Override
                         public void onError(Throwable e) {
-                            Log.w(LOG_TAG, "SendActivity: " + e + "Ac " + new Gson().toJson(activity));
+                            Log.w(LOG_TAG, "Activity Published: Error - " + e + "Ac " + new Gson().toJson(activity));
+                            saveLastDateSaved(activity.getStartTime());
                             if (aux == total) loadDataOcariot();
                         }
 
                         @Override
                         public void onComplete() {
-
+                            Log.w(LOG_TAG, "Activity Published: onComplete()");
                         }
                     });
         }
+    }
+
+    /**
+     * Saves in SharedPreference the date of the last saved activity on the OCARIoT platform.
+     * Useful for when to request FitBit activities, request all of them from that date saved.
+     *
+     * @param date String Datetime in ISO 8601 format.
+     */
+    private void saveLastDateSaved(String date) {
+        appPref.addString(KEY_ACTIVITY_LAST_DATE, DateUtils.formatDateTime(date, null));
+    }
+
+    /**
+     * Retrieve a date frcm the last saved activity on the OCARIoT platform.
+     *
+     * @return String Date in yyyy-MM-ddTHH:mm:ss format.
+     */
+    private String getLastDateSaved() {
+        if (appPref.getString(KEY_ACTIVITY_LAST_DATE) == null) return null;
+        return DateUtils.formatDateTime(
+                appPref.getString(KEY_ACTIVITY_LAST_DATE), DateUtils.DATE_FORMAT_DATE_TIME
+        );
     }
 
     /**

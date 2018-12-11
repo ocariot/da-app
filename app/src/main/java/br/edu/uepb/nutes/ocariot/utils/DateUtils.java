@@ -1,6 +1,7 @@
 package br.edu.uepb.nutes.ocariot.utils;
 
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,6 +22,7 @@ import java.util.TimeZone;
  */
 public final class DateUtils {
     public static final String DATE_FORMAT_ISO_8601 = "yyyy-MM-dd'T'HH:mm:ss.SSS";
+    public static final String DATE_FORMAT_DATE_TIME = "yyyy-MM-dd'T'HH:mm:ss";
 
     /**
      * Get/Retrieve calendar instance.
@@ -46,6 +48,25 @@ public final class DateUtils {
 
         DateFormat dateFormat = new SimpleDateFormat(format_date, Locale.getDefault());
         return dateFormat.format(calendar.getTime());
+    }
+
+    /**
+     * Validate datetime.
+     *
+     * @param str_date String
+     * @return boolean
+     */
+    public static boolean isDateTimeValid(String str_date) {
+        if (str_date == null) return false;
+
+        DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_DATE_TIME, Locale.getDefault());
+        dateFormat.setLenient(false);
+
+        try {
+            return (dateFormat.parse(str_date) != null);
+        } catch (ParseException e) {
+            return false;
+        }
     }
 
     /**
@@ -97,7 +118,7 @@ public final class DateUtils {
      * @param format_date {@link String}
      * @return String
      */
-    public static String formatDate(String date, @Nullable String format_date) {
+    public static String formatDate(@Nullable String date, @Nullable String format_date) {
         if (format_date == null || format_date.length() == 0)
             format_date = "yyyy-MM-dd";
 
@@ -119,6 +140,24 @@ public final class DateUtils {
     }
 
     /**
+     * Retrieve a datetime passed in milliseconds to the format passed as a parameter.
+     *
+     * @param milliseconds long
+     * @param format_date  String
+     * @return String
+     */
+    public static String formatDateTime(long milliseconds, String format_date) {
+        if (format_date == null || format_date.length() == 0)
+            format_date = DATE_FORMAT_DATE_TIME;
+
+        Calendar calendar = GregorianCalendar.getInstance();
+        calendar.setTimeInMillis(milliseconds);
+
+        DateFormat dateFormat = new SimpleDateFormat(format_date, Locale.getDefault());
+        return dateFormat.format(calendar.getTime());
+    }
+
+    /**
      * Convert string date in string format.
      *
      * @param date        {@link String}
@@ -132,26 +171,31 @@ public final class DateUtils {
         return getFormatDataTime(date, format_date, false, true);
     }
 
-    private static String getFormatDataTime(String date_input, String format_date, boolean date, boolean time) {
+
+    private static String getFormatDataTime(String date_input, String format_date,
+                                            boolean date, boolean time) {
         String result = "";
 
         if (date && !time) {
             result = getDataTime(Integer.parseInt(date_input.substring(0, 4)),
                     Integer.parseInt(date_input.substring(5, 7)) - 1,
                     Integer.parseInt(date_input.substring(8, 10)),
-                    0, 0, format_date);
+                    0, 0, 0, format_date);
         } else if (time && !date) {
             result = getDataTime(0, 0, 0,
                     Integer.parseInt(date_input.substring(11, 13)),
-                    Integer.parseInt(date_input.substring(14, 16)), format_date);
+                    Integer.parseInt(date_input.substring(14, 16)),
+                    Integer.parseInt(date_input.substring(17, 19)), format_date);
         } else {
             result = getDataTime(Integer.parseInt(date_input.substring(0, 4)),
                     Integer.parseInt(date_input.substring(5, 7)) - 1,
                     Integer.parseInt(date_input.substring(8, 10)),
                     Integer.parseInt(date_input.substring(11, 13)),
-                    Integer.parseInt(date_input.substring(14, 16)),
+                    Integer.parseInt(date_input.substring(15, 16)),
+                    Integer.parseInt(date_input.substring(17, 19)),
                     format_date);
         }
+
 
         return result;
     }
@@ -167,15 +211,15 @@ public final class DateUtils {
      * @param format_date The format date output.
      * @return The string datetime.
      */
-    private static String getDataTime(int year, int month, int day, int hourOfDay, int minute, String format_date) {
+    private static String getDataTime(int year, int month, int day, int hourOfDay,
+                                      int minute, int milliseconds, String format_date) {
         Calendar calendar = GregorianCalendar.getInstance();
         // Value to be used for MONTH field. 0 is January
-        calendar.set(year, month, day, hourOfDay, minute, 1);
+        calendar.set(year, month, day, hourOfDay, minute, milliseconds);
 
         DateFormat dateFormat = new SimpleDateFormat(format_date, Locale.getDefault());
         return dateFormat.format(calendar.getTime());
     }
-
 
     /**
      * Format date in ISO 8601 for the format passed in the "format_date" parameter.
