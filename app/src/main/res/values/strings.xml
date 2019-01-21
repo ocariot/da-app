@@ -1,8 +1,8 @@
 <resources>
-    <string name="app_name">OCARIoT</string>
+    <string name="app_name">OCARIoT DA</string>
 
     <!-- TITLES -->
-    <string name="title_ocariot">OCARIoT</string>
+    <string name="title_ocariot">OCARIoT DA</string>
     <string name="title_physical_activities">Physical activities</string>
     <string name="title_activities">Activities</string>
     <string name="title_sleep">Sleep</string>
