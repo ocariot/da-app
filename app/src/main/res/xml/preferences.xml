@@ -7,12 +7,6 @@
             android:key="@string/key_fitibit"
             android:summary="@string/settings_summary_fitbit"
             android:title="@string/settings_fitbit" />
-
-        <SwitchPreference
-            android:icon="@mipmap/logo_uaal"
-            android:key="@string/key_uaal"
-            android:summary="@string/settings_summary_uaal"
-            android:title="@string/settings_uaal" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/settings_account">
@@ -20,6 +14,13 @@
             android:key="@string/key_signout"
             android:summary="@string/settings_summary_signout"
             android:title="@string/settings_signout" />
-
     </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/settings_about">
+        <PreferenceScreen
+            android:key="@string/key_version"
+            android:summary="@string/settings_summary_version"
+            android:title="@string/settings_version" />
+    </PreferenceCategory>
+
 </PreferenceScreen>

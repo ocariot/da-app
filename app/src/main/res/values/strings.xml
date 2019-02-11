@@ -1,5 +1,28 @@
 <resources>
-    <string name="app_name">OCARIoT PoC</string>
+    <string name="app_name">OCARIoT DA</string>
+
+    <!-- TITLES -->
+    <string name="title_ocariot">OCARIoT DA</string>
+    <string name="title_physical_activities">Physical activities</string>
+    <string name="title_activities">Activities</string>
+    <string name="title_sleep">Sleep</string>
+    <string name="title_temp_humi">Temp/Humi</string>
+    <string name="title_temperature_humidity">Temperature/Humidity</string>
+    <string name="title_temperature">Temperature</string>
+    <string name="title_humidity">Humidity</string>
+    <string name="title_welcome">Welcome</string>
+    <string name="title_settings">Settings</string>
+    <string name="title_hours">hours</string>
+    <string name="title_minutes">minutes</string>
+    <string name="title_min">min</string>
+    <string name="title_hrs">hrs</string>
+    <string name="title_sleep_efficiency">Sleep Efficiency</string>
+    <string name="title_asleep">Asleep</string>
+    <string name="title_restless">Restless</string>
+    <string name="title_awake">Awake</string>
+    <string name="title_awake_restless">Awake/Restless</string>
+    <string name="title_today">Today</string>
+    <string name="title_ops">:(</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -7,8 +30,9 @@
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in</string>
     <string name="title_login_in">Login in</string>
-    <string name="title_ocariot">OCARIoT</string>
-    <string name="title_settings">Settings</string>
+    <string name="img_desc_ocariot">OCARIoT logo</string>
+
+    <!-- ACTIVITIES -->
     <string name="today_text">Today</string>
     <string name="cals">cals</string>
     <string name="cals_min">cals/min</string>
@@ -16,38 +40,47 @@
     <string name="duration_min">%d min</string>
     <string name="calories">Calories</string>
     <string name="steps">Steps</string>
-    <string name="level">Level</string>
-    <string name="level_min">Level in minutes</string>
-    <string name="level_sedentary">Sedentary: %d</string>
-    <string name="level_lightly">Lightly: %d</string>
-    <string name="level_fairly">Fairly: %d</string>
-    <string name="level_very">Very: %d</string>
-    <string name="login_with_fitbit">Login With FitBit</string>
+    <string name="levels">Levels</string>
+    <string name="level_sedentary">Sedentary: %d min</string>
+    <string name="level_lightly">Lightly: %d min</string>
+    <string name="level_fairly">Fairly: %d min</string>
+    <string name="level_very">Very: %d min</string>
+    <string name="img_desc_activity">Activity image</string>
+    <string name="img_desc_clock">Clock image</string>
+    <string name="img_desc_calories">Calories image</string>
 
-    <!-- TITLES -->
-    <string name="title_physical_activity">Physical Activity</string>
-    <string name="title_welcome">Welcome</string>
+    <!-- SLEEP -->
+    <string name="times_count">%d times</string>
+
+    <!-- ENVIRONMENT -->
+    <string name="environment_location">Location: %s</string>
+    <string name="environment_last_measurement">Last Measurement</string>
+    <string name="environment_daily_average">Daily Average</string>
 
     <!-- FORMAT DATES -->
     <string name="date_format1">yyyy-MM-dd</string>
-    <string name="date_time_abb1">MMMM dd \'at\' hh:mm a</string>
+    <string name="date_time_abb1">MMMM dd \'at\' HH:mm</string>
     <string name="date_time_abb2">EEEE \'at\' hh:mm:ss a</string>
+    <string name="date_time_abb3">EEEE, MMMM dd, YYYY</string>
+    <string name="date_time_abb4">EEE, MMMM dd, YYYY</string>
+    <string name="hour_format1">HH:mm</string>
 
     <!-- SETTINGS -->
-    <string name="settings_title">Settings OCARIoT PoC</string>
-    <string name="settings_title_uall_connect">uAAL Connect</string>
+    <string name="login_with_fitbit">Login With FitBit</string>
+    <string name="login_do_not_user_fitbit">I don\'t want to use FitBit</string>
+    <string name="settings_title">Settings</string>
     <string name="settings_account">Account</string>
     <string name="settings_external_services">External Services</string>
     <string name="key_fitibit">key_fitbit</string>
     <string name="key_signout">key_signout</string>
-    <string name="key_uaal">key_uaal</string>
+    <string name="key_version">key_version</string>
     <string name="settings_signout">Sign Out</string>
-    <string name="settings_uaal">UniversAAL IoT</string>
     <string name="settings_fitbit">FitBit</string>
     <string name="settings_summary_signout">You will be logged out of the application and redirected to login screen.</string>
-    <string name="settings_summary_uaal">Enable or disable universal services on the device.</string>
     <string name="settings_summary_fitbit">Shares activity and sleep data.</string>
-    <string name="uaal_service_status">uAAL Service</string>
+    <string name="settings_version">Version</string>
+    <string name="settings_summary_version">1.1.2</string>
+    <string name="settings_about">About</string>
 
     <!-- DIALOGS -->
     <string name="dialog_confirm_sign_out">Do you really want to quit the application?\nYou will be redirected to login screen&#8230;</string>
@@ -55,16 +88,32 @@
 
     <!-- ERROR MESSAGES -->
     <string name="error_oauth_fitbit">An internal error occurred with the FitBit OAuth server.</string>
-    <string name="error_oauth_fitbit_permission">We are having trouble capturing data from the fitbit server.\nClick here to grant authorization&#8230;</string>
+    <string name="error_oauth_fitbit_permission">We are having trouble capturing data from the FitBit server. The authorization may have expired.\nClick here to grant authorization again&#8230;</string>
     <string name="error_logout">There was an error while trying to logout. Try later.</string>
     <string name="error_login_invalid">Invalid username or password&#8230;</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_field_required">This field is required</string>
-    <string name="error_server">Server Error!</string>
+    <string name="error_500">There was an error communicating with the server. Please try again later&#8230;</string>
+    <string name="error_401">There was an error in the authentication of your data. Please try again the login&#8230;</string>
+    <string name="error_403">You do not have permission to access this feature. Please contact the administrator&#8230;</string>
 
     <!-- MESSAGES -->
     <string name="message_no_data_display">No data to display!</string>
-    <string name="message_welcome">How it works\n\n1. First, log in with your FitBit account;\n\n2. Authorize the collection of activity data from your FitBit account;\n\n3. Boot the universAAL IoT service;\n\n4. Done! Your activities will be captured from fitbit and synchronized with the OCARIoT platform.</string>
+    <string name="message_welcome">How it works\n\n1. Log in first with your FitBit account;\n\n2. Authorize the collection of activity and sleep data from your FitBit account;\n\n3. Done! the records of their activities and sleep will be captured from the FitBit Flex 2 and synchronized with the OCARIoT platform.</string>
 
+    <!-- VALIDATION MESSAGES -->
+    <string name="required_username">Username is required</string>
+    <string name="required_password">Password is required</string>
+
+    <!-- DELETE DATA -->
+    <string name="delete_data_title">Delete Data</string>
+    <string name="delete_data_invalid_select">Please select at least one data type.</string>
+    <string name="delete_data_confirm">I confirm that I am erasing the data.</string>
+    <string name="delete_data_description">Select the data types that you want to delete, and then click confirm.</string>
+    <string name="delete_data_obs">Attention! Make sure what you are doing. Because, after the delete request is made, you will not be able to cancel or recover the data again&#8230;</string>
+
+    <string-array name="room_sample_array">
+        <item>Select the room&#8230;</item>
+    </string-array>
 </resources>

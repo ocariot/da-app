@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#00bcd4</color>
+    <color name="colorPrimaryLight">#e8f8fa</color>
     <color name="colorPrimaryDark">#0097a7</color>
     <color name="colorAccent">#aad05e</color>
 
-    <color name="colorWarning">#FF9800</color>
+    <color name="colorWarning">#FF7043</color>
     <color name="colorWarningLight">#fcf8e3</color>
+    <color name="colorWarningDark">#E64A19</color>
 
     <color name="colorDanger">#a94442</color>
     <color name="colorDangerLight">#f2dede</color>
 
+    <color name="colorBlackLight">#757575</color>
+
     <color name="colorLineDivider">#e2e2e2</color>
+    <color name="colorBackgroundNavigation">#f0f0f0</color>
 </resources>
