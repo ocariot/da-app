@@ -28,7 +28,7 @@ public class FitBitNetRepository extends BaseNetRepository {
     private FitBitNetRepository(Context context) {
         super(context);
 
-        super.addInterceptor(provideInterceptor());
+        super.addRequestInterceptor(requestInterceptor());
         fitBitService = super.provideRetrofit(FitBitService.BASE_URL_FITBIT)
                 .create(FitBitService.class);
         authService = new AuthorizationService(context);
@@ -50,7 +50,7 @@ public class FitBitNetRepository extends BaseNetRepository {
      *
      * @return Interceptor
      */
-    private Interceptor provideInterceptor() {
+    private Interceptor requestInterceptor() {
         return chain -> {
             Request original = chain.request();
             final Request.Builder requestBuilder = original.newBuilder()

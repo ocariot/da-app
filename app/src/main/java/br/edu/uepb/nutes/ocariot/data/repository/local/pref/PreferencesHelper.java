@@ -2,7 +2,7 @@ package br.edu.uepb.nutes.ocariot.data.repository.local.pref;
 
 import net.openid.appauth.AuthState;
 
-import br.edu.uepb.nutes.ocariot.data.model.User;
+import br.edu.uepb.nutes.ocariot.data.model.Child;
 import br.edu.uepb.nutes.ocariot.data.model.UserAccess;
 
 /**
@@ -15,7 +15,7 @@ public interface PreferencesHelper {
 
     boolean addAuthStateFiBIt(final AuthState authState);
 
-    boolean addUserProfile(final User user);
+    boolean addChildProfile(final Child user);
 
     boolean addString(String key, String value);
 
@@ -29,7 +29,7 @@ public interface PreferencesHelper {
 
     AuthState getAuthStateFitBit();
 
-    User getUserProfile();
+    Child getUserProfile();
 
     boolean removeUserAccessOcariot();
 

@@ -19,12 +19,10 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,8 +32,8 @@ import java.util.Locale;
 import java.util.Objects;
 
 import br.edu.uepb.nutes.ocariot.R;
+import br.edu.uepb.nutes.ocariot.data.model.Child;
 import br.edu.uepb.nutes.ocariot.data.model.Environment;
-import br.edu.uepb.nutes.ocariot.data.model.User;
 import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
 import br.edu.uepb.nutes.ocariot.data.repository.remote.fitbit.FitBitNetRepository;
 import br.edu.uepb.nutes.ocariot.data.repository.remote.ocariot.OcariotNetRepository;
@@ -58,7 +56,7 @@ public class EnvironmentFragment extends Fragment implements View.OnClickListene
     private String dateStart, dateEnd = null;
     private List<Environment> environments;
     private LineChart[] mCharts;
-    private User userProfile;
+    private Child childProfile;
     private boolean isFirstRequest, isLoadBlocked = true;
     private String currentRoom;
 
@@ -136,7 +134,7 @@ public class EnvironmentFragment extends Fragment implements View.OnClickListene
         dateStart = DateUtils.getCurrentDatetime(FORMAT_DATE_DEFAULT);
         fitBitRepository = FitBitNetRepository.getInstance(getContext());
         ocariotRepository = OcariotNetRepository.getInstance(getContext());
-        userProfile = AppPreferencesHelper.getInstance(getContext()).getUserProfile();
+        childProfile = AppPreferencesHelper.getInstance(getContext()).getUserProfile();
         isFirstRequest = true;
         currentRoom = null;
 
@@ -188,11 +186,11 @@ public class EnvironmentFragment extends Fragment implements View.OnClickListene
      */
     private void loadDataOcariot() {
         loading(true);
-        if (userProfile.getSchool() == null) return;
+        if (childProfile.getInstitution() == null) return;
 
         ocariotRepository
                 .listEnvironments("timestamp", 1, 1000,
-                        userProfile.getSchool().getName(),
+                        childProfile.getInstitution().get_id(),
                         currentRoom,
                         "gte:".concat(dateStart),
                         (dateEnd != null ? "lt:".concat(dateEnd) : null))
@@ -223,9 +221,8 @@ public class EnvironmentFragment extends Fragment implements View.OnClickListene
         if (getContext() == null) return;
         mLocation.setText(Objects.requireNonNull(getContext()).getResources().getString(
                 R.string.environment_location,
-                userProfile.getSchool()
-                        .getCity().concat(", ")
-                        .concat(userProfile.getSchool().getCountry())));
+                childProfile.getInstitution().getName().concat(", ")
+                        .concat(childProfile.getInstitution().getType())));
 
         if (environments == null || environments.isEmpty()) {
             cleanCharts();
@@ -243,7 +240,7 @@ public class EnvironmentFragment extends Fragment implements View.OnClickListene
         double sumHum = 0;
 
         for (Environment env : environments) {
-            String room = env.getLocation().getSchool()
+            String room = env.getLocation().getLocal()
                     .concat(", ")
                     .concat(env.getLocation().getRoom());
             if (!rooms.contains(room)) rooms.add(room);
@@ -341,8 +338,8 @@ public class EnvironmentFragment extends Fragment implements View.OnClickListene
         final List<Entry> entriesHumidity = new ArrayList<>();
 
         for (int i = 0; i < environments.size(); i++) {
-            entriesTemperature.add(new Entry(i, environments.get(i).getTemperature()));
-            entriesHumidity.add(new Entry(i, environments.get(i).getHumidity()));
+            entriesTemperature.add(new Entry(i, (float) environments.get(i).getTemperature()));
+            entriesHumidity.add(new Entry(i, (float) environments.get(i).getHumidity()));
         }
 
         for (int i = 0; i < mCharts.length; i++) {

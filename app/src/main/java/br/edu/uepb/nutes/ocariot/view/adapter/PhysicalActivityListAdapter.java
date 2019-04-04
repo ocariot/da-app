@@ -10,8 +10,8 @@ import android.widget.TextView;
 import java.util.List;
 
 import br.edu.uepb.nutes.ocariot.R;
-import br.edu.uepb.nutes.ocariot.data.model.Activity;
 import br.edu.uepb.nutes.ocariot.data.model.ActivityType;
+import br.edu.uepb.nutes.ocariot.data.model.PhysicalActivity;
 import br.edu.uepb.nutes.ocariot.utils.DateUtils;
 import br.edu.uepb.nutes.ocariot.view.adapter.base.BaseAdapter;
 import butterknife.BindView;
@@ -22,7 +22,7 @@ import butterknife.ButterKnife;
  *
  * @author Copyright (c) 2018, NUTES/UEPB
  */
-public class PhysicalActivityListAdapter extends BaseAdapter<Activity> {
+public class PhysicalActivityListAdapter extends BaseAdapter<PhysicalActivity> {
     private final Context context;
 
     public PhysicalActivityListAdapter(Context context) {
@@ -40,9 +40,9 @@ public class PhysicalActivityListAdapter extends BaseAdapter<Activity> {
     }
 
     @Override
-    public void showData(RecyclerView.ViewHolder holder, int position, List<Activity> itemsList) {
+    public void showData(RecyclerView.ViewHolder holder, int position, List<PhysicalActivity> itemsList) {
         if (holder instanceof ViewHolder) {
-            final Activity activity = itemsList.get(position);
+            final PhysicalActivity activity = itemsList.get(position);
             ViewHolder h = (ViewHolder) holder;
 
             h.name.setText(activity.getName());
@@ -69,15 +69,9 @@ public class PhysicalActivityListAdapter extends BaseAdapter<Activity> {
                 h.image.setImageResource(R.drawable.ic_workout);
             }
 
-            /**
-             * OnClick Item
-             */
-            h.mView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mListener != null)
-                        mListener.onItemClick(activity);
-                }
+            // OnClick Item
+            h.mView.setOnClickListener(v -> {
+                if (mListener != null) mListener.onItemClick(activity);
             });
         }
     }

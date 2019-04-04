@@ -75,15 +75,9 @@ public class SleepListAdapter extends BaseAdapter<Sleep> {
 
             h.efficiency.setText(String.format(Locale.getDefault(), "%01d%%", efficiency));
 
-            /**
-             * OnClick Item
-             */
-            h.mView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mListener != null)
-                        mListener.onItemClick(sleep);
-                }
+            // OnClick Item
+            h.mView.setOnClickListener(v -> {
+                if (mListener != null) mListener.onItemClick(sleep);
             });
         }
     }

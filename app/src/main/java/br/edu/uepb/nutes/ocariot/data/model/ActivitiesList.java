@@ -12,17 +12,17 @@ import java.util.List;
  */
 public class ActivitiesList {
     @SerializedName("activities")
-    private List<Activity> activities;
+    private List<PhysicalActivity> activities;
 
-    public ActivitiesList(List<Activity> activities) {
+    public ActivitiesList(List<PhysicalActivity> activities) {
         this.activities = activities;
     }
 
-    public List<Activity> getActivities() {
+    public List<PhysicalActivity> getActivities() {
         return activities;
     }
 
-    public void setActivities(List<Activity> activities) {
+    public void setActivities(List<PhysicalActivity> activities) {
         this.activities = activities;
     }
 

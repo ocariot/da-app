@@ -19,6 +19,7 @@ import java.util.List;
 
 import br.edu.uepb.nutes.ocariot.R;
 import br.edu.uepb.nutes.ocariot.data.model.Activity;
+import br.edu.uepb.nutes.ocariot.data.model.PhysicalActivity;
 import br.edu.uepb.nutes.ocariot.data.model.Sleep;
 import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
 import br.edu.uepb.nutes.ocariot.data.repository.remote.ocariot.OcariotNetRepository;
@@ -119,9 +120,9 @@ public class DeleteDataActivity extends AppCompatActivity implements View.OnClic
         if (isActivities) {
             ocariotRepository.listActivities(pref.getUserAccessOcariot().getSubject(),
                     null, 1, 100)
-                    .subscribe(new DisposableObserver<List<Activity>>() {
+                    .subscribe(new DisposableObserver<List<PhysicalActivity>>() {
                         @Override
-                        public void onNext(List<Activity> activities) {
+                        public void onNext(List<PhysicalActivity> activities) {
                             totalActivities = activities.size();
                             deleteActivities(activities);
                         }
@@ -170,7 +171,7 @@ public class DeleteDataActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    private void deleteActivities(List<Activity> activities) {
+    private void deleteActivities(List<PhysicalActivity> activities) {
         Log.w(LOG_TAG, "deleteActivities() " + totalActivities);
         if (activities == null) return;
 

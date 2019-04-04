@@ -7,10 +7,10 @@ import com.auth0.android.jwt.JWT;
 
 import java.util.List;
 
-import br.edu.uepb.nutes.ocariot.data.model.Activity;
+import br.edu.uepb.nutes.ocariot.data.model.Child;
 import br.edu.uepb.nutes.ocariot.data.model.Environment;
+import br.edu.uepb.nutes.ocariot.data.model.PhysicalActivity;
 import br.edu.uepb.nutes.ocariot.data.model.Sleep;
-import br.edu.uepb.nutes.ocariot.data.model.User;
 import br.edu.uepb.nutes.ocariot.data.model.UserAccess;
 import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
 import br.edu.uepb.nutes.ocariot.data.repository.remote.BaseNetRepository;
@@ -34,7 +34,7 @@ public class OcariotNetRepository extends BaseNetRepository {
         super(context);
         this.mContext = context;
 
-        super.addInterceptor(provideInterceptor());
+        super.addRequestInterceptor(requestInterceptor());
         ocariotService = super.provideRetrofit(OcariotService.BASE_URL_OCARIOT)
                 .create(OcariotService.class);
     }
@@ -48,7 +48,7 @@ public class OcariotNetRepository extends BaseNetRepository {
      *
      * @return Interceptor
      */
-    private Interceptor provideInterceptor() {
+    private Interceptor requestInterceptor() {
         return chain -> {
             Request request = chain.request();
             final Request.Builder requestBuilder = request.newBuilder()
@@ -74,7 +74,7 @@ public class OcariotNetRepository extends BaseNetRepository {
     }
 
     public Single<UserAccess> auth(String username, String password) {
-        return ocariotService.authUser(new User(username, password))
+        return ocariotService.authUser(new Child(username, password))
                 .map(userAccess -> {
                     if (userAccess != null && userAccess.getAccessToken() != null) {
                         JWT jwt = new JWT(userAccess.getAccessToken());
@@ -88,58 +88,52 @@ public class OcariotNetRepository extends BaseNetRepository {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Single<User> getUserById(String userId) {
-        return ocariotService.getUserById(userId)
+    public Single<Child> getChildById(String childId) {
+        return ocariotService.getChildById(childId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Observable<List<Activity>> listActivities(String userId, String sort, int page, int limit) {
-        return ocariotService.listActivities(userId, sort, page, limit)
+    public Observable<List<PhysicalActivity>> listActivities(String childId, String sort, int page, int limit) {
+        return ocariotService.listActivities(childId, sort, page, limit)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Observable<Activity> publishActivity(String userId, Activity activity) {
-        return ocariotService.publishActivity(userId, activity)
+    public Observable<PhysicalActivity> publishActivity(String childId, PhysicalActivity activity) {
+        return ocariotService.publishActivity(childId, activity)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Observable<List<Sleep>> listSleep(String userId, String sort, int page, int limit) {
-        return ocariotService.listSleep(userId, sort, page, limit)
+    public Observable<List<Sleep>> listSleep(String childId, String sort, int page, int limit) {
+        return ocariotService.listSleep(childId, sort, page, limit)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Observable<Void> deleteActivity(String userId, String activityId) {
-        return ocariotService.deleteActivity(userId, activityId)
+    public Observable<Void> deleteActivity(String childId, String activityId) {
+        return ocariotService.deleteActivity(childId, activityId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Observable<Sleep> publishSleep(String userId, Sleep sleep) {
-        return ocariotService.publishSleep(userId, sleep)
+    public Observable<Sleep> publishSleep(String childId, Sleep sleep) {
+        return ocariotService.publishSleep(childId, sleep)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Observable<Void> deleteSleep(String childId, String sleepId) {
+        return ocariotService.deleteSleep(childId, sleepId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
     public Observable<List<Environment>> listEnvironments(String sort, int page, int limit,
-                                                          String school, String room,
+                                                          String institutionId, String room,
                                                           String dateStart, String dateEnd) {
-        return ocariotService.listEnvironments(sort, page, limit, school, room, dateStart, dateEnd)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
-    }
-
-    public Observable<Void> deleteSleep(String userId, String sleepId) {
-        return ocariotService.deleteSleep(userId, sleepId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
-    }
-
-    public Observable<Environment> publishEnvironment(Environment environment) {
-        return ocariotService.publishEnvironment(environment)
+        return ocariotService.listEnvironments(sort, page, limit, institutionId, room, dateStart, dateEnd)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }

@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Objects;
 
 import br.edu.uepb.nutes.ocariot.R;
-import br.edu.uepb.nutes.ocariot.data.model.Activity;
+import br.edu.uepb.nutes.ocariot.data.model.PhysicalActivity;
 import br.edu.uepb.nutes.ocariot.data.model.Sleep;
 import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
 import br.edu.uepb.nutes.ocariot.view.ui.fragment.EnvironmentFragment;
@@ -205,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onClickActivity(Activity activity) {
+    public void onClickActivity(PhysicalActivity activity) {
         Intent intent = new Intent(this, PhysicalActivityDetail.class);
         intent.putExtra(PhysicalActivityDetail.ACTIVITY_DETAIL, activity);
         startActivity(intent);

@@ -21,12 +21,12 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import br.edu.uepb.nutes.ocariot.R;
 import br.edu.uepb.nutes.ocariot.data.model.ActivitiesList;
-import br.edu.uepb.nutes.ocariot.data.model.Activity;
 import br.edu.uepb.nutes.ocariot.data.model.ActivityLevel;
-import br.edu.uepb.nutes.ocariot.data.model.User;
+import br.edu.uepb.nutes.ocariot.data.model.PhysicalActivity;
 import br.edu.uepb.nutes.ocariot.data.model.UserAccess;
 import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
 import br.edu.uepb.nutes.ocariot.data.repository.remote.fitbit.FitBitNetRepository;
@@ -37,7 +37,6 @@ import br.edu.uepb.nutes.ocariot.view.adapter.base.OnRecyclerViewListener;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.observers.DisposableObserver;
-import retrofit2.HttpException;
 
 /**
  * A fragment representing a list of Items.
@@ -143,20 +142,20 @@ public class PhysicalActivityListFragment extends Fragment {
         mRecyclerView.addItemDecoration(new DividerItemDecoration(mRecyclerView.getContext(),
                 new LinearLayoutManager(getContext()).getOrientation()));
 
-        mAdapter.setListener(new OnRecyclerViewListener<Activity>() {
+        mAdapter.setListener(new OnRecyclerViewListener<PhysicalActivity>() {
             @Override
-            public void onItemClick(Activity item) {
+            public void onItemClick(PhysicalActivity item) {
                 Log.w(LOG_TAG, "item: " + item.toString());
                 if (mListener != null) mListener.onClickActivity(item);
             }
 
             @Override
-            public void onLongItemClick(View v, Activity item) {
+            public void onLongItemClick(View v, PhysicalActivity item) {
 
             }
 
             @Override
-            public void onMenuContextClick(View v, Activity item) {
+            public void onMenuContextClick(View v, PhysicalActivity item) {
 
             }
         });
@@ -186,16 +185,16 @@ public class PhysicalActivityListFragment extends Fragment {
         if (!DateUtils.isDateTimeValid(fitBitLastDateRegister)) {
             currentDate = DateUtils.formatDateTime(DateUtils.addDays(1).getTimeInMillis(), null);
         }
-        Log.w("FitBit", "current: " + currentDate + " before: " + fitBitLastDateRegister + " | " + DateUtils.isDateTimeValid(fitBitLastDateRegister));
-        Log.w("FitBit", "current: " + currentDate + " before: " + fitBitLastDateRegister + " | " + DateUtils.isDateTimeValid(fitBitLastDateRegister));
 
         fitBitRepository.listActivities(currentDate, fitBitLastDateRegister,
                 "desc", 0, 100)
                 .subscribe(new DisposableObserver<ActivitiesList>() {
                     @Override
                     public void onNext(ActivitiesList activityList) {
-                        if (activityList != null && activityList.getActivities().size() > 0) {
-                            sendActivitiesToOcariot(convertFitBitDataToOcariot(activityList.getActivities()));
+                        if (!activityList.getActivities().isEmpty()) {
+                            sendActivitiesToOcariot(
+                                    convertFitBitDataToOcariot(activityList.getActivities())
+                            );
                         }
                     }
 
@@ -203,23 +202,6 @@ public class PhysicalActivityListFragment extends Fragment {
                     public void onError(Throwable e) {
                         Log.w(LOG_TAG, "FITIBIT - onError: " + e);
                         loadDataOcariot();
-
-                        if (e instanceof HttpException) {
-                            HttpException httpEx = ((HttpException) e);
-//                            if (httpEx.code() == 401) {
-//                                if (getActivity() == null) return;
-//                                Alerter.create(getActivity())
-//                                        .setTitle(getActivity().getResources().getString(R.string.title_ops))
-//                                        .setText(getActivity().getResources().getString(R.string.error_oauth_fitbit_permission))
-//                                        .setIcon(R.drawable.ic_warning_dark)
-//                                        .setBackgroundColorRes(R.color.colorWarning)
-//                                        .setIconColorFilter(0) // Optional - Removes white tint
-//                                        .setOnClickListener(v -> {
-//                                            new LoginFitBit(getActivity()).doAuthorizationCode();
-//                                        })
-//                                        .show();
-//                            }
-                        }
                     }
 
                     @Override
@@ -240,10 +222,10 @@ public class PhysicalActivityListFragment extends Fragment {
 
         ocariotRepository
                 .listActivities(userAccess.getSubject(), "-start_time", 1, 100)
-                .subscribe(new DisposableObserver<List<Activity>>() {
+                .subscribe(new DisposableObserver<List<PhysicalActivity>>() {
                     @Override
-                    public void onNext(List<Activity> activities) {
-                        if (activities.size() > 0) {
+                    public void onNext(List<PhysicalActivity> activities) {
+                        if (!activities.isEmpty()) {
                             mAdapter.clearItems();
                             mAdapter.addItems(activities);
                             mNoData.setVisibility(View.GONE);
@@ -288,28 +270,26 @@ public class PhysicalActivityListFragment extends Fragment {
     /**
      * Publish Activity in OCARioT API Service.
      *
-     * @param activities {@link List<Activity>} List of activities to be published.
+     * @param activities {@link List<PhysicalActivity>} List of activities to be published.
      */
-    private void sendActivitiesToOcariot(List<Activity> activities) {
+    private void sendActivitiesToOcariot(@NonNull List<PhysicalActivity> activities) {
         Log.w(LOG_TAG, "sendOcariot() TOTAL: " + activities.size());
-        if (activities == null) return;
-        int total = activities.size();
-
-        if (total == 0) {
+        if (activities.isEmpty()) {
             loadDataOcariot();
             return;
         }
+        int total = activities.size();
 
         // TODO Enviar lista completa na mesma requisição, quando o servidor oferecer suporte.
         int count = 0;
-        for (Activity activity : activities) {
+        for (PhysicalActivity activity : activities) {
             count++;
             final int aux = count;
             Log.w(LOG_TAG, "SendActivity-pre" + new Gson().toJson(activity));
             ocariotRepository.publishActivity(userAccess.getSubject(), activity)
-                    .subscribe(new DisposableObserver<Activity>() {
+                    .subscribe(new DisposableObserver<PhysicalActivity>() {
                         @Override
-                        public void onNext(Activity acty) {
+                        public void onNext(PhysicalActivity acty) {
                             Log.w(LOG_TAG, "Activity Published: " + acty);
                             if (aux == total) {
                                 saveLastDateSaved(activity.getStartTime());
@@ -319,7 +299,8 @@ public class PhysicalActivityListFragment extends Fragment {
 
                         @Override
                         public void onError(Throwable e) {
-                            Log.w(LOG_TAG, "Activity Published: Error - " + e + "Ac " + new Gson().toJson(activity));
+                            Log.w(LOG_TAG, "Activity Published: Error - " + e + "Ac " +
+                                    new Gson().toJson(activity));
                             saveLastDateSaved(activity.getStartTime());
                             if (aux == total) loadDataOcariot();
                         }
@@ -360,10 +341,10 @@ public class PhysicalActivityListFragment extends Fragment {
      *
      * @param activities List of physical activities.
      */
-    private List<Activity> convertFitBitDataToOcariot(List<Activity> activities) {
+    private List<PhysicalActivity> convertFitBitDataToOcariot(List<PhysicalActivity> activities) {
         if (activities == null) return new ArrayList<>();
 
-        for (Activity activity : activities) {
+        for (PhysicalActivity activity : activities) {
             if (activity.getLevels() == null) {
                 activities.remove(activity);
                 continue;
@@ -375,16 +356,18 @@ public class PhysicalActivityListFragment extends Fragment {
                 // Converts the duration in minutes to milliseconds.
                 level.setDuration(level.getDuration() * 60000);
             }
+            Log.w(LOG_TAG, "SendActivity-pre2: " + new Gson().toJson(activity));
+            activity.setStartTime(DateUtils.formatDateTime(activity.getStartTime(),
+                    "yyyy-MM-dd'T'HH:mm:ss"));
             activity.setEndTime(DateUtils.addMillisecondsToString(activity.getStartTime(),
                     (int) activity.getDuration()));
-            User user = new User();
-            user.set_id(userAccess.getSubject());
-            activity.setUser(user);
+            activity.setChildId(userAccess.getSubject());
+            Log.w(LOG_TAG, "SendActivity-pre2: " + new Gson().toJson(activity));
         }
         return activities;
     }
 
     public interface OnClickActivityListener {
-        void onClickActivity(Activity activity);
+        void onClickActivity(PhysicalActivity activity);
     }
 }

@@ -1,7 +1,6 @@
 package br.edu.uepb.nutes.ocariot.utils;
 
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,19 +33,19 @@ public final class DateUtils {
     }
 
     /**
-     * Returns the current datetime in format of format_date string passed as parameter.
-     * If "format_date" is null the default value: "yyyy-MM-dd HH:mm:ss" will be used.
+     * Returns the current datetime in format of formatDate string passed as parameter.
+     * If "formatDate" is null the default value: "yyyy-MM-dd HH:mm:ss" will be used.
      *
-     * @param format_date The datetime format
+     * @param formatDate The datetime format
      * @return Datetime formatted
      */
-    public static String getCurrentDatetime(String format_date) {
-        if (format_date == null)
-            format_date = "yyyy-MM-dd HH:mm:ss";
+    public static String getCurrentDatetime(String formatDate) {
+        if (formatDate == null)
+            formatDate = "yyyy-MM-dd HH:mm:ss";
 
         Calendar calendar = GregorianCalendar.getInstance();
 
-        DateFormat dateFormat = new SimpleDateFormat(format_date, Locale.getDefault());
+        DateFormat dateFormat = new SimpleDateFormat(formatDate, Locale.getDefault());
         return dateFormat.format(calendar.getTime());
     }
 
@@ -97,82 +96,80 @@ public final class DateUtils {
      * Retrieve a date/time passed in milliseconds to the format passed as a parameter.
      *
      * @param milliseconds long
-     * @param format_date  String
+     * @param formatDate   String
      * @return String
      */
-    public static String formatDate(long milliseconds, String format_date) {
-        if (format_date == null)
+    public static String formatDate(long milliseconds, String formatDate) {
+        if (formatDate == null)
             return null;
 
         Calendar calendar = GregorianCalendar.getInstance();
         calendar.setTimeInMillis(milliseconds);
 
-        DateFormat dateFormat = new SimpleDateFormat(format_date, Locale.getDefault());
+        DateFormat dateFormat = new SimpleDateFormat(formatDate, Locale.getDefault());
         return dateFormat.format(calendar.getTime());
     }
 
     /**
      * Convert string date in string format.
      *
-     * @param date        {@link String}
-     * @param format_date {@link String}
+     * @param date       {@link String}
+     * @param formatDate {@link String}
      * @return String
      */
-    public static String formatDate(@Nullable String date, @Nullable String format_date) {
-        if (format_date == null || format_date.length() == 0)
-            format_date = "yyyy-MM-dd";
+    public static String formatDate(@Nullable String date, @Nullable String formatDate) {
+        if (formatDate == null || formatDate.length() == 0)
+            formatDate = "yyyy-MM-dd";
 
-        return getFormatDataTime(date, format_date, true, false);
+        return getFormatDataTime(date, formatDate, true, false);
     }
 
     /**
      * Convert string date in string format.
      *
-     * @param date        {@link String}
-     * @param format_date {@link String}
+     * @param date       {@link String}
+     * @param formatDate {@link String}
      * @return String
      */
-    public static String formatDateTime(String date, @Nullable String format_date) {
-        if (format_date == null || format_date.length() == 0)
-            format_date = "yyyy-MM-dd'T'HH:mm:ss";
+    public static String formatDateTime(String date, @Nullable String formatDate) {
+        if (formatDate == null || formatDate.length() == 0) formatDate = DATE_FORMAT_DATE_TIME;
 
-        return getFormatDataTime(date, format_date, true, true);
+        return getFormatDataTime(date, formatDate, true, true);
     }
 
     /**
      * Retrieve a datetime passed in milliseconds to the format passed as a parameter.
      *
      * @param milliseconds long
-     * @param format_date  String
+     * @param formatDate   String
      * @return String
      */
-    public static String formatDateTime(long milliseconds, String format_date) {
-        if (format_date == null || format_date.length() == 0)
-            format_date = DATE_FORMAT_DATE_TIME;
+    public static String formatDateTime(long milliseconds, String formatDate) {
+        if (formatDate == null || formatDate.length() == 0) formatDate = DATE_FORMAT_DATE_TIME;
 
         Calendar calendar = GregorianCalendar.getInstance();
         calendar.setTimeInMillis(milliseconds);
 
-        DateFormat dateFormat = new SimpleDateFormat(format_date, Locale.getDefault());
+        DateFormat dateFormat = new SimpleDateFormat(formatDate, Locale.getDefault());
         return dateFormat.format(calendar.getTime());
     }
 
     /**
      * Convert string date in string format.
      *
-     * @param date        {@link String}
-     * @param format_date {@link String}
+     * @param date       {@link String}
+     * @param formatDate {@link String}
      * @return String
      */
-    public static String formatDateHour(String date, @Nullable String format_date) {
-        if (format_date == null || format_date.length() == 0)
-            format_date = "HH:mm:ss";
+    public static String formatDateHour(String date, @Nullable String formatDate) {
+        if (formatDate == null || formatDate.length() == 0)
+            formatDate = "HH:mm:ss";
 
-        return getFormatDataTime(date, format_date, false, true);
+        return getFormatDataTime(date, formatDate, false, true);
     }
 
 
-    private static String getFormatDataTime(String date_input, String format_date,
+    private static String getFormatDataTime(String date_input, String formatDate,
                                             boolean date, boolean time) {
         String result = "";
 
@@ -180,12 +177,12 @@ public final class DateUtils {
             result = getDataTime(Integer.parseInt(date_input.substring(0, 4)),
                     Integer.parseInt(date_input.substring(5, 7)) - 1,
                     Integer.parseInt(date_input.substring(8, 10)),
-                    0, 0, 0, format_date);
+                    0, 0, 0, formatDate);
         } else if (time && !date) {
             result = getDataTime(0, 0, 0,
                     Integer.parseInt(date_input.substring(11, 13)),
                     Integer.parseInt(date_input.substring(14, 16)),
-                    Integer.parseInt(date_input.substring(17, 19)), format_date);
+                    Integer.parseInt(date_input.substring(17, 19)), formatDate);
         } else {
             result = getDataTime(Integer.parseInt(date_input.substring(0, 4)),
                     Integer.parseInt(date_input.substring(5, 7)) - 1,
@@ -193,7 +190,7 @@ public final class DateUtils {
                     Integer.parseInt(date_input.substring(11, 13)),
                     Integer.parseInt(date_input.substring(15, 16)),
                     Integer.parseInt(date_input.substring(17, 19)),
-                    format_date);
+                    formatDate);
         }
 
 
@@ -203,41 +200,41 @@ public final class DateUtils {
     /**
      * Returns datetime according to the parameters.
      *
-     * @param year        The year
-     * @param month       The month
-     * @param day         The day
-     * @param hourOfDay   The hour
-     * @param minute      The minute
-     * @param format_date The format date output.
+     * @param year       The year
+     * @param month      The month
+     * @param day        The day
+     * @param hourOfDay  The hour
+     * @param minute     The minute
+     * @param formatDate The format date output.
      * @return The string datetime.
      */
     private static String getDataTime(int year, int month, int day, int hourOfDay,
-                                      int minute, int milliseconds, String format_date) {
+                                      int minute, int milliseconds, String formatDate) {
         Calendar calendar = GregorianCalendar.getInstance();
         // Value to be used for MONTH field. 0 is January
         calendar.set(year, month, day, hourOfDay, minute, milliseconds);
 
-        DateFormat dateFormat = new SimpleDateFormat(format_date, Locale.getDefault());
+        DateFormat dateFormat = new SimpleDateFormat(formatDate, Locale.getDefault());
         return dateFormat.format(calendar.getTime());
     }
 
     /**
-     * Format date in ISO 8601 for the format passed in the "format_date" parameter.
+     * Format date in ISO 8601 for the format passed in the "formatDate" parameter.
      * If the time zone is null, UTC is used.
      *
-     * @param str_date    String
-     * @param format_date String
-     * @param timeZone    {@link TimeZone}
+     * @param str_date   String
+     * @param formatDate String
+     * @param timeZone   {@link TimeZone}
      * @return String
      */
-    public static String formatDateISO8601(String str_date, String format_date, TimeZone timeZone) {
-        if (str_date == null || format_date == null)
+    public static String formatDateISO8601(String str_date, String formatDate, TimeZone timeZone) {
+        if (str_date == null || formatDate == null)
             return null;
 
         if (timeZone == null)
             timeZone = TimeZone.getTimeZone("UTC");
 
-        DateFormat dateFormat = new SimpleDateFormat(format_date, Locale.getDefault());
+        DateFormat dateFormat = new SimpleDateFormat(formatDate, Locale.getDefault());
         dateFormat.setTimeZone(timeZone);
         return dateFormat.format(DateUtils.fromISO8601(str_date));
     }
@@ -316,8 +313,7 @@ public final class DateUtils {
     }
 
     public static Calendar convertStringDateToCalendar(String date, String format) {
-        if (format == null || format.length() == 0)
-            format = "yyyy-MM-dd";
+        if (format == null || format.length() == 0) format = "yyyy-MM-dd";
 
         Calendar calendar = Calendar.getInstance();
         try {
@@ -337,10 +333,10 @@ public final class DateUtils {
      * @return String
      */
     public static String addMillisecondsToString(String datetime, int milliseconds) {
-        Calendar calendar = convertStringDateToCalendar(datetime, DATE_FORMAT_ISO_8601);
+        Calendar calendar = convertStringDateToCalendar(datetime, DATE_FORMAT_DATE_TIME);
         calendar.add(Calendar.MILLISECOND, milliseconds);
 
-        return formatDate(calendar.getTimeInMillis(), DATE_FORMAT_ISO_8601);
+        return formatDate(calendar.getTimeInMillis(), DATE_FORMAT_DATE_TIME);
     }
 
     /**
@@ -351,12 +347,11 @@ public final class DateUtils {
      * @return String
      */
     public static String addMinutesToString(String datetime, int minutes) {
-        Calendar calendar = convertStringDateToCalendar(datetime, DATE_FORMAT_ISO_8601);
+        Calendar calendar = convertStringDateToCalendar(datetime, DATE_FORMAT_DATE_TIME);
         calendar.add(Calendar.MINUTE, minutes);
 
-        return formatDate(calendar.getTimeInMillis(), DATE_FORMAT_ISO_8601);
+        return formatDate(calendar.getTimeInMillis(), DATE_FORMAT_DATE_TIME);
     }
-
 
     /**
      * returns the current year in milliseconds.
@@ -433,16 +428,15 @@ public final class DateUtils {
     /**
      * Checks if the date passed as parameter is this year.
      *
-     * @param str_date String
+     * @param strDate String
      * @return boolean
      */
-    public static boolean isYear(String str_date) {
+    public static boolean isYear(String strDate) {
         Calendar c1 = GregorianCalendar.getInstance();
         Calendar c2 = GregorianCalendar.getInstance();
         c2.setTimeInMillis(getCurrentDatetime());
 
-        Calendar c = Calendar.getInstance();
-        c1.setTime(DateUtils.fromISO8601(str_date));
+        c1.setTime(DateUtils.fromISO8601(strDate));
 
         return (c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR));
     }

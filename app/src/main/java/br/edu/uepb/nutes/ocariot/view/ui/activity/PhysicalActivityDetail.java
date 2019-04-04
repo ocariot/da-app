@@ -11,14 +11,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import br.edu.uepb.nutes.ocariot.R;
-import br.edu.uepb.nutes.ocariot.data.model.Activity;
 import br.edu.uepb.nutes.ocariot.data.model.ActivityLevel;
+import br.edu.uepb.nutes.ocariot.data.model.PhysicalActivity;
 import br.edu.uepb.nutes.ocariot.utils.DateUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * A fragment to see the details of a physical activity.
+ * A fragment to see the details of a physical physicalActivity.
  *
  * @author Copyright (c) 2018, NUTES/UEPB
  */
@@ -63,7 +63,7 @@ public class PhysicalActivityDetail extends AppCompatActivity {
     @BindView(R.id.activity_box_levels)
     RelativeLayout boxLevels;
 
-    private Activity activity;
+    private PhysicalActivity physicalActivity;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -73,7 +73,7 @@ public class PhysicalActivityDetail extends AppCompatActivity {
         setSupportActionBar(mToolbar);
 
         if (getIntent() != null) {
-            activity = getIntent().getParcelableExtra(ACTIVITY_DETAIL);
+            physicalActivity = getIntent().getParcelableExtra(ACTIVITY_DETAIL);
         }
         initComponents();
     }
@@ -92,13 +92,13 @@ public class PhysicalActivityDetail extends AppCompatActivity {
     }
 
     private void initComponents() {
-        if (activity == null) return;
+        if (physicalActivity == null) return;
 
         initToobar();
-        populateView(activity);
+        populateView(physicalActivity);
     }
 
-    private void populateView(Activity a) {
+    private void populateView(PhysicalActivity a) {
         dateStartTextView.setText(DateUtils.formatDateISO8601(a.getStartTime(),
                 getResources().getString(R.string.date_format1), null));
         datetimeStartTextView.setText(DateUtils.formatDateISO8601(a.getStartTime(),
@@ -144,6 +144,6 @@ public class PhysicalActivityDetail extends AppCompatActivity {
         mActionBar.setDisplayHomeAsUpEnabled(true);
         mActionBar.setDisplayShowTitleEnabled(true);
         mActionBar.setHomeAsUpIndicator(R.drawable.ic_close_dark);
-        mActionBar.setTitle(activity.getName());
+        mActionBar.setTitle(physicalActivity.getName());
     }
 }

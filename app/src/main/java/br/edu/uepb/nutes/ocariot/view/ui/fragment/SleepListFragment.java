@@ -27,7 +27,6 @@ import br.edu.uepb.nutes.ocariot.R;
 import br.edu.uepb.nutes.ocariot.data.model.Sleep;
 import br.edu.uepb.nutes.ocariot.data.model.SleepList;
 import br.edu.uepb.nutes.ocariot.data.model.SleepPatternDataSet;
-import br.edu.uepb.nutes.ocariot.data.model.User;
 import br.edu.uepb.nutes.ocariot.data.model.UserAccess;
 import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
 import br.edu.uepb.nutes.ocariot.data.repository.remote.fitbit.FitBitNetRepository;
@@ -320,9 +319,7 @@ public class SleepListFragment extends Fragment {
                 // Converts the duration in seconds to milliseconds.
                 patternDataSet.setDuration(patternDataSet.getDuration() * 1000);
             }
-            User user = new User();
-            user.set_id(userAccess.getSubject());
-            sleep.setUser(user);
+            sleep.setChildId(userAccess.getSubject());
         }
         return sleepList;
     }

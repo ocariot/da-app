@@ -61,8 +61,8 @@
     <string name="date_format1">yyyy-MM-dd</string>
     <string name="date_time_abb1">MMMM dd \'at\' HH:mm</string>
     <string name="date_time_abb2">EEEE \'at\' hh:mm:ss a</string>
-    <string name="date_time_abb3">EEEE, MMMM dd, YYYY</string>
-    <string name="date_time_abb4">EEE, MMMM dd, YYYY</string>
+    <string name="date_time_abb3">EEEE, MMMM dd, yyyy</string>
+    <string name="date_time_abb4">EEE, MMMM dd, yyyy</string>
     <string name="hour_format1">HH:mm</string>
 
     <!-- SETTINGS -->

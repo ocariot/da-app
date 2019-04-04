@@ -9,7 +9,7 @@ import net.openid.appauth.AuthState;
 
 import org.json.JSONException;
 
-import br.edu.uepb.nutes.ocariot.data.model.User;
+import br.edu.uepb.nutes.ocariot.data.model.Child;
 import br.edu.uepb.nutes.ocariot.data.model.UserAccess;
 import br.edu.uepb.nutes.ocariot.exception.LocalPreferenceException;
 
@@ -55,7 +55,7 @@ public class AppPreferencesHelper implements PreferencesHelper {
     }
 
     @Override
-    public boolean addUserProfile(User user) {
+    public boolean addChildProfile(Child user) {
         if (user == null) {
             throw new LocalPreferenceException("attribute user can not be null or empty!");
         }
@@ -107,9 +107,9 @@ public class AppPreferencesHelper implements PreferencesHelper {
     }
 
     @Override
-    public User getUserProfile() {
+    public Child getUserProfile() {
         String user = mPrefs.getString(PREF_KEY_USER_PROFILE, null);
-        return User.jsonDeserialize(user);
+        return Child.jsonDeserialize(user);
     }
 
     @Override

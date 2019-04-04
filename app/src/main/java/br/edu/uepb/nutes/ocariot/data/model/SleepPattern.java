@@ -2,6 +2,7 @@ package br.edu.uepb.nutes.ocariot.data.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -72,6 +73,7 @@ public class SleepPattern implements Parcelable {
         dest.writeParcelable(summary, flags);
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "SleepPattern{" +

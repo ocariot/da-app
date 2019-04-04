@@ -61,8 +61,7 @@ public class LoginFitBit {
     public void initConfig() {
         AuthorizationServiceConfiguration serviceConfig = new AuthorizationServiceConfiguration(
                 AUTHORIZATION_ENDPOINT, // authorization endpoint
-                TOKEN_ENDPOINT, // token endpoint
-                null
+                TOKEN_ENDPOINT // token endpoint
         );
 
         AuthorizationRequest.Builder authRequestBuilder =
@@ -87,12 +86,16 @@ public class LoginFitBit {
     public void doAuthorizationCode() {
         mAuthService = new AuthorizationService(mContext);
 
+        Intent intent = new Intent(mContext, SettingsActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
         mAuthService.performAuthorizationRequest(
                 mAuthRequest,
-                PendingIntent.getActivity(mContext, REQUEST_LOGIN_FITBIT_SUCCESS,
-                        new Intent(mContext, SettingsActivity.class), 0),
-                PendingIntent.getActivity(mContext, REQUEST_LOGIN_FITBIT_CANCELED,
-                        new Intent(mContext, SettingsActivity.class), 0));
+                PendingIntent.getActivity(mContext.getApplicationContext(),
+                        REQUEST_LOGIN_FITBIT_SUCCESS, intent, 0),
+                PendingIntent.getActivity(mContext.getApplicationContext(),
+                        REQUEST_LOGIN_FITBIT_CANCELED, intent, 0)
+        );
     }
 
     /**

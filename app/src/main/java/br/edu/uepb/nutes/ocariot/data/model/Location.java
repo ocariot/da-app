@@ -2,8 +2,6 @@ package br.edu.uepb.nutes.ocariot.data.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
-import android.util.Log;
 
 import java.util.Objects;
 
@@ -13,26 +11,39 @@ import java.util.Objects;
  * @author Copyright (c) 2018, NUTES/UEPB
  */
 public class Location implements Parcelable, Comparable<Location> {
-    private String school;
+    private String local;
     private String room;
-    private String country;
-    private String city;
+    private double latitude;
+    private double longitude;
 
     public Location() {
     }
 
-    public Location(String school, String room, String country, String city) {
-        this.school = school;
+    public Location(String local, String room, double latitude, double longitude) {
+        this.local = local;
         this.room = room;
-        this.country = country;
-        this.city = city;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     protected Location(Parcel in) {
-        school = in.readString();
+        local = in.readString();
         room = in.readString();
-        country = in.readString();
-        city = in.readString();
+        latitude = in.readDouble();
+        longitude = in.readDouble();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(local);
+        dest.writeString(room);
+        dest.writeDouble(latitude);
+        dest.writeDouble(longitude);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public static final Creator<Location> CREATOR = new Creator<Location>() {
@@ -47,12 +58,12 @@ public class Location implements Parcelable, Comparable<Location> {
         }
     };
 
-    public String getSchool() {
-        return school;
+    public String getLocal() {
+        return local;
     }
 
-    public void setSchool(String school) {
-        this.school = school;
+    public void setLocal(String local) {
+        this.local = local;
     }
 
     public String getRoom() {
@@ -63,38 +74,25 @@ public class Location implements Parcelable, Comparable<Location> {
         this.room = room;
     }
 
-    public String getCountry() {
-        return country;
+    public double getLatitude() {
+        return latitude;
     }
 
-    public void setCountry(String country) {
-        this.country = country;
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
     }
 
-    public String getCity() {
-        return city;
+    public double getLongitude() {
+        return longitude;
     }
 
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(school);
-        dest.writeString(room);
-        dest.writeString(country);
-        dest.writeString(city);
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(school, room, country, city);
+        return Objects.hash(local, room, latitude, longitude);
     }
 
     @Override
@@ -102,20 +100,19 @@ public class Location implements Parcelable, Comparable<Location> {
         if (!(o instanceof Location)) return false;
 
         Location location = (Location) o;
-        return Objects.equals(school, location.school) &&
-                Objects.equals(room, location.room) &&
-                Objects.equals(country, location.country) &&
-                Objects.equals(city, location.city);
+        return Double.compare(location.latitude, latitude) == 0 &&
+                Double.compare(location.longitude, longitude) == 0 &&
+                Objects.equals(local, location.local) &&
+                Objects.equals(room, location.room);
     }
 
-    @NonNull
     @Override
     public String toString() {
         return "Location{" +
-                "school='" + school + '\'' +
+                "local='" + local + '\'' +
                 ", room='" + room + '\'' +
-                ", country='" + country + '\'' +
-                ", city='" + city + '\'' +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
                 '}';
     }
 

@@ -1,0 +1,105 @@
+package br.edu.uepb.nutes.ocariot.data.model;
+
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.util.Objects;
+
+/**
+ * Represents the Measurement object.
+ *
+ * @author Copyright (c) 2018, NUTES/UEPB
+ */
+public class Measurement implements Parcelable {
+    private double value;
+    private String unit;
+    private String type;
+
+    public Measurement() {
+    }
+
+    public Measurement(String unit, double value, String type) {
+        this.value = value;
+        this.unit = unit;
+        this.type = type;
+    }
+
+    protected Measurement(Parcel in) {
+        value = in.readDouble();
+        unit = in.readString();
+        type = in.readString();
+    }
+
+    public double getValue() {
+        return value;
+    }
+
+    public void setValue(double value) {
+        this.value = value;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public static final Creator<Measurement> CREATOR = new Creator<Measurement>() {
+        @Override
+        public Measurement createFromParcel(Parcel in) {
+            return new Measurement(in);
+        }
+
+        @Override
+        public Measurement[] newArray(int size) {
+            return new Measurement[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeDouble(value);
+        dest.writeString(unit);
+        dest.writeString(type);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value, unit, type);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Measurement)) return false;
+
+        Measurement that = (Measurement) o;
+        return Double.compare(that.value, value) == 0 &&
+                Objects.equals(unit, that.unit) &&
+                Objects.equals(type, that.type);
+    }
+
+    @Override
+    public String toString() {
+        return "Measurement{" +
+                "value=" + value +
+                ", unit='" + unit + '\'' +
+                ", type='" + type + '\'' +
+                '}';
+    }
+}
+

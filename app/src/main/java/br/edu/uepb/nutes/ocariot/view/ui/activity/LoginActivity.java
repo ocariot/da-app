@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -14,7 +15,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import br.edu.uepb.nutes.ocariot.R;
-import br.edu.uepb.nutes.ocariot.data.model.User;
+import br.edu.uepb.nutes.ocariot.data.model.Child;
 import br.edu.uepb.nutes.ocariot.data.model.UserAccess;
 import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
 import br.edu.uepb.nutes.ocariot.data.repository.remote.ocariot.OcariotNetRepository;
@@ -108,6 +109,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     @Override
                     public void onError(Throwable e) {
+                        Log.w("ERROR-LOG", e.getMessage());
                         if (e instanceof HttpException) {
                             HttpException httpEx = ((HttpException) e);
                             if (httpEx.code() == 401) {
@@ -123,16 +125,16 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void getUserProfile(String userId) {
-        ocariotRepository.getUserById(userId)
-                .subscribe(new SingleObserver<User>() {
+        ocariotRepository.getChildById(userId)
+                .subscribe(new SingleObserver<Child>() {
                     @Override
                     public void onSubscribe(Disposable d) {
 
                     }
 
                     @Override
-                    public void onSuccess(User user) {
-                        appPref.addUserProfile(user);
+                    public void onSuccess(Child user) {
+                        appPref.addChildProfile(user);
                         openMainActivity();
                         showProgress(false);
                     }
