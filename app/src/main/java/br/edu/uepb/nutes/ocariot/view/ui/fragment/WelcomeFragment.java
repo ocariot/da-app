@@ -30,13 +30,7 @@ public class WelcomeFragment extends Fragment {
     }
 
     public static WelcomeFragment newInstance() {
-        WelcomeFragment fragment = new WelcomeFragment();
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        return new WelcomeFragment();
     }
 
     @Override

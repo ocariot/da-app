@@ -23,9 +23,9 @@ import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -40,7 +40,7 @@ import br.edu.uepb.nutes.ocariot.data.repository.remote.ocariot.OcariotNetReposi
 import br.edu.uepb.nutes.ocariot.utils.DateUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.observers.DisposableObserver;
+import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * A fragment representing a list of Items.
@@ -59,6 +59,8 @@ public class EnvironmentFragment extends Fragment implements View.OnClickListene
     private Child childProfile;
     private boolean isFirstRequest, isLoadBlocked = true;
     private String currentRoom;
+    private Context mContext;
+    private CompositeDisposable mDisposable;
 
     /**
      * We need this variable to lock and unlock loading more.
@@ -108,6 +110,7 @@ public class EnvironmentFragment extends Fragment implements View.OnClickListene
      * fragment (e.g. upon screen orientation changes).
      */
     public EnvironmentFragment() {
+        // Empty constructor required!
     }
 
     public static EnvironmentFragment newInstance() {
@@ -117,6 +120,11 @@ public class EnvironmentFragment extends Fragment implements View.OnClickListene
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mContext = Objects.requireNonNull(getActivity()).getApplicationContext();
+        mDisposable = new CompositeDisposable();
+        fitBitRepository = FitBitNetRepository.getInstance(mContext);
+        ocariotRepository = OcariotNetRepository.getInstance(mContext);
+        childProfile = AppPreferencesHelper.getInstance(mContext).getUserProfile();
     }
 
     @Override
@@ -132,9 +140,6 @@ public class EnvironmentFragment extends Fragment implements View.OnClickListene
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         dateStart = DateUtils.getCurrentDatetime(FORMAT_DATE_DEFAULT);
-        fitBitRepository = FitBitNetRepository.getInstance(getContext());
-        ocariotRepository = OcariotNetRepository.getInstance(getContext());
-        childProfile = AppPreferencesHelper.getInstance(getContext()).getUserProfile();
         isFirstRequest = true;
         currentRoom = null;
 
@@ -142,14 +147,10 @@ public class EnvironmentFragment extends Fragment implements View.OnClickListene
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-    }
-
-    @Override
     public void onDetach() {
         super.onDetach();
         if (fitBitRepository != null) fitBitRepository.dispose();
+        mDisposable.dispose();
     }
 
     /**
@@ -185,41 +186,29 @@ public class EnvironmentFragment extends Fragment implements View.OnClickListene
      * Otherwise it displays from the remote server.
      */
     private void loadDataOcariot() {
-        loading(true);
         if (childProfile.getInstitution() == null) return;
 
-        ocariotRepository
-                .listEnvironments("timestamp", 1, 1000,
-                        childProfile.getInstitution().get_id(),
-                        currentRoom,
-                        "gte:".concat(dateStart),
-                        (dateEnd != null ? "lt:".concat(dateEnd) : null))
-                .subscribe(new DisposableObserver<List<Environment>>() {
-                    @Override
-                    public void onNext(List<Environment> environmentsList) {
-                        environments = environmentsList;
-                        Log.w(LOG_TAG, "loadDataOcariot() -" + Arrays.toString(environments.toArray()));
-                        populateView(environments);
-
-                        loading(false);
-                        isFirstRequest = false;
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        mDataSwipeRefresh.setRefreshing(false);
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
+        mDisposable.add(
+                ocariotRepository
+                        .listEnvironments("timestamp", 1, 1000,
+                                childProfile.getInstitution().get_id(),
+                                currentRoom,
+                                "gte:".concat(dateStart),
+                                (dateEnd != null ? "lt:".concat(dateEnd) : null))
+                        .doOnSubscribe(disposable -> loading(true))
+                        .doAfterTerminate(() -> loading(false))
+                        .subscribe(environmentsList -> {
+                            this.environments = environmentsList;
+                            populateView(environmentsList);
+                            isFirstRequest = false;
+                        })
+        );
     }
 
     private void populateView(List<Environment> environments) {
-        if (getContext() == null) return;
-        mLocation.setText(Objects.requireNonNull(getContext()).getResources().getString(
+        if (mContext == null) return;
+        Log.w(LOG_TAG, new Gson().toJson(environments));
+        mLocation.setText(Objects.requireNonNull(mContext).getResources().getString(
                 R.string.environment_location,
                 childProfile.getInstitution().getName().concat(", ")
                         .concat(childProfile.getInstitution().getType())));
@@ -252,7 +241,7 @@ public class EnvironmentFragment extends Fragment implements View.OnClickListene
         // Room
         if (isFirstRequest) {
             Collections.sort(rooms);
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(Objects.requireNonNull(getContext()),
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(Objects.requireNonNull(mContext),
                     android.R.layout.simple_spinner_item, rooms);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             mRoomSpinner.setAdapter(adapter);
@@ -269,7 +258,7 @@ public class EnvironmentFragment extends Fragment implements View.OnClickListene
 
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
-
+                    // Not implemented!
                 }
             });
         }
@@ -290,10 +279,11 @@ public class EnvironmentFragment extends Fragment implements View.OnClickListene
         if (!enabled) {
             mDataSwipeRefresh.setRefreshing(false);
             itShouldLoadMore = true;
-        } else {
-            mDataSwipeRefresh.setRefreshing(true);
-            itShouldLoadMore = false;
+            return;
         }
+        if (mDataSwipeRefresh.isRefreshing()) return;
+        mDataSwipeRefresh.setRefreshing(true);
+        itShouldLoadMore = false;
     }
 
     @Override
@@ -374,7 +364,7 @@ public class EnvironmentFragment extends Fragment implements View.OnClickListene
                 int color = ContextCompat.getColor(Objects.requireNonNull(getActivity()),
                         R.color.colorWarningDark);
                 dataSet.setFillColor(ContextCompat.getColor(
-                        Objects.requireNonNull(getContext()), R.color.colorWarning));
+                        Objects.requireNonNull(mContext), R.color.colorWarning));
                 dataSet.setColor(color);
                 dataSet.setCircleColor(color);
                 dataSet.setHighLightColor(color);
@@ -384,7 +374,7 @@ public class EnvironmentFragment extends Fragment implements View.OnClickListene
                 int color = ContextCompat.getColor(Objects.requireNonNull(getActivity()),
                         R.color.colorPrimaryDark);
                 dataSet.setFillColor(ContextCompat.getColor(
-                        Objects.requireNonNull(getContext()), R.color.colorPrimary));
+                        Objects.requireNonNull(mContext), R.color.colorPrimary));
                 dataSet.setColor(color);
                 dataSet.setCircleColor(color);
                 dataSet.setHighLightColor(color);
@@ -419,9 +409,9 @@ public class EnvironmentFragment extends Fragment implements View.OnClickListene
     }
 
     private void cleanCharts() {
-        for (int i = 0; i < mCharts.length; i++) {
-            mCharts[i].clear();
-            mCharts[i].invalidate();
+        for (LineChart mChart : mCharts) {
+            mChart.clear();
+            mChart.invalidate();
         }
     }
 

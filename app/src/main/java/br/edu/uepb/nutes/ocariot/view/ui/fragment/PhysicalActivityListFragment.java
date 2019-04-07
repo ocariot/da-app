@@ -1,7 +1,9 @@
 package br.edu.uepb.nutes.ocariot.view.ui.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,14 +19,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
+import java.util.Objects;
 
 import br.edu.uepb.nutes.ocariot.R;
-import br.edu.uepb.nutes.ocariot.data.model.ActivitiesList;
 import br.edu.uepb.nutes.ocariot.data.model.ActivityLevel;
 import br.edu.uepb.nutes.ocariot.data.model.PhysicalActivity;
 import br.edu.uepb.nutes.ocariot.data.model.UserAccess;
@@ -36,7 +34,7 @@ import br.edu.uepb.nutes.ocariot.view.adapter.PhysicalActivityListAdapter;
 import br.edu.uepb.nutes.ocariot.view.adapter.base.OnRecyclerViewListener;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.observers.DisposableObserver;
+import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * A fragment representing a list of Items.
@@ -46,6 +44,7 @@ import io.reactivex.observers.DisposableObserver;
 public class PhysicalActivityListFragment extends Fragment {
     private final String LOG_TAG = "PhysicalActivityList";
     public final String KEY_ACTIVITY_LAST_DATE = "key_activity_last_key";
+    @SuppressLint("StaticFieldLeak")
 
     private PhysicalActivityListAdapter mAdapter;
     private FitBitNetRepository fitBitRepository;
@@ -53,6 +52,8 @@ public class PhysicalActivityListFragment extends Fragment {
     private AppPreferencesHelper appPref;
     private OnClickActivityListener mListener;
     private UserAccess userAccess;
+    private Context mContext;
+    private CompositeDisposable mDisposable;
 
     /**
      * We need this variable to lock and unlock loading more.
@@ -75,6 +76,7 @@ public class PhysicalActivityListFragment extends Fragment {
      * fragment (e.g. upon screen orientation changes).
      */
     public PhysicalActivityListFragment() {
+        // Empty constructor required!
     }
 
     public static PhysicalActivityListFragment newInstance() {
@@ -84,9 +86,11 @@ public class PhysicalActivityListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        fitBitRepository = FitBitNetRepository.getInstance(getActivity());
-        ocariotRepository = OcariotNetRepository.getInstance(getActivity());
-        appPref = AppPreferencesHelper.getInstance(getContext());
+        mContext = Objects.requireNonNull(getActivity()).getApplicationContext();
+        mDisposable = new CompositeDisposable();
+        fitBitRepository = FitBitNetRepository.getInstance(mContext);
+        ocariotRepository = OcariotNetRepository.getInstance(mContext);
+        appPref = AppPreferencesHelper.getInstance(mContext);
         userAccess = appPref.getUserAccessOcariot();
     }
 
@@ -109,6 +113,7 @@ public class PhysicalActivityListFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+
         if (context instanceof OnClickActivityListener) {
             mListener = (OnClickActivityListener) context;
         } else {
@@ -120,9 +125,10 @@ public class PhysicalActivityListFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        Log.w(LOG_TAG, "onDetach()");
         if (fitBitRepository != null) fitBitRepository.dispose();
-
         mListener = null;
+        mDisposable.dispose();
     }
 
     /**
@@ -135,28 +141,27 @@ public class PhysicalActivityListFragment extends Fragment {
     }
 
     private void initRecyclerView() {
-        mAdapter = new PhysicalActivityListAdapter(getContext());
+        mAdapter = new PhysicalActivityListAdapter(mContext);
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.addItemDecoration(new DividerItemDecoration(mRecyclerView.getContext(),
-                new LinearLayoutManager(getContext()).getOrientation()));
+                new LinearLayoutManager(mContext).getOrientation()));
 
         mAdapter.setListener(new OnRecyclerViewListener<PhysicalActivity>() {
             @Override
             public void onItemClick(PhysicalActivity item) {
-                Log.w(LOG_TAG, "item: " + item.toString());
                 if (mListener != null) mListener.onClickActivity(item);
             }
 
             @Override
             public void onLongItemClick(View v, PhysicalActivity item) {
-
+                // Not implemented!
             }
 
             @Override
             public void onMenuContextClick(View v, PhysicalActivity item) {
-
+                // Not implemented!
             }
         });
 
@@ -177,37 +182,21 @@ public class PhysicalActivityListFragment extends Fragment {
      */
     private void loadDataFitBit() {
         Log.w(LOG_TAG, "loadDataFitBit()");
-        loading(true);
-
-        // TODO COrrigir problema do afeter e befora
         String currentDate = null;
         String fitBitLastDateRegister = getLastDateSaved();
         if (!DateUtils.isDateTimeValid(fitBitLastDateRegister)) {
-            currentDate = DateUtils.formatDateTime(DateUtils.addDays(1).getTimeInMillis(), null);
+            currentDate = DateUtils.formatDateTime(
+                    DateUtils.addDays(1).getTimeInMillis(), null
+            );
         }
 
-        fitBitRepository.listActivities(currentDate, fitBitLastDateRegister,
-                "desc", 0, 100)
-                .subscribe(new DisposableObserver<ActivitiesList>() {
-                    @Override
-                    public void onNext(ActivitiesList activityList) {
-                        if (!activityList.getActivities().isEmpty()) {
-                            sendActivitiesToOcariot(
-                                    convertFitBitDataToOcariot(activityList.getActivities())
-                            );
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.w(LOG_TAG, "FITIBIT - onError: " + e);
-                        loadDataOcariot();
-                    }
-
-                    @Override
-                    public void onComplete() {
-                    }
-                });
+        mDisposable.add(fitBitRepository
+                .listActivities(currentDate, fitBitLastDateRegister, "desc", 0, 100)
+                .doOnSubscribe(disposable -> loading(true))
+                .subscribe(physicalActivities -> sendActivitiesToOcariot(
+                        convertFitBitDataToOcariot(physicalActivities)
+                ), error -> loadDataOcariot())
+        );
     }
 
     /**
@@ -218,38 +207,34 @@ public class PhysicalActivityListFragment extends Fragment {
     private void loadDataOcariot() {
         Log.w(LOG_TAG, "loadDataOcariotInit()");
         if (userAccess == null) return;
-        loading(true);
 
-        ocariotRepository
+        mDisposable.add(ocariotRepository
                 .listActivities(userAccess.getSubject(), "-start_time", 1, 100)
-                .subscribe(new DisposableObserver<List<PhysicalActivity>>() {
-                    @Override
-                    public void onNext(List<PhysicalActivity> activities) {
-                        if (!activities.isEmpty()) {
-                            mAdapter.clearItems();
-                            mAdapter.addItems(activities);
-                            mNoData.setVisibility(View.GONE);
-                        } else if (mAdapter.itemsIsEmpty()) {
-                            mNoData.setVisibility(View.VISIBLE);
+                .doOnSubscribe(disposable -> loading(true))
+                .doAfterTerminate(() -> loading(false))
+                .subscribe(this::populateViewActivities, error -> {
+                            loading(false);
+                            Toast.makeText(mContext, R.string.error_500, Toast.LENGTH_SHORT).show();
                         }
-                    }
+                )
+        );
+    }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        loading(false);
-                        if (getContext() == null) return;
-                        Toast.makeText(getContext(), R.string.error_500,
-                                Toast.LENGTH_SHORT).show();
-                        if (mAdapter.itemsIsEmpty()) {
-                            mNoData.setVisibility(View.VISIBLE);
-                        }
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        loading(false);
-                    }
-                });
+    /**
+     * Populate RecyclerView with physical activities.
+     *
+     * @param activities {@link List<PhysicalActivity>}
+     */
+    private void populateViewActivities(final List<PhysicalActivity> activities) {
+        Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
+            if (activities.isEmpty()) {
+                mNoData.setVisibility(View.VISIBLE);
+                return;
+            }
+            mAdapter.clearItems();
+            mAdapter.addItems(activities);
+            mNoData.setVisibility(View.GONE);
+        });
     }
 
     /**
@@ -261,10 +246,11 @@ public class PhysicalActivityListFragment extends Fragment {
         if (!enabled) {
             mDataSwipeRefresh.setRefreshing(false);
             itShouldLoadMore = true;
-        } else {
-            mDataSwipeRefresh.setRefreshing(true);
-            itShouldLoadMore = false;
+            return;
         }
+        if (mDataSwipeRefresh.isRefreshing()) return;
+        mDataSwipeRefresh.setRefreshing(true);
+        itShouldLoadMore = false;
     }
 
     /**
@@ -273,43 +259,30 @@ public class PhysicalActivityListFragment extends Fragment {
      * @param activities {@link List<PhysicalActivity>} List of activities to be published.
      */
     private void sendActivitiesToOcariot(@NonNull List<PhysicalActivity> activities) {
-        Log.w(LOG_TAG, "sendOcariot() TOTAL: " + activities.size());
+        Log.w(LOG_TAG, "sendActivitiesToOcariot() TOTAL: " + activities.size());
         if (activities.isEmpty()) {
             loadDataOcariot();
             return;
         }
         int total = activities.size();
 
-        // TODO Enviar lista completa na mesma requisição, quando o servidor oferecer suporte.
         int count = 0;
         for (PhysicalActivity activity : activities) {
             count++;
             final int aux = count;
-            Log.w(LOG_TAG, "SendActivity-pre" + new Gson().toJson(activity));
-            ocariotRepository.publishActivity(userAccess.getSubject(), activity)
-                    .subscribe(new DisposableObserver<PhysicalActivity>() {
-                        @Override
-                        public void onNext(PhysicalActivity acty) {
-                            Log.w(LOG_TAG, "Activity Published: " + acty);
-                            if (aux == total) {
+            new Handler().postDelayed(() -> mDisposable.add(
+                    ocariotRepository
+                            .publishActivity(activity)
+                            .subscribe(physicalActivity -> {
+                                if (aux == total) {
+                                    saveLastDateSaved(activity.getStartTime());
+                                    loadDataOcariot();
+                                }
+                            }, error -> {
                                 saveLastDateSaved(activity.getStartTime());
-                                loadDataOcariot();
-                            }
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-                            Log.w(LOG_TAG, "Activity Published: Error - " + e + "Ac " +
-                                    new Gson().toJson(activity));
-                            saveLastDateSaved(activity.getStartTime());
-                            if (aux == total) loadDataOcariot();
-                        }
-
-                        @Override
-                        public void onComplete() {
-                            Log.w(LOG_TAG, "Activity Published: onComplete()");
-                        }
-                    });
+                                if (aux == total) loadDataOcariot();
+                            })
+            ), 200);
         }
     }
 
@@ -324,7 +297,7 @@ public class PhysicalActivityListFragment extends Fragment {
     }
 
     /**
-     * Retrieve a date frcm the last saved activity on the OCARIoT platform.
+     * Retrieve a date from the last saved activity on the OCARIoT platform.
      *
      * @return String Date in yyyy-MM-ddTHH:mm:ss format.
      */
@@ -341,28 +314,23 @@ public class PhysicalActivityListFragment extends Fragment {
      *
      * @param activities List of physical activities.
      */
-    private List<PhysicalActivity> convertFitBitDataToOcariot(List<PhysicalActivity> activities) {
-        if (activities == null) return new ArrayList<>();
-
+    private List<PhysicalActivity> convertFitBitDataToOcariot(@NonNull List<PhysicalActivity> activities) {
         for (PhysicalActivity activity : activities) {
-            if (activity.getLevels() == null) {
-                activities.remove(activity);
-                continue;
-            }
-
             for (ActivityLevel level : activity.getLevels()) {
                 // In the FitBit API the duration comes in minutes.
                 // The OCARIoT API waits in milliseconds.
                 // Converts the duration in minutes to milliseconds.
                 level.setDuration(level.getDuration() * 60000);
             }
-            Log.w(LOG_TAG, "SendActivity-pre2: " + new Gson().toJson(activity));
-            activity.setStartTime(DateUtils.formatDateTime(activity.getStartTime(),
-                    "yyyy-MM-dd'T'HH:mm:ss"));
-            activity.setEndTime(DateUtils.addMillisecondsToString(activity.getStartTime(),
-                    (int) activity.getDuration()));
+            activity.setStartTime(DateUtils.formatDateTime(
+                    activity.getStartTime(),
+                    DateUtils.DATE_FORMAT_DATE_TIME)
+            );
+            activity.setEndTime(DateUtils.addMillisecondsToString(
+                    activity.getStartTime(),
+                    (int) activity.getDuration())
+            );
             activity.setChildId(userAccess.getSubject());
-            Log.w(LOG_TAG, "SendActivity-pre2: " + new Gson().toJson(activity));
         }
         return activities;
     }

@@ -11,7 +11,7 @@ import java.util.Objects;
  *
  * @author Copyright (c) 2018, NUTES/UEPB
  */
-public class Activity {
+public abstract class Activity {
     @SerializedName("id")
     private String _id; // _id in server remote (UUID)
 
@@ -26,9 +26,6 @@ public class Activity {
 
     @SerializedName(value = "child_id")
     private String childId;
-
-    public Activity() {
-    }
 
     public String get_id() {
         return _id;

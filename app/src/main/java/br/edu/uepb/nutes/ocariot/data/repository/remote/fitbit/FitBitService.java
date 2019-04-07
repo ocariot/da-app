@@ -3,6 +3,7 @@ package br.edu.uepb.nutes.ocariot.data.repository.remote.fitbit;
 import br.edu.uepb.nutes.ocariot.data.model.ActivitiesList;
 import br.edu.uepb.nutes.ocariot.data.model.SleepList;
 import io.reactivex.Observable;
+import io.reactivex.Single;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
@@ -20,7 +21,7 @@ public interface FitBitService {
      * @return Observable<ActivitiesList>
      */
     @GET("1/user/-/activities/list.json")
-    Observable<ActivitiesList> listActivity(
+    Single<ActivitiesList> listActivity(
             @Query("beforeDate") String beforeDate,
             @Query("afterDate") String afterDate,
             @Query("sort") String sort,
@@ -34,7 +35,7 @@ public interface FitBitService {
      * @return Observable<SleepList>
      */
     @GET("1.2/user/-/sleep/list.json")
-    Observable<SleepList> listSleep(
+    Single<SleepList> listSleep(
             @Query("beforeDate") String beforeDate,
             @Query("afterDate") String afterDate,
             @Query("sort") String sort,

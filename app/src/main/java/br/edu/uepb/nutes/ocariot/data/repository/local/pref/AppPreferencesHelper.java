@@ -114,7 +114,9 @@ public class AppPreferencesHelper implements PreferencesHelper {
 
     @Override
     public boolean removeUserAccessOcariot() {
-        return mPrefs.edit().remove(PREF_KEY_AUTH_STATE_OCARIOT).commit();
+        return mPrefs.edit().remove(PREF_KEY_AUTH_STATE_OCARIOT).commit() &&
+                mPrefs.edit().remove(PREF_KEY_USER_PROFILE).commit() &&
+                removeAuthStateFitBit();
     }
 
 

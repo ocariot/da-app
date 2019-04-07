@@ -2,6 +2,7 @@ package br.edu.uepb.nutes.ocariot.view.ui.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,15 +18,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import br.edu.uepb.nutes.ocariot.R;
 import br.edu.uepb.nutes.ocariot.data.model.Sleep;
-import br.edu.uepb.nutes.ocariot.data.model.SleepList;
 import br.edu.uepb.nutes.ocariot.data.model.SleepPatternDataSet;
 import br.edu.uepb.nutes.ocariot.data.model.UserAccess;
 import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
@@ -36,7 +34,7 @@ import br.edu.uepb.nutes.ocariot.view.adapter.SleepListAdapter;
 import br.edu.uepb.nutes.ocariot.view.adapter.base.OnRecyclerViewListener;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.observers.DisposableObserver;
+import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * A fragment representing a list of Items.
@@ -51,6 +49,8 @@ public class SleepListFragment extends Fragment {
     private OcariotNetRepository ocariotRepository;
     private OnClickSleepListener mListener;
     private UserAccess userAccess;
+    private Context mContext;
+    private CompositeDisposable mDisposable;
 
     /**
      * We need this variable to lock and unlock loading more.
@@ -73,6 +73,7 @@ public class SleepListFragment extends Fragment {
      * fragment (e.g. upon screen orientation changes).
      */
     public SleepListFragment() {
+        // Empty constructor  required!
     }
 
     public static SleepListFragment newInstance() {
@@ -82,7 +83,11 @@ public class SleepListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        userAccess = AppPreferencesHelper.getInstance(getContext()).getUserAccessOcariot();
+        mContext = Objects.requireNonNull(getActivity()).getApplicationContext();
+        mDisposable = new CompositeDisposable();
+        fitBitRepository = FitBitNetRepository.getInstance(mContext);
+        ocariotRepository = OcariotNetRepository.getInstance(mContext);
+        userAccess = AppPreferencesHelper.getInstance(mContext).getUserAccessOcariot();
     }
 
     @Override
@@ -97,9 +102,6 @@ public class SleepListFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        fitBitRepository = FitBitNetRepository.getInstance(getContext());
-        ocariotRepository = OcariotNetRepository.getInstance(getContext());
-
         initComponents();
     }
 
@@ -119,6 +121,7 @@ public class SleepListFragment extends Fragment {
         super.onDetach();
         if (fitBitRepository != null) fitBitRepository.dispose();
         mListener = null;
+        mDisposable.dispose();
     }
 
     /**
@@ -131,12 +134,12 @@ public class SleepListFragment extends Fragment {
     }
 
     private void initRecyclerView() {
-        mAdapter = new SleepListAdapter(getContext());
+        mAdapter = new SleepListAdapter(mContext);
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.addItemDecoration(new DividerItemDecoration(mRecyclerView.getContext(),
-                new LinearLayoutManager(getContext()).getOrientation()));
+                new LinearLayoutManager(mContext).getOrientation()));
 
         mAdapter.setListener(new OnRecyclerViewListener<Sleep>() {
             @Override
@@ -147,12 +150,12 @@ public class SleepListFragment extends Fragment {
 
             @Override
             public void onLongItemClick(View v, Sleep item) {
-
+                // Not implemented!
             }
 
             @Override
             public void onMenuContextClick(View v, Sleep item) {
-
+                // Not implemented!
             }
         });
 
@@ -172,31 +175,17 @@ public class SleepListFragment extends Fragment {
      * Load data in FitBit Server.
      */
     private void loadDataFitBit() {
-        loading(true);
         String currentDate = DateUtils.formatDate(DateUtils.addDays(1).getTimeInMillis(),
                 getResources().getString(R.string.date_format1));
 
-        fitBitRepository.listSleep(currentDate, null, "desc",0,100)
-                .subscribe(new DisposableObserver<SleepList>() {
-                    @Override
-                    public void onNext(SleepList sleepList) {
-                        Log.w("FITBIT-LOAD", sleepList.toJsonString());
-                        if (sleepList.getSleepList().size() > 0) {
-                            sendSleepToOcariot(convertFitBitDataToOcariot(sleepList.getSleepList()));
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.w(LOG_TAG, "FITIBIT - onError: " + e.getMessage());
-                        loadDataOcariot();
-                    }
-
-                    @Override
-                    public void onComplete() {
-                    }
-                });
-
+        mDisposable.add(
+                fitBitRepository
+                        .listSleep(currentDate, null, "desc", 0, 100)
+                        .doOnSubscribe(disposable -> loading(true))
+                        .subscribe(sleepList -> sendSleepToOcariot(
+                                convertFitBitDataToOcariot(sleepList)
+                        ), error -> loadDataOcariot())
+        );
     }
 
     /**
@@ -207,41 +196,32 @@ public class SleepListFragment extends Fragment {
     private void loadDataOcariot() {
         Log.w(LOG_TAG, "loadDataOcariotInit()");
         if (userAccess == null) return;
-        loading(true);
 
-        ocariotRepository
-                .listSleep(userAccess.getSubject(), "-start_time", 1, 100)
-                .subscribe(new DisposableObserver<List<Sleep>>() {
-                    @Override
-                    public void onNext(List<Sleep> sleep) {
-                        Log.w(LOG_TAG, "OC " + Arrays.toString(sleep.toArray()));
-                        if (sleep.size() > 0) {
-                            mAdapter.clearItems();
-                            mAdapter.addItems(sleep);
-                            mNoData.setVisibility(View.GONE);
-                        } else if (mAdapter.itemsIsEmpty()) {
-                            mNoData.setVisibility(View.VISIBLE);
-                        }
-                    }
+        mDisposable.add(
+                ocariotRepository
+                        .listSleep(userAccess.getSubject(), "-start_time", 1, 100)
+                        .doOnSubscribe(disposable -> loading(true))
+                        .doAfterTerminate(() -> loading(false))
+                        .subscribe(this::populateViewSleep, error -> Toast.makeText(mContext,
+                                R.string.error_500, Toast.LENGTH_SHORT).show())
+        );
+    }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.w(LOG_TAG, e.toString());
-                        loading(false);
-                        if (getContext() == null) return;
-
-                        Toast.makeText(getContext(), R.string.error_500,
-                                Toast.LENGTH_SHORT).show();
-                        if (mAdapter.itemsIsEmpty()) {
-                            mNoData.setVisibility(View.VISIBLE);
-                        }
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        loading(false);
-                    }
-                });
+    /**
+     * Populate RecyclerView with sleep records.
+     *
+     * @param sleepList {@link List<Sleep>}
+     */
+    private void populateViewSleep(final List<Sleep> sleepList) {
+        Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
+            if (sleepList.isEmpty()) {
+                mNoData.setVisibility(View.VISIBLE);
+                return;
+            }
+            mAdapter.clearItems();
+            mAdapter.addItems(sleepList);
+            mNoData.setVisibility(View.GONE);
+        });
     }
 
     /**
@@ -253,48 +233,36 @@ public class SleepListFragment extends Fragment {
         if (!enabled) {
             mDataSwipeRefresh.setRefreshing(false);
             itShouldLoadMore = true;
-        } else {
-            mDataSwipeRefresh.setRefreshing(true);
-            itShouldLoadMore = false;
+            return;
         }
+        if (mDataSwipeRefresh.isRefreshing()) return;
+        mDataSwipeRefresh.setRefreshing(true);
+        itShouldLoadMore = false;
     }
-
 
     /**
      * Publish Sleep in OCARioT API Service.
      *
-     * @param sleepList {@link List< Sleep >} List of sleep to be published.
+     * @param sleepList {@link List<Sleep>} List of sleep to be published.
      */
     private void sendSleepToOcariot(List<Sleep> sleepList) {
-        if (sleepList == null) return;
-        int total = sleepList.size();
         Log.w(LOG_TAG, "sendOcariot() TOTAL: " + sleepList.size());
+        int total = sleepList.size();
 
-        // TODO Enviar lista completa na mesma requisição, quando o servidor oferecer suporte.
         int count = 0;
         for (Sleep sleep : sleepList) {
             count++;
             final int aux = count;
-            Log.w(LOG_TAG, "SendSleep-pre" + new Gson().toJson(sleep));
-            ocariotRepository.publishSleep(userAccess.getSubject(), sleep)
-                    .subscribe(new DisposableObserver<Sleep>() {
-                        @Override
-                        public void onNext(Sleep slp) {
-                            Log.w(LOG_TAG, "Sleep Published: " + slp);
-                            if (aux == total) loadDataOcariot();
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-                            Log.w(LOG_TAG, "SendSleep: " + e + "Ac " + new Gson().toJson(sleep));
-                            if (aux == total) loadDataOcariot();
-                        }
-
-                        @Override
-                        public void onComplete() {
-
-                        }
-                    });
+            new Handler().postDelayed(() -> mDisposable.add(
+                    ocariotRepository
+                            .publishSleep(sleep)
+                            .subscribe(resultSleep -> {
+                                if (aux == total) loadDataOcariot();
+                            }, error -> {
+                                Log.w(LOG_TAG, "error send " + error.getMessage());
+                                if (aux == total) loadDataOcariot();
+                            })
+            ), 200);
         }
     }
 

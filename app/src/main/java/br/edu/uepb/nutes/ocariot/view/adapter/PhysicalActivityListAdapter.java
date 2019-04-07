@@ -78,10 +78,10 @@ public class PhysicalActivityListAdapter extends BaseAdapter<PhysicalActivity> {
 
     @Override
     public void clearAnimation(RecyclerView.ViewHolder holder) {
-
+        // Not implemented!
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
         final View mView;
 
         @BindView(R.id.activity_img)
@@ -99,7 +99,7 @@ public class PhysicalActivityListAdapter extends BaseAdapter<PhysicalActivity> {
         @BindView(R.id.calories_tv)
         TextView calories;
 
-        public ViewHolder(View view) {
+        ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
 

@@ -2,13 +2,12 @@ package br.edu.uepb.nutes.ocariot.data.repository.remote.ocariot;
 
 import java.util.List;
 
-import br.edu.uepb.nutes.ocariot.data.model.Activity;
 import br.edu.uepb.nutes.ocariot.data.model.Child;
 import br.edu.uepb.nutes.ocariot.data.model.Environment;
 import br.edu.uepb.nutes.ocariot.data.model.PhysicalActivity;
 import br.edu.uepb.nutes.ocariot.data.model.Sleep;
 import br.edu.uepb.nutes.ocariot.data.model.UserAccess;
-import io.reactivex.Observable;
+import io.reactivex.Completable;
 import io.reactivex.Single;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -34,7 +33,7 @@ public interface OcariotService {
 
     // Activity
     @GET("/users/children/{child_id}/physicalactivities")
-    Observable<List<PhysicalActivity>> listActivities(
+    Single<List<PhysicalActivity>> listActivities(
             @Path("child_id") String userId,
             @Query("sort") String sort,
             @Query("page") int page,
@@ -42,14 +41,15 @@ public interface OcariotService {
     );
 
     @POST("/users/children/{child_id}/physicalactivities")
-    Observable<PhysicalActivity> publishActivity(@Path("child_id") String userId, @Body Activity activity);
+    Single<PhysicalActivity> publishActivity(@Path("child_id") String userId,
+                                             @Body PhysicalActivity activity);
 
     @DELETE("/users/children/{child_id}/physicalactivities/{activity_id}")
-    Observable<Void> deleteActivity(@Path("child_id") String userId, @Path("activity_id") String activityId);
+    Completable deleteActivity(@Path("child_id") String userId, @Path("activity_id") String activityId);
 
     // Sleep
     @GET("/users/children/{child_id}/sleep")
-    Observable<List<Sleep>> listSleep(
+    Single<List<Sleep>> listSleep(
             @Path("child_id") String childId,
             @Query("sort") String sort,
             @Query("page") int page,
@@ -57,14 +57,14 @@ public interface OcariotService {
     );
 
     @POST("/users/children/{child_id}/sleep")
-    Observable<Sleep> publishSleep(@Path("child_id") String userId, @Body Sleep sleep);
+    Single<Sleep> publishSleep(@Path("child_id") String userId, @Body Sleep sleep);
 
     @DELETE("/users/children/{child_id}/sleep/{sleep_id}")
-    Observable<Void> deleteSleep(@Path("child_id") String userId, @Path("sleep_id") String sleepId);
+    Completable deleteSleep(@Path("child_id") String userId, @Path("sleep_id") String sleepId);
 
     // Environments
     @GET("/environments")
-    Observable<List<Environment>> listEnvironments(
+    Single<List<Environment>> listEnvironments(
             @Query("sort") String sort,
             @Query("page") int page,
             @Query("limit") int limit,

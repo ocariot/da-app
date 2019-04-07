@@ -112,7 +112,7 @@ public class PhysicalActivityDetail extends AppCompatActivity {
         if (duration > 0)
             caloriesMinuteTextView.setText(String.valueOf(a.getCalories() / duration));
 
-        if (a.getLevels() != null && a.getLevels().size() > 0) {
+        if (a.getLevels() != null && !a.getLevels().isEmpty()) {
             sedentaryTextView.setVisibility(View.VISIBLE);
             fairlyTextView.setVisibility(View.VISIBLE);
             lightlyTextView.setVisibility(View.VISIBLE);

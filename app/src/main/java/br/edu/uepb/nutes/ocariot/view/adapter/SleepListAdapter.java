@@ -84,10 +84,10 @@ public class SleepListAdapter extends BaseAdapter<Sleep> {
 
     @Override
     public void clearAnimation(RecyclerView.ViewHolder holder) {
-
+        // Not implemented!
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
         final View mView;
 
         @BindView(R.id.sleep_date_start_tv)
@@ -102,7 +102,7 @@ public class SleepListAdapter extends BaseAdapter<Sleep> {
         @BindView(R.id.sleep_efficiency_tv)
         TextView efficiency;
 
-        public ViewHolder(View view) {
+        ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
 

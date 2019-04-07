@@ -26,10 +26,6 @@ public class PhysicalActivity extends Activity implements Parcelable {
     @SerializedName(value = "levels", alternate = {"activityLevel"})
     private List<ActivityLevel> levels;
 
-    public PhysicalActivity() {
-        super();
-    }
-
     protected PhysicalActivity(Parcel in) {
         super.set_id(in.readString());
         super.setStartTime(in.readString());
@@ -103,7 +99,6 @@ public class PhysicalActivity extends Activity implements Parcelable {
     public void setLevels(List<ActivityLevel> levels) {
         this.levels = levels;
     }
-
 
     @Override
     public int hashCode() {

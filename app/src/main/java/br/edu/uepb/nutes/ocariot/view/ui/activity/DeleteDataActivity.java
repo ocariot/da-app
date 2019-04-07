@@ -25,7 +25,7 @@ import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper
 import br.edu.uepb.nutes.ocariot.data.repository.remote.ocariot.OcariotNetRepository;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.observers.DisposableObserver;
+import io.reactivex.disposables.CompositeDisposable;
 
 public class DeleteDataActivity extends AppCompatActivity implements View.OnClickListener {
     private final String LOG_TAG = "DeleteData";
@@ -33,8 +33,11 @@ public class DeleteDataActivity extends AppCompatActivity implements View.OnClic
     private OcariotNetRepository ocariotRepository;
     private AppPreferencesHelper pref;
     private int progressStatusValue = 0;
-    private int totalActivities = 0, totalSleep = 0;
-    private int totalActivitiesProcess = 0, totalSleepProcess = 0;
+    private int totalActivities = 0;
+    private int totalSleep = 0;
+    private int totalActivitiesProcess = 0;
+    private int totalSleepProcess = 0;
+    private CompositeDisposable mDisposable;
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -67,6 +70,7 @@ public class DeleteDataActivity extends AppCompatActivity implements View.OnClic
         ButterKnife.bind(this);
         setSupportActionBar(mToolbar);
 
+        mDisposable = new CompositeDisposable();
         ocariotRepository = OcariotNetRepository.getInstance(this);
         pref = AppPreferencesHelper.getInstance(this);
         deleteDataButton.setOnClickListener(this);
@@ -96,17 +100,15 @@ public class DeleteDataActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                super.onBackPressed();
-                break;
-            default:
-                break;
-        }
-
+        if (item.getItemId() == android.R.id.home) super.onBackPressed();
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mDisposable.dispose();
+    }
 
     private void processData(boolean isActivities, boolean isSleep, boolean isEnvironments) {
         Log.w(LOG_TAG, "processData() " + isActivities + " " + isSleep);
@@ -118,56 +120,44 @@ public class DeleteDataActivity extends AppCompatActivity implements View.OnClic
         updateStatus(false);
 
         if (isActivities) {
-            ocariotRepository.listActivities(pref.getUserAccessOcariot().getSubject(),
-                    null, 1, 100)
-                    .subscribe(new DisposableObserver<List<PhysicalActivity>>() {
-                        @Override
-                        public void onNext(List<PhysicalActivity> activities) {
-                            totalActivities = activities.size();
-                            deleteActivities(activities);
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-                            updateStatus(true);
-                            if (e != null) {
-                                Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-                            Toast.makeText(getApplicationContext(), getString(R.string.error_500), Toast.LENGTH_SHORT).show();
-                        }
-
-                        @Override
-                        public void onComplete() {
-                            updateStatus(false);
-                        }
-                    });
+            mDisposable.add(
+                    ocariotRepository
+                            .listActivities(pref.getUserAccessOcariot().getSubject(),
+                                    null, 1, 100)
+                            .subscribe(physicalActivities -> {
+                                totalActivities = physicalActivities.size();
+                                deleteActivities(physicalActivities);
+                            }, error -> {
+                                updateStatus(true);
+                                if (error != null) {
+                                    Toast.makeText(getApplicationContext(),
+                                            error.getMessage(), Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                                Toast.makeText(getApplicationContext(),
+                                        getString(R.string.error_500), Toast.LENGTH_SHORT).show();
+                            })
+            );
         }
 
         if (isSleep) {
-            ocariotRepository.listSleep(pref.getUserAccessOcariot().getSubject(),
-                    null, 1, 100).subscribe(new DisposableObserver<List<Sleep>>() {
-                @Override
-                public void onNext(List<Sleep> sleeps) {
-                    totalSleep = sleeps.size();
-                    deleteSleep(sleeps);
-                }
-
-                @Override
-                public void onError(Throwable e) {
-                    updateStatus(true);
-                    if (e != null) {
-                        Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    Toast.makeText(getApplicationContext(), getString(R.string.error_500), Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onComplete() {
-                    updateStatus(false);
-                }
-            });
+            mDisposable.add(
+                    ocariotRepository.listSleep(pref.getUserAccessOcariot().getSubject(),
+                            null, 1, 100)
+                            .subscribe(sleeps -> {
+                                totalSleep = sleeps.size();
+                                deleteSleep(sleeps);
+                            }, error -> {
+                                updateStatus(true);
+                                if (error != null) {
+                                    Toast.makeText(getApplicationContext(),
+                                            error.getMessage(), Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                                Toast.makeText(getApplicationContext(),
+                                        getString(R.string.error_500), Toast.LENGTH_SHORT).show();
+                            })
+            );
         }
     }
 
@@ -178,26 +168,14 @@ public class DeleteDataActivity extends AppCompatActivity implements View.OnClic
         for (Activity activity : activities) {
             new Handler().postDelayed(() -> {
                 totalActivitiesProcess++;
-
-                ocariotRepository.deleteActivity(
-                        pref.getUserAccessOcariot().getSubject(),
-                        activity.get_id()
-                ).subscribe(new DisposableObserver<Void>() {
-                    @Override
-                    public void onNext(Void aVoid) {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        updateStatus(false);
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        updateStatus(false);
-                    }
-                });
+                mDisposable.add(
+                        ocariotRepository
+                                .deleteActivity(
+                                        pref.getUserAccessOcariot().getSubject(), activity.get_id()
+                                )
+                                .doAfterTerminate(() -> updateStatus(false))
+                                .subscribe()
+                );
             }, 200);
         }
     }
@@ -210,25 +188,15 @@ public class DeleteDataActivity extends AppCompatActivity implements View.OnClic
             new Handler().postDelayed(() -> {
                 totalSleepProcess++;
 
-                ocariotRepository.deleteSleep(
-                        pref.getUserAccessOcariot().getSubject(),
-                        sleep.get_id()
-                ).subscribe(new DisposableObserver<Void>() {
-                    @Override
-                    public void onNext(Void aVoid) {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        updateStatus(false);
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        updateStatus(false);
-                    }
-                });
+                mDisposable.add(
+                        ocariotRepository
+                                .deleteSleep(
+                                        pref.getUserAccessOcariot().getSubject(),
+                                        sleep.get_id()
+                                )
+                                .doAfterTerminate(() -> updateStatus(false))
+                                .subscribe()
+                );
             }, 200);
         }
     }

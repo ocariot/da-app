@@ -15,14 +15,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import br.edu.uepb.nutes.ocariot.R;
-import br.edu.uepb.nutes.ocariot.data.model.Child;
 import br.edu.uepb.nutes.ocariot.data.model.UserAccess;
 import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
 import br.edu.uepb.nutes.ocariot.data.repository.remote.ocariot.OcariotNetRepository;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.SingleObserver;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.disposables.CompositeDisposable;
 import retrofit2.HttpException;
 
 /**
@@ -53,12 +51,14 @@ public class LoginActivity extends AppCompatActivity {
 
     private OcariotNetRepository ocariotRepository;
     private AppPreferencesHelper appPref;
+    private CompositeDisposable mDisposable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
+        mDisposable = new CompositeDisposable();
         ocariotRepository = OcariotNetRepository.getInstance(this);
         appPref = AppPreferencesHelper.getInstance(this);
 
@@ -82,6 +82,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        mDisposable.dispose();
     }
 
     private void login() {
@@ -90,74 +91,57 @@ public class LoginActivity extends AppCompatActivity {
         String username = String.valueOf(mUsernameEditText.getText());
         String password = String.valueOf(mPasswordEditText.getText());
 
-
-        ocariotRepository.auth(username, password)
-                .doOnSubscribe(disposable -> showProgress(true))
-                .subscribe(new SingleObserver<UserAccess>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onSuccess(UserAccess userAccess) {
-                        // save user logged
-                        if (appPref.addUserAccessOcariot(userAccess)) {
-                            getUserProfile(userAccess.getSubject());
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.w("ERROR-LOG", e.getMessage());
-                        if (e instanceof HttpException) {
-                            HttpException httpEx = ((HttpException) e);
-                            if (httpEx.code() == 401) {
-                                showMessageInvalidAuth(getString(R.string.error_login_invalid));
-                                showProgress(false);
-                                return;
+        mDisposable.add(
+                ocariotRepository
+                        .auth(username, password)
+                        .doOnSubscribe(disposable -> showProgress(true))
+                        .subscribe(userAccess -> {
+                            // save user logged
+                            if (appPref.addUserAccessOcariot(userAccess)) {
+                                getUserProfile(userAccess.getSubject());
                             }
-                        }
-                        showMessageInvalidAuth(getString(R.string.error_500));
-                        showProgress(false);
-                    }
-                });
+                        }, error -> {
+                            Log.w("ERROR-LOG", error.toString());
+                            if (error instanceof HttpException) {
+                                HttpException httpEx = ((HttpException) error);
+                                if (httpEx.code() == 401) {
+                                    showMessageInvalidAuth(getString(R.string.error_login_invalid));
+                                    showProgress(false);
+                                    return;
+                                }
+                            }
+                            showMessageInvalidAuth(getString(R.string.error_500));
+                            showProgress(false);
+                        })
+        );
     }
 
     private void getUserProfile(String userId) {
-        ocariotRepository.getChildById(userId)
-                .subscribe(new SingleObserver<Child>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onSuccess(Child user) {
-                        appPref.addChildProfile(user);
-                        openMainActivity();
-                        showProgress(false);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        if (e instanceof HttpException) {
-                            HttpException httpEx = ((HttpException) e);
-                            if (httpEx.code() == 401) {
-                                showMessageInvalidAuth(getString(R.string.error_401));
-                                showProgress(false);
-                                return;
-                            } else if (httpEx.code() == 403) {
-                                showMessageInvalidAuth(getString(R.string.error_403));
-                                showProgress(false);
-                                return;
-                            }
-
-                            showMessageInvalidAuth(getString(R.string.error_500));
+        mDisposable.add(
+                ocariotRepository
+                        .getChildById(userId)
+                        .subscribe(child -> {
+                            appPref.addChildProfile(child);
                             showProgress(false);
-                        }
-                    }
-                });
+                            openMainActivity();
+                        }, error -> {
+                            if (error instanceof HttpException) {
+                                HttpException httpEx = ((HttpException) error);
+                                if (httpEx.code() == 401) {
+                                    showMessageInvalidAuth(getString(R.string.error_401));
+                                    showProgress(false);
+                                    return;
+                                } else if (httpEx.code() == 403) {
+                                    showMessageInvalidAuth(getString(R.string.error_403));
+                                    showProgress(false);
+                                    return;
+                                }
+
+                                showMessageInvalidAuth(getString(R.string.error_500));
+                                showProgress(false);
+                            }
+                        })
+        );
     }
 
     /**
@@ -169,7 +153,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     * Validade form
+     * Validate form
      *
      * @return boolean
      */
@@ -205,9 +189,9 @@ public class LoginActivity extends AppCompatActivity {
 
     /**
      * Displays or removes invalid login message:
-     * -  messaga to display message;
+     * - message to display message;
      * - False to remove message.
-     * Animation fadein and fadeout are applied.
+     * Animation fade in and fade out are applied.
      *
      * @param message Message to display.
      */

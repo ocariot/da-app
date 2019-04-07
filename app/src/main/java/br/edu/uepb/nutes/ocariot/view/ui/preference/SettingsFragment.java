@@ -10,18 +10,20 @@ import android.preference.SwitchPreference;
 import android.util.Log;
 import android.widget.Toast;
 
-import net.openid.appauth.AuthState;
 import net.openid.appauth.AuthorizationException;
 import net.openid.appauth.AuthorizationResponse;
+
+import java.util.Objects;
 
 import br.edu.uepb.nutes.ocariot.R;
 import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
 import br.edu.uepb.nutes.ocariot.view.ui.activity.LoginActivity;
-import io.reactivex.SingleObserver;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * SettingsFragment implementation.
+ *
+ * @author Copyright (c) 2018, NUTES/UEPB
  */
 public class SettingsFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener {
     public final String LOG_TAG = "SettingsFragment";
@@ -29,8 +31,11 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     private SwitchPreference switchPrefFitBit;
     private LoginFitBit loginFitBit;
     private OnClickSettingsListener mListener;
+    private Context mContext;
+    private CompositeDisposable mDisposable;
 
     public SettingsFragment() {
+        // Empty constructor required!
     }
 
     /**
@@ -48,7 +53,9 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
 
-        loginFitBit = new LoginFitBit(getActivity().getApplicationContext());
+        mContext = getActivity();
+        mDisposable = new CompositeDisposable();
+        loginFitBit = new LoginFitBit(mContext);
 
         // FitBit
         switchPrefFitBit = (SwitchPreference) findPreference(getString(R.string.key_fitibit));
@@ -64,17 +71,18 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
 
         if (context instanceof OnClickSettingsListener)
             mListener = (OnClickSettingsListener) context;
         else throw new ClassCastException();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mDisposable.dispose();
     }
 
     @Override
@@ -112,7 +120,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     private void checkAuthFitBit() {
         AuthorizationResponse authFitBitResponse = AuthorizationResponse.fromIntent(getActivity().getIntent());
         AuthorizationException authFitBitException = AuthorizationException.fromIntent(getActivity().getIntent());
-        if (AppPreferencesHelper.getInstance(getActivity()).getAuthStateFitBit() == null) {
+        if (AppPreferencesHelper.getInstance(mContext).getAuthStateFitBit() == null) {
             switchPrefFitBit.setChecked(false);
         } else {
             switchPrefFitBit.setChecked(true);
@@ -126,7 +134,8 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
             // For other types of cases, such as the user canceled the operation,
             // no messages will be displayed.
             if (authFitBitException.type != AuthorizationException.TYPE_GENERAL_ERROR)
-                Toast.makeText(getActivity(), R.string.error_oauth_fitbit, Toast.LENGTH_LONG).show();
+                Toast.makeText(mContext, R.string.error_oauth_fitbit,
+                        Toast.LENGTH_LONG).show();
         } else if (authFitBitResponse != null) {
             // Request access token in server FitBit OAuth.
             getToken(authFitBitResponse);
@@ -138,11 +147,11 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
      */
     private void openDialogRevokeFitBit() {
         getActivity().runOnUiThread(() -> {
-            AlertDialog.Builder mDialog = new AlertDialog.Builder(getActivity());
+            AlertDialog.Builder mDialog = new AlertDialog.Builder(mContext);
             mDialog.setMessage(R.string.dialog_confirm_revoke_fitbit)
                     .setPositiveButton(android.R.string.yes,
                             (dialog, which) -> {
-                                if (AppPreferencesHelper.getInstance(getActivity())
+                                if (AppPreferencesHelper.getInstance(mContext)
                                         .removeAuthStateFitBit()) {
                                     switchPrefFitBit.setChecked(false);
                                 }
@@ -157,10 +166,10 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
      */
     private void openDialogSignOut() {
         getActivity().runOnUiThread(() -> {
-            AlertDialog.Builder mDialog = new AlertDialog.Builder(getActivity());
+            AlertDialog.Builder mDialog = new AlertDialog.Builder(mContext);
             mDialog.setMessage(R.string.dialog_confirm_sign_out)
                     .setPositiveButton(android.R.string.yes, (dialog, which) -> {
-                                if (AppPreferencesHelper.getInstance(getActivity())
+                                if (AppPreferencesHelper.getInstance(mContext)
                                         .removeUserAccessOcariot()) {
                                     startActivity(
                                             new Intent(getActivity(), LoginActivity.class)
@@ -179,27 +188,12 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
      * @param authFitBitResponse {@link AuthorizationResponse}
      */
     private void getToken(AuthorizationResponse authFitBitResponse) {
-
-        loginFitBit.doAuthorizationToken(authFitBitResponse)
-                .subscribe(new SingleObserver<AuthState>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onSuccess(AuthState authState) {
-                        Log.w(LOG_TAG, "TOKEN BEST " + authState.jsonSerializeString());
-
-                        switchPrefFitBit.setChecked(true);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        switchPrefFitBit.setChecked(false);
-                        Log.w(LOG_TAG, "onError " + e.getMessage());
-                    }
-                });
+        mDisposable.add(
+                loginFitBit
+                        .doAuthorizationToken(authFitBitResponse)
+                        .doOnError(throwable -> switchPrefFitBit.setChecked(false))
+                        .subscribe(authState -> switchPrefFitBit.setChecked(true))
+        );
     }
 
     public interface OnClickSettingsListener {

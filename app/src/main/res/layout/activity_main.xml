@@ -23,30 +23,13 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             app:itemBackground="@color/colorBackgroundNavigation"
+            android:background="@color/colorBackgroundNavigation"
             app:menu="@menu/navigation" />
 
-        <android.support.v4.view.ViewPager
-            android:id="@+id/viewpager"
+        <FrameLayout
+            android:id="@+id/frame_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/navigation"
-            android:layout_alignParentTop="true"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
+            android:layout_above="@+id/navigation" />
     </RelativeLayout>
-
-    <LinearLayout
-        android:id="@+id/box_content_welcome"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <FrameLayout
-            android:id="@+id/welcome_content"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-    </LinearLayout>
 </LinearLayout>

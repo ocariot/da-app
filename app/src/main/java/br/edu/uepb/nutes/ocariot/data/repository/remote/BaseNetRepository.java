@@ -75,10 +75,12 @@ public abstract class BaseNetRepository {
                     new X509TrustManager() {
                         @Override
                         public void checkClientTrusted(X509Certificate[] chain, String authType) {
+                            // Not implemented!
                         }
 
                         @Override
                         public void checkServerTrusted(X509Certificate[] chain, String authType) {
+                            // Not implemented!
                         }
 
                         @Override

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -8,114 +8,112 @@
     android:focusable="true"
     android:orientation="horizontal"
     android:paddingStart="@dimen/default_padding"
-    android:paddingEnd="@dimen/default_padding">
+    android:paddingTop="@dimen/item_padding"
+    android:paddingEnd="@dimen/default_padding"
+    android:paddingBottom="@dimen/item_padding">
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/activity_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="16dp"
+        android:contentDescription="@string/img_desc_activity"
+        android:tint="@color/colorPrimaryDark"
+        app:srcCompat="@drawable/ic_run" />
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingTop="@dimen/item_padding"
-        android:paddingBottom="@dimen/item_padding">
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/activity_img">
 
-        <ImageView
-            android:id="@+id/activity_img"
+        <TextView
+            android:id="@+id/name_activity_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="16dp"
-            android:contentDescription="@string/img_desc_activity"
-            android:tint="@color/colorPrimaryDark"
-            app:srcCompat="@drawable/ic_run" />
+            android:layout_alignParentTop="true"
+            android:text="Run"
+            android:textColor="@color/colorBlackLight"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
-        <RelativeLayout
+        <TextView
+            android:id="@+id/date_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/name_activity_tv"
+            android:layout_alignStart="@+id/name_activity_tv"
+            android:text="Aug 2 at 10:51"
+            android:textAppearance="?attr/textAppearanceListItemSecondary"
+            android:textSize="14sp" />
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/activity_img">
-
-            <TextView
-                android:id="@+id/name_activity_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:text="Run"
-                android:textAppearance="?attr/textAppearanceListItem"
-                android:textColor="@color/colorBlackLight"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/date_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/name_activity_tv"
-                android:layout_alignStart="@+id/name_activity_tv"
-                android:text="Aug 2 at 10:51"
-                android:textAppearance="?attr/textAppearanceListItemSecondary" />
+            android:layout_below="@+id/date_tv"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="10dp">
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/date_tv"
-                android:layout_alignParentStart="true"
-                android:layout_marginTop="10dp">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
-                <LinearLayout
+                <android.support.v7.widget.AppCompatImageView
+                    android:id="@+id/clock_img"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginEnd="2dp"
+                    android:contentDescription="@string/img_desc_clock"
+                    android:tint="@color/colorPrimary"
+                    app:srcCompat="@drawable/ic_clock" />
+
+                <TextView
+                    android:id="@+id/duration_tv"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="15"
+                    android:textSize="14sp" />
 
-                    <ImageView
-                        android:id="@+id/clock_img"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_marginEnd="2dp"
-                        android:contentDescription="@string/img_desc_clock"
-                        android:tint="@color/colorPrimary"
-                        app:srcCompat="@drawable/ic_clock" />
-
-                    <TextView
-                        android:id="@+id/duration_tv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:text="15"
-                        android:textAppearance="?attr/textAppearanceListItemSecondary" />
-
-                    <TextView
-                        android:id="@+id/duration_unit_tv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="2dp"
-                        android:layout_marginTop="2dp"
-                        android:text="@string/min" />
-                </LinearLayout>
-
-                <LinearLayout
+                <TextView
+                    android:id="@+id/duration_unit_tv"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                    <ImageView
-                        android:id="@+id/calories_img"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_marginStart="25dp"
-                        android:contentDescription="@string/img_desc_calories"
-                        app:srcCompat="@mipmap/ic_calorie" />
-
-                    <TextView
-                        android:id="@+id/calories_tv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:text="18"
-                        android:textAppearance="?attr/textAppearanceListItemSecondary" />
-
-                    <TextView
-                        android:id="@+id/calories_unit_tv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="2dp"
-                        android:layout_marginTop="2dp"
-                        android:text="@string/cals" />
-                </LinearLayout>
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="2dp"
+                    android:text="@string/min"
+                    android:textSize="14sp" />
             </LinearLayout>
-        </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:id="@+id/calories_img"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="25dp"
+                    android:contentDescription="@string/img_desc_calories"
+                    app:srcCompat="@mipmap/ic_calorie" />
+
+                <TextView
+                    android:id="@+id/calories_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="18"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/calories_unit_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="2dp"
+                    android:text="@string/cals"
+                    android:textSize="14sp" />
+            </LinearLayout>
+        </LinearLayout>
     </RelativeLayout>
-</LinearLayout>
+</RelativeLayout>

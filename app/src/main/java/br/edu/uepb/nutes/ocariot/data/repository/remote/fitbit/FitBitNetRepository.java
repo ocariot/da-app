@@ -6,11 +6,15 @@ import android.util.Log;
 import net.openid.appauth.AuthState;
 import net.openid.appauth.AuthorizationService;
 
+import java.util.List;
+
 import br.edu.uepb.nutes.ocariot.data.model.ActivitiesList;
+import br.edu.uepb.nutes.ocariot.data.model.PhysicalActivity;
+import br.edu.uepb.nutes.ocariot.data.model.Sleep;
 import br.edu.uepb.nutes.ocariot.data.model.SleepList;
 import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
 import br.edu.uepb.nutes.ocariot.data.repository.remote.BaseNetRepository;
-import io.reactivex.Observable;
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.Interceptor;
@@ -61,31 +65,33 @@ public class FitBitNetRepository extends BaseNetRepository {
             final AuthState authState = AppPreferencesHelper.getInstance(this.mContext)
                     .getAuthStateFitBit();
 
-            authState.performActionWithFreshTokens(authService, (accessToken, idToken, exception) -> {
-                if (accessToken != null) {
-                    requestBuilder.header(
-                            "Authorization",
-                            "Bearer ".concat(accessToken)
-                    );
-                }
-            });
-            Log.w("InterceptorFitBit", requestBuilder.build().headers().toString());
-            Log.w("InterceptorFitBit", "| REQUEST: " + requestBuilder.build().method() + " "
-                    + requestBuilder.build().url().toString());
+                authState.performActionWithFreshTokens(authService, (accessToken, idToken, exception) -> {
+                    if (accessToken != null) {
+                        requestBuilder.header(
+                                "Authorization",
+                                "Bearer ".concat(accessToken)
+                        );
+                    }
+                });
+                Log.w("InterceptorFitBit", requestBuilder.build().headers().toString());
+                Log.w("InterceptorFitBit", "| REQUEST: " + requestBuilder.build().method() + " "
+                        + requestBuilder.build().url().toString());
             return chain.proceed(requestBuilder.build());
         };
     }
 
-    public Observable<ActivitiesList> listActivities(String beforeDate, String afterDate,
-                                                     String sort, int offset, int limit) {
+    public Single<List<PhysicalActivity>> listActivities(String beforeDate, String afterDate,
+                                                         String sort, int offset, int limit) {
         return fitBitService.listActivity(beforeDate, afterDate, sort, offset, limit)
+                .map(ActivitiesList::getActivities)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Observable<SleepList> listSleep(String beforeDate, String afterDate,
-                                           String sort, int offset, int limit) {
+    public Single<List<Sleep>> listSleep(String beforeDate, String afterDate,
+                                         String sort, int offset, int limit) {
         return fitBitService.listSleep(beforeDate, afterDate, sort, offset, limit)
+                .map(SleepList::getSleepList)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
