@@ -52,6 +52,7 @@
                 android:layout_marginTop="2dp"
                 android:text="00:51 - 07-31"
                 android:textAppearance="?attr/textAppearanceListItemSecondary"
+                android:textColor="@color/colorBlackLight"
                 android:textSize="14sp" />
         </LinearLayout>
 
@@ -68,6 +69,7 @@
                 android:layout_marginTop="2dp"
                 android:text="07hrs 15min"
                 android:textAppearance="?attr/textAppearanceListItemSecondary"
+                android:textColor="@color/colorBlackLight"
                 android:textSize="14sp" />
 
         </LinearLayout>

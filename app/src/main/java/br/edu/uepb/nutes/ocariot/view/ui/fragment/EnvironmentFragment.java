@@ -243,7 +243,7 @@ public class EnvironmentFragment extends Fragment implements View.OnClickListene
             Collections.sort(rooms);
             ArrayAdapter<String> adapter = new ArrayAdapter<>(Objects.requireNonNull(mContext),
                     android.R.layout.simple_spinner_item, rooms);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            adapter.setDropDownViewResource(R.layout.spinner_item);
             mRoomSpinner.setAdapter(adapter);
             currentRoom = rooms.get(0).split(", ")[1];
 
@@ -251,6 +251,9 @@ public class EnvironmentFragment extends Fragment implements View.OnClickListene
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     currentRoom = String.valueOf(parent.getAdapter().getItem(position)).split(", ")[1];
+                    ((TextView) parent.getChildAt(0)).setTextColor(ContextCompat
+                            .getColor(mContext, R.color.colorBlackLight)
+                    );
                     if (!isLoadBlocked) loadDataOcariot();
 
                     isLoadBlocked = false;
