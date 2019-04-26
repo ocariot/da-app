@@ -80,7 +80,7 @@
             android:layout_alignBaseline="@+id/activity_steps_tv"
             android:layout_marginStart="2dp"
             android:layout_toEndOf="@+id/activity_steps_tv"
-            android:text="@string/steps" />
+            android:text="@string/calories" />
 
         <TextView
             android:id="@+id/activity_calories_tv"

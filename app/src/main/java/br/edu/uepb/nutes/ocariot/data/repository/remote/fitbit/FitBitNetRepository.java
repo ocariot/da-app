@@ -9,9 +9,15 @@ import net.openid.appauth.AuthorizationService;
 import java.util.List;
 
 import br.edu.uepb.nutes.ocariot.data.model.ActivitiesList;
+import br.edu.uepb.nutes.ocariot.data.model.Child;
 import br.edu.uepb.nutes.ocariot.data.model.PhysicalActivity;
 import br.edu.uepb.nutes.ocariot.data.model.Sleep;
 import br.edu.uepb.nutes.ocariot.data.model.SleepList;
+import br.edu.uepb.nutes.ocariot.data.model.fitbit.CaloriesLogList;
+import br.edu.uepb.nutes.ocariot.data.model.fitbit.LogData;
+import br.edu.uepb.nutes.ocariot.data.model.fitbit.MinutesFairlyActiveLogList;
+import br.edu.uepb.nutes.ocariot.data.model.fitbit.MinutesVeryActiveLogList;
+import br.edu.uepb.nutes.ocariot.data.model.fitbit.StepsLogList;
 import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
 import br.edu.uepb.nutes.ocariot.data.repository.remote.BaseNetRepository;
 import io.reactivex.Single;
@@ -65,24 +71,24 @@ public class FitBitNetRepository extends BaseNetRepository {
             final AuthState authState = AppPreferencesHelper.getInstance(this.mContext)
                     .getAuthStateFitBit();
 
-                authState.performActionWithFreshTokens(authService, (accessToken, idToken, exception) -> {
-                    if (accessToken != null) {
-                        requestBuilder.header(
-                                "Authorization",
-                                "Bearer ".concat(accessToken)
-                        );
-                    }
-                });
-                Log.w("InterceptorFitBit", requestBuilder.build().headers().toString());
-                Log.w("InterceptorFitBit", "| REQUEST: " + requestBuilder.build().method() + " "
-                        + requestBuilder.build().url().toString());
+            authState.performActionWithFreshTokens(authService, (accessToken, idToken, exception) -> {
+                if (accessToken != null) {
+                    requestBuilder.header(
+                            "Authorization",
+                            "Bearer ".concat(accessToken)
+                    );
+                }
+            });
+            Log.w("InterceptorFitBit", requestBuilder.build().headers().toString());
+            Log.w("InterceptorFitBit", "| REQUEST: " + requestBuilder.build().method() + " "
+                    + requestBuilder.build().url().toString());
             return chain.proceed(requestBuilder.build());
         };
     }
 
     public Single<List<PhysicalActivity>> listActivities(String beforeDate, String afterDate,
                                                          String sort, int offset, int limit) {
-        return fitBitService.listActivity(beforeDate, afterDate, sort, offset, limit)
+        return fitBitService.listActivities(beforeDate, afterDate, sort, offset, limit)
                 .map(ActivitiesList::getActivities)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
@@ -92,6 +98,40 @@ public class FitBitNetRepository extends BaseNetRepository {
                                          String sort, int offset, int limit) {
         return fitBitService.listSleep(beforeDate, afterDate, sort, offset, limit)
                 .map(SleepList::getSleepList)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Single<Child> getProfile() {
+        return fitBitService.getProfile()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Single<List<LogData>> getStepsLog(String date, String period) {
+        return fitBitService.getStepsLog(date, period)
+                .map(StepsLogList::getSteps)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Single<List<LogData>> getCaloriesLog(String date, String period) {
+        return fitBitService.getCaloriesLog(date, period)
+                .map(CaloriesLogList::getCalories)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Single<List<LogData>> getMinutesFairlyActiveLog(String date, String period) {
+        return fitBitService.getMinutesFairlyActiveLog(date, period)
+                .map(MinutesFairlyActiveLogList::getMinutesFairlyActive)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Single<List<LogData>> getMinutesVeryActiveLog(String date, String period) {
+        return fitBitService.getMinutesVeryActiveLog(date, period)
+                .map(MinutesVeryActiveLogList::getMinutesVeryActive)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
