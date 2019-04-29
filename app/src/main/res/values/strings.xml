@@ -31,6 +31,7 @@
     <string name="action_sign_in">Sign in</string>
     <string name="title_login_in">Login in</string>
     <string name="img_desc_ocariot">OCARIoT logo</string>
+    <string name="sync_profile">Synchronizing profile data&#8230;</string>
 
     <!-- ACTIVITIES -->
     <string name="today_text">Today</string>

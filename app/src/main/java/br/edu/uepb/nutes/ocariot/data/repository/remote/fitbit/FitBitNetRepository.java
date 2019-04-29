@@ -18,6 +18,7 @@ import br.edu.uepb.nutes.ocariot.data.model.fitbit.PhysicalActivityFitBit;
 import br.edu.uepb.nutes.ocariot.data.model.fitbit.SleepFitBit;
 import br.edu.uepb.nutes.ocariot.data.model.fitbit.SleepLevelDataFitBit;
 import br.edu.uepb.nutes.ocariot.data.model.fitbit.UserFitBit;
+import br.edu.uepb.nutes.ocariot.data.model.fitbit.UserResultFitBit;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.ActivityLevel;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.LogData;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.PhysicalActivity;
@@ -183,6 +184,7 @@ public class FitBitNetRepository extends BaseNetRepository {
 
     public Single<UserFitBit> getProfile() {
         return fitBitService.getProfile()
+                .map(UserResultFitBit::getUser)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }

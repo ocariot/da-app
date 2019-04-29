@@ -67,7 +67,7 @@ public class LoginFitBit {
         mAuthState = new AuthState(serviceConfig);
 
         mAuthRequest = authRequestBuilder
-                .setScopes("activity", "sleep")
+                .setScopes("activity", "sleep", "profile")
                 .build();
     }
 

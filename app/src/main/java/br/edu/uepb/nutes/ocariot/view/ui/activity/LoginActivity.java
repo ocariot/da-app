@@ -95,6 +95,7 @@ public class LoginActivity extends AppCompatActivity {
                 ocariotRepository
                         .auth(username, password)
                         .doOnSubscribe(disposable -> showProgress(true))
+                        .doAfterTerminate(() -> showProgress(false))
                         .subscribe(userAccess -> {
                             // save user logged
                             if (appPref.addUserAccessOcariot(userAccess)) {
@@ -106,12 +107,10 @@ public class LoginActivity extends AppCompatActivity {
                                 HttpException httpEx = ((HttpException) error);
                                 if (httpEx.code() == 401) {
                                     showMessageInvalidAuth(getString(R.string.error_login_invalid));
-                                    showProgress(false);
                                     return;
                                 }
                             }
                             showMessageInvalidAuth(getString(R.string.error_500));
-                            showProgress(false);
                         })
         );
     }
@@ -120,25 +119,22 @@ public class LoginActivity extends AppCompatActivity {
         mDisposable.add(
                 ocariotRepository
                         .getChildById(userId)
+                        .doOnSubscribe(disposable -> showProgress(true))
+                        .doAfterTerminate(() -> showProgress(false))
                         .subscribe(child -> {
                             appPref.addChildProfile(child);
-                            showProgress(false);
                             openMainActivity();
                         }, error -> {
                             if (error instanceof HttpException) {
                                 HttpException httpEx = ((HttpException) error);
                                 if (httpEx.code() == 401) {
                                     showMessageInvalidAuth(getString(R.string.error_401));
-                                    showProgress(false);
                                     return;
                                 } else if (httpEx.code() == 403) {
                                     showMessageInvalidAuth(getString(R.string.error_403));
-                                    showProgress(false);
                                     return;
                                 }
-
                                 showMessageInvalidAuth(getString(R.string.error_500));
-                                showProgress(false);
                             }
                         })
         );

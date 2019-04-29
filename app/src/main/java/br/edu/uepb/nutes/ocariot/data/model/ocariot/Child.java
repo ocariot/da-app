@@ -2,6 +2,7 @@ package br.edu.uepb.nutes.ocariot.data.model.ocariot;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
@@ -164,15 +165,9 @@ public class Child implements Parcelable {
         return Objects.hash(_id, username, password, gender, age, institution);
     }
 
+    @NonNull
     @Override
     public String toString() {
-        return "Child{" +
-                "_id='" + _id + '\'' +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", gender='" + gender + '\'' +
-                ", age=" + age +
-                ", institution=" + institution +
-                '}';
+        return new Gson().toJson(this);
     }
 }

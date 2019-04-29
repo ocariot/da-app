@@ -13,10 +13,11 @@ import android.widget.Toast;
 import net.openid.appauth.AuthorizationException;
 import net.openid.appauth.AuthorizationResponse;
 
-import java.util.Objects;
-
 import br.edu.uepb.nutes.ocariot.R;
+import br.edu.uepb.nutes.ocariot.data.model.ocariot.Child;
 import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
+import br.edu.uepb.nutes.ocariot.data.repository.remote.fitbit.FitBitNetRepository;
+import br.edu.uepb.nutes.ocariot.data.repository.remote.ocariot.OcariotNetRepository;
 import br.edu.uepb.nutes.ocariot.view.ui.activity.LoginActivity;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -33,6 +34,8 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     private OnClickSettingsListener mListener;
     private Context mContext;
     private CompositeDisposable mDisposable;
+    private OcariotNetRepository ocariotRepository;
+    private FitBitNetRepository fitBitRepository;
 
     public SettingsFragment() {
         // Empty constructor required!
@@ -56,6 +59,8 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         mContext = getActivity();
         mDisposable = new CompositeDisposable();
         loginFitBit = new LoginFitBit(mContext);
+        ocariotRepository = OcariotNetRepository.getInstance(mContext);
+        fitBitRepository = FitBitNetRepository.getInstance(mContext);
 
         // FitBit
         switchPrefFitBit = (SwitchPreference) findPreference(getString(R.string.key_fitibit));
@@ -192,11 +197,64 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                 loginFitBit
                         .doAuthorizationToken(authFitBitResponse)
                         .doOnError(throwable -> switchPrefFitBit.setChecked(false))
-                        .subscribe(authState -> switchPrefFitBit.setChecked(true))
+                        .subscribe(authState -> {
+                            switchPrefFitBit.setChecked(true);
+                            syncChildOcariotWithFitbit(AppPreferencesHelper
+                                    .getInstance(mContext)
+                                    .getUserAccessOcariot()
+                                    .getSubject()
+                            );
+                        })
         );
     }
 
     public interface OnClickSettingsListener {
         void onPrefClick(Preference preference);
+    }
+
+
+    /**
+     * TODO Temporary method. To remove!!! Well, you should not get fitbit profile data.
+     *
+     * @param userId
+     */
+    private void syncChildOcariotWithFitbit(String userId) {
+        mDisposable.add(
+                fitBitRepository
+                        .getProfile()
+                        .subscribe(userFitBit -> {
+                            Log.w(LOG_TAG, "CHILD FITBIT " + userFitBit.toString());
+                            Child child = new Child();
+                            child.set_id(userId);
+                            child.setAge(userFitBit.getAge());
+                            child.setGender(userFitBit.getGender().toLowerCase());
+                            Log.w(LOG_TAG, "CHILD UP " + child.toString());
+                            this.updateChild(child);
+                        }, err -> {
+                            Log.w(LOG_TAG, "FITBIT ERROR PROFILE" + err.getMessage());
+                            Toast.makeText(mContext, "Falha ao tentar recuperar perfil da criança no FitBit!",
+                                    Toast.LENGTH_LONG).show();
+                        })
+        );
+    }
+
+    /**
+     * TODO Temporary method. To remove!!! Well, you should not get fitbit profile data.
+     *
+     * @param child
+     */
+    private void updateChild(Child child) {
+        mDisposable.add(
+                ocariotRepository
+                        .updateChild(child)
+                        .subscribe(childRes -> {
+                            AppPreferencesHelper.getInstance(mContext).addChildProfile(childRes);
+                            Toast.makeText(mContext, "Perfil da criança atualizado!",
+                                    Toast.LENGTH_LONG).show();
+                        }, error -> {
+                            Toast.makeText(mContext, "Falha ao tentar sincronizar perfil da criança no OCARIoT!",
+                                    Toast.LENGTH_LONG).show();
+                        })
+        );
     }
 }

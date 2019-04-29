@@ -2,12 +2,12 @@ package br.edu.uepb.nutes.ocariot.data.repository.remote.ocariot;
 
 import java.util.List;
 
+import br.edu.uepb.nutes.ocariot.data.model.common.UserAccess;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.Child;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.Environment;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.LogData;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.PhysicalActivity;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.Sleep;
-import br.edu.uepb.nutes.ocariot.data.model.common.UserAccess;
 import io.reactivex.Completable;
 import io.reactivex.Single;
 import retrofit2.http.Body;
@@ -24,8 +24,8 @@ import retrofit2.http.Query;
  * @author Copyright (c) 2018, NUTES/UEPB
  */
 public interface OcariotService {
-    // String BASE_URL_OCARIOT = "https://ocariot.nutes.uepb.edu.br"; // API GATEWAY
-    String BASE_URL_OCARIOT = "https://192.168.0.106"; // API GATEWAY
+//     String BASE_URL_OCARIOT = "https://ocariot.nutes.uepb.edu.br"; // API GATEWAY
+    String BASE_URL_OCARIOT = "https://172.17.0.1"; // API GATEWAY
 
     // Child
     @POST("/auth")
