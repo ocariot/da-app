@@ -195,12 +195,12 @@ public class PhysicalActivityListFragment extends Fragment {
         currentDate = "today";
         fitBitLastDateRegister = null;
         mDisposable.addAll(
-                fitBitRepository
-                        .getStepsLog("today", "1y")
-                        .doOnSubscribe(disposable -> loading(true))
-                        .subscribe(this::sendStepsLog, error -> {
-                            Log.w(LOG_TAG, "ERROR GET FitBit Steps log: " + error.getMessage());
-                        }),
+//                fitBitRepository
+//                        .getStepsLog("today", "1y")
+//                        .doOnSubscribe(disposable -> loading(true))
+//                        .subscribe(this::sendStepsLog, error -> {
+//                            Log.w(LOG_TAG, "ERROR GET FitBit Steps log: " + error.getMessage());
+//                        }),
 //                fitBitRepository
 //                        .getCaloriesLog("today", "1y")
 //                        .doOnSubscribe(disposable -> loading(true))
@@ -221,6 +221,7 @@ public class PhysicalActivityListFragment extends Fragment {
                             loadDataOcariot();
                         })
         );
+
     }
 
     /**
@@ -306,7 +307,7 @@ public class PhysicalActivityListFragment extends Fragment {
                                     loadDataOcariot();
                                 }
                             }, error -> {
-                                Log.w(LOG_TAG, "ERROR OCARIoT POST ACTIVITY " + error.getMessage());
+//                                Log.w(LOG_TAG, "ERROR OCARIoT POST ACTIVITY " + error.getMessage());
                                 saveLastDateSaved(activity.getStartTime());
                                 if (aux == total) loadDataOcariot();
                             })

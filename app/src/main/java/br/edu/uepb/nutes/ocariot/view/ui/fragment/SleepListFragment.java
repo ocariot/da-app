@@ -258,7 +258,7 @@ public class SleepListFragment extends Fragment {
                             .subscribe(resultSleep -> {
                                 if (aux == total) loadDataOcariot();
                             }, error -> {
-                                Log.w(LOG_TAG, "ERROR OCARIoT POST SLEEP " + error.getMessage());
+//                                Log.w(LOG_TAG, "ERROR OCARIoT POST SLEEP " + error.getMessage());
                                 if (aux == total) loadDataOcariot();
                             })
             ), 100);
