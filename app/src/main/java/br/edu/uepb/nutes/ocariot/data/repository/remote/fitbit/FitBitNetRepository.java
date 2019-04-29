@@ -156,10 +156,11 @@ public class FitBitNetRepository extends BaseNetRepository {
                         Sleep sleep = new Sleep();
                         SleepPattern sleepPattern = new SleepPattern();
 
-                        sleep.setDuration(sleepFitBit.getDuration());
                         sleep.setStartTime(DateUtils.convertDateTimeToUTC(sleepFitBit.getStartTime()));
                         sleep.setEndTime(DateUtils.convertDateTimeToUTC(sleepFitBit.getEndTime()));
 
+                        sleep.setDuration((DateUtils.convertDateTime(sleep.getEndTime()).getTime() -
+                                DateUtils.convertDateTime(sleep.getStartTime()).getTime()));
                         for (SleepLevelDataFitBit dataSet : sleepFitBit.getLevels().getData()) {
                             // In the FitBit API the duration comes in seconds.
                             // The OCARIoT API waits in milliseconds.
@@ -193,7 +194,6 @@ public class FitBitNetRepository extends BaseNetRepository {
                     for (LogDataFitBit log : stepsLogList.getSteps()) {
                         result.add(new LogData(log.getDate(), Integer.valueOf(log.getValue())));
                     }
-                    Log.w("LOG_TETS",result.toString() );
                     return result;
                 })
                 .subscribeOn(Schedulers.io())

@@ -25,7 +25,7 @@ import retrofit2.http.Query;
  */
 public interface OcariotService {
     // String BASE_URL_OCARIOT = "https://ocariot.nutes.uepb.edu.br"; // API GATEWAY
-    String BASE_URL_OCARIOT = "https://192.168.1.6"; // API GATEWAY
+    String BASE_URL_OCARIOT = "https://192.168.0.106"; // API GATEWAY
 
     // Child
     @POST("/auth")
