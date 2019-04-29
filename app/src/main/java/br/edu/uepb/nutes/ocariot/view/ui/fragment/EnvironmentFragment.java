@@ -32,8 +32,8 @@ import java.util.Locale;
 import java.util.Objects;
 
 import br.edu.uepb.nutes.ocariot.R;
-import br.edu.uepb.nutes.ocariot.data.model.Child;
-import br.edu.uepb.nutes.ocariot.data.model.Environment;
+import br.edu.uepb.nutes.ocariot.data.model.ocariot.Child;
+import br.edu.uepb.nutes.ocariot.data.model.ocariot.Environment;
 import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
 import br.edu.uepb.nutes.ocariot.data.repository.remote.fitbit.FitBitNetRepository;
 import br.edu.uepb.nutes.ocariot.data.repository.remote.ocariot.OcariotNetRepository;

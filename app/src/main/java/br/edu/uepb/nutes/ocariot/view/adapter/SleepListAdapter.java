@@ -3,7 +3,6 @@ package br.edu.uepb.nutes.ocariot.view.adapter;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -12,7 +11,7 @@ import java.util.List;
 import java.util.Locale;
 
 import br.edu.uepb.nutes.ocariot.R;
-import br.edu.uepb.nutes.ocariot.data.model.Sleep;
+import br.edu.uepb.nutes.ocariot.data.model.ocariot.Sleep;
 import br.edu.uepb.nutes.ocariot.utils.DateUtils;
 import br.edu.uepb.nutes.ocariot.view.adapter.base.BaseAdapter;
 import butterknife.BindView;
@@ -46,12 +45,12 @@ public class SleepListAdapter extends BaseAdapter<Sleep> {
             final Sleep sleep = itemsList.get(position);
             ViewHolder h = (ViewHolder) holder;
 
-            h.dateStart.setText(DateUtils.formatDateISO8601(sleep.getStartTime(),
+            h.dateStart.setText(DateUtils.convertDateTimeUTCToLocale(sleep.getStartTime(),
                     context.getResources().getString(R.string.date_time_abb4), null));
             h.period.setText(String.format(Locale.getDefault(), "%s - %s",
-                    DateUtils.formatDateISO8601(sleep.getStartTime(),
+                    DateUtils.convertDateTimeUTCToLocale(sleep.getStartTime(),
                             context.getResources().getString(R.string.hour_format1), null),
-                    DateUtils.formatDateISO8601(sleep.getEndTime(),
+                    DateUtils.convertDateTimeUTCToLocale(sleep.getEndTime(),
                             context.getResources().getString(R.string.hour_format1), null)));
             h.duration.setText(String.format(Locale.getDefault(), "%02dhrs %02dmin",
                     sleep.getDuration() / 3600000, (sleep.getDuration() / 60000) % 60));

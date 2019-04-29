@@ -1,4 +1,4 @@
-package br.edu.uepb.nutes.ocariot.data.model;
+package br.edu.uepb.nutes.ocariot.data.model.ocariot;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -86,7 +86,7 @@ public class SleepPatternSummary implements Parcelable {
 
     @Override
     public String toString() {
-        return "SleepPatternSummary{" +
+        return "SleepLevelSummaryFitBit{" +
                 "awake=" + awake +
                 ", asleep=" + asleep +
                 ", restless=" + restless +

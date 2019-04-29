@@ -23,9 +23,9 @@ import java.util.List;
 import java.util.Objects;
 
 import br.edu.uepb.nutes.ocariot.R;
-import br.edu.uepb.nutes.ocariot.data.model.Sleep;
-import br.edu.uepb.nutes.ocariot.data.model.SleepPatternDataSet;
-import br.edu.uepb.nutes.ocariot.data.model.UserAccess;
+import br.edu.uepb.nutes.ocariot.data.model.ocariot.Sleep;
+import br.edu.uepb.nutes.ocariot.data.model.ocariot.SleepPatternDataSet;
+import br.edu.uepb.nutes.ocariot.data.model.common.UserAccess;
 import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
 import br.edu.uepb.nutes.ocariot.data.repository.remote.fitbit.FitBitNetRepository;
 import br.edu.uepb.nutes.ocariot.data.repository.remote.ocariot.OcariotNetRepository;
@@ -182,9 +182,7 @@ public class SleepListFragment extends Fragment {
                 fitBitRepository
                         .listSleep(currentDate, null, "desc", 0, 100)
                         .doOnSubscribe(disposable -> loading(true))
-                        .subscribe(sleepList -> sendSleepToOcariot(
-                                convertFitBitDataToOcariot(sleepList)
-                        ), error -> loadDataOcariot())
+                        .subscribe(this::sendSleepToOcariot, error -> loadDataOcariot())
         );
     }
 
@@ -251,6 +249,7 @@ public class SleepListFragment extends Fragment {
 
         int count = 0;
         for (Sleep sleep : sleepList) {
+            sleep.setChildId(userAccess.getSubject());
             count++;
             final int aux = count;
             new Handler().postDelayed(() -> mDisposable.add(
@@ -259,38 +258,38 @@ public class SleepListFragment extends Fragment {
                             .subscribe(resultSleep -> {
                                 if (aux == total) loadDataOcariot();
                             }, error -> {
-                                Log.w(LOG_TAG, "error send " + error.getMessage());
+                                Log.w(LOG_TAG, "ERROR OCARIoT POST SLEEP " + error.getMessage());
                                 if (aux == total) loadDataOcariot();
                             })
-            ), 200);
+            ), 100);
         }
     }
 
-    /**
-     * Handles data conversions from the FitBit API to data
-     * supported by the OCARIoT API.
-     *
-     * @param sleepList List of sleep.
-     */
-    private List<Sleep> convertFitBitDataToOcariot(List<Sleep> sleepList) {
-        if (sleepList == null) return new ArrayList<>();
-
-        for (Sleep sleep : sleepList) {
-            if (sleep.getPattern() == null) {
-                sleepList.remove(sleep);
-                continue;
-            }
-
-            for (SleepPatternDataSet patternDataSet : sleep.getPattern().getDataSet()) {
-                // In the FitBit API the duration comes in seconds.
-                // The OCARIoT API waits in milliseconds.
-                // Converts the duration in seconds to milliseconds.
-                patternDataSet.setDuration(patternDataSet.getDuration() * 1000);
-            }
-            sleep.setChildId(userAccess.getSubject());
-        }
-        return sleepList;
-    }
+//    /**
+//     * Handles data conversions from the FitBit API to data
+//     * supported by the OCARIoT API.
+//     *
+//     * @param sleepList List of sleep.
+//     */
+//    private List<Sleep> convertFitBitDataToOcariot(List<Sleep> sleepList) {
+//        if (sleepList == null) return new ArrayList<>();
+//
+//        for (Sleep sleep : sleepList) {
+//            if (sleep.getPattern() == null) {
+//                sleepList.remove(sleep);
+//                continue;
+//            }
+//
+//            for (SleepPatternDataSet patternDataSet : sleep.getPattern().getDataSet()) {
+//                // In the FitBit API the duration comes in seconds.
+//                // The OCARIoT API waits in milliseconds.
+//                // Converts the duration in seconds to milliseconds.
+//                patternDataSet.setDuration(patternDataSet.getDuration() * 1000);
+//            }
+//            sleep.setChildId(userAccess.getSubject());
+//        }
+//        return sleepList;
+//    }
 
     public interface OnClickSleepListener {
         void onClickSleep(Sleep sleep);

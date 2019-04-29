@@ -9,8 +9,8 @@ import net.openid.appauth.AuthState;
 
 import org.json.JSONException;
 
-import br.edu.uepb.nutes.ocariot.data.model.Child;
-import br.edu.uepb.nutes.ocariot.data.model.UserAccess;
+import br.edu.uepb.nutes.ocariot.data.model.ocariot.Child;
+import br.edu.uepb.nutes.ocariot.data.model.common.UserAccess;
 import br.edu.uepb.nutes.ocariot.exception.LocalPreferenceException;
 
 /**

@@ -18,9 +18,9 @@ import android.widget.Toast;
 import java.util.List;
 
 import br.edu.uepb.nutes.ocariot.R;
-import br.edu.uepb.nutes.ocariot.data.model.Activity;
-import br.edu.uepb.nutes.ocariot.data.model.PhysicalActivity;
-import br.edu.uepb.nutes.ocariot.data.model.Sleep;
+import br.edu.uepb.nutes.ocariot.data.model.ocariot.Activity;
+import br.edu.uepb.nutes.ocariot.data.model.ocariot.PhysicalActivity;
+import br.edu.uepb.nutes.ocariot.data.model.ocariot.Sleep;
 import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
 import br.edu.uepb.nutes.ocariot.data.repository.remote.ocariot.OcariotNetRepository;
 import butterknife.BindView;

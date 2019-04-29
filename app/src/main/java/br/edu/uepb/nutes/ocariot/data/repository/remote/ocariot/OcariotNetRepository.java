@@ -8,11 +8,12 @@ import com.auth0.android.jwt.JWT;
 import java.util.List;
 import java.util.Objects;
 
-import br.edu.uepb.nutes.ocariot.data.model.Child;
-import br.edu.uepb.nutes.ocariot.data.model.Environment;
-import br.edu.uepb.nutes.ocariot.data.model.PhysicalActivity;
-import br.edu.uepb.nutes.ocariot.data.model.Sleep;
-import br.edu.uepb.nutes.ocariot.data.model.UserAccess;
+import br.edu.uepb.nutes.ocariot.data.model.common.UserAccess;
+import br.edu.uepb.nutes.ocariot.data.model.ocariot.Child;
+import br.edu.uepb.nutes.ocariot.data.model.ocariot.Environment;
+import br.edu.uepb.nutes.ocariot.data.model.ocariot.LogData;
+import br.edu.uepb.nutes.ocariot.data.model.ocariot.PhysicalActivity;
+import br.edu.uepb.nutes.ocariot.data.model.ocariot.Sleep;
 import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
 import br.edu.uepb.nutes.ocariot.data.repository.remote.BaseNetRepository;
 import io.reactivex.Completable;
@@ -36,8 +37,8 @@ public class OcariotNetRepository extends BaseNetRepository {
         super(context);
         this.mContext = context;
 
-        super.addRequestInterceptor(requestInterceptor());
-        super.addRequestInterceptor(responseInterceptor());
+        super.addInterceptor(requestInterceptor());
+        super.addInterceptor(responseInterceptor());
         ocariotService = super.provideRetrofit(OcariotService.BASE_URL_OCARIOT)
                 .create(OcariotService.class);
     }
@@ -90,7 +91,6 @@ public class OcariotNetRepository extends BaseNetRepository {
         };
     }
 
-
     public Single<UserAccess> auth(String username, String password) {
         return ocariotService.authUser(new Child(username, password))
                 .map(userAccess -> {
@@ -112,6 +112,12 @@ public class OcariotNetRepository extends BaseNetRepository {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
+    public Single<Child> updateChild(Child child) {
+        return ocariotService.updateChild(child.get_id(), child)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
     public Single<List<PhysicalActivity>> listActivities(String childId, String sort, int page, int limit) {
         return ocariotService.listActivities(childId, sort, page, limit)
                 .subscribeOn(Schedulers.io())
@@ -120,6 +126,24 @@ public class OcariotNetRepository extends BaseNetRepository {
 
     public Single<PhysicalActivity> publishActivity(PhysicalActivity activity) {
         return ocariotService.publishActivity(activity.getChildId(), activity)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Single<List<Object>> publishActivityStepsLog(String childId, List<LogData> logData) {
+        return ocariotService.publishActivityLog(childId, "steps", logData)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Single<List<Object>> publishActivityCaloriesLog(String childId, List<LogData> logData) {
+        return ocariotService.publishActivityLog(childId, "calories", logData)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Single<List<Object>> publishActivityActiveMinutesLog(String childId, List<LogData> logData) {
+        return ocariotService.publishActivityLog(childId, "active_minutes", logData)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }

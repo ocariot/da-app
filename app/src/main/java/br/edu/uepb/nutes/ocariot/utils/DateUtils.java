@@ -2,9 +2,6 @@ package br.edu.uepb.nutes.ocariot.utils;
 
 import android.support.annotation.Nullable;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -20,7 +17,6 @@ import java.util.TimeZone;
  * @author @copyright Copyright (c) 2017, NUTES UEPB
  */
 public final class DateUtils {
-    public static final String DATE_FORMAT_ISO_8601 = "yyyy-MM-dd'T'HH:mm:ss.SSS";
     public static final String DATE_FORMAT_DATE_TIME = "yyyy-MM-dd'T'HH:mm:ss";
 
     /**
@@ -33,6 +29,86 @@ public final class DateUtils {
     }
 
     /**
+     * Convert date time in Object Date.
+     *
+     * @param datetime {@link String} Date time in format yyy-MM-dd'T'HH:mm:ss
+     * @return Date time in format yyy-MM-dd'T'HH:mm:ss
+     */
+    public static Date convertDateTime(String datetime) {
+        if (datetime == null) return null;
+
+        DateFormat formatUTC = new SimpleDateFormat(DateUtils.DATE_FORMAT_DATE_TIME, Locale.getDefault());
+        try {
+            return formatUTC.parse(datetime);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    /**
+     * Convert date time in UTC format.
+     *
+     * @param datetime {@link String} Date time in format yyy-MM-dd'T'HH:mm:ss
+     * @return Date time in format yyy-MM-dd'T'HH:mm:ss
+     */
+    public static String convertDateTimeToUTC(String datetime) {
+        if (datetime == null) return null;
+
+        Date dateUTC = null;
+        DateFormat formatUTC = new SimpleDateFormat(DateUtils.DATE_FORMAT_DATE_TIME, Locale.getDefault());
+
+        try {
+            dateUTC = formatUTC.parse(datetime);
+            formatUTC.setTimeZone(TimeZone.getTimeZone("UTC"));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return formatUTC.format(dateUTC);
+    }
+
+    /**
+     * Convert date and time in UTC to local time and date.
+     *
+     * @param datetime   {@link String} Date time in format yyy-MM-dd'T'HH:mm:ss
+     * @param formatDate {@link String} Output format. Default yyy-MM-dd'T'HH:mm:ss
+     * @param timezone   {@link TimeZone} Your timezone
+     * @return Date time in format yyy-MM-dd'T'HH:mm:ss
+     */
+    public static String convertDateTimeUTCToLocale(String datetime, String formatDate, TimeZone timezone) {
+        if (datetime == null) return null;
+        if (timezone == null) timezone = TimeZone.getDefault();
+        if (formatDate == null) formatDate = DateUtils.DATE_FORMAT_DATE_TIME;
+
+        Date dateUTC = null;
+        DateFormat formatLocale = new SimpleDateFormat(formatDate, Locale.getDefault());
+        formatLocale.setTimeZone(timezone);
+
+        try {
+            DateFormat utcFormat = new SimpleDateFormat(DateUtils.DATE_FORMAT_DATE_TIME, Locale.getDefault());
+            utcFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+            dateUTC = utcFormat.parse(datetime);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return formatLocale.format(dateUTC);
+    }
+
+    /**
+     * Convert date and time in UTC to local time and date.
+     *
+     * @param datetime   {@link String} Date time in format yyy-MM-dd'T'HH:mm:ss
+     * @param formatDate {@link String} Output format. Default yyy-MM-dd'T'HH:mm:ss
+     * @return Date time in format yyy-MM-dd'T'HH:mm:ss
+     */
+    public static String convertDateTimeUTCToLocale(String datetime, String formatDate) {
+        return DateUtils.convertDateTimeUTCToLocale(datetime, formatDate, null);
+    }
+
+    /**
      * Returns the current datetime in format of formatDate string passed as parameter.
      * If "formatDate" is null the default value: "yyyy-MM-dd HH:mm:ss" will be used.
      *
@@ -40,8 +116,7 @@ public final class DateUtils {
      * @return Datetime formatted
      */
     public static String getCurrentDatetime(String formatDate) {
-        if (formatDate == null)
-            formatDate = "yyyy-MM-dd HH:mm:ss";
+        if (formatDate == null) formatDate = "yyyy-MM-dd HH:mm:ss";
 
         Calendar calendar = GregorianCalendar.getInstance();
 
@@ -69,30 +144,6 @@ public final class DateUtils {
     }
 
     /**
-     * Returns the current datetime in milliseconds.
-     *
-     * @return long
-     */
-    private static long getCurrentDatetime() {
-        return GregorianCalendar.getInstance().getTimeInMillis();
-    }
-
-    /**
-     * Returns the current timestamp.
-     * - millis - long
-     * - timezone - Object (TimeZone)
-     * - value - String (yyyy-MM-dd HH:mm:ss)
-     *
-     * @return JSONObject
-     * @throws JSONException
-     */
-    public static JSONObject getCurrentTimestamp() throws JSONException {
-        return new JSONObject().put("timezone", TimeZone.getDefault())
-                .put("mills", DateUtils.getCurrentDatetime())
-                .put("value", DateUtils.getCurrentDatetime(null)); // yyyy-MM-dd HH:mm:ss
-    }
-
-    /**
      * Retrieve a date/time passed in milliseconds to the format passed as a parameter.
      *
      * @param milliseconds long
@@ -100,10 +151,9 @@ public final class DateUtils {
      * @return String
      */
     public static String formatDate(long milliseconds, String formatDate) {
-        if (formatDate == null)
-            return null;
+        if (formatDate == null) return null;
 
-        Calendar calendar = GregorianCalendar.getInstance();
+        Calendar calendar = DateUtils.getCalendar();
         calendar.setTimeInMillis(milliseconds);
 
         DateFormat dateFormat = new SimpleDateFormat(formatDate, Locale.getDefault());
@@ -192,8 +242,6 @@ public final class DateUtils {
                     Integer.parseInt(date_input.substring(17, 19)),
                     formatDate);
         }
-
-
         return result;
     }
 
@@ -219,64 +267,14 @@ public final class DateUtils {
     }
 
     /**
-     * Format date in ISO 8601 for the format passed in the "formatDate" parameter.
-     * If the time zone is null, UTC is used.
+     * Retrieve the current date according to timezone UTC.
      *
-     * @param str_date   String
-     * @param formatDate String
-     * @param timeZone   {@link TimeZone}
      * @return String
      */
-    public static String formatDateISO8601(String str_date, String formatDate, TimeZone timeZone) {
-        if (str_date == null || formatDate == null)
-            return null;
-
-        if (timeZone == null)
-            timeZone = TimeZone.getTimeZone("UTC");
-
-        DateFormat dateFormat = new SimpleDateFormat(formatDate, Locale.getDefault());
-        dateFormat.setTimeZone(timeZone);
-        return dateFormat.format(DateUtils.fromISO8601(str_date));
-    }
-
-    /**
-     * Retrieve the current date according to timezone.
-     * If the time zone is null, UTC is used.
-     *
-     * @param timeZone {@link TimeZone}
-     * @return String
-     */
-    public static String getCurrentDateISO8601(TimeZone timeZone) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat(DateUtils.DATE_FORMAT_ISO_8601,
-                Locale.getDefault());
-        if (timeZone != null)
-            dateFormat.setTimeZone(timeZone);
-        else dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-
-        return dateFormat.format(new Date());
-    }
-
-    /**
-     * Convert string datetime in UTC ISO 8601
-     *
-     * @param str_date String datetime.
-     * @return String
-     */
-    private static Date fromISO8601(String str_date) {
-        if (str_date == null)
-            return null;
-
-        DateFormat dateFormat = new SimpleDateFormat(DateUtils.DATE_FORMAT_ISO_8601,
-                Locale.getDefault());
-        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-
-        try {
-            return dateFormat.parse(str_date);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        return null;
+    public static String getCurrentDateUTC() {
+        SimpleDateFormat format = new SimpleDateFormat(DateUtils.DATE_FORMAT_DATE_TIME, Locale.getDefault());
+        format.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return format.format(new Date());
     }
 
     /**
@@ -403,26 +401,11 @@ public final class DateUtils {
         Calendar c1 = GregorianCalendar.getInstance();
         Calendar c2 = GregorianCalendar.getInstance();
         c1.setTimeInMillis(dateMills);
-        c2.setTimeInMillis(getCurrentDatetime());
+        c2.setTimeInMillis(new Date().getTime());
 
         return c1.get(Calendar.DAY_OF_MONTH) == c2.get(Calendar.DAY_OF_MONTH) &&
                 c1.get(Calendar.MONTH) == c2.get(Calendar.MONTH) &&
                 c2.get(Calendar.YEAR) == c2.get(Calendar.YEAR);
-    }
-
-    /**
-     * Checks if the date passed as parameter is this year.
-     *
-     * @param dateMills long
-     * @return boolean
-     */
-    public static boolean isYear(long dateMills) {
-        Calendar c1 = GregorianCalendar.getInstance();
-        Calendar c2 = GregorianCalendar.getInstance();
-        c1.setTimeInMillis(dateMills);
-        c2.setTimeInMillis(getCurrentDatetime());
-
-        return (c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR));
     }
 
     /**
@@ -434,9 +417,9 @@ public final class DateUtils {
     public static boolean isYear(String strDate) {
         Calendar c1 = GregorianCalendar.getInstance();
         Calendar c2 = GregorianCalendar.getInstance();
-        c2.setTimeInMillis(getCurrentDatetime());
+        c2.setTimeInMillis(new Date().getTime());
 
-        c1.setTime(DateUtils.fromISO8601(strDate));
+        c1.setTime(DateUtils.convertDateTime(strDate));
 
         return (c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR));
     }

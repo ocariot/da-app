@@ -6,29 +6,29 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class CaloriesLogList {
+public class CaloriesLogListFitBit {
     @SerializedName("activities-calories")
-    private List<LogData> calories;
+    private List<LogDataFitBit> calories;
 
-    public CaloriesLogList() {
+    public CaloriesLogListFitBit() {
     }
 
-    public CaloriesLogList(List<LogData> calories) {
+    public CaloriesLogListFitBit(List<LogDataFitBit> calories) {
         this.calories = calories;
     }
 
-    public List<LogData> getCalories() {
+    public List<LogDataFitBit> getCalories() {
         return calories;
     }
 
-    public void setCalories(List<LogData> calories) {
+    public void setCalories(List<LogDataFitBit> calories) {
         this.calories = calories;
     }
 
     @NonNull
     @Override
     public String toString() {
-        return "CaloriesLogList{" +
+        return "CaloriesLogListFitBit{" +
                 "calories=" + calories +
                 '}';
     }

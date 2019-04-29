@@ -15,7 +15,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import br.edu.uepb.nutes.ocariot.R;
-import br.edu.uepb.nutes.ocariot.data.model.UserAccess;
+import br.edu.uepb.nutes.ocariot.data.model.common.UserAccess;
 import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
 import br.edu.uepb.nutes.ocariot.data.repository.remote.ocariot.OcariotNetRepository;
 import butterknife.BindView;

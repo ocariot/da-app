@@ -1,4 +1,4 @@
-package br.edu.uepb.nutes.ocariot.data.model;
+package br.edu.uepb.nutes.ocariot.data.model.ocariot;
 
 import android.os.Parcel;
 import android.os.Parcelable;

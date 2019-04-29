@@ -17,8 +17,8 @@ import android.widget.FrameLayout;
 import java.util.Objects;
 
 import br.edu.uepb.nutes.ocariot.R;
-import br.edu.uepb.nutes.ocariot.data.model.PhysicalActivity;
-import br.edu.uepb.nutes.ocariot.data.model.Sleep;
+import br.edu.uepb.nutes.ocariot.data.model.ocariot.PhysicalActivity;
+import br.edu.uepb.nutes.ocariot.data.model.ocariot.Sleep;
 import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
 import br.edu.uepb.nutes.ocariot.view.ui.fragment.EnvironmentFragment;
 import br.edu.uepb.nutes.ocariot.view.ui.fragment.PhysicalActivityListFragment;

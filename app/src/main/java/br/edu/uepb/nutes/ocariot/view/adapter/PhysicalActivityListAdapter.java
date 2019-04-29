@@ -10,8 +10,8 @@ import android.widget.TextView;
 import java.util.List;
 
 import br.edu.uepb.nutes.ocariot.R;
-import br.edu.uepb.nutes.ocariot.data.model.ActivityType;
-import br.edu.uepb.nutes.ocariot.data.model.PhysicalActivity;
+import br.edu.uepb.nutes.ocariot.data.model.ocariot.ActivityType;
+import br.edu.uepb.nutes.ocariot.data.model.ocariot.PhysicalActivity;
 import br.edu.uepb.nutes.ocariot.utils.DateUtils;
 import br.edu.uepb.nutes.ocariot.view.adapter.base.BaseAdapter;
 import butterknife.BindView;
@@ -46,7 +46,7 @@ public class PhysicalActivityListAdapter extends BaseAdapter<PhysicalActivity> {
             ViewHolder h = (ViewHolder) holder;
 
             h.name.setText(activity.getName());
-            h.dateStart.setText(DateUtils.formatDateISO8601(activity.getStartTime(),
+            h.dateStart.setText(DateUtils.convertDateTimeUTCToLocale(activity.getStartTime(),
                     context.getResources().getString(R.string.date_time_abb1), null));
             int duration = (int) (activity.getDuration() / (60 * 1000));
             h.duration.setText(String.valueOf(duration));

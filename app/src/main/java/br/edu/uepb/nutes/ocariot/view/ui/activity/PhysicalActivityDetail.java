@@ -11,8 +11,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import br.edu.uepb.nutes.ocariot.R;
-import br.edu.uepb.nutes.ocariot.data.model.ActivityLevel;
-import br.edu.uepb.nutes.ocariot.data.model.PhysicalActivity;
+import br.edu.uepb.nutes.ocariot.data.model.ocariot.ActivityLevel;
+import br.edu.uepb.nutes.ocariot.data.model.ocariot.PhysicalActivity;
 import br.edu.uepb.nutes.ocariot.utils.DateUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -99,9 +99,9 @@ public class PhysicalActivityDetail extends AppCompatActivity {
     }
 
     private void populateView(PhysicalActivity a) {
-        dateStartTextView.setText(DateUtils.formatDateISO8601(a.getStartTime(),
+        dateStartTextView.setText(DateUtils.convertDateTimeUTCToLocale(a.getStartTime(),
                 getResources().getString(R.string.date_format1), null));
-        datetimeStartTextView.setText(DateUtils.formatDateISO8601(a.getStartTime(),
+        datetimeStartTextView.setText(DateUtils.convertDateTimeUTCToLocale(a.getStartTime(),
                 getResources().getString(R.string.date_time_abb3), null));
 
         int duration = (int) (a.getDuration() / (60 * 1000));

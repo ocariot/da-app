@@ -2,6 +2,7 @@ package br.edu.uepb.nutes.ocariot.data.model.ocariot;
 
 import android.support.annotation.NonNull;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 public class LogData {
@@ -38,9 +39,6 @@ public class LogData {
     @NonNull
     @Override
     public String toString() {
-        return "LogData{" +
-                "date='" + date + '\'' +
-                ", value='" + value + '\'' +
-                '}';
+        return new Gson().toJson(this);
     }
 }

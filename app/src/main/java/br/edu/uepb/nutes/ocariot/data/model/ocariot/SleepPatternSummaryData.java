@@ -1,11 +1,9 @@
-package br.edu.uepb.nutes.ocariot.data.model;
+package br.edu.uepb.nutes.ocariot.data.model.ocariot;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
-
-import java.util.List;
 
 /**
  * Represents the summary data of the sleep pattern entity {@link SleepPattern}.
@@ -62,7 +60,7 @@ public class SleepPatternSummaryData implements Parcelable {
 
     @Override
     public String toString() {
-        return "SleepPatternSummaryData{" +
+        return "SleepLevelSummaryDataFitBit{" +
                 "count=" + count +
                 ", duration=" + duration +
                 '}';

@@ -52,7 +52,7 @@ public abstract class BaseNetRepository {
         return mClient.build();
     }
 
-    protected void addRequestInterceptor(Interceptor interceptor) {
+    protected void addInterceptor(Interceptor interceptor) {
         if (interceptor == null) return;
         if (mClient == null) mClient = this.getUnsafeOkHttpClient();
 

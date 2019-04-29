@@ -6,29 +6,29 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class MinutesVeryActiveLogList {
+public class MinutesVeryActiveLogListFitBit {
     @SerializedName("activities-minutesVeryActive")
-    private List<LogData> minutesVeryActive;
+    private List<LogDataFitBit> minutesVeryActive;
 
-    public MinutesVeryActiveLogList() {
+    public MinutesVeryActiveLogListFitBit() {
     }
 
-    public MinutesVeryActiveLogList(List<LogData> minutesVeryActive) {
+    public MinutesVeryActiveLogListFitBit(List<LogDataFitBit> minutesVeryActive) {
         this.minutesVeryActive = minutesVeryActive;
     }
 
-    public List<LogData> getMinutesVeryActive() {
+    public List<LogDataFitBit> getMinutesVeryActive() {
         return minutesVeryActive;
     }
 
-    public void setMinutesVeryActive(List<LogData> minutesVeryActive) {
+    public void setMinutesVeryActive(List<LogDataFitBit> minutesVeryActive) {
         this.minutesVeryActive = minutesVeryActive;
     }
 
     @NonNull
     @Override
     public String toString() {
-        return "MinutesVeryActiveLogList{" +
+        return "MinutesVeryActiveLogListFitBit{" +
                 "minutesVeryActive=" + minutesVeryActive +
                 '}';
     }

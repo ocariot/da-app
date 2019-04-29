@@ -1,4 +1,4 @@
-package br.edu.uepb.nutes.ocariot.data.model;
+package br.edu.uepb.nutes.ocariot.data.model.ocariot;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,6 +26,10 @@ public class PhysicalActivity extends Activity implements Parcelable {
 
     @SerializedName(value = "levels", alternate = {"activityLevel"})
     private List<ActivityLevel> levels;
+
+    public PhysicalActivity() {
+        super();
+    }
 
     protected PhysicalActivity(Parcel in) {
         super.set_id(in.readString());
@@ -98,6 +103,11 @@ public class PhysicalActivity extends Activity implements Parcelable {
 
     public void setLevels(List<ActivityLevel> levels) {
         this.levels = levels;
+    }
+
+    public boolean addLevel(ActivityLevel level) {
+        if (this.levels == null) this.levels = new ArrayList<>();
+        return this.levels.add(level);
     }
 
     @Override

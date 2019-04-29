@@ -4,17 +4,17 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
-public class LogData {
+public class LogDataFitBit {
     @SerializedName("dateTime")
     private String date;
 
     @SerializedName("value")
     private String value;
 
-    public LogData() {
+    public LogDataFitBit() {
     }
 
-    public LogData(String date, String value) {
+    public LogDataFitBit(String date, String value) {
         this.date = date;
         this.value = value;
     }
@@ -38,7 +38,7 @@ public class LogData {
     @NonNull
     @Override
     public String toString() {
-        return "LogData{" +
+        return "LogDataFitBit{" +
                 "date='" + date + '\'' +
                 ", value='" + value + '\'' +
                 '}';

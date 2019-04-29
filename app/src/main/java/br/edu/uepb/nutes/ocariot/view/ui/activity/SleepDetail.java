@@ -31,9 +31,9 @@ import java.util.List;
 import java.util.Locale;
 
 import br.edu.uepb.nutes.ocariot.R;
-import br.edu.uepb.nutes.ocariot.data.model.Sleep;
-import br.edu.uepb.nutes.ocariot.data.model.SleepPatternDataSet;
-import br.edu.uepb.nutes.ocariot.data.model.SleepPatternSummaryData;
+import br.edu.uepb.nutes.ocariot.data.model.ocariot.Sleep;
+import br.edu.uepb.nutes.ocariot.data.model.ocariot.SleepPatternDataSet;
+import br.edu.uepb.nutes.ocariot.data.model.ocariot.SleepPatternSummaryData;
 import br.edu.uepb.nutes.ocariot.utils.DateUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -152,15 +152,15 @@ public class SleepDetail extends AppCompatActivity {
         mActionBar.setHomeAsUpIndicator(R.drawable.ic_close_dark);
 
         if (sleep.getStartTime() != null) {
-            mActionBar.setTitle(DateUtils.formatDateISO8601(sleep.getStartTime(),
+            mActionBar.setTitle(DateUtils.convertDateTimeUTCToLocale(sleep.getStartTime(),
                     getString(R.string.date_time_abb4), null));
         }
     }
 
     private void populateView() {
-        String dateStart = DateUtils.formatDateISO8601(sleep.getStartTime(),
+        String dateStart = DateUtils.convertDateTimeUTCToLocale(sleep.getStartTime(),
                 getString(R.string.hour_format1), null);
-        String dateEnd = DateUtils.formatDateISO8601(sleep.getEndTime(),
+        String dateEnd = DateUtils.convertDateTimeUTCToLocale(sleep.getEndTime(),
                 getString(R.string.hour_format1), null);
         mPeriodTextView.setText(String.format(Locale.getDefault(), "%s - %s",
                 dateStart, dateEnd));

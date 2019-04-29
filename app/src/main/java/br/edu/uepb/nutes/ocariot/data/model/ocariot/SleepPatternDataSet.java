@@ -1,4 +1,4 @@
-package br.edu.uepb.nutes.ocariot.data.model;
+package br.edu.uepb.nutes.ocariot.data.model.ocariot;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -85,7 +85,7 @@ public class SleepPatternDataSet implements Parcelable {
 
     @Override
     public String toString() {
-        return "SleepPatternDataSet{" +
+        return "SleepLevelDataFitBit{" +
                 "startTime='" + startTime + '\'' +
                 ", name='" + name + '\'' +
                 ", duration=" + duration +
