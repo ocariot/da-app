@@ -4,7 +4,10 @@ import java.util.List;
 
 import br.edu.uepb.nutes.ocariot.data.model.common.UserAccess;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.Child;
+import br.edu.uepb.nutes.ocariot.data.model.ocariot.Educator;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.Environment;
+import br.edu.uepb.nutes.ocariot.data.model.ocariot.Family;
+import br.edu.uepb.nutes.ocariot.data.model.ocariot.HealthProfessional;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.LogData;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.MultiStatusResult;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.PhysicalActivity;
@@ -38,6 +41,15 @@ public interface OcariotService {
 
     @GET("/v1/children/{child_id}")
     Single<Child> getChildById(@Path("child_id") String childId);
+
+    @GET("/v1/families/{family_id}")
+    Single<Family> getFamilyById(@Path("family_id") String familyId);
+
+    @GET("/v1/educators/{educator_id}")
+    Single<Educator> getEducatorById(@Path("educator_id") String educatorId);
+
+    @GET("/v1/healthprofessionals/{healthprofessional_id}")
+    Single<HealthProfessional> getHealthProfessionalById(@Path("healthprofessional_id") String educatorId);
 
     @PATCH("/v1/children/{child_id}")
     Single<Child> updateChild(@Path("child_id") String childId, @Body Child child);

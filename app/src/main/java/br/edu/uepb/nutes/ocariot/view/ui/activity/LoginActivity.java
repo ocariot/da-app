@@ -98,9 +98,11 @@ public class LoginActivity extends AppCompatActivity {
                         .doOnSubscribe(disposable -> showProgress(true))
                         .doAfterTerminate(() -> showProgress(false))
                         .subscribe(userAccess -> {
+                            Log.w("AAA", "FEito login!");
                             // save user logged
                             if (appPref.addUserAccessOcariot(userAccess)) {
-                                getUserProfile(userAccess.getSubject());
+                                Log.w("AAA", "addUserAccessOcariot");
+                                getUserProfile(userAccess);
                             }
                         }, error -> {
                             Log.w("ERROR-LOG", error.toString());
@@ -116,29 +118,108 @@ public class LoginActivity extends AppCompatActivity {
         );
     }
 
-    private void getUserProfile(String userId) {
-        mDisposable.add(
-                ocariotRepository
-                        .getChildById(userId)
-                        .doOnSubscribe(disposable -> showProgress(true))
-                        .doAfterTerminate(() -> showProgress(false))
-                        .subscribe(child -> {
-                            appPref.addChildProfile(child);
-                            openMainActivity();
-                        }, error -> {
-                            if (error instanceof HttpException) {
-                                HttpException httpEx = ((HttpException) error);
-                                if (httpEx.code() == 401) {
-                                    showMessageInvalidAuth(getString(R.string.error_401));
-                                    return;
-                                } else if (httpEx.code() == 403) {
-                                    showMessageInvalidAuth(getString(R.string.error_403));
-                                    return;
+    private void getUserProfile(UserAccess userAccess) {
+        Log.w("AAA", "TYPE: " + userAccess.getSubjectType());
+        if (userAccess.getSubjectType().equalsIgnoreCase(User.Type.CHILD)) {
+            mDisposable.add(
+                    ocariotRepository
+                            .getChildById(userAccess.getSubject())
+                            .doOnSubscribe(disposable -> showProgress(true))
+                            .doAfterTerminate(() -> showProgress(false))
+                            .subscribe(child -> {
+                                appPref.addChildProfile(child);
+                                Log.w("AAA", child.toJson());
+                                openMainActivity();
+                            }, error -> {
+                                if (error instanceof HttpException) {
+                                    HttpException httpEx = ((HttpException) error);
+                                    if (httpEx.code() == 401) {
+                                        showMessageInvalidAuth(getString(R.string.error_401));
+                                        return;
+                                    } else if (httpEx.code() == 403) {
+                                        showMessageInvalidAuth(getString(R.string.error_403));
+                                        return;
+                                    }
+                                    showMessageInvalidAuth(getString(R.string.error_500));
                                 }
-                                showMessageInvalidAuth(getString(R.string.error_500));
-                            }
-                        })
-        );
+                            })
+            );
+        } else if (userAccess.getSubjectType().equalsIgnoreCase(User.Type.FAMILY)) {
+            mDisposable.add(
+                    ocariotRepository
+                            .getFamilyById(userAccess.getSubject())
+                            .doOnSubscribe(disposable -> showProgress(true))
+                            .doAfterTerminate(() -> showProgress(false))
+                            .subscribe(family -> {
+                                Log.w("AAA", family.toJson());
+                                Intent intent = new Intent(getApplicationContext(), ChildrenManagerActivity.class);
+                                intent.putExtra(User.Type.FAMILY, family.toJson());
+                                startActivity(intent);
+                            }, error -> {
+                                if (error instanceof HttpException) {
+                                    HttpException httpEx = ((HttpException) error);
+                                    if (httpEx.code() == 401) {
+                                        showMessageInvalidAuth(getString(R.string.error_401));
+                                        return;
+                                    } else if (httpEx.code() == 403) {
+                                        showMessageInvalidAuth(getString(R.string.error_403));
+                                        return;
+                                    }
+                                    showMessageInvalidAuth(getString(R.string.error_500));
+                                }
+                            })
+            );
+        } else if (userAccess.getSubjectType().equalsIgnoreCase(User.Type.EDUCATOR)) {
+            mDisposable.add(
+                    ocariotRepository
+                            .getEducatorById(userAccess.getSubject())
+                            .doOnSubscribe(disposable -> showProgress(true))
+                            .doAfterTerminate(() -> showProgress(false))
+                            .subscribe(educator -> {
+                                Log.w("AAA", educator.toJson());
+                                Intent intent = new Intent(getApplicationContext(), ChildrenManagerActivity.class);
+                                intent.putExtra(User.Type.EDUCATOR, educator.toJson());
+                                startActivity(intent);
+                            }, error -> {
+                                if (error instanceof HttpException) {
+                                    HttpException httpEx = ((HttpException) error);
+                                    if (httpEx.code() == 401) {
+                                        showMessageInvalidAuth(getString(R.string.error_401));
+                                        return;
+                                    } else if (httpEx.code() == 403) {
+                                        showMessageInvalidAuth(getString(R.string.error_403));
+                                        return;
+                                    }
+                                    showMessageInvalidAuth(getString(R.string.error_500));
+                                }
+                            })
+            );
+        } else if (userAccess.getSubjectType().equalsIgnoreCase(User.Type.HEALTH_PROFESSIONAL)) {
+            mDisposable.add(
+                    ocariotRepository
+                            .getHealthProfessionalById(userAccess.getSubject())
+                            .doOnSubscribe(disposable -> showProgress(true))
+                            .doAfterTerminate(() -> showProgress(false))
+                            .subscribe(healthProfessional -> {
+                                Log.w("AAA", healthProfessional.toJson());
+                                Intent intent = new Intent(getApplicationContext(), ChildrenManagerActivity.class);
+                                intent.putExtra(User.Type.HEALTH_PROFESSIONAL, healthProfessional.toJson());
+                                startActivity(intent);
+                            }, error -> {
+                                if (error instanceof HttpException) {
+                                    HttpException httpEx = ((HttpException) error);
+                                    if (httpEx.code() == 401) {
+                                        showMessageInvalidAuth(getString(R.string.error_401));
+                                        return;
+                                    } else if (httpEx.code() == 403) {
+                                        showMessageInvalidAuth(getString(R.string.error_403));
+                                        return;
+                                    }
+                                    showMessageInvalidAuth(getString(R.string.error_500));
+                                }
+                            })
+            );
+        }
     }
 
     /**
@@ -146,6 +227,14 @@ public class LoginActivity extends AppCompatActivity {
      */
     private void openMainActivity() {
         startActivity(new Intent(getApplicationContext(), MainActivity.class));
+        finish();
+    }
+
+    /**
+     * Open children manager activity.
+     */
+    private void openChildrenManager() {
+        startActivity(new Intent(getApplicationContext(), ChildrenManagerActivity.class));
         finish();
     }
 

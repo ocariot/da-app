@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/default_padding"
+    android:paddingTop="@dimen/item_padding"
+    android:paddingEnd="@dimen/default_padding"
+    android:paddingBottom="@dimen/item_padding">
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/child_img"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="16dp"
+        android:tint="@color/colorPrimaryDark"
+        app:srcCompat="@drawable/ic_child" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/child_img">
+
+        <TextView
+            android:id="@+id/name_child"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:text="B999"
+            android:textColor="@color/colorBlackLight"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/date_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/name_child"
+            android:layout_alignStart="@+id/name_child"
+            android:text="NUTES/UEPB"
+            android:textAppearance="?attr/textAppearanceListItemSecondary"
+            android:textSize="14sp" />
+    </RelativeLayout>
+</RelativeLayout>
