@@ -5,7 +5,7 @@ package br.edu.uepb.nutes.ocariot.data.model.ocariot;
  *
  * @author Copyright (c) 2018, NUTES/UEPB
  */
-public class MeasurementType {
-    public static String TEMPERATURE = "temperature";
-    public static String HUMIDITY = "humidity";
+class MeasurementType {
+    static String TEMPERATURE = "temperature";
+    static String HUMIDITY = "humidity";
 }

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="90dp"
+    android:background="@android:color/transparent">
+
+    <View
+        android:id="@+id/img_phy"
+        android:layout_width="45dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="@dimen/default_padding"
+        android:layout_marginTop="@dimen/default_padding"
+        android:layout_marginRight="@dimen/default_padding"
+        android:layout_marginBottom="@dimen/default_padding"
+        android:background="@color/light_transparent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/tv_title"
+        android:layout_width="0dp"
+        android:layout_height="12dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="200dp"
+        android:background="@color/light_transparent"
+        app:layout_constraintLeft_toRightOf="@+id/img_phy"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/img_phy" />
+
+    <View
+        android:id="@+id/tv_content"
+        android:layout_width="0dp"
+        android:layout_height="12dp"
+        android:layout_marginEnd="140dp"
+        android:background="@color/light_transparent"
+        app:layout_constraintBottom_toBottomOf="@+id/img_phy"
+        app:layout_constraintLeft_toLeftOf="@+id/tv_title"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/img_phy" />
+
+    <View
+        android:id="@+id/tv_time"
+        android:layout_width="0dp"
+        android:layout_height="12dp"
+        android:layout_marginEnd="60dp"
+        android:background="@color/light_transparent"
+        app:layout_constraintBottom_toBottomOf="@+id/img_phy"
+        app:layout_constraintLeft_toLeftOf="@+id/tv_title"
+        app:layout_constraintRight_toRightOf="parent" />
+
+</android.support.constraint.ConstraintLayout>

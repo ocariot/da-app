@@ -2,6 +2,7 @@ package br.edu.uepb.nutes.ocariot.data.model.ocariot;
 
 import android.support.annotation.NonNull;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Objects;
@@ -84,12 +85,6 @@ public abstract class Activity {
     @NonNull
     @Override
     public String toString() {
-        return "Activity{" +
-                "_id='" + _id + '\'' +
-                ", startTime='" + startTime + '\'' +
-                ", endTime='" + endTime + '\'' +
-                ", duration=" + duration +
-                ", childId='" + childId + '\'' +
-                '}';
+        return new Gson().toJson(this);
     }
 }

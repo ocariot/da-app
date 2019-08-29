@@ -3,6 +3,7 @@ package br.edu.uepb.nutes.ocariot.view.adapter;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -12,6 +13,7 @@ import java.util.Locale;
 
 import br.edu.uepb.nutes.ocariot.R;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.Sleep;
+import br.edu.uepb.nutes.ocariot.data.model.ocariot.SleepType;
 import br.edu.uepb.nutes.ocariot.utils.DateUtils;
 import br.edu.uepb.nutes.ocariot.view.adapter.base.BaseAdapter;
 import butterknife.BindView;
@@ -55,15 +57,16 @@ public class SleepListAdapter extends BaseAdapter<Sleep> {
             h.duration.setText(String.format(Locale.getDefault(), "%02dhrs %02dmin",
                     sleep.getDuration() / 3600000, (sleep.getDuration() / 60000) % 60));
 
-            int efficiency = 0;
-            int divider = sleep.getPattern().getSummary().getAsleep().getDuration() +
-                    sleep.getPattern().getSummary().getAwake().getDuration() +
-                    sleep.getPattern().getSummary().getRestless().getDuration();
-            if (divider > 0) {
-                efficiency = Math.round(
-                        (sleep.getPattern().getSummary().getAsleep().getDuration() / (float) divider) * 100
-                );
+            int dividend = 0;
+            if (sleep.getType().equalsIgnoreCase(SleepType.CLASSIC)) {
+                dividend = sleep.getPattern().getSummary().getAsleep().getDuration();
+            } else if (sleep.getType().equalsIgnoreCase(SleepType.STAGES)) {
+                dividend = (sleep.getPattern().getSummary().getDeep().getDuration()) +
+                        (sleep.getPattern().getSummary().getLight().getDuration()) +
+                        (sleep.getPattern().getSummary().getRem().getDuration());
             }
+
+            int efficiency = Math.round((dividend / (float) sleep.getDuration()) * 100);
             if (efficiency >= 90) {
                 h.efficiency.setTextColor(ContextCompat.getColor(context, R.color.colorAccent));
             } else if (efficiency > 80) {

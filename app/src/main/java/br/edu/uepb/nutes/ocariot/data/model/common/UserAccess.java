@@ -2,6 +2,7 @@ package br.edu.uepb.nutes.ocariot.data.model.common;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import com.auth0.android.jwt.JWT;
 import com.google.gson.Gson;
@@ -17,11 +18,13 @@ import java.lang.reflect.Type;
  */
 public class UserAccess implements Parcelable {
     public static final String KEY_SCOPES = "scope";
-
-    private String subject;
+    public static final String KEY_SUB_TYPE = "sub_type";
 
     @SerializedName(value = "access_token", alternate = {"token"})
     private String accessToken;
+
+    private String subject;
+    private String subjectType;
     private String refreshToken;
     private String tokenType;
     private long expirationDate; // in milliseconds
@@ -30,34 +33,10 @@ public class UserAccess implements Parcelable {
     public UserAccess() {
     }
 
-    public UserAccess(String subject, String accessToken, String refreshToken,
-                      String tokenType, long expirationDate, String scopes, int mode) {
-        this.subject = subject;
-        this.accessToken = accessToken;
-        this.refreshToken = refreshToken;
-        this.tokenType = tokenType;
-        this.expirationDate = expirationDate;
-        this.scopes = scopes;
-    }
-
-    public UserAccess(String subject, String accessToken, long expirationDate,
-                      String scopes, int mode) {
-        this.subject = subject;
-        this.accessToken = accessToken;
-        this.expirationDate = expirationDate;
-        this.scopes = scopes;
-    }
-
-    public UserAccess(String subject, String accessToken, long expirationDate, String scopes) {
-        this.subject = subject;
-        this.accessToken = accessToken;
-        this.expirationDate = expirationDate;
-        this.scopes = scopes;
-    }
-
     protected UserAccess(Parcel in) {
-        subject = in.readString();
         accessToken = in.readString();
+        subject = in.readString();
+        subjectType = in.readString();
         refreshToken = in.readString();
         tokenType = in.readString();
         expirationDate = in.readLong();
@@ -76,12 +55,36 @@ public class UserAccess implements Parcelable {
         }
     };
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(accessToken);
+        parcel.writeString(subject);
+        parcel.writeString(subjectType);
+        parcel.writeString(refreshToken);
+        parcel.writeString(tokenType);
+        parcel.writeLong(expirationDate);
+        parcel.writeString(scopes);
+    }
+
     public String getSubject() {
         return subject;
     }
 
     public void setSubject(String subject) {
         this.subject = subject;
+    }
+
+    public String getSubjectType() {
+        return subjectType;
+    }
+
+    public void setSubjectType(String subjectType) {
+        this.subjectType = subjectType;
     }
 
     public String getAccessToken() {
@@ -132,15 +135,6 @@ public class UserAccess implements Parcelable {
     }
 
     /**
-     * Convert object to string in json format.
-     *
-     * @return String
-     */
-    public String toJsonString() {
-        return String.valueOf(this.toJson());
-    }
-
-    /**
      * Convert object to json format.
      *
      * @return String
@@ -161,31 +155,9 @@ public class UserAccess implements Parcelable {
         return new Gson().fromJson(json, typeUserAccess);
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(subject);
-        parcel.writeString(accessToken);
-        parcel.writeString(refreshToken);
-        parcel.writeString(tokenType);
-        parcel.writeLong(expirationDate);
-        parcel.writeString(scopes);
-    }
-
+    @NonNull
     @Override
     public String toString() {
-        return "UserAccess{" +
-                "subject='" + subject + '\'' +
-                ", accessToken='" + accessToken + '\'' +
-                ", refreshToken='" + refreshToken + '\'' +
-                ", tokenType='" + tokenType + '\'' +
-                ", expirationDate=" + expirationDate +
-                ", scopes=" + scopes +
-                '}';
+        return new Gson().toJson(this);
     }
-
 }

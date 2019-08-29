@@ -2,9 +2,12 @@ package br.edu.uepb.nutes.ocariot.data.model.fitbit;
 
 import android.support.annotation.NonNull;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
+
+import br.edu.uepb.nutes.ocariot.data.model.ocariot.HeartRateZoneItem;
 
 /**
  * Represents Physical Activity object from FitBit platform.
@@ -47,6 +50,12 @@ public class PhysicalActivityFitBit {
 
     @SerializedName("originalStartTime")
     private String originalStartTime;
+
+    @SerializedName("averageHeartRate")
+    private int averageHeartRate;
+
+    @SerializedName("heartRateZones")
+    private List<HeartRateZoneFitBit> heartRateZones;
 
     public PhysicalActivityFitBit() {
     }
@@ -147,22 +156,52 @@ public class PhysicalActivityFitBit {
         this.originalStartTime = originalStartTime;
     }
 
+    public List<HeartRateZoneFitBit> getHeartRateZones() {
+        return heartRateZones;
+    }
+
+    public void setHeartRateZones(List<HeartRateZoneFitBit> heartRateZones) {
+        this.heartRateZones = heartRateZones;
+    }
+
+    public int getAverageHeartRate() {
+        return averageHeartRate;
+    }
+
+    public void setAverageHeartRate(int averageHeartRate) {
+        this.averageHeartRate = averageHeartRate;
+    }
+
+    public HeartRateZoneFitBit getOutOfRangeZone() {
+        return searchZone("out");
+    }
+
+    public HeartRateZoneFitBit getFatBurnZone() {
+        return searchZone("fat");
+    }
+
+    public HeartRateZoneFitBit getCardioZone() {
+        return searchZone("cardio");
+    }
+
+    public HeartRateZoneFitBit getPeakZone() {
+        return searchZone("peak");
+    }
+
+    private HeartRateZoneFitBit searchZone(String zone) {
+        if (heartRateZones != null && !heartRateZones.isEmpty()) {
+            for (HeartRateZoneFitBit item : heartRateZones) {
+                if (item.getName().toLowerCase().contains(zone)) {
+                    return item;
+                }
+            }
+        }
+        return new HeartRateZoneFitBit();
+    }
+
     @NonNull
     @Override
     public String toString() {
-        return "PhysicalActivityFitBit{" +
-                "activityLevel=" + activityLevel +
-                ", activityName='" + activityName + '\'' +
-                ", activityTypeId=" + activityTypeId +
-                ", calories=" + calories +
-                ", steps=" + steps +
-                ", duration=" + duration +
-                ", originalDuration=" + originalDuration +
-                ", elevationGain=" + elevationGain +
-                ", logId=" + logId +
-                ", logType='" + logType + '\'' +
-                ", startTime='" + startTime + '\'' +
-                ", originalStartTime='" + originalStartTime + '\'' +
-                '}';
+        return new Gson().toJson(this);
     }
 }

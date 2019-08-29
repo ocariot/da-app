@@ -8,11 +8,18 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+
+import com.tapadoo.alerter.Alerter;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Objects;
 
@@ -20,6 +27,7 @@ import br.edu.uepb.nutes.ocariot.R;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.PhysicalActivity;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.Sleep;
 import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
+import br.edu.uepb.nutes.ocariot.utils.MessageEvent;
 import br.edu.uepb.nutes.ocariot.view.ui.fragment.EnvironmentFragment;
 import br.edu.uepb.nutes.ocariot.view.ui.fragment.PhysicalActivityListFragment;
 import br.edu.uepb.nutes.ocariot.view.ui.fragment.SleepListFragment;
@@ -43,6 +51,10 @@ public class MainActivity extends AppCompatActivity implements
     public final String KEY_DO_NOT_LOGIN_FITBIT = "key_do_not_login_fitbit";
 
     private AppPreferencesHelper appPref;
+    private PhysicalActivityListFragment physicalActivityListFragment;
+    private SleepListFragment sleepListFragment;
+    private EnvironmentFragment environmentFragment;
+    private int lastViewIndex;
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -53,14 +65,10 @@ public class MainActivity extends AppCompatActivity implements
     @BindView(R.id.frame_content)
     FrameLayout mWelcomeContent;
 
-    private PhysicalActivityListFragment physicalActivityListFragment;
-    private SleepListFragment sleepListFragment;
-    private EnvironmentFragment environmentFragment;
-    private int lastViewIndex;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.w(LOG_TAG, "Main onCreate()");
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setSupportActionBar(mToolbar);
@@ -76,8 +84,10 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onStart() {
+        super.onStart();
+
+        EventBus.getDefault().register(this);
         if (appPref.getAuthStateFitBit() == null && !appPref.getBoolean(KEY_DO_NOT_LOGIN_FITBIT)) {
             replaceFragment(WelcomeFragment.newInstance());
             mBuBottomNavigationView.setVisibility(View.GONE);
@@ -87,6 +97,12 @@ public class MainActivity extends AppCompatActivity implements
             else if (lastViewIndex == 2) loadEnvironmentsView();
             else loadPhysicalActivitiesView();
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -171,6 +187,7 @@ public class MainActivity extends AppCompatActivity implements
      * Replace fragment physical activities view.
      */
     private void loadPhysicalActivitiesView() {
+        Log.d(LOG_TAG, "loadPhysicalActivitiesView: ");
         replaceFragment(physicalActivityListFragment);
         mBuBottomNavigationView.getMenu().getItem(0).setChecked(true);
         Objects.requireNonNull(getSupportActionBar())
@@ -198,5 +215,29 @@ public class MainActivity extends AppCompatActivity implements
         Objects.requireNonNull(getSupportActionBar())
                 .setTitle(R.string.title_temperature_humidity);
         lastViewIndex = 2;
+    }
+
+    @Subscribe(threadMode = ThreadMode.POSTING)
+    public void onMessageEvent(MessageEvent event) {
+        Log.w(LOG_TAG, "EVENT DISPATCH");
+        if (event.getName().equals(MessageEvent.EventType.OCARIOT_ACCESS_TOKEN_EXPIRED)) {
+            Alerter.create(this)
+                    .setDuration(40000)
+                    .enableVibration(true)
+                    .enableSwipeToDismiss()
+                    .setTitle(R.string.alert_title_token_expired)
+                    .setBackgroundColorRes(R.color.colorWarning)
+                    .setIcon(R.drawable.ic_warning_dark)
+                    .setText(R.string.alert_token_expired_ocariot)
+                    .setOnHideListener(this::redirectToLogin)
+                    .show();
+        }
+    }
+
+    private void redirectToLogin() {
+        appPref.removeSession();
+        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        getApplicationContext().startActivity(intent);
     }
 }

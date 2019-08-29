@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
@@ -27,6 +28,9 @@ public class PhysicalActivity extends Activity implements Parcelable {
     @SerializedName(value = "levels", alternate = {"activityLevel"})
     private List<ActivityLevel> levels;
 
+    @SerializedName(value = "heart_rate")
+    private HeartRateZone heartRate;
+
     public PhysicalActivity() {
         super();
     }
@@ -41,6 +45,7 @@ public class PhysicalActivity extends Activity implements Parcelable {
         calories = in.readInt();
         steps = in.readInt();
         levels = in.createTypedArrayList(ActivityLevel.CREATOR);
+        heartRate= in.readParcelable(HeartRateZone.class.getClassLoader());
     }
 
     @Override
@@ -54,6 +59,7 @@ public class PhysicalActivity extends Activity implements Parcelable {
         dest.writeInt(calories);
         dest.writeInt(steps);
         dest.writeTypedList(levels);
+        dest.writeParcelable(heartRate, flags);
     }
 
     @Override
@@ -110,6 +116,14 @@ public class PhysicalActivity extends Activity implements Parcelable {
         return this.levels.add(level);
     }
 
+    public HeartRateZone getHeartRate() {
+        return heartRate;
+    }
+
+    public void setHeartRate(HeartRateZone heartRate) {
+        this.heartRate = heartRate;
+    }
+
     @Override
     public int hashCode() {
         return super.hashCode();
@@ -123,12 +137,6 @@ public class PhysicalActivity extends Activity implements Parcelable {
     @NonNull
     @Override
     public String toString() {
-        return "PhysicalActivity{" +
-                super.toString() +
-                "name='" + name + '\'' +
-                ", calories=" + calories +
-                ", steps=" + steps +
-                ", levels=" + levels +
-                '}';
+        return new Gson().toJson(this);
     }
 }

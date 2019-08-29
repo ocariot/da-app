@@ -124,7 +124,7 @@ public class EnvironmentFragment extends Fragment implements View.OnClickListene
         mDisposable = new CompositeDisposable();
         fitBitRepository = FitBitNetRepository.getInstance(mContext);
         ocariotRepository = OcariotNetRepository.getInstance(mContext);
-        childProfile = AppPreferencesHelper.getInstance(mContext).getUserProfile();
+        childProfile = AppPreferencesHelper.getInstance(mContext).getChildProfile();
     }
 
     @Override
@@ -186,32 +186,32 @@ public class EnvironmentFragment extends Fragment implements View.OnClickListene
      * Otherwise it displays from the remote server.
      */
     private void loadDataOcariot() {
-        if (childProfile.getInstitution() == null) return;
-
-        mDisposable.add(
-                ocariotRepository
-                        .listEnvironments("timestamp", 1, 1000,
-                                childProfile.getInstitution().get_id(),
-                                currentRoom,
-                                "gte:".concat(dateStart),
-                                (dateEnd != null ? "lt:".concat(dateEnd) : null))
-                        .doOnSubscribe(disposable -> loading(true))
-                        .doAfterTerminate(() -> loading(false))
-                        .subscribe(environmentsList -> {
-                            this.environments = environmentsList;
-                            populateView(environmentsList);
-                            isFirstRequest = false;
-                        })
-        );
+//        if (childProfile.getInstitution() == null) return;
+//
+//        mDisposable.add(
+//                ocariotRepository
+//                        .listEnvironments("timestamp", 1, 1000,
+//                                childProfile.getInstitution().get_id(),
+//                                currentRoom,
+//                                "gte:".concat(dateStart),
+//                                (dateEnd != null ? "lt:".concat(dateEnd) : null))
+//                        .doOnSubscribe(disposable -> loading(true))
+//                        .doAfterTerminate(() -> loading(false))
+//                        .subscribe(environmentsList -> {
+//                            this.environments = environmentsList;
+//                            populateView(environmentsList);
+//                            isFirstRequest = false;
+//                        })
+//        );
     }
 
     private void populateView(List<Environment> environments) {
         if (mContext == null) return;
         Log.w(LOG_TAG, new Gson().toJson(environments));
-        mLocation.setText(Objects.requireNonNull(mContext).getResources().getString(
-                R.string.environment_location,
-                childProfile.getInstitution().getName().concat(", ")
-                        .concat(childProfile.getInstitution().getType())));
+//        mLocation.setText(Objects.requireNonNull(mContext).getResources().getString(
+//                R.string.environment_location,
+//                childProfile.getInstitution().getName().concat(", ")
+//                        .concat(childProfile.getInstitution().getType())));
 
         if (environments == null || environments.isEmpty()) {
             cleanCharts();

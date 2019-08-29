@@ -5,6 +5,8 @@ import android.util.Log;
 
 import com.auth0.android.jwt.JWT;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -12,10 +14,13 @@ import br.edu.uepb.nutes.ocariot.data.model.common.UserAccess;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.Child;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.Environment;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.LogData;
+import br.edu.uepb.nutes.ocariot.data.model.ocariot.MultiStatusResult;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.PhysicalActivity;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.Sleep;
+import br.edu.uepb.nutes.ocariot.data.model.ocariot.Weight;
 import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
 import br.edu.uepb.nutes.ocariot.data.repository.remote.BaseNetRepository;
+import br.edu.uepb.nutes.ocariot.utils.MessageEvent;
 import io.reactivex.Completable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -30,8 +35,9 @@ import okhttp3.Response;
  * @author Copyright (c) 2018, NUTES/UEPB
  */
 public class OcariotNetRepository extends BaseNetRepository {
+    private static OcariotNetRepository mInstance;
+
     private OcariotService ocariotService;
-    private final Context mContext;
 
     private OcariotNetRepository(Context context) {
         super(context);
@@ -41,10 +47,12 @@ public class OcariotNetRepository extends BaseNetRepository {
         super.addInterceptor(responseInterceptor());
         ocariotService = super.provideRetrofit(OcariotService.BASE_URL_OCARIOT)
                 .create(OcariotService.class);
+        Log.w("OcariotNetRepo", "CONSTRUCT");
     }
 
     public static OcariotNetRepository getInstance(Context context) {
-        return new OcariotNetRepository(context);
+        if (mInstance == null) mInstance = new OcariotNetRepository(context);
+        return mInstance;
     }
 
     /**
@@ -86,7 +94,15 @@ public class OcariotNetRepository extends BaseNetRepository {
         return chain -> {
             Response response = chain.proceed(chain.request());
 
-            Log.w("RESPONSEBODY", response.code() + " | " + Objects.requireNonNull(response.body()).string());
+//            Log.w("RESPONSEBODY", response.code() + " | " +
+//                    Objects.requireNonNull(response.body()).string());
+
+            // access token expired!
+            if (response.code() == 401) {
+                EventBus.getDefault().post(
+                        new MessageEvent(MessageEvent.EventType.OCARIOT_ACCESS_TOKEN_EXPIRED)
+                );
+            }
             return chain.proceed(chain.request());
         };
     }
@@ -99,6 +115,7 @@ public class OcariotNetRepository extends BaseNetRepository {
                         userAccess.setSubject(jwt.getSubject());
                         userAccess.setExpirationDate(Objects.requireNonNull(jwt.getExpiresAt()).getTime());
                         userAccess.setScopes(jwt.getClaim(UserAccess.KEY_SCOPES).asString());
+                        userAccess.setSubjectType(jwt.getClaim(UserAccess.KEY_SUB_TYPE).asString());
                     }
                     return userAccess;
                 })
@@ -118,32 +135,27 @@ public class OcariotNetRepository extends BaseNetRepository {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
+    public Completable updateLastSync(String childId, String date) {
+        return ocariotService.updateLastSync(childId, date)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
     public Single<List<PhysicalActivity>> listActivities(String childId, String sort, int page, int limit) {
         return ocariotService.listActivities(childId, sort, page, limit)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Single<PhysicalActivity> publishActivity(PhysicalActivity activity) {
-        return ocariotService.publishActivity(activity.getChildId(), activity)
+    public Single<PhysicalActivity> publishPhysicalActivity(PhysicalActivity activity) {
+        return ocariotService.publishPhysicalActivity(activity.getChildId(), activity)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Single<List<Object>> publishActivityStepsLog(String childId, List<LogData> logData) {
-        return ocariotService.publishActivityLog(childId, "steps", logData)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
-    }
-
-    public Single<List<Object>> publishActivityCaloriesLog(String childId, List<LogData> logData) {
-        return ocariotService.publishActivityLog(childId, "calories", logData)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
-    }
-
-    public Single<List<Object>> publishActivityActiveMinutesLog(String childId, List<LogData> logData) {
-        return ocariotService.publishActivityLog(childId, "active_minutes", logData)
+    public Single<MultiStatusResult<PhysicalActivity>> publishPhysicalActivities(String childId,
+                                                                                 PhysicalActivity[] activities) {
+        return ocariotService.publishPhysicalActivities(childId, activities)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -166,6 +178,12 @@ public class OcariotNetRepository extends BaseNetRepository {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
+    public Single<MultiStatusResult<Sleep>> publishSleep(String childId, Sleep[] sleep) {
+        return ocariotService.publishSleep(childId, sleep)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
     public Completable deleteSleep(String childId, String sleepId) {
         return ocariotService.deleteSleep(childId, sleepId)
                 .subscribeOn(Schedulers.io())
@@ -174,8 +192,56 @@ public class OcariotNetRepository extends BaseNetRepository {
 
     public Single<List<Environment>> listEnvironments(String sort, int page, int limit,
                                                       String institutionId, String room,
-                                                      String dateStart, String dateEnd) {
-        return ocariotService.listEnvironments(sort, page, limit, institutionId, room, dateStart, dateEnd)
+                                                      String startDate, String endDate) {
+        return ocariotService.listEnvironments(sort, page, limit, institutionId, room, startDate, endDate)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Single<MultiStatusResult<LogData>> publishSteps(String childId, LogData[] logData) {
+        return ocariotService.publishLog(childId, "steps", logData)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Single<MultiStatusResult<LogData>> publishCalories(String childId, LogData[] logData) {
+        return ocariotService.publishLog(childId, "calories", logData)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Single<MultiStatusResult<LogData>> publishActiveMinutes(String childId, LogData[] logData) {
+        return ocariotService.publishLog(childId, "active_minutes", logData)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Single<MultiStatusResult<LogData>> publishLightlyActiveMinutes(String childId, LogData[] logData) {
+        return ocariotService.publishLog(childId, "lightly_active_minutes", logData)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Single<MultiStatusResult<LogData>> publishSedentaryMinutes(String childId, LogData[] logData) {
+        return ocariotService.publishLog(childId, "sedentary_minutes", logData)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Single<MultiStatusResult<Weight>> publishWeights(String childId, Weight[] weights) {
+        return ocariotService.publishWeights(childId, weights)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Single<List<Weight>> listWeights(String childId) {
+        return ocariotService.listhWeights(childId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Completable publishFitBitAuth(String childId, UserAccess userAccess) {
+        return ocariotService.publishFitBitAuth(childId, userAccess)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }

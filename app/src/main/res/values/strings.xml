@@ -1,8 +1,8 @@
 <resources>
-    <string name="app_name">OCARIoT DA</string>
+    <string name="app_name">DA OCARIoT</string>
 
     <!-- TITLES -->
-    <string name="title_ocariot">OCARIoT DA</string>
+    <string name="title_ocariot">DA OCARIoT</string>
     <string name="title_physical_activities">Physical activities</string>
     <string name="title_activities">Activities</string>
     <string name="title_sleep">Sleep</string>
@@ -21,8 +21,13 @@
     <string name="title_restless">Restless</string>
     <string name="title_awake">Awake</string>
     <string name="title_awake_restless">Awake/Restless</string>
+    <string name="title_rem">REM</string>
+    <string name="title_light">Light</string>
+    <string name="title_deep">Deep</string>
     <string name="title_today">Today</string>
     <string name="title_ops">:(</string>
+    <string name="title_error">Error!</string>
+    <string name="title_success">Success!</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -49,6 +54,8 @@
     <string name="img_desc_activity">Activity image</string>
     <string name="img_desc_clock">Clock image</string>
     <string name="img_desc_calories">Calories image</string>
+    <string name="hr_avg">Average Heart Rate</string>
+    <string name="activity_range_time">%s at %s</string>
 
     <!-- SLEEP -->
     <string name="times_count">%d times</string>
@@ -65,6 +72,7 @@
     <string name="date_time_abb3">EEEE, MMMM dd, yyyy</string>
     <string name="date_time_abb4">EEE, MMMM dd, yyyy</string>
     <string name="hour_format1">HH:mm</string>
+    <string name="hour_format2">HH:mm:ss</string>
 
     <!-- SETTINGS -->
     <string name="login_with_fitbit">Login With FitBit</string>
@@ -75,12 +83,13 @@
     <string name="key_fitibit">key_fitbit</string>
     <string name="key_signout">key_signout</string>
     <string name="key_version">key_version</string>
+    <string name="key_sync_data">key_sync_data</string>
     <string name="settings_signout">Sign Out</string>
     <string name="settings_fitbit">FitBit</string>
     <string name="settings_summary_signout">You will be logged out of the application and redirected to login screen.</string>
     <string name="settings_summary_fitbit">Shares activity and sleep data.</string>
     <string name="settings_version">Version</string>
-    <string name="settings_summary_version">1.1.2</string>
+    <string name="settings_summary_version">1.5.0</string>
     <string name="settings_about">About</string>
 
     <!-- DIALOGS -->
@@ -114,6 +123,22 @@
     <string name="delete_data_description">Select the data types that you want to delete, and then click confirm.</string>
     <string name="delete_data_obs">Attention! Make sure what you are doing. Because, after the delete request is made, you will not be able to cancel or recover the data again&#8230;</string>
 
+    <!-- SYNC DATA -->
+    <string name="synchronization">Synchronization</string>
+    <string name="synchronization_data">Synchronize data from external services with the OCARIoT platform.</string>
+    <string name="synchronizing">Synchronizing</string>
+    <string name="synchronizing_data_fitbit">Synchronizing Fitbit Data with the OCARIoT Platform&#8230;</string>
+    <string name="sync_data_fitbit_error">An error occurred while trying to sync Fitbit data with the OCARIoT platform.\nPlease try again later&#8230;</string>
+    <string name="sync_data_fitbit_success">Fitbit data successfully synced with OCARIoT platform.</string>
+
+    <!-- ALERTS -->
+    <string name="alert_title_token_expired">Authentication problem!</string>
+    <string name="alert_token_expired_ocariot">Your session has exceeded the 24 hour limit.\nWithin seconds you will be redirected to the login screen to perform a new authentication.</string>
+    <string name="alert_title_no_token_fitbit">Error trying to regain Fitbit access!</string>
+    <string name="alert_no_token_fitbit">To collect Fitbit data, you must first provide access to your data.</string>
+    <string name="alert_token_expired_fitbit">The Fitbit access token has expired or been revoked.\nPlease click here to grant access again&#8230;</string>
+
+    <!--  ARRAYS   -->
     <string-array name="room_sample_array">
         <item>Select the room&#8230;</item>
     </string-array>

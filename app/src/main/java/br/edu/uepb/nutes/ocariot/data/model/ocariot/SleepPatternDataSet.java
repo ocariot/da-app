@@ -2,7 +2,9 @@ package br.edu.uepb.nutes.ocariot.data.model.ocariot;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -25,7 +27,7 @@ public class SleepPatternDataSet implements Parcelable {
 
     public SleepPatternDataSet(String startTime, String name, long duration) {
         this.startTime = startTime;
-        this.name = name;
+        this.setName(name);
         this.duration = duration;
     }
 
@@ -42,6 +44,9 @@ public class SleepPatternDataSet implements Parcelable {
     }
 
     public void setName(String name) {
+        if (name.equalsIgnoreCase("wake")) {
+            name = "awake";
+        }
         this.name = name;
     }
 
@@ -83,12 +88,9 @@ public class SleepPatternDataSet implements Parcelable {
         parcel.writeLong(duration);
     }
 
+    @NonNull
     @Override
     public String toString() {
-        return "SleepLevelDataFitBit{" +
-                "startTime='" + startTime + '\'' +
-                ", name='" + name + '\'' +
-                ", duration=" + duration +
-                '}';
+        return new Gson().toJson(this);
     }
 }

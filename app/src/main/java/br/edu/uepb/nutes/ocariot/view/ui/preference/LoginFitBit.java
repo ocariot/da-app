@@ -34,8 +34,8 @@ public class LoginFitBit {
 
     private final Uri REDIRECT_URI = Uri.parse("fitbitauth://finished");
 
-    private final String CLIENT_ID = "22DCVN";
-    private final String CLIENT_SECRET = "6327dcf9efdab5108c707bd01cc20aa9"; // TODO REMOVER!!!
+    private final String CLIENT_ID = "YOUR_CLIENT_ID";
+    private final String CLIENT_SECRET = "YOUR_CLIENT_SECRET";
 
     private Context mContext;
 
@@ -67,7 +67,8 @@ public class LoginFitBit {
         mAuthState = new AuthState(serviceConfig);
 
         mAuthRequest = authRequestBuilder
-                .setScopes("activity", "sleep", "profile")
+                .setScopes("activity", "sleep", "heartrate", "weight")
+                .setPrompt("login")
                 .build();
     }
 

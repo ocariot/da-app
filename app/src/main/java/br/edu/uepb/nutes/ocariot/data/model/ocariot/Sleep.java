@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -12,6 +13,9 @@ import com.google.gson.annotations.SerializedName;
  * @author Copyright (c) 2018, NUTES/UEPB
  */
 public class Sleep extends Activity implements Parcelable {
+    @SerializedName("type")
+    private String type;
+
     @SerializedName(value = "pattern", alternate = {"levels"})
     private SleepPattern pattern;
 
@@ -24,6 +28,7 @@ public class Sleep extends Activity implements Parcelable {
         super.setEndTime(in.readString());
         super.setDuration(in.readLong());
         super.setChildId(in.readString());
+        type = in.readString();
         pattern = in.readParcelable(SleepPattern.class.getClassLoader());
     }
 
@@ -34,6 +39,7 @@ public class Sleep extends Activity implements Parcelable {
         dest.writeString(super.getEndTime());
         dest.writeLong(super.getDuration());
         dest.writeString(super.getChildId());
+        dest.writeString(type);
         dest.writeParcelable(pattern, flags);
     }
 
@@ -62,6 +68,14 @@ public class Sleep extends Activity implements Parcelable {
         this.pattern = pattern;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     @Override
     public int hashCode() {
         return super.hashCode();
@@ -75,9 +89,6 @@ public class Sleep extends Activity implements Parcelable {
     @NonNull
     @Override
     public String toString() {
-        return "Sleep{" +
-                super.toString() +
-                "pattern=" + pattern +
-                '}';
+        return new Gson().toJson(this);
     }
 }

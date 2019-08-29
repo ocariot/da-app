@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.security.cert.X509Certificate;
+import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
@@ -26,8 +27,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * @author Copyright (c) 2018, NUTES/UEPB
  */
 public abstract class BaseNetRepository {
-    protected Context mContext;
     private OkHttpClient.Builder mClient;
+
+    protected Context mContext;
 
     public BaseNetRepository(Context mContext) {
         this.mContext = mContext;
@@ -97,9 +99,12 @@ public abstract class BaseNetRepository {
             // Create an ssl socket factory with our all-trusting manager
             final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
 
-            OkHttpClient.Builder builder = new OkHttpClient.Builder();
-            builder.sslSocketFactory(sslSocketFactory, (X509TrustManager) trustAllCerts[0]);
-            builder.hostnameVerifier((hostname, session) -> true);
+            OkHttpClient.Builder builder = new OkHttpClient.Builder()
+                    .connectTimeout(1, TimeUnit.MINUTES)
+                    .readTimeout(1, TimeUnit.MINUTES)
+                    .writeTimeout(1, TimeUnit.MINUTES)
+                    .sslSocketFactory(sslSocketFactory, (X509TrustManager) trustAllCerts[0])
+                    .hostnameVerifier((hostname, session) -> true);
             return builder;
         } catch (Exception e) {
             throw new RuntimeException(e);

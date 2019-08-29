@@ -2,7 +2,6 @@ package br.edu.uepb.nutes.ocariot.view.ui.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -18,18 +17,17 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
+import com.ethanhua.skeleton.Skeleton;
+import com.ethanhua.skeleton.SkeletonScreen;
+
 import java.util.List;
 import java.util.Objects;
 
 import br.edu.uepb.nutes.ocariot.R;
-import br.edu.uepb.nutes.ocariot.data.model.ocariot.Sleep;
-import br.edu.uepb.nutes.ocariot.data.model.ocariot.SleepPatternDataSet;
 import br.edu.uepb.nutes.ocariot.data.model.common.UserAccess;
+import br.edu.uepb.nutes.ocariot.data.model.ocariot.Sleep;
 import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
-import br.edu.uepb.nutes.ocariot.data.repository.remote.fitbit.FitBitNetRepository;
 import br.edu.uepb.nutes.ocariot.data.repository.remote.ocariot.OcariotNetRepository;
-import br.edu.uepb.nutes.ocariot.utils.DateUtils;
 import br.edu.uepb.nutes.ocariot.view.adapter.SleepListAdapter;
 import br.edu.uepb.nutes.ocariot.view.adapter.base.OnRecyclerViewListener;
 import butterknife.BindView;
@@ -45,12 +43,13 @@ public class SleepListFragment extends Fragment {
     private final String LOG_TAG = "SleepListFragment";
 
     private SleepListAdapter mAdapter;
-    private FitBitNetRepository fitBitRepository;
     private OcariotNetRepository ocariotRepository;
+    private AppPreferencesHelper appPref;
     private OnClickSleepListener mListener;
     private UserAccess userAccess;
     private Context mContext;
     private CompositeDisposable mDisposable;
+    private SkeletonScreen mSkeletonScreen;
 
     /**
      * We need this variable to lock and unlock loading more.
@@ -85,9 +84,8 @@ public class SleepListFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mContext = Objects.requireNonNull(getActivity()).getApplicationContext();
         mDisposable = new CompositeDisposable();
-        fitBitRepository = FitBitNetRepository.getInstance(mContext);
         ocariotRepository = OcariotNetRepository.getInstance(mContext);
-        userAccess = AppPreferencesHelper.getInstance(mContext).getUserAccessOcariot();
+        appPref = AppPreferencesHelper.getInstance(mContext);
     }
 
     @Override
@@ -117,9 +115,15 @@ public class SleepListFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        userAccess = appPref.getUserAccessOcariot();
+        loadDataOcariot();
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
-        if (fitBitRepository != null) fitBitRepository.dispose();
         mListener = null;
         mDisposable.dispose();
     }
@@ -130,13 +134,13 @@ public class SleepListFragment extends Fragment {
     private void initComponents() {
         initRecyclerView();
         initDataSwipeRefresh();
-        loadDataFitBit();
     }
 
     private void initRecyclerView() {
         mAdapter = new SleepListAdapter(mContext);
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext,
+                LinearLayoutManager.VERTICAL, false));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.addItemDecoration(new DividerItemDecoration(mRecyclerView.getContext(),
                 new LinearLayoutManager(mContext).getOrientation()));
@@ -159,7 +163,12 @@ public class SleepListFragment extends Fragment {
             }
         });
 
-        mRecyclerView.setAdapter(mAdapter);
+        mSkeletonScreen = Skeleton.bind(mRecyclerView)
+                .adapter(mAdapter)
+                .load(R.layout.sleep_item_shimmer)
+                .count(10)
+                .duration(1200)
+                .show();
     }
 
     /**
@@ -167,23 +176,8 @@ public class SleepListFragment extends Fragment {
      */
     private void initDataSwipeRefresh() {
         mDataSwipeRefresh.setOnRefreshListener(() -> {
-            if (itShouldLoadMore) loadDataFitBit();
+            if (itShouldLoadMore) loadDataOcariot();
         });
-    }
-
-    /**
-     * Load data in FitBit Server.
-     */
-    private void loadDataFitBit() {
-        String currentDate = DateUtils.formatDate(DateUtils.addDays(1).getTimeInMillis(),
-                getResources().getString(R.string.date_format1));
-
-        mDisposable.add(
-                fitBitRepository
-                        .listSleep(currentDate, null, "desc", 0, 100)
-                        .doOnSubscribe(disposable -> loading(true))
-                        .subscribe(this::sendSleepToOcariot, error -> loadDataOcariot())
-        );
     }
 
     /**
@@ -228,68 +222,15 @@ public class SleepListFragment extends Fragment {
      * @param enabled boolean
      */
     private void loading(final boolean enabled) {
+        mDataSwipeRefresh.setRefreshing(false);
         if (!enabled) {
-            mDataSwipeRefresh.setRefreshing(false);
+            mSkeletonScreen.hide();
             itShouldLoadMore = true;
             return;
         }
-        if (mDataSwipeRefresh.isRefreshing()) return;
-        mDataSwipeRefresh.setRefreshing(true);
+        mSkeletonScreen.show();
         itShouldLoadMore = false;
     }
-
-    /**
-     * Publish Sleep in OCARioT API Service.
-     *
-     * @param sleepList {@link List<Sleep>} List of sleep to be published.
-     */
-    private void sendSleepToOcariot(List<Sleep> sleepList) {
-        Log.w(LOG_TAG, "sendOcariot() TOTAL: " + sleepList.size());
-        int total = sleepList.size();
-
-        int count = 0;
-        for (Sleep sleep : sleepList) {
-            sleep.setChildId(userAccess.getSubject());
-            count++;
-            final int aux = count;
-            new Handler().postDelayed(() -> mDisposable.add(
-                    ocariotRepository
-                            .publishSleep(sleep)
-                            .subscribe(resultSleep -> {
-                                if (aux == total) loadDataOcariot();
-                            }, error -> {
-//                                Log.w(LOG_TAG, "ERROR OCARIoT POST SLEEP " + error.getMessage());
-                                if (aux == total) loadDataOcariot();
-                            })
-            ), 100);
-        }
-    }
-
-//    /**
-//     * Handles data conversions from the FitBit API to data
-//     * supported by the OCARIoT API.
-//     *
-//     * @param sleepList List of sleep.
-//     */
-//    private List<Sleep> convertFitBitDataToOcariot(List<Sleep> sleepList) {
-//        if (sleepList == null) return new ArrayList<>();
-//
-//        for (Sleep sleep : sleepList) {
-//            if (sleep.getPattern() == null) {
-//                sleepList.remove(sleep);
-//                continue;
-//            }
-//
-//            for (SleepPatternDataSet patternDataSet : sleep.getPattern().getDataSet()) {
-//                // In the FitBit API the duration comes in seconds.
-//                // The OCARIoT API waits in milliseconds.
-//                // Converts the duration in seconds to milliseconds.
-//                patternDataSet.setDuration(patternDataSet.getDuration() * 1000);
-//            }
-//            sleep.setChildId(userAccess.getSubject());
-//        }
-//        return sleepList;
-//    }
 
     public interface OnClickSleepListener {
         void onClickSleep(Sleep sleep);

@@ -2,7 +2,9 @@ package br.edu.uepb.nutes.ocariot.data.model.ocariot;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -16,18 +18,28 @@ import java.util.Objects;
 public class Environment implements Parcelable {
     @SerializedName("id")
     private String _id; // _id in server remote (UUID)
-    private String institution_id;
+
+    @SerializedName("institution_id")
+    private String institutionId;
+
+    @SerializedName("location")
     private Location location;
+
+    @SerializedName("measurements")
     private List<Measurement> measurements;
-    private String timestamp;
+
+    @SerializedName("climatized")
     private boolean climatized;
+
+    @SerializedName("timestamp")
+    private String timestamp;
 
     public Environment() {
     }
 
     public Environment(String institution_id, Location location,
                        List<Measurement> measurements, String timestamp) {
-        this.institution_id = institution_id;
+        this.institutionId = institution_id;
         this.location = location;
         this.measurements = measurements;
         this.timestamp = timestamp;
@@ -35,7 +47,7 @@ public class Environment implements Parcelable {
 
     protected Environment(Parcel in) {
         _id = in.readString();
-        institution_id = in.readString();
+        institutionId = in.readString();
         location = in.readParcelable(Location.class.getClassLoader());
         measurements = in.createTypedArrayList(Measurement.CREATOR);
         timestamp = in.readString();
@@ -45,7 +57,7 @@ public class Environment implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(_id);
-        dest.writeString(institution_id);
+        dest.writeString(institutionId);
         dest.writeParcelable(location, flags);
         dest.writeTypedList(measurements);
         dest.writeString(timestamp);
@@ -77,12 +89,12 @@ public class Environment implements Parcelable {
         this._id = _id;
     }
 
-    public String getInstitution_id() {
-        return institution_id;
+    public String getInstitutionId() {
+        return institutionId;
     }
 
-    public void setInstitution_id(String institution_id) {
-        this.institution_id = institution_id;
+    public void setInstitutionId(String institutionId) {
+        this.institutionId = institutionId;
     }
 
     public Location getLocation() {
@@ -140,7 +152,7 @@ public class Environment implements Parcelable {
         Environment that = (Environment) o;
         return climatized == that.climatized &&
                 Objects.equals(_id, that._id) &&
-                Objects.equals(institution_id, that.institution_id) &&
+                Objects.equals(institutionId, that.institutionId) &&
                 Objects.equals(location, that.location) &&
                 Objects.equals(measurements, that.measurements) &&
                 Objects.equals(timestamp, that.timestamp);
@@ -148,18 +160,12 @@ public class Environment implements Parcelable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(_id, institution_id, location, measurements, timestamp, climatized);
+        return Objects.hash(_id, institutionId, location, measurements, timestamp, climatized);
     }
 
+    @NonNull
     @Override
     public String toString() {
-        return "Environment{" +
-                "_id='" + _id + '\'' +
-                ", institution_id='" + institution_id + '\'' +
-                ", location=" + location +
-                ", measurements=" + measurements +
-                ", timestamp='" + timestamp + '\'' +
-                ", climatized=" + climatized +
-                '}';
+        return new Gson().toJson(this);
     }
 }

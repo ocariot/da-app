@@ -2,18 +2,19 @@ package br.edu.uepb.nutes.ocariot.data.model.fitbit;
 
 import android.support.annotation.NonNull;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class CaloriesLogListFitBit {
-    @SerializedName("activities-calories")
+public class CaloriesListFitBit {
+    @SerializedName("activities-tracker-calories")
     private List<LogDataFitBit> calories;
 
-    public CaloriesLogListFitBit() {
+    public CaloriesListFitBit() {
     }
 
-    public CaloriesLogListFitBit(List<LogDataFitBit> calories) {
+    public CaloriesListFitBit(List<LogDataFitBit> calories) {
         this.calories = calories;
     }
 
@@ -28,8 +29,6 @@ public class CaloriesLogListFitBit {
     @NonNull
     @Override
     public String toString() {
-        return "CaloriesLogListFitBit{" +
-                "calories=" + calories +
-                '}';
+        return new Gson().toJson(this);
     }
 }

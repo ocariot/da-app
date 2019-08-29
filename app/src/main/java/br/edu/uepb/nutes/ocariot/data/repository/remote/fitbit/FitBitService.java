@@ -1,12 +1,15 @@
 package br.edu.uepb.nutes.ocariot.data.repository.remote.fitbit;
 
 import br.edu.uepb.nutes.ocariot.data.model.fitbit.ActivitiesListFitBit;
-import br.edu.uepb.nutes.ocariot.data.model.fitbit.CaloriesLogListFitBit;
-import br.edu.uepb.nutes.ocariot.data.model.fitbit.MinutesFairlyActiveLogListFitBit;
-import br.edu.uepb.nutes.ocariot.data.model.fitbit.MinutesVeryActiveLogListFitBit;
+import br.edu.uepb.nutes.ocariot.data.model.fitbit.CaloriesListFitBit;
+import br.edu.uepb.nutes.ocariot.data.model.fitbit.MinutesFairlyActiveListFitBit;
+import br.edu.uepb.nutes.ocariot.data.model.fitbit.MinutesLightlyActiveListFitBit;
+import br.edu.uepb.nutes.ocariot.data.model.fitbit.MinutesSedentaryListFitBit;
+import br.edu.uepb.nutes.ocariot.data.model.fitbit.MinutesVeryActiveListFitBit;
 import br.edu.uepb.nutes.ocariot.data.model.fitbit.SleepListFitBit;
-import br.edu.uepb.nutes.ocariot.data.model.fitbit.StepsLogListFitBit;
+import br.edu.uepb.nutes.ocariot.data.model.fitbit.StepsListFitBit;
 import br.edu.uepb.nutes.ocariot.data.model.fitbit.UserResultFitBit;
+import br.edu.uepb.nutes.ocariot.data.model.fitbit.WeightListFitBit;
 import io.reactivex.Single;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
@@ -20,11 +23,6 @@ import retrofit2.http.Query;
 public interface FitBitService {
     String BASE_URL_FITBIT = "https://api.fitbit.com/";
 
-    /**
-     * Retrieves a list of user’s activity log entries before or after a given day.
-     *
-     * @return Observable<ActivitiesListFitBit>
-     */
     @GET("1.2/user/-/activities/list.json")
     Single<ActivitiesListFitBit> listActivities(
             @Query("beforeDate") String beforeDate,
@@ -34,38 +32,54 @@ public interface FitBitService {
             @Query("limit") int limit
     );
 
-    /**
-     * Retrieves a list of user sleep log entries before or after a certain day.
-     *
-     * @return Observable<SleepListFitBit>
-     */
-    @GET("1.2/user/-/sleep/list.json")
+    @GET("1.2/user/-/sleep/date/{start-date}/{end-date}.json")
     Single<SleepListFitBit> listSleep(
-            @Query("beforeDate") String beforeDate,
-            @Query("afterDate") String afterDate,
-            @Query("sort") String sort,
-            @Query("offset ") int offset,
-            @Query("limit  ") int limit
+            @Path("start-date") String startDate,
+            @Path("end-date") String endDate
     );
 
     @GET("1/user/-/profile.json")
     Single<UserResultFitBit> getProfile();
 
-    @GET("1.2/user/-/activities/steps/date/{date}/{period}.json")
-    Single<StepsLogListFitBit> getStepsLog(@Path("date") String date, @Path("period") String period);
-
-    @GET("1.2/user/-/activities/calories/date/{date}/{period}.json")
-    Single<CaloriesLogListFitBit> getCaloriesLog(@Path("date") String date, @Path("period") String period);
-
-    @GET("1.2/user/-/activities/minutesFairlyActive/date/{date}/{period}.json")
-    Single<MinutesFairlyActiveLogListFitBit> getMinutesFairlyActiveLog(
-            @Path("date") String date,
-            @Path("period") String period
+    @GET("1.2/user/-/activities/tracker/steps/date/{start-date}/{end-date}.json")
+    Single<StepsListFitBit> getSteps(
+            @Path("start-date") String startDate,
+            @Path("end-date") String endDate
     );
 
-    @GET("1.2/user/-/activities/minutesVeryActive/date/{date}/{period}.json")
-    Single<MinutesVeryActiveLogListFitBit> getMinutesVeryActiveLog(
-            @Path("date") String date,
+    @GET("1.2/user/-/activities/tracker/calories/date/{start-date}/{end-date}.json")
+    Single<CaloriesListFitBit> getCalories(
+            @Path("start-date") String startDate,
+            @Path("end-date") String endDate
+    );
+
+    @GET("1.2/user/-/activities/tracker/minutesSedentary/date/{start-date}/{end-date}.json")
+    Single<MinutesSedentaryListFitBit> getSedentaryMinutes(
+            @Path("start-date") String startDate,
+            @Path("end-date") String endDate
+    );
+
+    @GET("1.2/user/-/activities/tracker/minutesLightlyActive/date/{start-date}/{end-date}.json")
+    Single<MinutesLightlyActiveListFitBit> getLightlyActiveMinutes(
+            @Path("start-date") String startDate,
+            @Path("end-date") String endDate
+    );
+
+    @GET("1.2/user/-/activities/tracker/minutesFairlyActive/date/{start-date}/{end-date}.json")
+    Single<MinutesFairlyActiveListFitBit> getFairlyActiveMinutes(
+            @Path("start-date") String startDate,
+            @Path("end-date") String endDate
+    );
+
+    @GET("1.2/user/-/activities/tracker/minutesVeryActive/date/{start-date}/{end-date}.json")
+    Single<MinutesVeryActiveListFitBit> getVeryActiveMinutes(
+            @Path("start-date") String startDate,
+            @Path("end-date") String endDate
+    );
+
+    @GET("1.2/user/-/body/log/weight/date/{start-date}/{period}.json")
+    Single<WeightListFitBit> listWeights(
+            @Path("start-date") String startDate,
             @Path("period") String period
     );
 }

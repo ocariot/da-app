@@ -87,8 +87,6 @@ public class ActivityLevel implements Parcelable, Comparable<ActivityLevel> {
 
     @Override
     public int compareTo(@NonNull ActivityLevel o) {
-        if (this.duration < o.duration) return -1;
-        if (this.duration > o.duration) return 1;
-        return 0;
+        return Integer.compare(this.duration, o.duration);
     }
 }

@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
@@ -83,9 +84,6 @@ public class SleepPattern implements Parcelable {
     @NonNull
     @Override
     public String toString() {
-        return "SleepPattern{" +
-                "dataSet=" + (dataSet != null ? Arrays.toString(dataSet.toArray()) : "null") +
-                ", summary=" + summary +
-                '}';
+        return new Gson().toJson(this);
     }
 }

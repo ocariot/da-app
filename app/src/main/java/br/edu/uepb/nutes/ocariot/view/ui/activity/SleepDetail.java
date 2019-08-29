@@ -12,7 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -33,7 +33,8 @@ import java.util.Locale;
 import br.edu.uepb.nutes.ocariot.R;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.Sleep;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.SleepPatternDataSet;
-import br.edu.uepb.nutes.ocariot.data.model.ocariot.SleepPatternSummaryData;
+import br.edu.uepb.nutes.ocariot.data.model.ocariot.SleepPatternSummary;
+import br.edu.uepb.nutes.ocariot.data.model.ocariot.SleepType;
 import br.edu.uepb.nutes.ocariot.utils.DateUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -70,50 +71,59 @@ public class SleepDetail extends AppCompatActivity {
     @BindView(R.id.sleep_date_end_graph_tv)
     TextView mDateEndGraph;
 
-    @BindView(R.id.title_asleep)
-    TextView mTitleAsleepTextView;
-
-    @BindView(R.id.box_asleep_min)
-    FrameLayout mBoxAsleepMinute;
-
-    @BindView(R.id.box_asleep_hour_min)
-    FrameLayout mBoxAsleepHourMinute;
-
-    @BindView(R.id.asleep_duration_min_tv)
-    TextView mAsleepDurationMinTextView;
-
-    @BindView(R.id.asleep_duration_hour_tv)
-    TextView mAsleepDurationHourTextView;
-
-    @BindView(R.id.asleep_duration_min2_tv)
-    TextView mAsleepDurationMin2TextView;
-
-    @BindView(R.id.asleep_count_times_tv)
+    @BindView(R.id.asleep_count_times_classic_tv)
     TextView mAsleepCountTimesTextView;
 
-    @BindView(R.id.title_restless)
-    TextView mTitleRestlessTextView;
+    @BindView(R.id.asleep_duration_classic_tv)
+    TextView mAsleepDurationTextView;
 
-    @BindView(R.id.restless_count_times_tv)
+    @BindView(R.id.restless_count_times_classic_tv)
     TextView mRestlessCountTimesTextView;
 
-    @BindView(R.id.restless_duration_min_tv)
-    TextView mRestlessDurationMinTextView;
+    @BindView(R.id.restless_duration_classic_tv)
+    TextView mRestlessDurationTextView;
 
-    @BindView(R.id.title_awake)
-    TextView mTitleAwakeTextView;
+    @BindView(R.id.awake_count_times_classic_tv)
+    TextView mAwakeCountTimesClassicTextView;
 
-    @BindView(R.id.awake_count_times_tv)
-    TextView mAwakeCountTimesTextView;
+    @BindView(R.id.awake_duration_classic_tv)
+    TextView mAwakeDurationClassicTextView;
 
-    @BindView(R.id.awake_duration_min_tv)
-    TextView mAwakeDurationMinTextView;
+    @BindView(R.id.restless_awake_duration_classic_tv)
+    TextView mRestlessAwakeDurationTextView;
 
-    @BindView(R.id.restless_awake_duration_min_tv)
-    TextView mRestlessAwakeDurationMinTextView;
+    @BindView(R.id.awake_count_times_stages_tv)
+    TextView mAwakeCountTimesStagesTextView;
+
+    @BindView(R.id.awake_duration_stages_tv)
+    TextView mAwakeDurationStagesTextView;
+
+    @BindView(R.id.rem_count_times_stages_tv)
+    TextView mRemCountTimesTextView;
+
+    @BindView(R.id.rem_duration_stages_tv)
+    TextView mRemDurationTextView;
+
+    @BindView(R.id.light_count_times_stages_tv)
+    TextView mLightCountTimesTextView;
+
+    @BindView(R.id.light_duration_stages_tv)
+    TextView mLightDurationTextView;
+
+    @BindView(R.id.deep_count_times_stages_tv)
+    TextView mDeepCountTimesTextView;
+
+    @BindView(R.id.deep_duration_stages_tv)
+    TextView mDeepDurationTextView;
 
     @BindView(R.id.sleep_chart)
     LineChart mSleepChart;
+
+    @BindView(R.id.box_type_classic)
+    RelativeLayout boxClassic;
+
+    @BindView(R.id.box_type_stages)
+    RelativeLayout boxStages;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -158,22 +168,20 @@ public class SleepDetail extends AppCompatActivity {
     }
 
     private void populateView() {
-        String dateStart = DateUtils.convertDateTimeUTCToLocale(sleep.getStartTime(),
-                getString(R.string.hour_format1), null);
-        String dateEnd = DateUtils.convertDateTimeUTCToLocale(sleep.getEndTime(),
-                getString(R.string.hour_format1), null);
+        String dateStart = DateUtils.convertDateTimeUTCToLocale(sleep.getStartTime(), getString(R.string.hour_format1));
+        String dateEnd = DateUtils.convertDateTimeUTCToLocale(sleep.getEndTime(), getString(R.string.hour_format1));
         mPeriodTextView.setText(String.format(Locale.getDefault(), "%s - %s",
                 dateStart, dateEnd));
 
-        int efficiency = 0;
-        int divider = sleep.getPattern().getSummary().getAsleep().getDuration() +
-                sleep.getPattern().getSummary().getAwake().getDuration() +
-                sleep.getPattern().getSummary().getRestless().getDuration();
-        if (divider > 0) {
-            efficiency = Math.round(
-                    (sleep.getPattern().getSummary().getAsleep().getDuration() / (float) divider) * 100
-            );
+        int dividend = 0;
+        if (sleep.getType().equalsIgnoreCase(SleepType.CLASSIC)) {
+            dividend = sleep.getPattern().getSummary().getAsleep().getDuration();
+        } else if (sleep.getType().equalsIgnoreCase(SleepType.STAGES)) {
+            dividend = (sleep.getPattern().getSummary().getDeep().getDuration()) +
+                    (sleep.getPattern().getSummary().getLight().getDuration()) +
+                    (sleep.getPattern().getSummary().getRem().getDuration());
         }
+        int efficiency = Math.round((dividend / (float) sleep.getDuration()) * 100);
         if (efficiency >= 90) {
             mEfficiencyTextView.setTextColor(ContextCompat.getColor(this, R.color.colorAccent));
         } else if (efficiency > 80) {
@@ -189,48 +197,69 @@ public class SleepDetail extends AppCompatActivity {
         mDateStartGraph.setText(dateStart);
         mDateEndGraph.setText(dateEnd);
 
-        // asleep
-        int asleepHour = 0;
-        int asleepMinute = 0;
-        SleepPatternSummaryData asleep = sleep.getPattern().getSummary().getAsleep();
-        if (asleep.getDuration() > 0) {
-            asleepHour = asleep.getDuration() / 60;
-            asleepMinute = asleep.getDuration() % 60;
-        }
-
-        if (asleepHour > 0) {
-            mBoxAsleepHourMinute.setVisibility(View.VISIBLE);
-            mBoxAsleepMinute.setVisibility(View.GONE);
-
-            mAsleepDurationHourTextView.setText(String.format(Locale.getDefault(), "%02d", asleepHour));
-            mAsleepDurationMin2TextView.setText(String.format(Locale.getDefault(), "%02d", asleepMinute));
+        if (sleep.getType().equalsIgnoreCase(SleepType.CLASSIC)) {
+            boxStages.setVisibility(View.GONE);
+            boxClassic.setVisibility(View.VISIBLE);
+            populatePatternClassic(sleep.getPattern().getSummary());
+        } else if (sleep.getType().equalsIgnoreCase(SleepType.STAGES)) {
+            boxClassic.setVisibility(View.GONE);
+            boxStages.setVisibility(View.VISIBLE);
+            populatePatternStages(sleep.getPattern().getSummary());
         } else {
-            mBoxAsleepMinute.setVisibility(View.VISIBLE);
-            mBoxAsleepHourMinute.setVisibility(View.GONE);
-            mAsleepDurationMinTextView.setText(String.format(Locale.getDefault(), "%02d", asleepMinute));
+            boxClassic.setVisibility(View.GONE);
+            boxStages.setVisibility(View.GONE);
         }
-        mTitleAsleepTextView.setText(getString(R.string.title_asleep));
-        mAsleepCountTimesTextView.setText(getString(R.string.times_count, asleep.getCount()));
-
-        // restless
-        SleepPatternSummaryData restless = sleep.getPattern().getSummary().getRestless();
-        mTitleRestlessTextView.setText(getString(R.string.title_restless));
-        mRestlessCountTimesTextView.setText(getString(R.string.times_count, restless.getCount()));
-        mRestlessDurationMinTextView.setText(String.format(Locale.getDefault(), "%02d",
-                restless.getDuration() > 0 ? restless.getDuration() % 60 : 0));
-
-        // awake
-        SleepPatternSummaryData awake = sleep.getPattern().getSummary().getAwake();
-        mTitleAwakeTextView.setText(getString(R.string.title_awake));
-        mAwakeCountTimesTextView.setText(getString(R.string.times_count, awake.getCount()));
-        mAwakeDurationMinTextView.setText(String.format(Locale.getDefault(), "%02d",
-                awake.getDuration() > 0 ? awake.getDuration() % 60 : 0));
-
-        // restless+awake
-        mRestlessAwakeDurationMinTextView.setText(String.format(Locale.getDefault(), "%02d",
-                restless.getDuration() + awake.getDuration()));
 
         printChart();
+    }
+
+    private String mountDuration(long duration) {
+        int hours = (int) Math.floor(duration / 3600000);
+        int minutes = (int) Math.floor((duration - hours * 3600000) / 60000);
+
+        if (hours > 0 || minutes > 0) {
+            return (hours > 0 ? String.format(Locale.getDefault(), "%02dh ", hours) : "")
+                    .concat((minutes > 0 ? String.format(Locale.getDefault(), "%02dmin", minutes) : ""));
+        }
+        return "";
+    }
+
+    private void populatePatternClassic(SleepPatternSummary summary) {
+        Log.w(LOG_TAG, "populatePatternClassic - " + summary.toString());
+
+        // asleep
+        mAsleepCountTimesTextView.setText(getString(R.string.times_count, summary.getAsleep().getCount()));
+        mAsleepDurationTextView.setText(mountDuration(summary.getAsleep().getDuration()));
+
+        // restless
+        mRestlessCountTimesTextView.setText(getString(R.string.times_count, summary.getRestless().getCount()));
+        mRestlessDurationTextView.setText(mountDuration(summary.getRestless().getDuration()));
+
+        // awake
+        mAwakeCountTimesClassicTextView.setText(getString(R.string.times_count, summary.getAwake().getCount()));
+        mAwakeDurationClassicTextView.setText(mountDuration(summary.getAwake().getDuration()));
+
+        // restless+awake
+        mRestlessAwakeDurationTextView.setText(mountDuration(summary.getRestless().getDuration()));
+    }
+
+    private void populatePatternStages(SleepPatternSummary summary) {
+        Log.w(LOG_TAG, "populatePatternStages - " + summary.toString());
+        // awake
+        mAwakeCountTimesStagesTextView.setText(getString(R.string.times_count, summary.getAwake().getCount()));
+        mAwakeDurationStagesTextView.setText(mountDuration(summary.getAwake().getDuration()));
+
+        // REM
+        mRemCountTimesTextView.setText(getString(R.string.times_count, summary.getRem().getCount()));
+        mRemDurationTextView.setText(mountDuration(summary.getRem().getDuration()));
+
+        // light
+        mLightCountTimesTextView.setText(getString(R.string.times_count, summary.getLight().getCount()));
+        mLightDurationTextView.setText(mountDuration(summary.getLight().getDuration()));
+
+        // deep
+        mDeepCountTimesTextView.setText(getString(R.string.times_count, summary.getDeep().getCount()));
+        mDeepDurationTextView.setText(mountDuration(summary.getDeep().getDuration()));
     }
 
     private void printChart() {
@@ -244,15 +273,24 @@ public class SleepDetail extends AppCompatActivity {
             int total = (int) item.getDuration() / 60000;
             for (int j = 0; j < total; j++) {
                 aux++;
-                if (item.getName().equalsIgnoreCase("restless")) {
-                    entries.add(new Entry(aux, 3, item));
-                    colors.add(ContextCompat.getColor(this, R.color.colorPrimary));
+                if (item.getName().equalsIgnoreCase("awake")) {
+                    entries.add(new Entry(aux, 1, item));
+                    colors.add(ContextCompat.getColor(this, R.color.colorWarning));
                 } else if (item.getName().equalsIgnoreCase("asleep")) {
                     entries.add(new Entry(aux, 2, item));
                     colors.add(ContextCompat.getColor(this, R.color.colorPrimaryDark));
-                } else {
-                    entries.add(new Entry(aux, 1, item));
-                    colors.add(ContextCompat.getColor(this, R.color.colorWarning));
+                } else if (item.getName().equalsIgnoreCase("restless")) {
+                    entries.add(new Entry(aux, 3, item));
+                    colors.add(ContextCompat.getColor(this, R.color.colorPrimary));
+                } else if (item.getName().equalsIgnoreCase("rem")) {
+                    entries.add(new Entry(aux, 2, item));
+                    colors.add(ContextCompat.getColor(this, R.color.colorPrimaryDark));
+                } else if (item.getName().equalsIgnoreCase("light")) {
+                    entries.add(new Entry(aux, 3, item));
+                    colors.add(ContextCompat.getColor(this, R.color.colorPrimary));
+                } else if (item.getName().equalsIgnoreCase("deep")) {
+                    entries.add(new Entry(aux, 4, item));
+                    colors.add(ContextCompat.getColor(this, R.color.colorPurple));
                 }
             }
         }
@@ -277,10 +315,6 @@ public class SleepDetail extends AppCompatActivity {
         mSleepChart.getXAxis().setEnabled(false);
         mSleepChart.getXAxis().setDrawGridLines(false);
         mSleepChart.getXAxis().setDrawAxisLine(false);
-
-
-        Log.w("RESULT", "TOTAL - " + entries.size());
-
 
         LineDataSet dataSet = new LineDataSet(entries, "");
         dataSet.setDrawCircles(false);
@@ -320,13 +354,16 @@ public class SleepDetail extends AppCompatActivity {
         public String getFormattedValue(float value, AxisBase axis) {
             String result = "";
             if (value == 1f) {
-                result = "Awake";
+                result = getString(R.string.title_awake);
             } else if (value == 2f) {
-                result = "Asleep";
+                result = sleep.getType().equalsIgnoreCase(SleepType.STAGES) ?
+                        getString(R.string.title_rem) : getString(R.string.title_asleep);
             } else if (value == 3f) {
-                result = "Restless";
+                result = sleep.getType().equalsIgnoreCase(SleepType.STAGES) ?
+                        getString(R.string.title_light) : getString(R.string.title_restless);
+            } else if (value == 4f) {
+                result = getString(R.string.title_deep);
             }
-
             return result;
         }
     }
@@ -355,15 +392,21 @@ public class SleepDetail extends AppCompatActivity {
                     title = getString(R.string.title_asleep);
                 } else if (pattern.getName().equalsIgnoreCase("awake")) {
                     title = getString(R.string.title_awake);
+                } else if (pattern.getName().equalsIgnoreCase("rem")) {
+                    title = getString(R.string.title_rem);
+                } else if (pattern.getName().equalsIgnoreCase("light")) {
+                    title = getString(R.string.title_light);
+                } else if (pattern.getName().equalsIgnoreCase("deep")) {
+                    title = getString(R.string.title_deep);
                 }
 
                 mTitle.setText(title.concat(String.format(Locale.getDefault(), " %d min",
                         pattern.getDuration() / 60000)));
 
                 mSubtitle.setText(DateUtils
-                        .formatDateHour(pattern.getStartTime(), getString(R.string.hour_format1))
+                        .convertDateTimeUTCToLocale(pattern.getStartTime(), getString(R.string.hour_format1))
                         .concat(" - ")
-                        .concat(DateUtils.formatDateHour(DateUtils.addMinutesToString(
+                        .concat(DateUtils.convertDateTimeUTCToLocale(DateUtils.addMinutesToString(
                                 pattern.getStartTime(), (int) pattern.getDuration() / 60000),
                                 getString(R.string.hour_format1))
                         )

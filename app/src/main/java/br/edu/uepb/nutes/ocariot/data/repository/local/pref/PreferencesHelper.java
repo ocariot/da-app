@@ -29,7 +29,7 @@ public interface PreferencesHelper {
 
     AuthState getAuthStateFitBit();
 
-    Child getUserProfile();
+    Child getChildProfile();
 
     boolean removeUserAccessOcariot();
 
@@ -40,4 +40,6 @@ public interface PreferencesHelper {
     String getString(String key);
 
     boolean getBoolean(String key);
+
+    boolean removeSession();
 }

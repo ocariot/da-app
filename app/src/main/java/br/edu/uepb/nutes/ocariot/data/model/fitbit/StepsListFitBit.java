@@ -7,14 +7,14 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class StepsLogListFitBit {
-    @SerializedName("activities-steps")
+public class StepsListFitBit {
+    @SerializedName("activities-tracker-steps")
     private List<LogDataFitBit> steps;
 
-    public StepsLogListFitBit() {
+    public StepsListFitBit() {
     }
 
-    public StepsLogListFitBit(List<LogDataFitBit> steps) {
+    public StepsListFitBit(List<LogDataFitBit> steps) {
         this.steps = steps;
     }
 

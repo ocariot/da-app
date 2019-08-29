@@ -2,6 +2,10 @@ package br.edu.uepb.nutes.ocariot.data.model.ocariot;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
+
+import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.Objects;
 
@@ -11,8 +15,13 @@ import java.util.Objects;
  * @author Copyright (c) 2018, NUTES/UEPB
  */
 public class Measurement implements Parcelable {
+    @SerializedName("value")
     private double value;
+
+    @SerializedName("unit")
     private String unit;
+
+    @SerializedName("type")
     private String type;
 
     public Measurement() {
@@ -93,13 +102,10 @@ public class Measurement implements Parcelable {
                 Objects.equals(type, that.type);
     }
 
+    @NonNull
     @Override
     public String toString() {
-        return "Measurement{" +
-                "value=" + value +
-                ", unit='" + unit + '\'' +
-                ", type='" + type + '\'' +
-                '}';
+        return new Gson().toJson(this);
     }
 }
 

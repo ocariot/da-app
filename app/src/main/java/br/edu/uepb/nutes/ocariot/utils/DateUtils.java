@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Provides useful methods for handling date/time.
@@ -37,13 +38,24 @@ public final class DateUtils {
     public static Date convertDateTime(String datetime) {
         if (datetime == null) return null;
 
-        DateFormat formatUTC = new SimpleDateFormat(DateUtils.DATE_FORMAT_DATE_TIME, Locale.getDefault());
         try {
+            DateFormat formatUTC = new SimpleDateFormat(DateUtils.DATE_FORMAT_DATE_TIME, Locale.getDefault());
             return formatUTC.parse(datetime);
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        return null;
+    }
 
+    public static Date convertDate(String date) {
+        if (date == null) return null;
+
+        try {
+            DateFormat formatUTC = new SimpleDateFormat("YY-MM-dd", Locale.getDefault());
+            return formatUTC.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
@@ -174,6 +186,14 @@ public final class DateUtils {
         return getFormatDataTime(date, formatDate, true, false);
     }
 
+    public static long getTotalHours(long milliseconds) {
+        return TimeUnit.MILLISECONDS.toHours(milliseconds);
+    }
+
+    public static long getTotalMinutes(long milliseconds) {
+        return TimeUnit.MILLISECONDS.toMinutes(milliseconds);
+    }
+
     /**
      * Convert string date in string format.
      *
@@ -271,7 +291,18 @@ public final class DateUtils {
      *
      * @return String
      */
-    public static String getCurrentDateUTC() {
+    public static String getCurrentDate() {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        format.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return format.format(new Date());
+    }
+
+    /**
+     * Retrieve the current date according to timezone UTC.
+     *
+     * @return String
+     */
+    public static String getCurrentDatetimeUTC() {
         SimpleDateFormat format = new SimpleDateFormat(DateUtils.DATE_FORMAT_DATE_TIME, Locale.getDefault());
         format.setTimeZone(TimeZone.getTimeZone("UTC"));
         return format.format(new Date());
@@ -318,8 +349,8 @@ public final class DateUtils {
             DateFormat df = new SimpleDateFormat(format, Locale.getDefault());
             calendar.setTime(df.parse(date));
         } catch (ParseException e) {
+            e.printStackTrace();
         }
-
         return calendar;
     }
 
@@ -352,6 +383,20 @@ public final class DateUtils {
     }
 
     /**
+     * Add month in date.
+     *
+     * @param date   Date.
+     * @param months Month.
+     * @return String
+     */
+    public static String addMonths(String date, int months) {
+        Calendar calendar = convertStringDateToCalendar(date, null);
+        calendar.add(Calendar.MONTH, months);
+
+        return formatDate(calendar.getTimeInMillis(), "yyyy-MM-dd");
+    }
+
+    /**
      * returns the current year in milliseconds.
      * Example YEAR-01-01 00:00:00
      *
@@ -377,8 +422,7 @@ public final class DateUtils {
      * @return boolean
      */
     public static boolean isDateValid(String date, @Nullable String format) {
-        if (format == null || format.length() == 0)
-            format = "yyyy-MM-dd";
+        if (format == null || format.length() == 0) format = "yyyy-MM-dd";
 
         try {
             DateFormat df = new SimpleDateFormat(format, Locale.getDefault());

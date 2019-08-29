@@ -2,18 +2,19 @@ package br.edu.uepb.nutes.ocariot.data.model.fitbit;
 
 import android.support.annotation.NonNull;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class MinutesFairlyActiveLogListFitBit {
-    @SerializedName("activities-minutesFairlyActive")
+public class MinutesFairlyActiveListFitBit {
+    @SerializedName("activities-tracker-minutesFairlyActive")
     private List<LogDataFitBit> minutesFairlyActive;
 
-    public MinutesFairlyActiveLogListFitBit() {
+    public MinutesFairlyActiveListFitBit() {
     }
 
-    public MinutesFairlyActiveLogListFitBit(List<LogDataFitBit> minutesFairlyActive) {
+    public MinutesFairlyActiveListFitBit(List<LogDataFitBit> minutesFairlyActive) {
         this.minutesFairlyActive = minutesFairlyActive;
     }
 
@@ -28,8 +29,6 @@ public class MinutesFairlyActiveLogListFitBit {
     @NonNull
     @Override
     public String toString() {
-        return "MinutesFairlyActiveLogListFitBit{" +
-                "minutesFairlyActive=" + minutesFairlyActive +
-                '}';
+        return new Gson().toJson(this);
     }
 }

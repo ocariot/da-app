@@ -2,7 +2,9 @@ package br.edu.uepb.nutes.ocariot.data.model.ocariot;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Objects;
@@ -15,10 +17,20 @@ import java.util.Objects;
 public class Institution implements Parcelable {
     @SerializedName("id")
     private String _id; // _id in server remote (UUID)
-    private String name;
+
+    @SerializedName("type")
     private String type;
+
+    @SerializedName("name")
+    private String name;
+
+    @SerializedName("address")
     private String address;
+
+    @SerializedName("latitude")
     private double latitude;
+
+    @SerializedName("longitude")
     private double longitude;
 
     public Institution() {
@@ -126,15 +138,9 @@ public class Institution implements Parcelable {
         return Objects.equals(name, that.name);
     }
 
+    @NonNull
     @Override
     public String toString() {
-        return "Institution{" +
-                "_id='" + _id + '\'' +
-                ", name='" + name + '\'' +
-                ", type='" + type + '\'' +
-                ", address='" + address + '\'' +
-                ", latitude=" + latitude +
-                ", longitude=" + longitude +
-                '}';
+        return new Gson().toJson(this);
     }
 }

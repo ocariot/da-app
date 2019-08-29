@@ -44,8 +44,8 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 
     // JavaRx
-    implementation 'io.reactivex.rxjava2:rxjava:2.2.4'
-    implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.7'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
 
     // Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.5.0'
@@ -54,13 +54,21 @@ dependencies {
 
     //  Encode/Decode
     implementation 'com.auth0.android:jwtdecode:1.2.0'
-    implementation 'com.scottyab:secure-preferences-lib:0.1.4'
+    implementation 'com.scottyab:secure-preferences-lib:0.1.7'
 
     // OAuth2 Client
     implementation 'net.openid:appauth:0.7.1'
 
-//    // Alert
-//    implementation 'com.tapadoo.android:alerter:4.0.0'
+    // Alert
+    implementation 'com.tapadoo.android:alerter:2.0.6'
+
+    // RecyclerView animation
+    implementation 'com.ethanhua:skeleton:1.1.2'
+    implementation 'io.supercharge:shimmerlayout:2.1.0'
+    implementation 'com.facebook.shimmer:shimmer:0.5.0'
+
+    // Eventbus
+    implementation 'org.greenrobot:eventbus:3.1.1'
 
     // Graphs
     implementation 'com.github.jakob-grabner:Circle-Progress-View:1.4'

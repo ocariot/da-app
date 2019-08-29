@@ -11,9 +11,18 @@
 
     <color name="colorDanger">#a94442</color>
     <color name="colorDangerLight">#f2dede</color>
+    <color name="colorPurple">#7c608f</color>
 
     <color name="colorBlackLight">#757575</color>
 
     <color name="colorLineDivider">#e2e2e2</color>
     <color name="colorBackgroundNavigation">#f0f0f0</color>
+
+    <color name="colorFontGreyDark">#333333</color>
+    <color name="colorFontGreyLight">#666666</color>
+    <color name="colorLine">#dfdfdf</color>
+    <color name="colorFontGreen">#388e3c</color>
+    <color name="colorFontRed">#F96650</color>
+
+    <color name="shimmer_color_for_image">#55efefef</color>
 </resources>

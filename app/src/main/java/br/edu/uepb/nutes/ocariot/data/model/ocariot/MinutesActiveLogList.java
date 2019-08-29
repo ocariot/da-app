@@ -2,6 +2,7 @@ package br.edu.uepb.nutes.ocariot.data.model.ocariot;
 
 import android.support.annotation.NonNull;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -28,8 +29,6 @@ public class MinutesActiveLogList {
     @NonNull
     @Override
     public String toString() {
-        return "MinutesActiveLogList{" +
-                "minutesActive=" + minutesActive +
-                '}';
+        return new Gson().toJson(this);
     }
 }

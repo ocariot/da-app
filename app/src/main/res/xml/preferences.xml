@@ -7,6 +7,11 @@
             android:key="@string/key_fitibit"
             android:summary="@string/settings_summary_fitbit"
             android:title="@string/settings_fitbit" />
+
+        <PreferenceScreen
+            android:key="@string/key_sync_data"
+            android:summary="@string/synchronization_data"
+            android:title="@string/synchronization" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/settings_account">

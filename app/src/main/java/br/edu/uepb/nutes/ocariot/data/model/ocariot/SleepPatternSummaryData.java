@@ -2,7 +2,9 @@ package br.edu.uepb.nutes.ocariot.data.model.ocariot;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -59,14 +61,6 @@ public class SleepPatternSummaryData implements Parcelable {
     }
 
     @Override
-    public String toString() {
-        return "SleepLevelSummaryDataFitBit{" +
-                "count=" + count +
-                ", duration=" + duration +
-                '}';
-    }
-
-    @Override
     public int describeContents() {
         return 0;
     }
@@ -75,6 +69,12 @@ public class SleepPatternSummaryData implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(count);
         dest.writeInt(duration);
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return new Gson().toJson(this);
     }
 }
 

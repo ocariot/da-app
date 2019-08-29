@@ -2,6 +2,7 @@ package br.edu.uepb.nutes.ocariot.data.model.fitbit;
 
 import android.support.annotation.NonNull;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -22,21 +23,21 @@ public class SleepLevelSummaryFitBit {
     @SerializedName("restless")
     private SleepLevelSummaryDataFitBit restless;
 
-    // Classic Sleep Record (No Heart Rate)
-    @SerializedName("wake")
-    private SleepLevelSummaryDataFitBit wake;
-
     // Sleep Record with Stages (With Heart Rate)
-    @SerializedName("rem")
-    private SleepLevelSummaryDataFitBit rem;
+    @SerializedName("deep")
+    private SleepLevelSummaryDataFitBit deep;
 
     // Sleep Record with Stages (With Heart Rate)
     @SerializedName("light")
     private SleepLevelSummaryDataFitBit light;
 
     // Sleep Record with Stages (With Heart Rate)
-    @SerializedName("deep")
-    private SleepLevelSummaryDataFitBit deep;
+    @SerializedName("rem")
+    private SleepLevelSummaryDataFitBit rem;
+
+    // Classic Sleep Record (No Heart Rate)
+    @SerializedName("wake")
+    private SleepLevelSummaryDataFitBit wake;
 
     public SleepLevelSummaryFitBit() {
     }
@@ -118,15 +119,7 @@ public class SleepLevelSummaryFitBit {
     @NonNull
     @Override
     public String toString() {
-        return "SleepLevelSummaryFitBit{" +
-                "awake=" + awake +
-                ", asleep=" + asleep +
-                ", restless=" + restless +
-                ", wake=" + wake +
-                ", rem=" + rem +
-                ", light=" + light +
-                ", deep=" + deep +
-                '}';
+        return new Gson().toJson(this);
     }
 }
 

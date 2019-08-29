@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -30,11 +29,14 @@ public class PhysicalActivityDetail extends AppCompatActivity {
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
 
-    @BindView(R.id.activity_period_tv)
+    @BindView(R.id.activity_date_tv)
     TextView dateStartTextView;
 
-    @BindView(R.id.activity_datetime_start_details_tv)
-    TextView datetimeStartTextView;
+    @BindView(R.id.activity_date_start_details_tv)
+    TextView dateStartDetailsTextView;
+
+    @BindView(R.id.activity_range_duration_details_tv)
+    TextView rangeDurationTextView;
 
     @BindView(R.id.activity_duration_tv)
     TextView durationTextView;
@@ -60,8 +62,14 @@ public class PhysicalActivityDetail extends AppCompatActivity {
     @BindView(R.id.activity_title_level_very_tv)
     TextView veryTextView;
 
+    @BindView(R.id.hr_avg_tv)
+    TextView avgHeartRate;
+
     @BindView(R.id.activity_box_levels)
     RelativeLayout boxLevels;
+
+    @BindView(R.id.box_hr)
+    RelativeLayout boxHRZones;
 
     private PhysicalActivity physicalActivity;
 
@@ -78,19 +86,6 @@ public class PhysicalActivityDetail extends AppCompatActivity {
         initComponents();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                super.onBackPressed();
-                break;
-            default:
-                break;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     private void initComponents() {
         if (physicalActivity == null) return;
 
@@ -101,16 +96,23 @@ public class PhysicalActivityDetail extends AppCompatActivity {
     private void populateView(PhysicalActivity a) {
         dateStartTextView.setText(DateUtils.convertDateTimeUTCToLocale(a.getStartTime(),
                 getResources().getString(R.string.date_format1), null));
-        datetimeStartTextView.setText(DateUtils.convertDateTimeUTCToLocale(a.getStartTime(),
+        dateStartDetailsTextView.setText(DateUtils.convertDateTimeUTCToLocale(a.getStartTime(),
                 getResources().getString(R.string.date_time_abb3), null));
+
+        rangeDurationTextView.setText(getResources().getString(
+                R.string.activity_range_time,
+                DateUtils.convertDateTimeUTCToLocale(a.getStartTime(), getString(R.string.hour_format2)),
+                DateUtils.convertDateTimeUTCToLocale(a.getEndTime(), getString(R.string.hour_format2))
+        ));
 
         int duration = (int) (a.getDuration() / (60 * 1000));
         durationTextView.setText(getResources().getString(R.string.duration_min, duration));
         stepsTextView.setText(String.valueOf(a.getSteps()));
         caloriesTextView.setText(String.valueOf(a.getCalories()));
 
-        if (duration > 0)
+        if (duration > 0) {
             caloriesMinuteTextView.setText(String.valueOf(a.getCalories() / duration));
+        }
 
         if (a.getLevels() != null && !a.getLevels().isEmpty()) {
             sedentaryTextView.setVisibility(View.VISIBLE);
@@ -134,6 +136,12 @@ public class PhysicalActivityDetail extends AppCompatActivity {
             }
         } else {
             boxLevels.setVisibility(View.GONE);
+        }
+
+        if (a.getHeartRate() != null && a.getHeartRate().getAverage() > 0) {
+            avgHeartRate.setText(String.valueOf(a.getHeartRate().getAverage()));
+        } else {
+            boxHRZones.setVisibility(View.GONE);
         }
     }
 

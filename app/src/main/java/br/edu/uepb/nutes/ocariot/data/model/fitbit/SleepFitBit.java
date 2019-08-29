@@ -2,6 +2,7 @@ package br.edu.uepb.nutes.ocariot.data.model.fitbit;
 
 import android.support.annotation.NonNull;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -161,20 +162,6 @@ public class SleepFitBit {
     @NonNull
     @Override
     public String toString() {
-        return "SleepFitBit{" +
-                "levels=" + levels +
-                ", dateOfSleep='" + dateOfSleep + '\'' +
-                ", duration=" + duration +
-                ", efficiency=" + efficiency +
-                ", logId=" + logId +
-                ", minutesAfterWakeup=" + minutesAfterWakeup +
-                ", minutesAsleep=" + minutesAsleep +
-                ", minutesAwake=" + minutesAwake +
-                ", minutesToFallAsleep=" + minutesToFallAsleep +
-                ", timeInBed=" + timeInBed +
-                ", startTime='" + startTime + '\'' +
-                ", endTime='" + endTime + '\'' +
-                ", type='" + type + '\'' +
-                '}';
+        return new Gson().toJson(this);
     }
 }

@@ -2,7 +2,9 @@ package br.edu.uepb.nutes.ocariot.data.model.ocariot;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -20,6 +22,15 @@ public class SleepPatternSummary implements Parcelable {
     @SerializedName("restless")
     private SleepPatternSummaryData restless;
 
+    @SerializedName("deep")
+    private SleepPatternSummaryData deep;
+
+    @SerializedName("light")
+    private SleepPatternSummaryData light;
+
+    @SerializedName("rem")
+    private SleepPatternSummaryData rem;
+
     public SleepPatternSummary() {
     }
 
@@ -30,10 +41,21 @@ public class SleepPatternSummary implements Parcelable {
         this.restless = restless;
     }
 
+    public SleepPatternSummary(SleepPatternSummaryData awake, SleepPatternSummaryData deep,
+                               SleepPatternSummaryData light, SleepPatternSummaryData rem) {
+        this.awake = awake;
+        this.deep = deep;
+        this.light = light;
+        this.rem = rem;
+    }
+
     protected SleepPatternSummary(Parcel in) {
         awake = in.readParcelable(SleepPatternSummaryData.class.getClassLoader());
         asleep = in.readParcelable(SleepPatternSummaryData.class.getClassLoader());
         restless = in.readParcelable(SleepPatternSummaryData.class.getClassLoader());
+        deep = in.readParcelable(SleepPatternSummaryData.class.getClassLoader());
+        light = in.readParcelable(SleepPatternSummaryData.class.getClassLoader());
+        rem = in.readParcelable(SleepPatternSummaryData.class.getClassLoader());
     }
 
     public static final Creator<SleepPatternSummary> CREATOR = new Creator<SleepPatternSummary>() {
@@ -72,6 +94,31 @@ public class SleepPatternSummary implements Parcelable {
         this.restless = restless;
     }
 
+    public SleepPatternSummaryData getDeep() {
+        return deep;
+    }
+
+    public void setDeep(SleepPatternSummaryData deep) {
+        this.deep = deep;
+    }
+
+    public SleepPatternSummaryData getLight() {
+        return light;
+    }
+
+    public void setLight(SleepPatternSummaryData light) {
+        this.light = light;
+    }
+
+    public SleepPatternSummaryData getRem() {
+        return rem;
+    }
+
+    public void setRem(SleepPatternSummaryData rem) {
+        this.rem = rem;
+    }
+
+
     @Override
     public int describeContents() {
         return 0;
@@ -82,15 +129,15 @@ public class SleepPatternSummary implements Parcelable {
         dest.writeParcelable(awake, flags);
         dest.writeParcelable(asleep, flags);
         dest.writeParcelable(restless, flags);
+        dest.writeParcelable(deep, flags);
+        dest.writeParcelable(light, flags);
+        dest.writeParcelable(rem, flags);
     }
 
+    @NonNull
     @Override
     public String toString() {
-        return "SleepLevelSummaryFitBit{" +
-                "awake=" + awake +
-                ", asleep=" + asleep +
-                ", restless=" + restless +
-                '}';
+        return new Gson().toJson(this);
     }
 }
 

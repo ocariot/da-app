@@ -2,6 +2,10 @@ package br.edu.uepb.nutes.ocariot.data.model.ocariot;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
+
+import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.Objects;
 
@@ -11,9 +15,16 @@ import java.util.Objects;
  * @author Copyright (c) 2018, NUTES/UEPB
  */
 public class Location implements Parcelable, Comparable<Location> {
+    @SerializedName("local")
     private String local;
+
+    @SerializedName("room")
     private String room;
+
+    @SerializedName("latitude")
     private double latitude;
+
+    @SerializedName("longitude")
     private double longitude;
 
     public Location() {
@@ -107,16 +118,6 @@ public class Location implements Parcelable, Comparable<Location> {
     }
 
     @Override
-    public String toString() {
-        return "Location{" +
-                "local='" + local + '\'' +
-                ", room='" + room + '\'' +
-                ", latitude=" + latitude +
-                ", longitude=" + longitude +
-                '}';
-    }
-
-    @Override
     public int compareTo(Location o) {
         int value = this.room.compareTo(o.room);
         if (value < 0) {
@@ -128,5 +129,11 @@ public class Location implements Parcelable, Comparable<Location> {
         }
 
         return 0;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return new Gson().toJson(this);
     }
 }
