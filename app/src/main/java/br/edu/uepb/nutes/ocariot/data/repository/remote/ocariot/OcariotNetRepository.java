@@ -12,6 +12,7 @@ import java.util.Objects;
 
 import br.edu.uepb.nutes.ocariot.data.model.common.UserAccess;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.Child;
+import br.edu.uepb.nutes.ocariot.data.model.ocariot.ChildrenGroup;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.Educator;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.Environment;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.Family;
@@ -138,14 +139,32 @@ public class OcariotNetRepository extends BaseNetRepository {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
+    public Single<List<Child>> getFamilyChildrenById(String familyId) {
+        return ocariotService.getFamilyChildrenById(familyId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
     public Single<Educator> getEducatorById(String educatorId) {
         return ocariotService.getEducatorById(educatorId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
+    public Single<List<ChildrenGroup>> getEducatorGroupsById(String educatorId) {
+        return ocariotService.getEducatorGroupsById(educatorId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
     public Single<HealthProfessional> getHealthProfessionalById(String healthprofessionalId) {
         return ocariotService.getHealthProfessionalById(healthprofessionalId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Single<List<ChildrenGroup>> getHealthProfessionalGroupsById(String healthprofessionalId) {
+        return ocariotService.getHealthProfessionalGroupsById(healthprofessionalId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }

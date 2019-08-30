@@ -4,6 +4,7 @@ import java.util.List;
 
 import br.edu.uepb.nutes.ocariot.data.model.common.UserAccess;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.Child;
+import br.edu.uepb.nutes.ocariot.data.model.ocariot.ChildrenGroup;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.Educator;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.Environment;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.Family;
@@ -33,7 +34,7 @@ import retrofit2.http.Query;
 public interface OcariotService {
     // String BASE_URL_OCARIOT = "https://ocariot.nutes.uepb.edu.br"; // API GATEWAY
 //    String BASE_URL_OCARIOT = "https://172.17.0.1"; // API GATEWAY
-    String BASE_URL_OCARIOT = "https://192.168.0.118"; // API GATEWAY
+    String BASE_URL_OCARIOT = "https://192.168.0.105"; // API GATEWAY
 
     // Child
     @POST("/v1/auth")
@@ -45,11 +46,20 @@ public interface OcariotService {
     @GET("/v1/families/{family_id}")
     Single<Family> getFamilyById(@Path("family_id") String familyId);
 
+    @GET("/v1/families/{family_id}/children")
+    Single<List<Child>> getFamilyChildrenById(@Path("family_id") String familyId);
+
     @GET("/v1/educators/{educator_id}")
     Single<Educator> getEducatorById(@Path("educator_id") String educatorId);
 
+    @GET("/v1/educators/{educator_id}/children/groups")
+    Single<List<ChildrenGroup>> getEducatorGroupsById(@Path("educator_id") String educatorId);
+
     @GET("/v1/healthprofessionals/{healthprofessional_id}")
     Single<HealthProfessional> getHealthProfessionalById(@Path("healthprofessional_id") String educatorId);
+
+    @GET("/v1/healthprofessionals/{healthprofessional_id}/children/groups")
+    Single<List<ChildrenGroup>> getHealthProfessionalGroupsById(@Path("healthprofessional_id") String educatorId);
 
     @PATCH("/v1/children/{child_id}")
     Single<Child> updateChild(@Path("child_id") String childId, @Body Child child);

@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.util.Objects;
 
 public class User {
     @SerializedName("id")
@@ -77,6 +78,18 @@ public class User {
         public static String HEALTH_PROFESSIONAL = "healthprofessional";
         public static String FAMILY = "family";
         public static String APPLICATION = "application"; // Must not login to APP!!!
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if(!(o instanceof User)) return false;
+        User user = (User) o;
+        return username.equals(user.username);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(username);
     }
 
     /**

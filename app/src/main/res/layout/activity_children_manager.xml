@@ -12,21 +12,30 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-        <TextView
-            android:id="@+id/no_data_textView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:gravity="center_horizontal"
-            android:text="@string/message_no_data_display"
-            android:visibility="visible" />
+    <TextView
+        android:id="@+id/no_data_textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center_horizontal"
+        android:text="@string/message_no_data_display"
+        android:visibility="gone" />
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/children_list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scrollbarSize="3sp"
-                android:scrollbarThumbVertical="@color/colorAccent"
-                android:scrollbars="vertical"/>
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/data_swipe_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="horizontal">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/children_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbarSize="3sp"
+            android:scrollbarThumbVertical="@color/colorAccent"
+            android:scrollbars="vertical" />
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </LinearLayout>

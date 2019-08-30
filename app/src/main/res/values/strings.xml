@@ -12,6 +12,7 @@
     <string name="title_humidity">Humidity</string>
     <string name="title_welcome">Welcome</string>
     <string name="title_settings">Settings</string>
+    <string name="manager_child">Child Manager</string>
     <string name="title_hours">hours</string>
     <string name="title_minutes">minutes</string>
     <string name="title_min">min</string>
