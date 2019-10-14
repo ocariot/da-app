@@ -1,21 +1,26 @@
 package br.edu.uepb.nutes.ocariot.view.ui.activity;
 
+import android.Manifest;
+import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
-
-import com.tapadoo.alerter.Alerter;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -28,8 +33,9 @@ import br.edu.uepb.nutes.ocariot.data.model.ocariot.PhysicalActivity;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.Sleep;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.User;
 import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
+import br.edu.uepb.nutes.ocariot.utils.AlertMessage;
 import br.edu.uepb.nutes.ocariot.utils.MessageEvent;
-import br.edu.uepb.nutes.ocariot.view.ui.fragment.EnvironmentFragment;
+import br.edu.uepb.nutes.ocariot.view.ui.fragment.IotFragment;
 import br.edu.uepb.nutes.ocariot.view.ui.fragment.PhysicalActivityListFragment;
 import br.edu.uepb.nutes.ocariot.view.ui.fragment.SleepListFragment;
 import br.edu.uepb.nutes.ocariot.view.ui.fragment.WelcomeFragment;
@@ -49,29 +55,36 @@ public class MainActivity extends AppCompatActivity implements
         WelcomeFragment.OnClickWelcomeListener,
         BottomNavigationView.OnNavigationItemSelectedListener {
     private final String LOG_TAG = MainActivity.class.getSimpleName();
-    public final String KEY_DO_NOT_LOGIN_FITBIT = "key_do_not_login_fitbit";
+    public static final String KEY_DO_NOT_LOGIN_FITBIT = "key_do_not_login_fitbit";
+
+    private final int REQUEST_ENABLE_BLUETOOTH = 1;
+    private final int REQUEST_ENABLE_LOCATION = 2;
 
     private AppPreferencesHelper appPref;
     private PhysicalActivityListFragment physicalActivityListFragment;
     private SleepListFragment sleepListFragment;
-    private EnvironmentFragment environmentFragment;
+    private IotFragment iotFragment;
     private int lastViewIndex;
+    private AlertMessage mAlertMessage;
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
 
     @BindView(R.id.navigation)
-    BottomNavigationView mBuBottomNavigationView;
+    BottomNavigationView mBottomNavigationView;
 
     @BindView(R.id.frame_content)
     FrameLayout mWelcomeContent;
 
+    @BindView(R.id.child_username_bar)
+    TextView mChildUsernameBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.w(LOG_TAG, "Main onCreate()");
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
         setSupportActionBar(mToolbar);
         Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.title_physical_activities);
 
@@ -79,23 +92,41 @@ public class MainActivity extends AppCompatActivity implements
         appPref = AppPreferencesHelper.getInstance(this);
         physicalActivityListFragment = PhysicalActivityListFragment.newInstance();
         sleepListFragment = SleepListFragment.newInstance();
-        environmentFragment = EnvironmentFragment.newInstance();
+        iotFragment = IotFragment.newInstance();
+        mAlertMessage = new AlertMessage(this);
 
-        mBuBottomNavigationView.setOnNavigationItemSelectedListener(this);
+        mBottomNavigationView.setOnNavigationItemSelectedListener(this);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-
         EventBus.getDefault().register(this);
-        if (appPref.getAuthStateFitBit() == null && !appPref.getBoolean(KEY_DO_NOT_LOGIN_FITBIT)) {
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (appPref.getLastSelectedChild() == null) {
+            openChildrenManagerActivity();
+            return;
+        }
+
+        if (!appPref.getUserAccessOcariot().getSubjectType().equalsIgnoreCase(User.Type.CHILD)) {
+            Objects.requireNonNull(getSupportActionBar())
+                    .setSubtitle(appPref.getLastSelectedChild().getUsername());
+        }
+
+        if (appPref.getLastSelectedChild().getFitBitAccess() != null
+                && (appPref.getLastSelectedChild().getFitBitAccess().getAccessToken() == null
+                || appPref.getLastSelectedChild().getFitBitAccess().isExpired())
+                && !appPref.getBoolean(KEY_DO_NOT_LOGIN_FITBIT)) {
             replaceFragment(WelcomeFragment.newInstance());
-            mBuBottomNavigationView.setVisibility(View.GONE);
+            mBottomNavigationView.setVisibility(View.GONE);
         } else {
-            mBuBottomNavigationView.setVisibility(View.VISIBLE);
+            mBottomNavigationView.setVisibility(View.VISIBLE);
             if (lastViewIndex == 1) loadSleepView();
-            else if (lastViewIndex == 2) loadEnvironmentsView();
+            else if (lastViewIndex == 2) loadIotView();
             else loadPhysicalActivitiesView();
         }
     }
@@ -108,8 +139,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         MenuItem menuItem = menu.findItem(R.id.action_child);
         if (appPref.getUserAccessOcariot().getSubjectType().equalsIgnoreCase(User.Type.CHILD)) {
             menuItem.setVisible(false);
@@ -127,12 +157,11 @@ public class MainActivity extends AppCompatActivity implements
                 startActivity(new Intent(this, SettingsActivity.class));
                 break;
             case R.id.action_child:
-                startActivity(new Intent(this, ChildrenManagerActivity.class));
+                openChildrenManagerActivity();
                 break;
             default:
                 break;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -145,8 +174,8 @@ public class MainActivity extends AppCompatActivity implements
             case R.id.navigation_sleep:
                 loadSleepView();
                 break;
-            case R.id.navigation_temp_humi:
-                loadEnvironmentsView();
+            case R.id.navigation_iot:
+                loadIotView();
                 break;
             default:
                 break;
@@ -175,8 +204,9 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onDoNotLoginFitBitClick() {
-        replaceFragment(physicalActivityListFragment);
         appPref.addBoolean(KEY_DO_NOT_LOGIN_FITBIT, true);
+        mBottomNavigationView.setVisibility(View.VISIBLE);
+        loadPhysicalActivitiesView();
     }
 
     /**
@@ -197,7 +227,7 @@ public class MainActivity extends AppCompatActivity implements
     private void loadPhysicalActivitiesView() {
         Log.d(LOG_TAG, "loadPhysicalActivitiesView: ");
         replaceFragment(physicalActivityListFragment);
-        mBuBottomNavigationView.getMenu().getItem(0).setChecked(true);
+        mBottomNavigationView.getMenu().getItem(0).setChecked(true);
         Objects.requireNonNull(getSupportActionBar())
                 .setTitle(R.string.title_physical_activities);
         lastViewIndex = 0;
@@ -208,7 +238,7 @@ public class MainActivity extends AppCompatActivity implements
      */
     private void loadSleepView() {
         replaceFragment(sleepListFragment);
-        mBuBottomNavigationView.getMenu().getItem(1).setChecked(true);
+        mBottomNavigationView.getMenu().getItem(1).setChecked(true);
         Objects.requireNonNull(getSupportActionBar())
                 .setTitle(R.string.title_sleep);
         lastViewIndex = 1;
@@ -217,28 +247,32 @@ public class MainActivity extends AppCompatActivity implements
     /**
      * Replace fragment environments view.
      */
-    private void loadEnvironmentsView() {
-        replaceFragment(environmentFragment);
-        mBuBottomNavigationView.getMenu().getItem(2).setChecked(true);
+    private void loadIotView() {
+        checkPermissions();
+        replaceFragment(iotFragment);
+        mBottomNavigationView.getMenu().getItem(2).setChecked(true);
         Objects.requireNonNull(getSupportActionBar())
-                .setTitle(R.string.title_temperature_humidity);
+                .setTitle(R.string.title_weight);
         lastViewIndex = 2;
     }
 
     @Subscribe(threadMode = ThreadMode.POSTING)
     public void onMessageEvent(MessageEvent event) {
-        Log.w(LOG_TAG, "EVENT DISPATCH");
         if (event.getName().equals(MessageEvent.EventType.OCARIOT_ACCESS_TOKEN_EXPIRED)) {
-            Alerter.create(this)
-                    .setDuration(40000)
-                    .enableVibration(true)
-                    .enableSwipeToDismiss()
-                    .setTitle(R.string.alert_title_token_expired)
-                    .setBackgroundColorRes(R.color.colorWarning)
-                    .setIcon(R.drawable.ic_warning_dark)
-                    .setText(R.string.alert_token_expired_ocariot)
-                    .setOnHideListener(this::redirectToLogin)
-                    .show();
+            mAlertMessage.show(R.string.alert_title_token_expired,
+                    R.string.alert_token_expired_ocariot,
+                    R.color.colorWarning, R.drawable.ic_warning_dark, 20000,
+                    true, new AlertMessage.AlertMessageListener() {
+                        @Override
+                        public void onHideListener() {
+                            redirectToLogin();
+                        }
+
+                        @Override
+                        public void onClickListener() {
+                            redirectToLogin();
+                        }
+                    });
         }
     }
 
@@ -247,5 +281,83 @@ public class MainActivity extends AppCompatActivity implements
         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         getApplicationContext().startActivity(intent);
+    }
+
+    /**
+     * Open children manager activity.
+     */
+    private void openChildrenManagerActivity() {
+        startActivity(new Intent(this, ChildrenManagerActivity.class));
+    }
+
+
+    /**
+     * Checks if you have permission to use.
+     * Required bluetooth ble and location.
+     */
+    public void checkPermissions() {
+        if (BluetoothAdapter.getDefaultAdapter() != null &&
+                !BluetoothAdapter.getDefaultAdapter().isEnabled()) {
+            Log.w(LOG_TAG, "checkPermissions(): Bluetooth disabled");
+            requestBluetoothEnable();
+        } else if (!hasLocationPermissions()) {
+            requestLocationPermission();
+        }
+    }
+
+    /**
+     * Request Bluetooth permission
+     */
+    private void requestBluetoothEnable() {
+        Log.w(LOG_TAG, "requestBluetoothEnable(): Criando intent");
+        startActivityForResult(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE),
+                REQUEST_ENABLE_BLUETOOTH);
+    }
+
+    /**
+     * Checks whether the location permission was given.
+     *
+     * @return boolean
+     */
+    public boolean hasLocationPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) ==
+                    PackageManager.PERMISSION_GRANTED;
+        }
+        return true;
+    }
+
+    /**
+     * Request Location permission.
+     */
+    protected void requestLocationPermission() {
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_ENABLE_LOCATION);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        // If request is cancelled, the result arrays are empty.
+        if ((requestCode == REQUEST_ENABLE_LOCATION) &&
+                (grantResults.length > 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED)) {
+            Toast.makeText(this, R.string.message_permission_location, Toast.LENGTH_LONG).show();
+            requestLocationPermission();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_ENABLE_BLUETOOTH) {
+            if (resultCode != Activity.RESULT_OK) {
+                Log.w(LOG_TAG, "onActivityResult(): Bluetooth negado");
+            } else {
+                Log.w(LOG_TAG, "onActivityResult(): Bluetooth aceito");
+                requestLocationPermission();
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

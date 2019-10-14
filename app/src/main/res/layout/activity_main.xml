@@ -12,8 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <RelativeLayout
-        android:id="@+id/box_content_main"
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -21,9 +20,11 @@
             android:id="@+id/navigation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
             android:layout_alignParentBottom="true"
-            app:itemBackground="@color/colorBackgroundNavigation"
             android:background="@color/colorBackgroundNavigation"
+            app:itemBackground="@color/colorBackgroundNavigation"
+            app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"
             app:menu="@menu/navigation" />
 
         <FrameLayout
@@ -31,5 +32,5 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/navigation" />
-    </RelativeLayout>
+    </android.support.design.widget.CoordinatorLayout>
 </LinearLayout>

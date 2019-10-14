@@ -4,7 +4,7 @@
     <item
         android:id="@+id/action_child"
         android:icon="@drawable/add_child"
-        android:title="@string/manager_child"
+        android:title="@string/title_children"
         app:showAsAction="always" />
 
     <item

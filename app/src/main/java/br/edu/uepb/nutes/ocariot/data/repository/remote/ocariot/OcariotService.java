@@ -5,10 +5,9 @@ import java.util.List;
 import br.edu.uepb.nutes.ocariot.data.model.common.UserAccess;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.Child;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.ChildrenGroup;
-import br.edu.uepb.nutes.ocariot.data.model.ocariot.Educator;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.Environment;
-import br.edu.uepb.nutes.ocariot.data.model.ocariot.Family;
-import br.edu.uepb.nutes.ocariot.data.model.ocariot.HealthProfessional;
+import br.edu.uepb.nutes.ocariot.data.model.ocariot.FitBitAppData;
+import br.edu.uepb.nutes.ocariot.data.model.ocariot.FitBitSync;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.LogData;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.MultiStatusResult;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.PhysicalActivity;
@@ -32,9 +31,8 @@ import retrofit2.http.Query;
  * @author Copyright (c) 2018, NUTES/UEPB
  */
 public interface OcariotService {
-    // String BASE_URL_OCARIOT = "https://ocariot.nutes.uepb.edu.br"; // API GATEWAY
-//    String BASE_URL_OCARIOT = "https://172.17.0.1"; // API GATEWAY
-    String BASE_URL_OCARIOT = "https://192.168.0.105"; // API GATEWAY
+    String BASE_URL_OCARIOT = "https://ocariot.nutes.uepb.edu.br"; // API GATEWAY
+//    String BASE_URL_OCARIOT = "https://192.168.0.113"; // API GATEWAY
 
     // Child
     @POST("/v1/auth")
@@ -43,26 +41,14 @@ public interface OcariotService {
     @GET("/v1/children/{child_id}")
     Single<Child> getChildById(@Path("child_id") String childId);
 
-    @GET("/v1/families/{family_id}")
-    Single<Family> getFamilyById(@Path("family_id") String familyId);
-
     @GET("/v1/families/{family_id}/children")
     Single<List<Child>> getFamilyChildrenById(@Path("family_id") String familyId);
-
-    @GET("/v1/educators/{educator_id}")
-    Single<Educator> getEducatorById(@Path("educator_id") String educatorId);
 
     @GET("/v1/educators/{educator_id}/children/groups")
     Single<List<ChildrenGroup>> getEducatorGroupsById(@Path("educator_id") String educatorId);
 
-    @GET("/v1/healthprofessionals/{healthprofessional_id}")
-    Single<HealthProfessional> getHealthProfessionalById(@Path("healthprofessional_id") String educatorId);
-
     @GET("/v1/healthprofessionals/{healthprofessional_id}/children/groups")
     Single<List<ChildrenGroup>> getHealthProfessionalGroupsById(@Path("healthprofessional_id") String educatorId);
-
-    @PATCH("/v1/children/{child_id}")
-    Single<Child> updateChild(@Path("child_id") String childId, @Body Child child);
 
     @FormUrlEncoded
     @PATCH("/v1/children/{child_id}/")
@@ -101,9 +87,6 @@ public interface OcariotService {
     );
 
     @POST("/v1/children/{child_id}/sleep")
-    Single<Sleep> publishSleep(@Path("child_id") String childId, @Body Sleep sleep);
-
-    @POST("/v1/children/{child_id}/sleep")
     Single<MultiStatusResult<Sleep>> publishSleep(@Path("child_id") String childId, @Body Sleep[] sleep);
 
     @DELETE("/v1/children/{child_id}/sleep/{sleep_id}")
@@ -121,8 +104,12 @@ public interface OcariotService {
     @POST("/v1/children/{child_id}/weights")
     Single<MultiStatusResult<Weight>> publishWeights(@Path("child_id") String childId, @Body Weight[] weights);
 
-    @GET("/v1/children/{child_id}/weights")
-    Single<List<Weight>> listhWeights(@Path("child_id") String childId);
+    @GET("/v1/children/{child_id}/weights?sort=-timestamp")
+    Single<List<Weight>> listhWeights(
+            @Path("child_id") String childId,
+            @Query("timestamp") String startDate,
+            @Query("timestamp") String endDate
+    );
 
     // Environments
     @GET("/v1/environments")
@@ -136,5 +123,23 @@ public interface OcariotService {
             @Query("timestamp") String endDate
     );
 
-    Completable publishFitBitAuth(@Path("child_id") String childId, @Body UserAccess userAccess);
+    @GET("/v1/fitbit")
+    Single<FitBitAppData> getFitBitAppData();
+
+    @POST("/v1/users/{user_id}/fitbit/auth")
+    Completable publishFitBitAuth(
+            @Path("user_id") String childId,
+            @Body UserAccess userAccess,
+            @Query("init_sync") boolean initSync,
+            @Query("last_sync") String lastSync
+    );
+
+    @POST("/v1/users/{user_id}/fitbit/auth/revoke")
+    Completable revokeFitBitAuth(@Path("user_id") String childId);
+
+    @GET("/v1/users/{user_id}/fitbit/auth")
+    Single<UserAccess> getFitBitAuth(@Path("user_id") String childId);
+
+    @POST("/v1/users/{user_id}/fitbit/sync")
+    Single<FitBitSync> fitBitSync(@Path("user_id") String childId);
 }

@@ -51,9 +51,9 @@ public class SleepListAdapter extends BaseAdapter<Sleep> {
                     context.getResources().getString(R.string.date_time_abb4), null));
             h.period.setText(String.format(Locale.getDefault(), "%s - %s",
                     DateUtils.convertDateTimeUTCToLocale(sleep.getStartTime(),
-                            context.getResources().getString(R.string.hour_format1), null),
+                            context.getResources().getString(R.string.hour_format2), null),
                     DateUtils.convertDateTimeUTCToLocale(sleep.getEndTime(),
-                            context.getResources().getString(R.string.hour_format1), null)));
+                            context.getResources().getString(R.string.hour_format2), null)));
             h.duration.setText(String.format(Locale.getDefault(), "%02dhrs %02dmin",
                     sleep.getDuration() / 3600000, (sleep.getDuration() / 60000) % 60));
 

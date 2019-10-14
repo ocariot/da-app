@@ -50,7 +50,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="2dp"
                 android:layout_marginTop="2dp"
-                android:text="00:51 - 07-31"
+                android:text="00:51:00 - 07-31:30"
                 android:textAppearance="?attr/textAppearanceListItemSecondary"
                 android:textColor="@color/colorBlackLight"
                 android:textSize="14sp" />

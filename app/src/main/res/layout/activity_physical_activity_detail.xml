@@ -82,7 +82,6 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/title_activity_steps_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@+id/activity_steps_tv"
@@ -102,7 +101,6 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/title_activity_calories_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@+id/activity_calories_tv"
@@ -121,7 +119,6 @@
             android:textSize="20sp" />
 
         <TextView
-            android:id="@+id/activity_title_calories__min_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@+id/activity_calories_min_tv"
@@ -227,7 +224,6 @@
                     style="@android:style/TextAppearance.Medium" />
 
                 <TextView
-                    android:id="@+id/hr_bpm_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignBaseline="@+id/hr_avg_tv"

@@ -95,7 +95,6 @@
                         android:text="15" />
 
                     <TextView
-                        android:id="@+id/sleep_duration_minutes_title_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignBaseline="@+id/sleep_duration_hours_title_tv"
@@ -262,7 +261,6 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/box_4_classic"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/box_3_classic"
@@ -449,7 +447,6 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/box_4_stages"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/box_3_stages"

@@ -37,6 +37,7 @@ public class Educator extends User {
                 "childrenGroups='" + childrenGroups + '\'' +
                 '}';
     }
+
     /**
      * Convert object to json format.
      *

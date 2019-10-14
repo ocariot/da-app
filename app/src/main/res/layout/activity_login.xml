@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,56 +8,47 @@
     android:orientation="vertical"
     tools:context="br.edu.uepb.nutes.ocariot.view.ui.activity.LoginActivity">
 
+    <com.flaviofaria.kenburnsview.KenBurnsView
+        android:id="@+id/image_back"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/children_back" />
+
     <ImageView
+        android:id="@+id/logo"
         android:layout_width="match_parent"
         android:layout_height="130dp"
         android:layout_marginTop="60dp"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="10dp"
         android:contentDescription="@string/img_desc_ocariot"
         app:srcCompat="@drawable/ocariot_logo" />
 
-    <!-- Login progress -->
-    <ProgressBar
-        android:id="@+id/login_progress"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:indeterminate="true"
-        android:visibility="gone" />
-
     <LinearLayout
-        android:id="@+id/box_message_error"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"
-        android:background="@color/colorWarningLight"
-        android:gravity="center"
-        android:visibility="gone">
-
-        <TextView
-            android:id="@+id/message_error"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="16sp"
-            android:text="@null" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/email_login_form"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="25dp">
+        android:layout_below="@+id/logo"
+        android:padding="40dp">
+
+        <!-- Login progress -->
+        <ProgressBar
+            android:id="@+id/login_progress"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/logo"
+            android:foregroundGravity="center"
+            android:indeterminate="true"
+            android:layout_marginBottom="20dp"
+            android:visibility="gone" />
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp">
+            android:layout_marginBottom="20dp"
+            android:theme="@style/TextInputLayoutAppearance">
 
-            <EditText
+            <android.support.v7.widget.AppCompatEditText
                 android:id="@+id/username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -65,7 +56,8 @@
                 android:hint="@string/prompt_username"
                 android:inputType="text"
                 android:maxLines="1"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:textColor="#FFF" />
 
         </android.support.design.widget.TextInputLayout>
 
@@ -73,18 +65,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
-            app:passwordToggleEnabled="true">
+            android:theme="@style/TextInputLayoutAppearance"
+            app:passwordToggleEnabled="true"
+            app:passwordToggleTint="@color/colorInputText">
 
-            <EditText
+            <android.support.v7.widget.AppCompatEditText
                 android:id="@+id/password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:autofillHints="@string/prompt_password"
                 android:hint="@string/prompt_password"
                 android:imeOptions="actionSend"
                 android:inputType="textPassword"
-                android:maxLines="1"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:textColor="#FFF" />
 
         </android.support.design.widget.TextInputLayout>
 
@@ -94,8 +87,9 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_marginTop="16dp"
+            android:backgroundTint="@color/colorPrimaryDark"
             android:text="@string/title_login_in"
             android:textStyle="bold" />
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>

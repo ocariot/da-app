@@ -1,10 +1,8 @@
 package br.edu.uepb.nutes.ocariot.data.repository;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.LogData;
@@ -66,6 +64,7 @@ public class SyncDataRepository {
 
     private Single<MultiStatusResult<LogData>> syncSteps() {
         return fitbitRepo.getSteps(startDate, endDate)
+                .onErrorReturn(throwable -> new ArrayList<>())
                 .map(logDataList -> logDataList.toArray(new LogData[0]))
                 .flatMap(steps -> ocariotRepo.publishSteps(childId, steps))
                 .subscribeOn(Schedulers.io())
@@ -74,6 +73,7 @@ public class SyncDataRepository {
 
     private Single<MultiStatusResult<LogData>> syncCalories() {
         return fitbitRepo.getCalories(startDate, endDate)
+                .onErrorReturn(throwable -> new ArrayList<>())
                 .map(logDataList -> logDataList.toArray(new LogData[0]))
                 .flatMap(calories -> ocariotRepo.publishCalories(childId, calories))
                 .subscribeOn(Schedulers.io())
@@ -82,6 +82,7 @@ public class SyncDataRepository {
 
     private Single<MultiStatusResult<LogData>> syncActiveMinutes() {
         return fitbitRepo.getActiveMinutes(startDate, endDate)
+                .onErrorReturn(throwable -> new ArrayList<>())
                 .map(logDataList -> logDataList.toArray(new LogData[0]))
                 .flatMap(calories -> ocariotRepo.publishActiveMinutes(childId, calories))
                 .subscribeOn(Schedulers.io())
@@ -90,6 +91,7 @@ public class SyncDataRepository {
 
     private Single<MultiStatusResult<LogData>> syncLightlyActiveMinutes() {
         return fitbitRepo.getLightlyActiveMinutes(startDate, endDate)
+                .onErrorReturn(throwable -> new ArrayList<>())
                 .map(logDataList -> logDataList.toArray(new LogData[0]))
                 .flatMap(calories -> ocariotRepo.publishLightlyActiveMinutes(childId, calories))
                 .subscribeOn(Schedulers.io())
@@ -98,6 +100,7 @@ public class SyncDataRepository {
 
     private Single<MultiStatusResult<LogData>> syncSedentaryMinutes() {
         return fitbitRepo.getSedentaryMinutes(startDate, endDate)
+                .onErrorReturn(throwable -> new ArrayList<>())
                 .map(logDataList -> logDataList.toArray(new LogData[0]))
                 .flatMap(calories -> ocariotRepo.publishSedentaryMinutes(childId, calories))
                 .subscribeOn(Schedulers.io())
@@ -106,6 +109,7 @@ public class SyncDataRepository {
 
     private Single<MultiStatusResult<PhysicalActivity>> syncPhysicalActivities() {
         return fitbitRepo.listActivities(null, endDate, "asc", 0, 100)
+                .onErrorReturn(throwable -> new ArrayList<>())
                 .map(activitiesList -> activitiesList.toArray(new PhysicalActivity[0]))
                 .flatMap(activities -> ocariotRepo.publishPhysicalActivities(childId, activities))
                 .subscribeOn(Schedulers.io())
@@ -121,11 +125,9 @@ public class SyncDataRepository {
 
         for (int i = 0; i < 6; i++) {
             requests.add(fitbitRepo.listSleep(currentStartDate, currentEndDate)
+                    .onErrorReturn(throwable -> new ArrayList<>())
                     .map(sleepList -> sleepList.toArray(new Sleep[0]))
-                    .flatMap(sleep -> {
-                        Log.w("RES-SLEEP==", Arrays.toString(sleep));
-                        return ocariotRepo.publishSleep(childId, sleep);
-                    })
+                    .flatMap(sleep -> ocariotRepo.publishSleep(childId, sleep))
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread()));
             currentStartDate = DateUtils.addMonths(currentStartDate, -1);
@@ -142,11 +144,9 @@ public class SyncDataRepository {
 
         for (int i = 0; i < 6; i++) {
             requests.add(fitbitRepo.listWeights(currentStartDate, currentEndDate)
+                    .onErrorReturn(throwable -> new ArrayList<>())
                     .map(weightList -> weightList.toArray(new Weight[0]))
-                    .flatMap(weights -> {
-                        Log.w("RES-WEIGHT==", Arrays.toString(weights));
-                        return ocariotRepo.publishWeights(childId, weights);
-                    })
+                    .flatMap(weights -> ocariotRepo.publishWeights(childId, weights))
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread()));
             currentStartDate = DateUtils.addMonths(currentStartDate, -1);

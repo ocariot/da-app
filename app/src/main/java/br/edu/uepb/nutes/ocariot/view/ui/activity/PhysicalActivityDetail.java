@@ -12,6 +12,8 @@ import android.widget.TextView;
 import br.edu.uepb.nutes.ocariot.R;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.ActivityLevel;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.PhysicalActivity;
+import br.edu.uepb.nutes.ocariot.data.model.ocariot.User;
+import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
 import br.edu.uepb.nutes.ocariot.utils.DateUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -72,6 +74,7 @@ public class PhysicalActivityDetail extends AppCompatActivity {
     RelativeLayout boxHRZones;
 
     private PhysicalActivity physicalActivity;
+    private AppPreferencesHelper appPref;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,6 +82,8 @@ public class PhysicalActivityDetail extends AppCompatActivity {
         setContentView(R.layout.activity_physical_activity_detail);
         ButterKnife.bind(this);
         setSupportActionBar(mToolbar);
+
+        appPref = AppPreferencesHelper.getInstance(this);
 
         if (getIntent() != null) {
             physicalActivity = getIntent().getParcelableExtra(ACTIVITY_DETAIL);
@@ -89,7 +94,7 @@ public class PhysicalActivityDetail extends AppCompatActivity {
     private void initComponents() {
         if (physicalActivity == null) return;
 
-        initToobar();
+        initToolbar();
         populateView(physicalActivity);
     }
 
@@ -145,7 +150,7 @@ public class PhysicalActivityDetail extends AppCompatActivity {
         }
     }
 
-    private void initToobar() {
+    private void initToolbar() {
         ActionBar mActionBar = getSupportActionBar();
         if (mActionBar == null) return;
 
@@ -153,5 +158,10 @@ public class PhysicalActivityDetail extends AppCompatActivity {
         mActionBar.setDisplayShowTitleEnabled(true);
         mActionBar.setHomeAsUpIndicator(R.drawable.ic_close_dark);
         mActionBar.setTitle(physicalActivity.getName());
+
+        if (!appPref.getUserAccessOcariot().getSubjectType()
+                .equalsIgnoreCase(User.Type.CHILD)) {
+            mActionBar.setSubtitle(appPref.getLastSelectedChild().getUsername());
+        }
     }
 }

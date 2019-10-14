@@ -1,6 +1,5 @@
 package br.edu.uepb.nutes.ocariot.view.ui.activity;
 
-
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -9,7 +8,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -35,6 +33,8 @@ import br.edu.uepb.nutes.ocariot.data.model.ocariot.Sleep;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.SleepPatternDataSet;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.SleepPatternSummary;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.SleepType;
+import br.edu.uepb.nutes.ocariot.data.model.ocariot.User;
+import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
 import br.edu.uepb.nutes.ocariot.utils.DateUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,10 +45,7 @@ import butterknife.ButterKnife;
  * @author Copyright (c) 2018, NUTES/UEPB
  */
 public class SleepDetail extends AppCompatActivity {
-    private final String LOG_TAG = "PhysicalActivityDetail";
-
     public static String SLEEP_DETAIL = "sleep_detail";
-    private Sleep sleep;
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -125,12 +122,17 @@ public class SleepDetail extends AppCompatActivity {
     @BindView(R.id.box_type_stages)
     RelativeLayout boxStages;
 
+    private AppPreferencesHelper appPref;
+    private Sleep sleep;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sleep_detail);
         ButterKnife.bind(this);
         setSupportActionBar(mToolbar);
+
+        appPref = AppPreferencesHelper.getInstance(this);
 
         if (getIntent() != null) {
             sleep = getIntent().getParcelableExtra(SLEEP_DETAIL);
@@ -149,11 +151,11 @@ public class SleepDetail extends AppCompatActivity {
     private void initComponents() {
         if (sleep == null) return;
 
-        initToobar();
+        initToolbar();
         populateView();
     }
 
-    private void initToobar() {
+    private void initToolbar() {
         ActionBar mActionBar = getSupportActionBar();
         if (mActionBar == null) return;
 
@@ -165,11 +167,15 @@ public class SleepDetail extends AppCompatActivity {
             mActionBar.setTitle(DateUtils.convertDateTimeUTCToLocale(sleep.getStartTime(),
                     getString(R.string.date_time_abb4), null));
         }
+        if (!appPref.getUserAccessOcariot().getSubjectType()
+                .equalsIgnoreCase(User.Type.CHILD)) {
+            mActionBar.setSubtitle(appPref.getLastSelectedChild().getUsername());
+        }
     }
 
     private void populateView() {
-        String dateStart = DateUtils.convertDateTimeUTCToLocale(sleep.getStartTime(), getString(R.string.hour_format1));
-        String dateEnd = DateUtils.convertDateTimeUTCToLocale(sleep.getEndTime(), getString(R.string.hour_format1));
+        String dateStart = DateUtils.convertDateTimeUTCToLocale(sleep.getStartTime(), getString(R.string.hour_format2));
+        String dateEnd = DateUtils.convertDateTimeUTCToLocale(sleep.getEndTime(), getString(R.string.hour_format2));
         mPeriodTextView.setText(String.format(Locale.getDefault(), "%s - %s",
                 dateStart, dateEnd));
 
@@ -213,20 +219,7 @@ public class SleepDetail extends AppCompatActivity {
         printChart();
     }
 
-    private String mountDuration(long duration) {
-        int hours = (int) Math.floor(duration / 3600000);
-        int minutes = (int) Math.floor((duration - hours * 3600000) / 60000);
-
-        if (hours > 0 || minutes > 0) {
-            return (hours > 0 ? String.format(Locale.getDefault(), "%02dh ", hours) : "")
-                    .concat((minutes > 0 ? String.format(Locale.getDefault(), "%02dmin", minutes) : ""));
-        }
-        return "";
-    }
-
     private void populatePatternClassic(SleepPatternSummary summary) {
-        Log.w(LOG_TAG, "populatePatternClassic - " + summary.toString());
-
         // asleep
         mAsleepCountTimesTextView.setText(getString(R.string.times_count, summary.getAsleep().getCount()));
         mAsleepDurationTextView.setText(mountDuration(summary.getAsleep().getDuration()));
@@ -244,7 +237,6 @@ public class SleepDetail extends AppCompatActivity {
     }
 
     private void populatePatternStages(SleepPatternSummary summary) {
-        Log.w(LOG_TAG, "populatePatternStages - " + summary.toString());
         // awake
         mAwakeCountTimesStagesTextView.setText(getString(R.string.times_count, summary.getAwake().getCount()));
         mAwakeDurationStagesTextView.setText(mountDuration(summary.getAwake().getDuration()));
@@ -260,6 +252,17 @@ public class SleepDetail extends AppCompatActivity {
         // deep
         mDeepCountTimesTextView.setText(getString(R.string.times_count, summary.getDeep().getCount()));
         mDeepDurationTextView.setText(mountDuration(summary.getDeep().getDuration()));
+    }
+
+    private String mountDuration(long duration) {
+        int hours = (int) Math.floor(duration / 3600000);
+        int minutes = (int) Math.floor((duration / 60000) % 60);
+
+        if (hours > 0 || minutes > 0) {
+            return (hours > 0 ? String.format(Locale.getDefault(), "%02dh ", hours) : "")
+                    .concat((minutes > 0 ? String.format(Locale.getDefault(), "%02dmin", minutes) : ""));
+        }
+        return "";
     }
 
     private void printChart() {
@@ -331,8 +334,6 @@ public class SleepDetail extends AppCompatActivity {
         mSleepChart.setHardwareAccelerationEnabled(false);
         mSleepChart.getXAxis().setGranularity(1f);
 
-        mSleepChart.getAxisLeft().setLabelCount(3);
-
         if (Utils.getSDKInt() >= 18) {
             // fill drawable only supported on api level 18 and above
             Drawable drawable = ContextCompat.getDrawable(this, R.drawable.fade_sleep_chart);
@@ -361,7 +362,7 @@ public class SleepDetail extends AppCompatActivity {
             } else if (value == 3f) {
                 result = sleep.getType().equalsIgnoreCase(SleepType.STAGES) ?
                         getString(R.string.title_light) : getString(R.string.title_restless);
-            } else if (value == 4f) {
+            } else if (sleep.getType().equalsIgnoreCase(SleepType.STAGES) && value == 4f) {
                 result = getString(R.string.title_deep);
             }
             return result;

@@ -57,6 +57,9 @@ public class PhysicalActivityFitBit {
     @SerializedName("heartRateZones")
     private List<HeartRateZoneFitBit> heartRateZones;
 
+    @SerializedName("distance")
+    private long distance;
+
     public PhysicalActivityFitBit() {
     }
 
@@ -197,6 +200,14 @@ public class PhysicalActivityFitBit {
             }
         }
         return new HeartRateZoneFitBit();
+    }
+
+    public long getDistance() {
+        return distance;
+    }
+
+    public void setDistance(long distance) {
+        this.distance = distance;
     }
 
     @NonNull

@@ -172,19 +172,19 @@ public final class DateUtils {
         return dateFormat.format(calendar.getTime());
     }
 
-    /**
-     * Convert string date in string format.
-     *
-     * @param date       {@link String}
-     * @param formatDate {@link String}
-     * @return String
-     */
-    public static String formatDate(@Nullable String date, @Nullable String formatDate) {
-        if (formatDate == null || formatDate.length() == 0)
-            formatDate = "yyyy-MM-dd";
-
-        return getFormatDataTime(date, formatDate, true, false);
-    }
+//    /**
+//     * Convert string date in string format.
+//     *
+//     * @param date       {@link String}
+//     * @param formatDate {@link String}
+//     * @return String
+//     */
+//    public static String formatDate(@Nullable String date, @Nullable String formatDate) {
+//        if (formatDate == null || formatDate.length() == 0)
+//            formatDate = "yyyy-MM-dd";
+//
+//        return getFormatDataTime(date, formatDate, true, false);
+//    }
 
     public static long getTotalHours(long milliseconds) {
         return TimeUnit.MILLISECONDS.toHours(milliseconds);
@@ -194,97 +194,68 @@ public final class DateUtils {
         return TimeUnit.MILLISECONDS.toMinutes(milliseconds);
     }
 
-    /**
-     * Convert string date in string format.
-     *
-     * @param date       {@link String}
-     * @param formatDate {@link String}
-     * @return String
-     */
-    public static String formatDateTime(String date, @Nullable String formatDate) {
-        if (formatDate == null || formatDate.length() == 0) formatDate = DATE_FORMAT_DATE_TIME;
+//    /**
+//     * Convert string date in string format.
+//     *
+//     * @param date       {@link String}
+//     * @param formatDate {@link String}
+//     * @return String
+//     */
+//    public static String formatDateHour(String date, @Nullable String formatDate) {
+//        if (formatDate == null || formatDate.length() == 0)
+//            formatDate = "HH:mm:ss";
+//
+//        return getFormatDataTime(date, formatDate, false, true);
+//    }
+//
+//
+//    private static String getFormatDataTime(String date_input, String formatDate,
+//                                            boolean date, boolean time) {
+//        String result = "";
+//
+//        if (date && !time) {
+//            result = getDataTime(Integer.parseInt(date_input.substring(0, 4)),
+//                    Integer.parseInt(date_input.substring(5, 7)) - 1,
+//                    Integer.parseInt(date_input.substring(8, 10)),
+//                    0, 0, 0, formatDate);
+//        } else if (time && !date) {
+//            result = getDataTime(0, 0, 0,
+//                    Integer.parseInt(date_input.substring(11, 13)),
+//                    Integer.parseInt(date_input.substring(14, 16)),
+//                    Integer.parseInt(date_input.substring(17, 19)), formatDate);
+//        } else {
+//            result = getDataTime(Integer.parseInt(date_input.substring(0, 4)),
+//                    Integer.parseInt(date_input.substring(5, 7)) - 1,
+//                    Integer.parseInt(date_input.substring(8, 10)),
+//                    Integer.parseInt(date_input.substring(11, 13)),
+//                    Integer.parseInt(date_input.substring(15, 16)),
+//                    Integer.parseInt(date_input.substring(17, 19)),
+//                    formatDate);
+//        }
+//        Log.d("RESUL", result);
+//        return result;
+//    }
 
-        return getFormatDataTime(date, formatDate, true, true);
-    }
-
-    /**
-     * Retrieve a datetime passed in milliseconds to the format passed as a parameter.
-     *
-     * @param milliseconds long
-     * @param formatDate   String
-     * @return String
-     */
-    public static String formatDateTime(long milliseconds, String formatDate) {
-        if (formatDate == null || formatDate.length() == 0) formatDate = DATE_FORMAT_DATE_TIME;
-
-        Calendar calendar = GregorianCalendar.getInstance();
-        calendar.setTimeInMillis(milliseconds);
-
-        DateFormat dateFormat = new SimpleDateFormat(formatDate, Locale.getDefault());
-        return dateFormat.format(calendar.getTime());
-    }
-
-    /**
-     * Convert string date in string format.
-     *
-     * @param date       {@link String}
-     * @param formatDate {@link String}
-     * @return String
-     */
-    public static String formatDateHour(String date, @Nullable String formatDate) {
-        if (formatDate == null || formatDate.length() == 0)
-            formatDate = "HH:mm:ss";
-
-        return getFormatDataTime(date, formatDate, false, true);
-    }
-
-
-    private static String getFormatDataTime(String date_input, String formatDate,
-                                            boolean date, boolean time) {
-        String result = "";
-
-        if (date && !time) {
-            result = getDataTime(Integer.parseInt(date_input.substring(0, 4)),
-                    Integer.parseInt(date_input.substring(5, 7)) - 1,
-                    Integer.parseInt(date_input.substring(8, 10)),
-                    0, 0, 0, formatDate);
-        } else if (time && !date) {
-            result = getDataTime(0, 0, 0,
-                    Integer.parseInt(date_input.substring(11, 13)),
-                    Integer.parseInt(date_input.substring(14, 16)),
-                    Integer.parseInt(date_input.substring(17, 19)), formatDate);
-        } else {
-            result = getDataTime(Integer.parseInt(date_input.substring(0, 4)),
-                    Integer.parseInt(date_input.substring(5, 7)) - 1,
-                    Integer.parseInt(date_input.substring(8, 10)),
-                    Integer.parseInt(date_input.substring(11, 13)),
-                    Integer.parseInt(date_input.substring(15, 16)),
-                    Integer.parseInt(date_input.substring(17, 19)),
-                    formatDate);
-        }
-        return result;
-    }
-
-    /**
-     * Returns datetime according to the parameters.
-     *
-     * @param year       The year
-     * @param month      The month
-     * @param day        The day
-     * @param hourOfDay  The hour
-     * @param minute     The minute
-     * @param formatDate The format date output.
-     * @return The string datetime.
-     */
-    private static String getDataTime(int year, int month, int day, int hourOfDay,
-                                      int minute, int milliseconds, String formatDate) {
-        Calendar calendar = GregorianCalendar.getInstance();
-        // Value to be used for MONTH field. 0 is January
-        calendar.set(year, month, day, hourOfDay, minute, milliseconds);
-
-        DateFormat dateFormat = new SimpleDateFormat(formatDate, Locale.getDefault());
-        return dateFormat.format(calendar.getTime());
-    }
+//    /**
+//     * Returns datetime according to the parameters.
+//     *
+//     * @param year       The year
+//     * @param month      The month
+//     * @param day        The day
+//     * @param hourOfDay  The hour
+//     * @param minute     The minute
+//     * @param formatDate The format date output.
+//     * @return The string datetime.
+//     */
+//    private static String getDataTime(int year, int month, int day, int hourOfDay,
+//                                      int minute, int milliseconds, String formatDate) {
+//        Calendar calendar = GregorianCalendar.getInstance();
+//        // Value to be used for MONTH field. 0 is January
+//        calendar.set(year, month, day, hourOfDay, minute, milliseconds);
+//
+//        DateFormat dateFormat = new SimpleDateFormat(formatDate, Locale.getDefault());
+//        return dateFormat.format(calendar.getTime());
+//    }
 
     /**
      * Retrieve the current date according to timezone UTC.
@@ -341,6 +312,18 @@ public final class DateUtils {
         return formatDate(c.getTimeInMillis(), "yyyy-MM-dd");
     }
 
+    /**
+     * Add days in string datetime.
+     *
+     * @param days (-) to decrease the days (+) to advance
+     * @return Calendar
+     */
+    public static String addDaysToDatetimeString(String date, int days) {
+        Calendar c = convertStringDateToCalendar(date, DATE_FORMAT_DATE_TIME);
+        c.add(Calendar.DAY_OF_YEAR, days);
+        return formatDate(c.getTimeInMillis(), DATE_FORMAT_DATE_TIME);
+    }
+
     public static Calendar convertStringDateToCalendar(String date, String format) {
         if (format == null || format.length() == 0) format = "yyyy-MM-dd";
 
@@ -361,7 +344,7 @@ public final class DateUtils {
      * @param milliseconds Total in milliseconds.
      * @return String
      */
-    public static String addMillisecondsToString(String datetime, int milliseconds) {
+    public static String    addMillisecondsToString(String datetime, int milliseconds) {
         Calendar calendar = convertStringDateToCalendar(datetime, DATE_FORMAT_DATE_TIME);
         calendar.add(Calendar.MILLISECOND, milliseconds);
 
@@ -392,7 +375,6 @@ public final class DateUtils {
     public static String addMonths(String date, int months) {
         Calendar calendar = convertStringDateToCalendar(date, null);
         calendar.add(Calendar.MONTH, months);
-
         return formatDate(calendar.getTimeInMillis(), "yyyy-MM-dd");
     }
 

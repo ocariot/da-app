@@ -16,14 +16,21 @@
 
     <PreferenceCategory android:title="@string/settings_account">
         <PreferenceScreen
+            android:key="@string/key_children"
+            android:summary="@string/settings_summary_children"
+            android:title="@string/settings_children" />
+
+        <PreferenceScreen
             android:key="@string/key_signout"
             android:summary="@string/settings_summary_signout"
             android:title="@string/settings_signout" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/settings_about">
-        <PreferenceScreen
-            android:key="@string/key_version"
+        <Preference
+            android:summary="@string/message_about"/>
+
+        <Preference
             android:summary="@string/settings_summary_version"
             android:title="@string/settings_version" />
     </PreferenceCategory>
