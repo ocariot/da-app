@@ -12,4 +12,15 @@
         android:background="?attr/colorPrimary"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
+    <TextView
+        android:id="@+id/child_username_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="17dp"
+        android:paddingEnd="10dp"
+        android:visibility="gone"
+        android:paddingBottom="10dp"
+        android:text="BR0001"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
 </android.support.design.widget.AppBarLayout>

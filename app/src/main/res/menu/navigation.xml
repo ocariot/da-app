@@ -11,7 +11,7 @@
         android:title="@string/title_sleep" />
 
     <item
-        android:id="@+id/navigation_temp_humi"
-        android:icon="@drawable/thermometer"
-        android:title="@string/title_temp_humi" />
+        android:id="@+id/navigation_iot"
+        android:icon="@drawable/scale"
+        android:title="@string/title_iot" />
 </menu>

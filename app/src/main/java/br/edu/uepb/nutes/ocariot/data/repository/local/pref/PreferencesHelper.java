@@ -1,9 +1,8 @@
 package br.edu.uepb.nutes.ocariot.data.repository.local.pref;
 
-import net.openid.appauth.AuthState;
-
-import br.edu.uepb.nutes.ocariot.data.model.ocariot.Child;
 import br.edu.uepb.nutes.ocariot.data.model.common.UserAccess;
+import br.edu.uepb.nutes.ocariot.data.model.ocariot.Child;
+import br.edu.uepb.nutes.ocariot.data.model.ocariot.FitBitAppData;
 
 /**
  * Interface for Preferences Helper.
@@ -11,35 +10,26 @@ import br.edu.uepb.nutes.ocariot.data.model.common.UserAccess;
  * @author Copyright (c) 2018, NUTES/UEPB
  */
 public interface PreferencesHelper {
+
     boolean addUserAccessOcariot(final UserAccess userAccess);
 
-    boolean addAuthStateFiBIt(final AuthState authState);
+    boolean addLastSelectedChild(final Child user);
 
-    boolean addChildProfile(final Child user);
-
-    boolean addString(String key, String value);
+    boolean addFitbitAppData(final FitBitAppData fitBitAppData);
 
     boolean addBoolean(String key, boolean value);
 
     boolean addInt(String key, int value);
 
-    boolean addLong(String key, long value);
-
     UserAccess getUserAccessOcariot();
 
-    AuthState getAuthStateFitBit();
+    Child getLastSelectedChild();
 
-    Child getChildProfile();
-
-    boolean removeUserAccessOcariot();
-
-    boolean removeAuthStateFitBit();
-
-    boolean removeItem(String key);
-
-    String getString(String key);
+    FitBitAppData getFitbitAppData();
 
     boolean getBoolean(String key);
+
+    int getInt(String key);
 
     boolean removeSession();
 }

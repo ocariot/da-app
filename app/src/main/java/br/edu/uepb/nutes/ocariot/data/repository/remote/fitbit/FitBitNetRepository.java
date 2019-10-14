@@ -1,17 +1,16 @@
 package br.edu.uepb.nutes.ocariot.data.repository.remote.fitbit;
 
 import android.content.Context;
-import android.util.Log;
 
-import net.openid.appauth.AuthState;
 import net.openid.appauth.AuthorizationService;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
+import br.edu.uepb.nutes.ocariot.BuildConfig;
+import br.edu.uepb.nutes.ocariot.data.model.common.UserAccess;
 import br.edu.uepb.nutes.ocariot.data.model.fitbit.ActivityLevelFitBit;
 import br.edu.uepb.nutes.ocariot.data.model.fitbit.HeartRateZoneFitBit;
 import br.edu.uepb.nutes.ocariot.data.model.fitbit.LogDataFitBit;
@@ -43,6 +42,7 @@ import io.reactivex.schedulers.Schedulers;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.logging.HttpLoggingInterceptor;
 
 /**
  * Repository to consume the FitBit API.
@@ -60,6 +60,12 @@ public class FitBitNetRepository extends BaseNetRepository {
 
         super.addInterceptor(requestInterceptor());
         super.addInterceptor(responseInterceptor());
+        if (BuildConfig.DEBUG) {
+            HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+            logging.level(HttpLoggingInterceptor.Level.BODY);
+            this.addInterceptor(logging);
+        }
+
         fitBitService = super.provideRetrofit(FitBitService.BASE_URL_FITBIT)
                 .create(FitBitService.class);
         authService = new AuthorizationService(context);
@@ -89,21 +95,17 @@ public class FitBitNetRepository extends BaseNetRepository {
                     .header("Accept", "application/json")
                     .header("Content-type", "application/json")
                     .method(original.method(), original.body());
-            final AuthState authState = AppPreferencesHelper.getInstance(this.mContext)
-                    .getAuthStateFitBit();
 
-            authState.performActionWithFreshTokens(authService, (accessToken, idToken, exception) -> {
-                if (accessToken != null) {
-                    requestBuilder.header(
-                            "Authorization",
-                            "Bearer ".concat(accessToken)
-                    );
-                }
+            UserAccess userAccess = AppPreferencesHelper
+                    .getInstance(mContext)
+                    .getLastSelectedChild().getFitBitAccess();
 
-            });
-            Log.w("InterceptorFitBit", requestBuilder.build().headers().toString());
-            Log.w("InterceptorFitBit", "| REQUEST: " + requestBuilder.build().method() + " "
-                    + requestBuilder.build().url().toString());
+            if (userAccess != null && userAccess.getAccessToken() != null) {
+                requestBuilder.header(
+                        "Authorization",
+                        "Bearer ".concat(userAccess.getAccessToken())
+                );
+            }
             return chain.proceed(requestBuilder.build());
         };
     }
@@ -116,14 +118,13 @@ public class FitBitNetRepository extends BaseNetRepository {
     private Interceptor responseInterceptor() {
         return chain -> {
             Response response = chain.proceed(chain.request());
-
             // access token expired!
             if (response.code() == 401) {
                 EventBus.getDefault().post(
                         new MessageEvent(MessageEvent.EventType.FITBIT_ACCESS_TOKEN_EXPIRED)
                 );
             }
-            return chain.proceed(chain.request());
+            return response;
         };
     }
 
@@ -175,7 +176,7 @@ public class FitBitNetRepository extends BaseNetRepository {
                             }
                             physicalActivity.setHeartRate(heartRateZone);
                         }
-                        Log.w("ZONES", "ZON" + physicalActivity);
+                        physicalActivity.setDistance(activity.getDistance() * 1000);
                         result.add(physicalActivity);
                     }
                     return result;
@@ -302,8 +303,8 @@ public class FitBitNetRepository extends BaseNetRepository {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Single<List<Weight>> listWeights(String startDate, String period) {
-        return fitBitService.listWeights(startDate, period)
+    public Single<List<Weight>> listWeights(String startDate, String endDate) {
+        return fitBitService.listWeights(startDate, endDate)
                 .map(weights -> {
                     List<Weight> result = new ArrayList<>();
                     for (WeightFitBit weight : weights.getWeights()) {

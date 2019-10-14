@@ -1,28 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#00bcd4</color>
-    <color name="colorPrimaryLight">#e8f8fa</color>
     <color name="colorPrimaryDark">#0097a7</color>
     <color name="colorAccent">#aad05e</color>
 
     <color name="colorWarning">#FF7043</color>
-    <color name="colorWarningLight">#fcf8e3</color>
     <color name="colorWarningDark">#E64A19</color>
 
     <color name="colorDanger">#a94442</color>
-    <color name="colorDangerLight">#f2dede</color>
     <color name="colorPurple">#7c608f</color>
 
     <color name="colorBlackLight">#757575</color>
 
     <color name="colorLineDivider">#e2e2e2</color>
+    <color name="colorInputText">#d3d3d3</color>
     <color name="colorBackgroundNavigation">#f0f0f0</color>
+    <color name="colorFitbitActive">#1babb4</color>
+    <color name="colorFitbitInactive">#d6d6d6</color>
 
-    <color name="colorFontGreyDark">#333333</color>
-    <color name="colorFontGreyLight">#666666</color>
-    <color name="colorLine">#dfdfdf</color>
-    <color name="colorFontGreen">#388e3c</color>
-    <color name="colorFontRed">#F96650</color>
-
-    <color name="shimmer_color_for_image">#55efefef</color>
 </resources>

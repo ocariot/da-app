@@ -3,6 +3,7 @@ package br.edu.uepb.nutes.ocariot.data.model.common;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.auth0.android.jwt.JWT;
 import com.google.gson.Gson;
@@ -10,6 +11,8 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.util.Date;
+import java.util.Objects;
 
 /**
  * Represents UserAccess object.
@@ -17,30 +20,49 @@ import java.lang.reflect.Type;
  * @author Copyright (c) 2018, NUTES/UEPB
  */
 public class UserAccess implements Parcelable {
-    public static final String KEY_SCOPES = "scope";
+    public static final String KEY_SCOPE = "scope";
     public static final String KEY_SUB_TYPE = "sub_type";
 
     @SerializedName(value = "access_token", alternate = {"token"})
     private String accessToken;
 
-    private String subject;
-    private String subjectType;
+    @SerializedName("refresh_token")
     private String refreshToken;
+
+    @SerializedName("token_type")
     private String tokenType;
+
+    @SerializedName("scope")
+    private String scope;
+
+    @SerializedName(value = "expires_in", alternate = {"exp"})
     private long expirationDate; // in milliseconds
-    private String scopes;
+
+    @SerializedName("user_id")
+    private String userId;
+
+    @SerializedName("sub")
+    private String subject;
+
+    @SerializedName("sub_type")
+    private String subjectType;
+
+    @SerializedName("status")
+    private String status;
 
     public UserAccess() {
     }
 
     protected UserAccess(Parcel in) {
         accessToken = in.readString();
-        subject = in.readString();
-        subjectType = in.readString();
         refreshToken = in.readString();
         tokenType = in.readString();
+        scope = in.readString();
         expirationDate = in.readLong();
-        scopes = in.readString();
+        userId = in.readString();
+        subject = in.readString();
+        subjectType = in.readString();
+        status = in.readString();
     }
 
     public static final Creator<UserAccess> CREATOR = new Creator<UserAccess>() {
@@ -63,12 +85,14 @@ public class UserAccess implements Parcelable {
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(accessToken);
-        parcel.writeString(subject);
-        parcel.writeString(subjectType);
         parcel.writeString(refreshToken);
         parcel.writeString(tokenType);
+        parcel.writeString(scope);
         parcel.writeLong(expirationDate);
-        parcel.writeString(scopes);
+        parcel.writeString(userId);
+        parcel.writeString(subject);
+        parcel.writeString(subjectType);
+        parcel.writeString(status);
     }
 
     public String getSubject() {
@@ -119,19 +143,36 @@ public class UserAccess implements Parcelable {
         this.expirationDate = expirationDate;
     }
 
-    public String getScopes() {
-        return scopes;
+    public String getScope() {
+        return scope;
     }
 
-    public void setScopes(String scopes) {
-        this.scopes = scopes;
+    public void setScope(String scope) {
+        this.scope = scope;
     }
 
     public boolean isExpired() {
-        if (accessToken != null && !accessToken.isEmpty())
-            return new JWT(accessToken).isExpired(0);
-
+        if (accessToken != null && !accessToken.isEmpty()) {
+            return new Date().getTime() >= Objects.requireNonNull(
+                    new JWT(accessToken).getExpiresAt()).getTime();
+        }
         return true;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String user_id) {
+        this.userId = user_id;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     /**

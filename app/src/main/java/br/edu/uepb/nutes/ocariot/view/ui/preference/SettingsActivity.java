@@ -1,12 +1,13 @@
 package br.edu.uepb.nutes.ocariot.view.ui.preference;
 
 import android.os.Bundle;
-import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
 import br.edu.uepb.nutes.ocariot.R;
+import br.edu.uepb.nutes.ocariot.data.model.ocariot.User;
+import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
 
 /**
  * SettingsActivity implementation.
@@ -15,29 +16,50 @@ import br.edu.uepb.nutes.ocariot.R;
  */
 public class SettingsActivity extends BaseSettingsActivity implements
         SettingsFragment.OnClickSettingsListener {
+    private AppPreferencesHelper appPref;
+    private ActionBar actionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) actionBar.setDisplayHomeAsUpEnabled(true);
 
+        appPref = AppPreferencesHelper.getInstance(this);
+        initToolBar();
+
+        if (AppPreferencesHelper.getInstance(this).getLastSelectedChild() == null) {
+            replaceFragment(SettingsSimpleFragment.newInstance());
+            return;
+        }
         replaceFragment(SettingsFragment.newInstance());
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        if (actionBar != null && !appPref.getUserAccessOcariot().getSubjectType()
+                .equalsIgnoreCase(User.Type.CHILD)) {
+            actionBar.setSubtitle(appPref.getLastSelectedChild().getUsername());
+        }
+    }
+
+    private void initToolBar() {
+        actionBar = getDelegate().getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                super.onBackPressed();
-                break;
+        if (item.getItemId() == android.R.id.home) {
+            super.onBackPressed();
         }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
-    public void onPrefClick(Preference preference) {
-        if (preference.getKey().equals(getString(R.string.key_fitibit))) {
+    public void onPrefClick(String key) {
+        if (key.equals(getString(R.string.key_fitibit))) {
             finish();
         }
     }

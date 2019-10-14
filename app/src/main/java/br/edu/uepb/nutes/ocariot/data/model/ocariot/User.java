@@ -1,22 +1,27 @@
 package br.edu.uepb.nutes.ocariot.data.model.ocariot;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.Objects;
 
 public class User {
     @SerializedName("id")
-    private String _id; // _id in server remote (UUID)
+    protected String _id; // _id in server remote (UUID)
 
     @SerializedName("username")
-    private String username;
+    protected String username;
 
     @SerializedName("password")
-    private String password;
+    protected String password;
 
     @SerializedName("institution_id")
-    private String institutionId;
+    protected String institutionId;
 
     @SerializedName("last_login")
-    private String lastLogin;
+    protected String lastLogin;
 
     public User() {
     }
@@ -74,5 +79,39 @@ public class User {
         public static String FAMILY = "family";
         public static String APPLICATION = "application"; // Must not login to APP!!!
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if(!(o instanceof User)) return false;
+        User user = (User) o;
+        return username.equals(user.username);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(username);
+    }
+
+    /**
+     * Convert object to json format.
+     *
+     * @return String
+     */
+    public String toJson() {
+        return new Gson().toJson(this);
+    }
+
+    /**
+     * Convert json to Object.
+     *
+     * @param json String
+     * @return User
+     */
+    public static User jsonDeserialize(String json) {
+        java.lang.reflect.Type typeUser = new TypeToken<User>() {
+        }.getType();
+        return new Gson().fromJson(json, typeUser);
+    }
+
 }
 

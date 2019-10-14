@@ -5,12 +5,9 @@ import android.content.SharedPreferences;
 
 import com.securepreferences.SecurePreferences;
 
-import net.openid.appauth.AuthState;
-
-import org.json.JSONException;
-
-import br.edu.uepb.nutes.ocariot.data.model.ocariot.Child;
 import br.edu.uepb.nutes.ocariot.data.model.common.UserAccess;
+import br.edu.uepb.nutes.ocariot.data.model.ocariot.Child;
+import br.edu.uepb.nutes.ocariot.data.model.ocariot.FitBitAppData;
 import br.edu.uepb.nutes.ocariot.exception.LocalPreferenceException;
 
 /**
@@ -20,9 +17,9 @@ import br.edu.uepb.nutes.ocariot.exception.LocalPreferenceException;
  * @author Copyright (c) 2018, NUTES/UEPB
  */
 public class AppPreferencesHelper implements PreferencesHelper {
-    private final String PREF_KEY_AUTH_STATE_OCARIOT = "pref_key_user_access_ocariot";
-    private final String PREF_KEY_AUTH_STATE_FITBIT = "pref_key_access_fitbit";
-    private final String PREF_KEY_CHILD_PROFILE = "pref_key_user_profile";
+    private final String PREF_KEY_AUTH_OCARIOT = "pref_key_user_access_ocariot";
+    private final String PREF_KEY_LAST_SELECTED_CHILD = "pref_key_user_profile";
+    private final String PREF_KEY_FITBIT_DATA = "pref_key_fitbit_data";
 
     private static AppPreferencesHelper instance;
     private SharedPreferences mPrefs;
@@ -38,36 +35,26 @@ public class AppPreferencesHelper implements PreferencesHelper {
 
     @Override
     public boolean addUserAccessOcariot(final UserAccess userAccess) {
-        if (userAccess.getAccessToken() == null || userAccess.getAccessToken().isEmpty())
+        if (userAccess.getAccessToken() == null || userAccess.getAccessToken().isEmpty()) {
             throw new LocalPreferenceException("attribute accessToken can not be null or empty!");
-
-        return mPrefs.edit().putString(PREF_KEY_AUTH_STATE_OCARIOT,
-                userAccess.toString()).commit();
+        }
+        return mPrefs.edit().putString(PREF_KEY_AUTH_OCARIOT, userAccess.toString()).commit();
     }
 
     @Override
-    public boolean addAuthStateFiBIt(final AuthState authState) {
-        if (authState == null)
-            throw new LocalPreferenceException("attribute authState can not be null or empty!");
-
-        return mPrefs.edit().putString(PREF_KEY_AUTH_STATE_FITBIT,
-                authState.jsonSerializeString()).commit();
-    }
-
-    @Override
-    public boolean addChildProfile(Child user) {
+    public boolean addLastSelectedChild(Child user) {
         if (user == null) {
             throw new LocalPreferenceException("attribute user can not be null or empty!");
         }
-
-        return mPrefs.edit().putString(PREF_KEY_CHILD_PROFILE,
-                user.toString()).commit();
+        return mPrefs.edit().putString(PREF_KEY_LAST_SELECTED_CHILD, user.toString()).commit();
     }
 
     @Override
-    public boolean addString(final String key, final String value) {
-        checkKey(key);
-        return mPrefs.edit().putString(key, value).commit();
+    public boolean addFitbitAppData(FitBitAppData fitBitAppData) {
+        if (fitBitAppData == null) {
+            throw new LocalPreferenceException("attribute fitBitAppData can not be null or empty!");
+        }
+        return mPrefs.edit().putString(PREF_KEY_FITBIT_DATA, fitBitAppData.toString()).commit();
     }
 
     @Override
@@ -77,71 +64,35 @@ public class AppPreferencesHelper implements PreferencesHelper {
     }
 
     @Override
-    public boolean addInt(final String key, final int value) {
+    public boolean addInt(String key, int value) {
         checkKey(key);
         return mPrefs.edit().putInt(key, value).commit();
     }
 
     @Override
-    public boolean addLong(final String key, final long value) {
-        checkKey(key);
-        return mPrefs.edit().putLong(key, value).commit();
-    }
-
-    @Override
     public UserAccess getUserAccessOcariot() {
-        String userAccess = mPrefs.getString(PREF_KEY_AUTH_STATE_OCARIOT, null);
+        String userAccess = mPrefs.getString(PREF_KEY_AUTH_OCARIOT, null);
         return UserAccess.jsonDeserialize(userAccess);
     }
 
     @Override
-    public AuthState getAuthStateFitBit() {
-        String authStateJson = mPrefs.getString(PREF_KEY_AUTH_STATE_FITBIT, null);
-        try {
-            if (authStateJson != null)
-                return AuthState.jsonDeserialize(authStateJson);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    @Override
-    public Child getChildProfile() {
-        String user = mPrefs.getString(PREF_KEY_CHILD_PROFILE, null);
+    public Child getLastSelectedChild() {
+        String user = mPrefs.getString(PREF_KEY_LAST_SELECTED_CHILD, null);
         return Child.jsonDeserialize(user);
     }
 
     @Override
-    public boolean removeUserAccessOcariot() {
-        return mPrefs.edit().remove(PREF_KEY_AUTH_STATE_OCARIOT).commit() &&
-                mPrefs.edit().remove(PREF_KEY_CHILD_PROFILE).commit() &&
-                removeAuthStateFitBit();
-    }
-
-
-    @Override
-    public boolean removeAuthStateFitBit() {
-        return mPrefs.edit().remove(PREF_KEY_AUTH_STATE_FITBIT).commit();
+    public FitBitAppData getFitbitAppData() {
+        String fitbitAppData = mPrefs.getString(PREF_KEY_FITBIT_DATA, null);
+        if (fitbitAppData != null) return FitBitAppData.jsonDeserialize(fitbitAppData);
+        return null;
     }
 
     @Override
     public boolean removeSession() {
-        return removeUserAccessOcariot() && removeAuthStateFitBit();
+        return mPrefs.edit().remove(PREF_KEY_AUTH_OCARIOT).commit() &&
+                mPrefs.edit().remove(PREF_KEY_LAST_SELECTED_CHILD).commit();
     }
-
-    @Override
-    public boolean removeItem(final String key) {
-        checkKey(key);
-        return mPrefs.edit().remove(key).commit();
-    }
-
-    @Override
-    public String getString(String key) {
-        checkKey(key);
-        return mPrefs.getString(key, null);
-    }
-
 
     @Override
     public boolean getBoolean(String key) {
@@ -149,8 +100,15 @@ public class AppPreferencesHelper implements PreferencesHelper {
         return mPrefs.getBoolean(key, false);
     }
 
+    @Override
+    public int getInt(String key) {
+        checkKey(key);
+        return mPrefs.getInt(key, -1);
+    }
+
     private void checkKey(String key) {
-        if (key == null || key.isEmpty())
+        if (key == null || key.isEmpty()) {
             throw new NullPointerException("key can not be null or empty!");
+        }
     }
 }

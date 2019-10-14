@@ -31,6 +31,9 @@ public class PhysicalActivity extends Activity implements Parcelable {
     @SerializedName(value = "heart_rate")
     private HeartRateZone heartRate;
 
+    @SerializedName(value = "distance")
+    private long distance;
+
     public PhysicalActivity() {
         super();
     }
@@ -46,6 +49,7 @@ public class PhysicalActivity extends Activity implements Parcelable {
         steps = in.readInt();
         levels = in.createTypedArrayList(ActivityLevel.CREATOR);
         heartRate= in.readParcelable(HeartRateZone.class.getClassLoader());
+        distance = in.readLong();
     }
 
     @Override
@@ -60,6 +64,7 @@ public class PhysicalActivity extends Activity implements Parcelable {
         dest.writeInt(steps);
         dest.writeTypedList(levels);
         dest.writeParcelable(heartRate, flags);
+        dest.writeLong(distance);
     }
 
     @Override
@@ -122,6 +127,14 @@ public class PhysicalActivity extends Activity implements Parcelable {
 
     public void setHeartRate(HeartRateZone heartRate) {
         this.heartRate = heartRate;
+    }
+
+    public long getDistance() {
+        return distance;
+    }
+
+    public void setDistance(long distance) {
+        this.distance = distance;
     }
 
     @Override

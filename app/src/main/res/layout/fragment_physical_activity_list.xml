@@ -6,13 +6,11 @@
     android:orientation="vertical"
     tools:context=".view.ui.activity.PhysicalActivityDetail">
 
-    <TextView
-        android:id="@+id/no_data_textView"
+    <include
+        android:id="@+id/box_no_data"
+        layout="@layout/no_data"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:gravity="center_horizontal"
-        android:text="@string/message_no_data_display"
+        android:layout_height="match_parent"
         android:visibility="gone" />
 
     <android.support.v4.widget.SwipeRefreshLayout

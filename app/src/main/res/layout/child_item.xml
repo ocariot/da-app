@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
+    android:orientation="horizontal"
+    android:padding="@dimen/default_padding">
+
+    <ImageView
+        android:id="@+id/gender_img"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:contentDescription="@null"
+        android:src="@null" />
+
+    <TextView
+        android:id="@+id/name_child"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/gender_img"
+        android:layout_marginTop="-2dp"
+        android:layout_marginStart="40dp"
+        android:text="B0001"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="@color/colorBlackLight"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/child_last_sync_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/name_child"
+        android:layout_marginTop="2dp"
+        android:layout_marginStart="40dp"
+        android:text="@string/last_sync_date_time"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textColor="@color/colorBlackLight" />
+
+    <ImageView
+        android:id="@+id/fitbit_status_img"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignParentEnd="true"
+        android:contentDescription="@null"
+        android:layout_marginTop="10dp"
+        android:tint="@color/colorFitbitActive"
+        android:src="@drawable/ic_fitbit_logo" />
+</RelativeLayout>

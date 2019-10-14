@@ -4,7 +4,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.util.Log;
 
 import net.openid.appauth.AuthState;
 import net.openid.appauth.AuthorizationRequest;
@@ -15,6 +14,8 @@ import net.openid.appauth.ClientAuthentication;
 import net.openid.appauth.ClientSecretBasic;
 import net.openid.appauth.ResponseTypeValues;
 
+import br.edu.uepb.nutes.ocariot.data.model.common.UserAccess;
+import br.edu.uepb.nutes.ocariot.data.model.ocariot.Child;
 import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
 import io.reactivex.Single;
 
@@ -24,8 +25,6 @@ import io.reactivex.Single;
  * @author Copyright (c) 2018, NUTES/UEPB
  */
 public class LoginFitBit {
-    private final String LOG_TAG = "LoginFitBit";
-
     private final int REQUEST_LOGIN_FITBIT_SUCCESS = 2;
     private final int REQUEST_LOGIN_FITBIT_CANCELED = 3;
 
@@ -34,24 +33,28 @@ public class LoginFitBit {
 
     private final Uri REDIRECT_URI = Uri.parse("fitbitauth://finished");
 
-    private final String CLIENT_ID = "YOUR_CLIENT_ID";
-    private final String CLIENT_SECRET = "YOUR_CLIENT_SECRET";
-
     private Context mContext;
 
     private AuthState mAuthState;
     private AuthorizationService mAuthService;
     private AuthorizationRequest mAuthRequest;
+    private AppPreferencesHelper appPref;
+    private String CLIENT_SECRET;
 
     public LoginFitBit(Context context) {
         this.mContext = context;
+        appPref = AppPreferencesHelper.getInstance(mContext);
+
         initConfig();
     }
 
     /**
      * Initialize settings to obtain authorization code.
      */
-    public void initConfig() {
+    private void initConfig() {
+        String CLIENT_ID = appPref.getFitbitAppData().getClientId();
+        CLIENT_SECRET = appPref.getFitbitAppData().getClientSecret();
+
         AuthorizationServiceConfiguration serviceConfig = new AuthorizationServiceConfiguration(
                 AUTHORIZATION_ENDPOINT, // authorization endpoint
                 TOKEN_ENDPOINT // token endpoint
@@ -68,7 +71,7 @@ public class LoginFitBit {
 
         mAuthRequest = authRequestBuilder
                 .setScopes("activity", "sleep", "heartrate", "weight")
-                .setPrompt("login")
+                .setPrompt("login consent")
                 .build();
     }
 
@@ -102,18 +105,15 @@ public class LoginFitBit {
         final ClientAuthentication clientAuth = new ClientSecretBasic(CLIENT_SECRET);
         if (mAuthService == null) mAuthService = new AuthorizationService(mContext);
 
-        return Single.create(emitter -> mAuthService.performTokenRequest(authResp.createTokenExchangeRequest(),
+        return Single.create(emitter -> mAuthService.performTokenRequest(
+                authResp.createTokenExchangeRequest(),
                 clientAuth, (tokenResponse, e) -> {
                     mAuthState.update(tokenResponse, e);
                     if (e != null) {
-                        Log.w(LOG_TAG, "performTokenRequest() error: " + e.getMessage());
                         emitter.onError(e);
                         return;
                     }
-
-                    if (AppPreferencesHelper.getInstance(mContext).addAuthStateFiBIt(mAuthState)) {
-                        emitter.onSuccess(mAuthState);
-                    }
+                    emitter.onSuccess(mAuthState);
                 }));
     }
 }

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">DA OCARIoT</string>
+
+    <!-- TITLES -->
+    <string name="title_physical_activities">Atividades físicas</string>
+    <string name="title_activities">Atividades</string>
+    <string name="title_sleep">Sono</string>
+    <string name="title_weight">Peso</string>
+    <string name="title_body_fat">Gordura corporal</string>
+    <string name="title_iot">IoT</string>
+    <string name="title_welcome">Bem-vindo</string>
+    <string name="title_settings">Configurações</string>
+    <string name="title_children">Crianças</string>
+    <string name="title_hours">horas</string>
+    <string name="title_minutes">minutos</string>
+    <string name="title_sleep_efficiency">Eficiência do sono</string>
+    <string name="title_asleep">Adormecido</string>
+    <string name="title_restless">Inquieto</string>
+    <string name="title_awake">Acordado</string>
+    <string name="title_rem">REM</string>
+    <string name="title_light">Leve</string>
+    <string name="title_deep">Profundo</string>
+    <string name="title_error">Erro!</string>
+    <string name="title_success">Sucesso!</string>
+    <string name="title_login_failed">Autenticação falhou!</string>
+    <string name="title_connection_error">Erro de conexão!</string>
+    <string name="title_access_blocked">Acesso bloqueado!</string>
+    <string name="title_last_measurement_month">Última medição do mês atual</string>
+    <string name="title_processing">Processando</string>
+    <string name="title_yes">Sim</string>
+    <string name="title_no">Não</string>
+    <string name="img_sort">Ícone de ordenação</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_username">Nome de usuário</string>
+    <string name="prompt_password">Senha</string>
+    <string name="title_login_in">Entrar</string>
+    <string name="img_desc_ocariot">OCARIoT logo</string>
+
+    <!-- ACTIVITIES -->
+    <string name="cals">cals</string>
+    <string name="cals_min">cals/min</string>
+    <string name="min">min</string>
+    <string name="duration_min">%d min</string>
+    <string name="calories">Calorias</string>
+    <string name="steps">Passos</string>
+    <string name="levels">Níveis</string>
+    <string name="level_sedentary">Sedentary: %d min</string>
+    <string name="level_lightly">Lightly: %d min</string>
+    <string name="level_fairly">Fairly: %d min</string>
+    <string name="level_very">Very: %d min</string>
+    <string name="img_desc_activity">Imagem da atividade</string>
+    <string name="img_desc_clock">Imagem do relógio</string>
+    <string name="img_desc_calories">Imagem da caloria</string>
+    <string name="hr_avg">Frequência cardíaca média</string>
+    <string name="activity_range_time">%s às %s</string>
+
+    <!-- SLEEP -->
+    <string name="times_count">%d vezes</string>
+
+    <!-- IoT -->
+    <string name="weight_month_average">Média do mês</string>
+    <string name="img_desc_heart">Imagem do Coração</string>
+
+    <!-- FORMAT DATES -->
+    <string name="date_format1">yyyy-MM-dd</string>
+    <string name="date_time_abb1">dd MMMM \'às\' HH:mm</string>
+    <string name="date_time_abb3">EEEE, dd MMMM, yyyy</string>
+    <string name="date_time_abb4">EEE, dd MMMM, yyyy</string>
+    <string name="date_time_abb5">EEE, dd/MM/yyyy \'às\' HH:mm:ss</string>
+    <string name="hour_format1">HH:mm</string>
+    <string name="hour_format2">HH:mm:ss</string>
+
+    <!-- SETTINGS -->
+    <string name="login_with_fitbit">Fornecer acesso ao Fitbit</string>
+    <string name="login_do_not_user_fitbit">Não usar o Fitbit no momento</string>
+    <string name="settings_title">Configurações</string>
+    <string name="settings_account">Conta</string>
+    <string name="settings_external_services">Serviços Externos</string>
+    <string name="key_fitibit">key_fitbit</string>
+    <string name="key_signout">key_signout</string>
+    <string name="key_sync_data">key_sync_data</string>
+    <string name="key_children">key_children_manager</string>
+    <string name="settings_signout">Sair</string>
+    <string name="settings_fitbit">Fitbit</string>
+    <string name="settings_summary_signout">Você será desconectado do aplicativo e redirecionado para a tela de login.</string>
+    <string name="settings_summary_fitbit">Compartilhe dados de atividade, sono, frequência cardíaca e peso.</string>
+    <string name="settings_version">Versão</string>
+    <string name="settings_summary_version">1.6.1</string>
+    <string name="settings_about">Sobre</string>
+    <string name="settings_children">Crianças</string>
+    <string name="settings_summary_children">Lista de crianças</string>
+
+    <!-- DIALOGS -->
+    <string name="dialog_confirm_sign_out">Deseja realmente sair do aplicativo?\nVocê será redirecionado para a tela de login&#8230;</string>
+    <string name="dialog_confirm_revoke_fitbit">Deseja desconectar do Fitbit?\nNão será mais possível sincronizar os dados da criança \"%s\".</string>
+    <string name="dialog_revoke_fitbit_processing">Processando pedido de revogação de acesso ao Fitbit&#8230;</string>
+
+    <!-- ERROR MESSAGES -->
+    <string name="error_connection">Não foi possível estabelecer uma comunicação. Verifique se você possui conexão à Internet e tente novamente&#8230;</string>
+    <string name="error_oauth_fitbit">Ocorreu um erro interno no servidor OAuth do Fitbit.</string>
+    <string name="error_configs_fitbit">Não foi possível recuperar as informações do Fitbit necessárias para executar a operação.\nPor favor, entre em contato com o administrador!</string>
+    <string name="error_login_invalid">Nome de usuário ou senha inválidos&#8230;</string>
+    <string name="error_500">Ocorreu um erro na comunicação com o servidor. Por favor, tente novamente mais tarde&#8230;</string>
+    <string name="error_403">Você não tem permissão para a funcionalidade que está tentando acessar. Por favor, entre em contato com o administrador&#8230;</string>
+
+    <!-- MESSAGES -->
+    <string name="message_no_data_display">Não há dados para exibir!</string>
+    <string name="message_welcome">1. Faça autenticação na conta Fitbit da criança selecionada;\n\n2. Forneça autorização para que o APP OCARIoT colete do Fitbit dados de atividade física, sono, frequência cardíaca e peso;\n\n3. Feito! Os registros de atividade, sono, frequência cardíaca e peso serão capturados pelos dispositivos Fitbit e sincronizados com a plataforma OCARIoT automaticamente ou quando solicitado.</string>
+    <string name="message_welcome_child">1. Faça autenticação na sua conta Fitbit;\n\n2. Forneça autorização para que o APP OCARIoT colete do Fitbit dados de atividade física, sono, frequência cardíaca e peso;\n\n3. Feito! Os registros de atividade, sono, frequência cardíaca e peso serão capturados pelos dispositivos Fitbit e sincronizados com a plataforma OCARIoT automaticamente ou quando solicitado.</string>
+    <string name="message_selected_child">Criança selecionada %s</string>
+    <string name="message_about">Este projeto recebeu financiamento do programa Horizonte 2020 da União Européia sob o contrato de concessão nº 777082 e o Ministério da Ciência, Tecnologia, Inovação e Comunicação do Brasil através da RNP, contrato nº 3007.</string>
+    <string name="message_permission_location">A permissão de localização é obrigatória para utilizar o Bluetooth Low Energy!</string>
+
+    <!-- VALIDATION MESSAGES -->
+    <string name="required_username">O nome de usuário é requerido!</string>
+    <string name="required_password">A senha é requerida!</string>
+
+    <!-- SYNC DATA -->
+    <string name="synchronization">Sincronização</string>
+    <string name="synchronization_data">Sincronize dados de serviços externos com a plataforma OCARIoT.</string>
+    <string name="synchronizing">Sincronizando</string>
+    <string name="synchronizing_data_fitbit">Sincronizando dados Fitbit da criança \"%s\" com a plataforma OCARIoT&#8230;</string>
+    <string name="sync_data_fitbit_error">Ocorreu um erro ao tentar sincronizar os dados do Fitbit do criança "%s" com a plataforma OCARIoT.\nPor favor, tente novamente mais tarde&#8230;</string>
+    <string name="sync_data_fitbit_success">Os dados do Fitbit da criança "%s" foram sincronizados com sucesso com a plataforma OCARIoT.</string>
+    <string name="sync_forced_data_fitbit_success">Atividade Física: %1d\nSono: %2d\nPeso: %3d\nLogs (dias)\n\tPassos: %4d\n\tCalorias: %5d\n\tMinutos Ativos: %6d\n\tMinutos Levemente Ativos: %7d\n\tMinutos Sedentários: %8d</string>
+    <string name="last_sync_date_time">Última sinc: %s</string>
+    <string name="fitbit_get_access_token_error">Ocorreu um erro ao tentar recuperar token de acesso do Fitbit.\nPor favor, tente mais tarde&#8230;</string>
+
+    <!-- ALERTS -->
+    <string name="alert_title_token_expired">Problema na autenticação!</string>
+    <string name="alert_token_expired_ocariot">Sua sessão excedeu o limite de 24 horas.\nEm segundos, você será redirecionado para a tela de login para realizar uma nova autenticação.</string>
+    <string name="alert_title_no_token_fitbit">Ocorreu um erro ao tentar recuperar o acesso ao Fitbit!</string>
+    <string name="alert_no_token_fitbit">Para coletar dados Fitbit da criança \"%s\", você deve primeiro fornecer autorização para coletar os dados.</string>
+    <string name="alert_token_expired_fitbit">O token de acesso Fitbit para filho \"%s\" expirou ou foi revogado.\nPor favor, clique aqui para conceder acesso novamente&#8230;</string>
+    <string name="alert_access_blocked">Desculpe, este aplicativo não suporta usuário do tipo administrador. Somente criança, família, educador e profissional de saúde são permitidos&#8230;</string>
+    <string name="alert_revoke_fitbit_success">Acesso Fitbit revogado com sucesso. Não será mais possível executar a sincronização dos dados.</string>
+
+    <!--  MENU  -->
+    <string name="action_sort_username">Username</string>
+    <string name="action_sort_sync">Sincronização</string>
+</resources>

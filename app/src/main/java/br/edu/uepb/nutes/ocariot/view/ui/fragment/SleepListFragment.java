@@ -6,6 +6,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.content.res.AppCompatResources;
+import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,8 +16,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ethanhua.skeleton.Skeleton;
 import com.ethanhua.skeleton.SkeletonScreen;
@@ -28,6 +28,7 @@ import br.edu.uepb.nutes.ocariot.data.model.common.UserAccess;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.Sleep;
 import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
 import br.edu.uepb.nutes.ocariot.data.repository.remote.ocariot.OcariotNetRepository;
+import br.edu.uepb.nutes.ocariot.utils.AlertMessage;
 import br.edu.uepb.nutes.ocariot.view.adapter.SleepListAdapter;
 import br.edu.uepb.nutes.ocariot.view.adapter.base.OnRecyclerViewListener;
 import butterknife.BindView;
@@ -50,6 +51,7 @@ public class SleepListFragment extends Fragment {
     private Context mContext;
     private CompositeDisposable mDisposable;
     private SkeletonScreen mSkeletonScreen;
+    private AlertMessage mAlertMessage;
 
     /**
      * We need this variable to lock and unlock loading more.
@@ -64,8 +66,11 @@ public class SleepListFragment extends Fragment {
     @BindView(R.id.data_swipe_refresh)
     SwipeRefreshLayout mDataSwipeRefresh;
 
-    @BindView(R.id.no_data_textView)
-    TextView mNoData;
+    @BindView(R.id.box_no_data)
+    View mNoData;
+
+    @BindView(R.id.img_no_data)
+    AppCompatImageView mImgNoData;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -83,9 +88,11 @@ public class SleepListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = Objects.requireNonNull(getActivity()).getApplicationContext();
-        mDisposable = new CompositeDisposable();
         ocariotRepository = OcariotNetRepository.getInstance(mContext);
         appPref = AppPreferencesHelper.getInstance(mContext);
+
+        mDisposable = new CompositeDisposable();
+        mAlertMessage = new AlertMessage(getActivity());
     }
 
     @Override
@@ -100,6 +107,7 @@ public class SleepListFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mImgNoData.setImageDrawable(AppCompatResources.getDrawable(mContext, R.drawable.moon));
         initComponents();
     }
 
@@ -186,16 +194,14 @@ public class SleepListFragment extends Fragment {
      * Otherwise it displays from the remote server.
      */
     private void loadDataOcariot() {
-        Log.w(LOG_TAG, "loadDataOcariotInit()");
         if (userAccess == null) return;
 
         mDisposable.add(
                 ocariotRepository
-                        .listSleep(userAccess.getSubject(), "-start_time", 1, 100)
+                        .listSleep(appPref.getLastSelectedChild().get_id(), "-start_time", 1, 100)
                         .doOnSubscribe(disposable -> loading(true))
                         .doAfterTerminate(() -> loading(false))
-                        .subscribe(this::populateViewSleep, error -> Toast.makeText(mContext,
-                                R.string.error_500, Toast.LENGTH_SHORT).show())
+                        .subscribe(this::populateViewSleep, error -> mAlertMessage.handleError(error))
         );
     }
 
@@ -228,7 +234,7 @@ public class SleepListFragment extends Fragment {
             itShouldLoadMore = true;
             return;
         }
-        mSkeletonScreen.show();
+        if (mAdapter.itemsIsEmpty()) mSkeletonScreen.show();
         itShouldLoadMore = false;
     }
 

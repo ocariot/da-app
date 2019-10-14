@@ -77,9 +77,9 @@ public interface FitBitService {
             @Path("end-date") String endDate
     );
 
-    @GET("1.2/user/-/body/log/weight/date/{start-date}/{period}.json")
+    @GET("1.2/user/-/body/log/weight/date/{start-date}/{end-date}.json")
     Single<WeightListFitBit> listWeights(
             @Path("start-date") String startDate,
-            @Path("period") String period
+            @Path("end-date") String endDate
     );
 }

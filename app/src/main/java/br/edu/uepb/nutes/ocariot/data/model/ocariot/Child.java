@@ -5,12 +5,14 @@ import android.support.annotation.NonNull;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
+import br.edu.uepb.nutes.ocariot.data.model.common.UserAccess;
+
 /**
  * Represents Child object.
  *
  * @author Copyright (c) 2018, NUTES/UEPB
  */
-public class Child extends User {
+public class Child extends User implements Comparable<Child> {
     @SerializedName("gender")
     private String gender;
 
@@ -19,6 +21,9 @@ public class Child extends User {
 
     @SerializedName("last_sync")
     private String lastSync;
+
+    @SerializedName("fitbit_access")
+    private UserAccess fitBitAccess;
 
     public Child() {
     }
@@ -51,6 +56,14 @@ public class Child extends User {
         this.lastSync = lastSync;
     }
 
+    public UserAccess getFitBitAccess() {
+        return fitBitAccess;
+    }
+
+    public void setFitBitAccess(UserAccess fitBitAccess) {
+        this.fitBitAccess = fitBitAccess;
+    }
+
     /**
      * Convert json to Object.
      *
@@ -65,5 +78,10 @@ public class Child extends User {
     @Override
     public String toString() {
         return new Gson().toJson(this);
+    }
+
+    @Override
+    public int compareTo(Child o) {
+        return this.username.compareToIgnoreCase(o.getUsername());
     }
 }

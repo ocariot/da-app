@@ -6,16 +6,15 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.content.res.AppCompatResources;
+import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ethanhua.skeleton.Skeleton;
 import com.ethanhua.skeleton.SkeletonScreen;
@@ -27,8 +26,8 @@ import br.edu.uepb.nutes.ocariot.R;
 import br.edu.uepb.nutes.ocariot.data.model.common.UserAccess;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.PhysicalActivity;
 import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
-import br.edu.uepb.nutes.ocariot.data.repository.remote.BaseNetRepository;
 import br.edu.uepb.nutes.ocariot.data.repository.remote.ocariot.OcariotNetRepository;
+import br.edu.uepb.nutes.ocariot.utils.AlertMessage;
 import br.edu.uepb.nutes.ocariot.view.adapter.PhysicalActivityListAdapter;
 import br.edu.uepb.nutes.ocariot.view.adapter.base.OnRecyclerViewListener;
 import butterknife.BindView;
@@ -51,6 +50,7 @@ public class PhysicalActivityListFragment extends Fragment {
     private Context mContext;
     private CompositeDisposable mDisposable;
     private SkeletonScreen mSkeletonScreen;
+    private AlertMessage mAlertMessage;
 
     // We need this variable to lock and unlock loading more.
     // We should not charge more when a request has already been made.
@@ -63,8 +63,11 @@ public class PhysicalActivityListFragment extends Fragment {
     @BindView(R.id.data_swipe_refresh)
     SwipeRefreshLayout mDataSwipeRefresh;
 
-    @BindView(R.id.no_data_textView)
-    TextView mNoData;
+    @BindView(R.id.box_no_data)
+    View mNoData;
+
+    @BindView(R.id.img_no_data)
+    AppCompatImageView mImgNoData;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -82,15 +85,13 @@ public class PhysicalActivityListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = Objects.requireNonNull(getActivity()).getApplicationContext();
-        mDisposable = new CompositeDisposable();
+
         ocariotRepository = OcariotNetRepository.getInstance(mContext);
         appPref = AppPreferencesHelper.getInstance(mContext);
         userAccess = appPref.getUserAccessOcariot();
-    }
 
-    @Override
-    public void onResume() {
-        super.onResume();
+        mDisposable = new CompositeDisposable();
+        mAlertMessage = new AlertMessage(getActivity());
     }
 
     @Override
@@ -104,6 +105,8 @@ public class PhysicalActivityListFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mImgNoData.setImageDrawable(AppCompatResources.getDrawable(mContext, R.drawable.running));
+
         initComponents();
     }
 
@@ -132,6 +135,11 @@ public class PhysicalActivityListFragment extends Fragment {
     private void initComponents() {
         initRecyclerView();
         initDataSwipeRefresh();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         loadDataOcariot();
     }
 
@@ -184,17 +192,19 @@ public class PhysicalActivityListFragment extends Fragment {
      * Otherwise it displays from the remote server.
      */
     private void loadDataOcariot() {
-        Log.w(LOG_TAG, "loadDataOcariotInit()");
         if (userAccess == null) return;
 
         mDisposable.add(
                 ocariotRepository
-                        .listActivities(userAccess.getSubject(), "-start_time", 1, 100)
+                        .listActivities(
+                                appPref.getLastSelectedChild().get_id(),
+                                "-start_time",
+                                1,
+                                100
+                        )
                         .doOnSubscribe(disposable -> loading(true))
                         .doAfterTerminate(() -> loading(false))
-                        .subscribe(this::populateViewActivities,
-                                error -> Toast.makeText(mContext, R.string.error_500, Toast.LENGTH_SHORT).show()
-                        )
+                        .subscribe(this::populateViewActivities, error -> mAlertMessage.handleError(error))
         );
     }
 
@@ -227,7 +237,7 @@ public class PhysicalActivityListFragment extends Fragment {
             itShouldLoadMore = true;
             return;
         }
-        mSkeletonScreen.show();
+        if (mAdapter.itemsIsEmpty()) mSkeletonScreen.show();
         itShouldLoadMore = false;
     }
 

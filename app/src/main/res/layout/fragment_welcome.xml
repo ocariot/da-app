@@ -17,11 +17,30 @@
         android:textSize="28sp" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/child_username_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="@string/message_selected_child"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+    <TextView
+        android:id="@+id/instructions_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:text="@string/message_welcome" />
+
+    <TextView
+        android:id="@+id/last_sync_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:gravity="center"
+        android:text="@string/last_sync_date_time"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textColor="@color/colorBlackLight" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -45,6 +64,7 @@
             android:layout_gravity="bottom"
             android:backgroundTint="@color/colorWarning"
             android:text="@string/login_do_not_user_fitbit" />
+
     </LinearLayout>
 
 </LinearLayout>

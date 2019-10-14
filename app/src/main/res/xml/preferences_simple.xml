@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/settings_account">
+        <PreferenceScreen
+            android:key="@string/key_signout"
+            android:summary="@string/settings_summary_signout"
+            android:title="@string/settings_signout" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/settings_about">
+        <Preference
+            android:summary="@string/message_about"/>
+
+        <Preference
+            android:summary="@string/settings_summary_version"
+            android:title="@string/settings_version" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

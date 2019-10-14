@@ -5,13 +5,10 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import java.util.Objects;
 
 import br.edu.uepb.nutes.ocariot.R;
 
@@ -25,7 +22,6 @@ public class DialogLoading extends DialogFragment {
     private static final String ID = "id";
     private static final String MESSAGE = "message";
     private static final String TITLE = "title";
-    private View view;
     private FragmentManager fragmentManager;
 
     /**
@@ -42,11 +38,11 @@ public class DialogLoading extends DialogFragment {
      * @param message The id string of message
      * @return The DialogFragment
      */
-    public static DialogLoading newDialog(int id, int title, int message) {
+    public static DialogLoading newDialog(int id, String title, String message) {
         Bundle bundle = new Bundle();
         bundle.putInt(ID, id);
-        bundle.putInt(TITLE, title);
-        bundle.putInt(MESSAGE, message);
+        bundle.putString(TITLE, title);
+        bundle.putString(MESSAGE, message);
 
         DialogLoading dialogFragment = new DialogLoading();
         dialogFragment.setArguments(bundle);
@@ -57,21 +53,15 @@ public class DialogLoading extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.dialog_fragment, container, false);
+        View view = inflater.inflate(R.layout.dialog_fragment, container, false);
         TextView message = view.findViewById(R.id.loading_message);
 
         getDialog().setCanceledOnTouchOutside(false);
         getDialog().setCancelable(false);
-        getDialog().setTitle(Objects.requireNonNull(getArguments()).getInt(TITLE));
-        message.setText(getArguments().getInt(MESSAGE));
+        getDialog().setTitle(getArguments().getString(TITLE));
+        message.setText(getArguments().getString(MESSAGE));
 
         return view;
-    }
-
-    public void setMessage(@StringRes int id) {
-        if (view == null) return;
-        TextView message = view.findViewById(R.id.loading_message);
-        message.setText(id);
     }
 
     /**
@@ -88,7 +78,7 @@ public class DialogLoading extends DialogFragment {
     }
 
     public void close() {
-        if(fragmentManager == null) return;
+        if (fragmentManager == null) return;
         Fragment dialogFragment = fragmentManager.findFragmentByTag(DIALOG_TAG);
 
         if (dialogFragment != null && this.isVisible()) {

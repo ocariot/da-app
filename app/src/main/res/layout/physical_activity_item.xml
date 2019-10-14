@@ -77,7 +77,6 @@
                     android:textSize="14sp" />
 
                 <TextView
-                    android:id="@+id/duration_unit_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="2dp"
@@ -92,7 +91,6 @@
                 android:layout_height="wrap_content">
 
                 <android.support.v7.widget.AppCompatImageView
-                    android:id="@+id/calories_img"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_marginStart="25dp"
@@ -109,7 +107,6 @@
                     android:textSize="14sp" />
 
                 <TextView
-                    android:id="@+id/calories_unit_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="2dp"
