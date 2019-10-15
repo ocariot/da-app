@@ -22,18 +22,31 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 import br.edu.uepb.nutes.ocariot.R;
+import br.edu.uepb.nutes.ocariot.data.model.fitbit.ActivitiesListFitBit;
+import br.edu.uepb.nutes.ocariot.data.model.fitbit.ActivityLevelFitBit;
+import br.edu.uepb.nutes.ocariot.data.model.fitbit.HeartRateZoneFitBit;
+import br.edu.uepb.nutes.ocariot.data.model.fitbit.PhysicalActivityFitBit;
+import br.edu.uepb.nutes.ocariot.data.model.ocariot.ActivityLevel;
+import br.edu.uepb.nutes.ocariot.data.model.ocariot.HeartRateZone;
+import br.edu.uepb.nutes.ocariot.data.model.ocariot.HeartRateZoneItem;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.PhysicalActivity;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.Sleep;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.User;
 import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
 import br.edu.uepb.nutes.ocariot.utils.AlertMessage;
+import br.edu.uepb.nutes.ocariot.utils.DateUtils;
 import br.edu.uepb.nutes.ocariot.utils.MessageEvent;
 import br.edu.uepb.nutes.ocariot.view.ui.fragment.IotFragment;
 import br.edu.uepb.nutes.ocariot.view.ui.fragment.PhysicalActivityListFragment;

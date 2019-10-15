@@ -359,7 +359,10 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                         .fitBitSync(child.get_id())
                         .doOnSubscribe(disposable -> mDialogSync.show(getFragmentManager()))
                         .doAfterTerminate(() -> mDialogSync.close())
-                        .subscribe(this::showAlertResultSyncForced, err -> showAlertResultSync(false))
+                        .subscribe(
+                                fitBitSync -> showAlertResultSync(true),
+                                err -> showAlertResultSync(false)
+                        )
         );
     }
 
@@ -425,30 +428,6 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
             });
         }
         alerter.show();
-    }
-
-    private void showAlertResultSyncForced(FitBitSync fitBitSync) {
-        String result = "\n\n" + mContext.getResources()
-                .getString(R.string.sync_forced_data_fitbit_success,
-                        fitBitSync.getActivities(), fitBitSync.getSleep(),
-                        fitBitSync.getWeights(), fitBitSync.getLogs().getSteps(),
-                        fitBitSync.getLogs().getCalories(), fitBitSync.getLogs().getActiveMinutes(),
-                        fitBitSync.getLogs().getLightlyActiveMinutes(), fitBitSync.getLogs().getSedentaryMinutes());
-        Alerter.create(getActivity())
-                .setDuration(30000)
-                .enableSwipeToDismiss()
-                .setTitle(R.string.title_success)
-                .setText(mContext.getResources()
-                        .getString(R.string.sync_data_fitbit_success, child.getUsername())
-                        .concat(result))
-                .setBackgroundColorRes(R.color.colorAccent)
-                .setIcon(R.drawable.ic_happy_dark)
-                .setOnClickListener(v -> {
-                    Intent intent = new Intent(getActivity(), MainActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
-                })
-                .show();
     }
 
     private void openFitbitAuth() {

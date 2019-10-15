@@ -5,9 +5,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
+import java.util.Locale;
 
 import br.edu.uepb.nutes.ocariot.R;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.ActivityType;
@@ -23,15 +25,15 @@ import butterknife.ButterKnife;
  * @author Copyright (c) 2018, NUTES/UEPB
  */
 public class PhysicalActivityListAdapter extends BaseAdapter<PhysicalActivity> {
-    private final Context context;
+    private final Context mContext;
 
     public PhysicalActivityListAdapter(Context context) {
-        this.context = context;
+        this.mContext = context;
     }
 
     @Override
     public View createView(ViewGroup viewGroup, int viewType) {
-        return View.inflate(context, R.layout.physical_activity_item, null);
+        return View.inflate(mContext, R.layout.physical_activity_item, null);
     }
 
     @Override
@@ -47,7 +49,7 @@ public class PhysicalActivityListAdapter extends BaseAdapter<PhysicalActivity> {
 
             h.name.setText(activity.getName());
             h.dateStart.setText(DateUtils.convertDateTimeUTCToLocale(activity.getStartTime(),
-                    context.getResources().getString(R.string.date_time_abb1), null));
+                    mContext.getResources().getString(R.string.date_time_abb1), null));
             int duration = (int) (activity.getDuration() / (60 * 1000));
             h.duration.setText(String.valueOf(duration));
             h.calories.setText(String.valueOf(activity.getCalories()));
@@ -65,8 +67,26 @@ public class PhysicalActivityListAdapter extends BaseAdapter<PhysicalActivity> {
                 h.image.setImageResource(R.drawable.ic_workout);
             } else if (name.equals(ActivityType.FITSTAR_PERSONAL)) {
                 h.image.setImageResource(R.drawable.ic_star);
+            } else if (name.equals(ActivityType.SWIM)) {
+                h.image.setImageResource(R.drawable.ic_swimming);
+            } else if (name.equals(ActivityType.SPORT)) {
+                h.image.setImageResource(R.drawable.ic_sport);
             } else {
                 h.image.setImageResource(R.drawable.ic_workout);
+            }
+
+            // distance
+            if (activity.getDistance() != null && activity.getDistance() > 0) {
+                double distance = activity.getDistance() / 1000;
+                double distanceRest = activity.getDistance() % 1000;
+                if (distanceRest > 0) {
+                    h.distance.setText(String.format(Locale.getDefault(), "%.2f", distance));
+                } else {
+                    h.distance.setText(String.format(Locale.getDefault(), "%d", (int) distance));
+                }
+                h.boxDistance.setVisibility(View.VISIBLE);
+            } else {
+                h.boxDistance.setVisibility(View.INVISIBLE);
             }
 
             // OnClick Item
@@ -98,6 +118,12 @@ public class PhysicalActivityListAdapter extends BaseAdapter<PhysicalActivity> {
 
         @BindView(R.id.calories_tv)
         TextView calories;
+
+        @BindView(R.id.distance_tv)
+        TextView distance;
+
+        @BindView(R.id.box_distance)
+        LinearLayout boxDistance;
 
         ViewHolder(View view) {
             super(view);

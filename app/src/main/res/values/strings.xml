@@ -39,6 +39,7 @@
 
     <!-- ACTIVITIES -->
     <string name="cals">cals</string>
+    <string name="km">km</string>
     <string name="cals_min">cals/min</string>
     <string name="min">min</string>
     <string name="duration_min">%d min</string>
@@ -54,6 +55,7 @@
     <string name="img_desc_calories">Calories image</string>
     <string name="hr_avg">Average Heart Rate</string>
     <string name="activity_range_time">%s at %s</string>
+    <string name="img_desc_distance">Distance image</string>
 
     <!-- SLEEP -->
     <string name="times_count">%d times</string>

@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.Locale;
+
 import br.edu.uepb.nutes.ocariot.R;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.ActivityLevel;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.PhysicalActivity;
@@ -66,6 +68,9 @@ public class PhysicalActivityDetail extends AppCompatActivity {
 
     @BindView(R.id.hr_avg_tv)
     TextView avgHeartRate;
+
+    @BindView(R.id.activity_distance_tv)
+    TextView distanceTextView;
 
     @BindView(R.id.activity_box_levels)
     RelativeLayout boxLevels;
@@ -147,6 +152,17 @@ public class PhysicalActivityDetail extends AppCompatActivity {
             avgHeartRate.setText(String.valueOf(a.getHeartRate().getAverage()));
         } else {
             boxHRZones.setVisibility(View.GONE);
+        }
+
+        // distance
+        if (a.getDistance() != null && a.getDistance() > 0) {
+            double distance = a.getDistance() / 1000;
+            double distanceRest = a.getDistance() % 1000;
+            if (distanceRest > 0) {
+                distanceTextView.setText(String.format(Locale.getDefault(), "%.2f", distance));
+            } else {
+                distanceTextView.setText(String.format(Locale.getDefault(), "%d", (int) distance));
+            }
         }
     }
 

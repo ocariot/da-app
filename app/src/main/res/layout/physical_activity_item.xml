@@ -55,7 +55,8 @@
             android:layout_marginTop="10dp">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="0.7"
                 android:layout_height="wrap_content">
 
                 <android.support.v7.widget.AppCompatImageView
@@ -87,7 +88,8 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content">
 
                 <android.support.v7.widget.AppCompatImageView
@@ -112,6 +114,40 @@
                     android:layout_marginStart="2dp"
                     android:layout_marginTop="2dp"
                     android:text="@string/cals"
+                    android:textColor="@color/colorBlackLight"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/box_distance"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content">
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginTop="4dp"
+                    android:contentDescription="@string/img_desc_distance"
+                    app:srcCompat="@mipmap/ic_gps" />
+
+                <TextView
+                    android:id="@+id/distance_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="2dp"
+                    android:text="1"
+                    android:textColor="@color/colorBlackLight"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="2dp"
+                    android:text="@string/km"
                     android:textColor="@color/colorBlackLight"
                     android:textSize="14sp" />
             </LinearLayout>

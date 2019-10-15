@@ -14,4 +14,5 @@ public class ActivityType {
     public static String FITSTAR_PERSONAL = "Fitstar: Personal Trainer";
     public static String WORKOUT = "Workout";
     public static String SWIM = "Swim";
+    public static String SPORT = "Sport";
 }
