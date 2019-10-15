@@ -22,31 +22,18 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 
 import br.edu.uepb.nutes.ocariot.R;
-import br.edu.uepb.nutes.ocariot.data.model.fitbit.ActivitiesListFitBit;
-import br.edu.uepb.nutes.ocariot.data.model.fitbit.ActivityLevelFitBit;
-import br.edu.uepb.nutes.ocariot.data.model.fitbit.HeartRateZoneFitBit;
-import br.edu.uepb.nutes.ocariot.data.model.fitbit.PhysicalActivityFitBit;
-import br.edu.uepb.nutes.ocariot.data.model.ocariot.ActivityLevel;
-import br.edu.uepb.nutes.ocariot.data.model.ocariot.HeartRateZone;
-import br.edu.uepb.nutes.ocariot.data.model.ocariot.HeartRateZoneItem;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.PhysicalActivity;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.Sleep;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.User;
 import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
 import br.edu.uepb.nutes.ocariot.utils.AlertMessage;
-import br.edu.uepb.nutes.ocariot.utils.DateUtils;
 import br.edu.uepb.nutes.ocariot.utils.MessageEvent;
 import br.edu.uepb.nutes.ocariot.view.ui.fragment.IotFragment;
 import br.edu.uepb.nutes.ocariot.view.ui.fragment.PhysicalActivityListFragment;
@@ -238,7 +225,6 @@ public class MainActivity extends AppCompatActivity implements
      * Replace fragment physical activities view.
      */
     private void loadPhysicalActivitiesView() {
-        Log.d(LOG_TAG, "loadPhysicalActivitiesView: ");
         replaceFragment(physicalActivityListFragment);
         mBottomNavigationView.getMenu().getItem(0).setChecked(true);
         Objects.requireNonNull(getSupportActionBar())
@@ -311,7 +297,6 @@ public class MainActivity extends AppCompatActivity implements
     public void checkPermissions() {
         if (BluetoothAdapter.getDefaultAdapter() != null &&
                 !BluetoothAdapter.getDefaultAdapter().isEnabled()) {
-            Log.w(LOG_TAG, "checkPermissions(): Bluetooth disabled");
             requestBluetoothEnable();
         } else if (!hasLocationPermissions()) {
             requestLocationPermission();
@@ -322,7 +307,6 @@ public class MainActivity extends AppCompatActivity implements
      * Request Bluetooth permission
      */
     private void requestBluetoothEnable() {
-        Log.w(LOG_TAG, "requestBluetoothEnable(): Criando intent");
         startActivityForResult(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE),
                 REQUEST_ENABLE_BLUETOOTH);
     }
@@ -363,13 +347,8 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_ENABLE_BLUETOOTH) {
-            if (resultCode != Activity.RESULT_OK) {
-                Log.w(LOG_TAG, "onActivityResult(): Bluetooth negado");
-            } else {
-                Log.w(LOG_TAG, "onActivityResult(): Bluetooth aceito");
+        if (requestCode == REQUEST_ENABLE_BLUETOOTH && resultCode == Activity.RESULT_OK) {
                 requestLocationPermission();
-            }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }

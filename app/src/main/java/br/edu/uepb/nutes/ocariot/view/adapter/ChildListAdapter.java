@@ -2,10 +2,8 @@ package br.edu.uepb.nutes.ocariot.view.adapter;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.ImageViewCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -15,7 +13,6 @@ import java.util.List;
 
 import br.edu.uepb.nutes.ocariot.R;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.Child;
-import br.edu.uepb.nutes.ocariot.data.model.ocariot.User;
 import br.edu.uepb.nutes.ocariot.utils.DateUtils;
 import br.edu.uepb.nutes.ocariot.view.adapter.base.BaseAdapter;
 import butterknife.BindView;

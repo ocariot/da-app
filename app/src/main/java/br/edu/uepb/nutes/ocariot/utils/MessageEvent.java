@@ -1,7 +1,5 @@
 package br.edu.uepb.nutes.ocariot.utils;
 
-import android.content.Context;
-
 public class MessageEvent {
     private String name;
     private Object message;

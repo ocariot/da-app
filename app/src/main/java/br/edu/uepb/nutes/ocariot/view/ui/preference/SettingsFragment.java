@@ -21,8 +21,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import br.edu.uepb.nutes.ocariot.R;
 import br.edu.uepb.nutes.ocariot.data.model.common.UserAccess;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.Child;
-import br.edu.uepb.nutes.ocariot.data.model.ocariot.FitBitLogsSync;
-import br.edu.uepb.nutes.ocariot.data.model.ocariot.FitBitSync;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.User;
 import br.edu.uepb.nutes.ocariot.data.repository.SyncDataRepository;
 import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;

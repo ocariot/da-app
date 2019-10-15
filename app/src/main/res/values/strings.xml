@@ -125,7 +125,6 @@
     <string name="synchronizing_data_fitbit">Synchronizing Fitbit data from child \"%s\" with OCARIoT platform&#8230;</string>
     <string name="sync_data_fitbit_error">An error occurred while trying to sync Fitbit data from child "%s" with the OCARIoT platform.\nPlease, try again later&#8230;</string>
     <string name="sync_data_fitbit_success">Fitbit data from the "%s" child was successfully synchronized with the OCARIoT platform.</string>
-    <string name="sync_forced_data_fitbit_success">Physical Activity: %1d\nSleep: %2d\nWeight: %3d\nLogs (days)\n\tSteps: %4d\n\tCalories: %5d\n\tActive Minutes: %6d\n\tLightly Active Minutes: %7d\n\tSedentary Minutes: %8d</string>
     <string name="last_sync_date_time">Last sync: %s</string>
     <string name="fitbit_get_access_token_error">An error occurred while trying to retrieve Fitbit access token.\nPlease try again later&#8230;</string>
 

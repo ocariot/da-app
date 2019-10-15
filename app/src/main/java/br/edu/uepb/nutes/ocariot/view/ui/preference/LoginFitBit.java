@@ -14,8 +14,6 @@ import net.openid.appauth.ClientAuthentication;
 import net.openid.appauth.ClientSecretBasic;
 import net.openid.appauth.ResponseTypeValues;
 
-import br.edu.uepb.nutes.ocariot.data.model.common.UserAccess;
-import br.edu.uepb.nutes.ocariot.data.model.ocariot.Child;
 import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
 import io.reactivex.Single;
 

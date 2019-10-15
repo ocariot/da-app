@@ -1,14 +1,12 @@
 package br.edu.uepb.nutes.ocariot.data.repository.remote.ocariot;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.auth0.android.jwt.JWT;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -212,7 +210,6 @@ public class OcariotNetRepository extends BaseNetRepository {
 
     public Single<MultiStatusResult<PhysicalActivity>> publishPhysicalActivities(String childId,
                                                                                  PhysicalActivity[] activities) {
-        Log.w("ACTIVITY_TEST PUSH", Arrays.toString(activities) + " SIZE " + activities.length);
         return ocariotService.publishPhysicalActivities(childId, activities)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());

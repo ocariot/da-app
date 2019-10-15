@@ -7,8 +7,6 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-import br.edu.uepb.nutes.ocariot.data.model.ocariot.HeartRateZoneItem;
-
 /**
  * Represents Physical Activity object from FitBit platform.
  *

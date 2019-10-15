@@ -126,7 +126,6 @@
     <string name="synchronizing_data_fitbit">Sincronizando dados Fitbit da criança \"%s\" com a plataforma OCARIoT&#8230;</string>
     <string name="sync_data_fitbit_error">Ocorreu um erro ao tentar sincronizar os dados do Fitbit do criança "%s" com a plataforma OCARIoT.\nPor favor, tente novamente mais tarde&#8230;</string>
     <string name="sync_data_fitbit_success">Os dados do Fitbit da criança "%s" foram sincronizados com sucesso com a plataforma OCARIoT.</string>
-    <string name="sync_forced_data_fitbit_success">Atividade Física: %1d\nSono: %2d\nPeso: %3d\nLogs (dias)\n\tPassos: %4d\n\tCalorias: %5d\n\tMinutos Ativos: %6d\n\tMinutos Levemente Ativos: %7d\n\tMinutos Sedentários: %8d</string>
     <string name="last_sync_date_time">Última sinc: %s</string>
     <string name="fitbit_get_access_token_error">Ocorreu um erro ao tentar recuperar token de acesso do Fitbit.\nPor favor, tente mais tarde&#8230;</string>
 

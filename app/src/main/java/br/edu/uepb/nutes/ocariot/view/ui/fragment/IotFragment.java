@@ -24,7 +24,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -43,7 +42,6 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 import java.text.DecimalFormat;
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 import java.util.Random;
 
@@ -339,7 +337,6 @@ public class IotFragment extends Fragment {
     private HRManagerCallback mHRManagerCallback = new HRManagerCallback() {
         @Override
         public void onMeasurementReceived(@NonNull BluetoothDevice device, int heartRate, String timestamp) {
-            Log.w(LOG_TAG, "mHRManagerCallback(): " + heartRate + " | " + timestamp);
             if (heartRate > 0) {
                 totalHR++;
                 sumHR += heartRate;
