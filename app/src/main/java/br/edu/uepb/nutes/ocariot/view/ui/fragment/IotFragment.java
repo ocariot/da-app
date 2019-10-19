@@ -23,15 +23,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 
-import com.ethanhua.skeleton.Skeleton;
-import com.ethanhua.skeleton.SkeletonScreen;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -72,12 +69,10 @@ public class IotFragment extends Fragment {
     private CompositeDisposable mDisposable;
     private AppPreferencesHelper appPref;
     private AlertMessage mAlertMessage;
-    private SkeletonScreen mSkeletonScreen;
     private SimpleBleScanner mScanner;
     private HRManager mHRManager;
     private ObjectAnimator heartAnimation;
     private int minHR, maxHR, avgHR, sumHR, totalHR;
-    private AlphaAnimation fadeIn;
 
     // We need this variable to lock and unlock loading more.
     // We should not charge more when a request has already been made.
@@ -157,7 +152,6 @@ public class IotFragment extends Fragment {
         mHRManager = HRManager.getInstance(mContext);
         mHRManager.setHeartRateCallback(mHRManagerCallback);
         minHR = Integer.MAX_VALUE;
-        fadeIn = new AlphaAnimation(1.0f, 0.0f);
     }
 
     @Override
@@ -193,10 +187,6 @@ public class IotFragment extends Fragment {
         new android.os.Handler().postDelayed(
                 () -> addEntry(new Random().nextInt((200 - 70 + 1) + 70)),
                 300);
-
-        mSkeletonScreen = Skeleton.bind(getView())
-                .load(R.layout.fragment_iot_shimmer)
-                .show();
     }
 
     /**
@@ -215,13 +205,13 @@ public class IotFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        loadDataOcariot();
         if ((BluetoothAdapter.getDefaultAdapter() != null &&
                 BluetoothAdapter.getDefaultAdapter().isEnabled()) &&
                 !mScanner.isScanStarted() && !mHRManager.isConnected()) {
             Log.w(LOG_TAG, "onStart()");
             mScanner.startScan(mScannerCallback);
         }
+        loadDataOcariot();
     }
 
     /**
@@ -301,11 +291,9 @@ public class IotFragment extends Fragment {
     private void loading(final boolean enabled) {
         mDataSwipeRefresh.setRefreshing(false);
         if (!enabled) {
-            mSkeletonScreen.hide();
             itShouldLoadMore = true;
             return;
         }
-        mSkeletonScreen.show();
         itShouldLoadMore = false;
     }
 
@@ -383,7 +371,7 @@ public class IotFragment extends Fragment {
                     mMinHRTextView.setText(String.valueOf(minHR));
                     mMaxHRTextView.setText(String.valueOf(maxHR));
                     mAvgHRTextView.setText(String.valueOf(avgHR));
-                 });
+                });
     }
 
     private void initChart() {
