@@ -1,5 +1,6 @@
 package br.edu.uepb.nutes.ocariot.view.ui.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -44,6 +45,7 @@ import butterknife.ButterKnife;
 import io.reactivex.disposables.CompositeDisposable;
 
 public class ChildrenManagerActivity extends AppCompatActivity {
+    public static final String EXTRA_IS_FIRST_OPEN = "extra_is_first_open";
     private final String KEY_SORT_SELECTED = "key_sort_selected";
 
     private ChildListAdapter mAdapter;
@@ -56,6 +58,7 @@ public class ChildrenManagerActivity extends AppCompatActivity {
     private boolean itShouldLoadMore = true;
     private Menu mMenu;
     private List<Child> children;
+    private boolean isFirstOpen;
 
     @BindView(R.id.children_list)
     RecyclerView mRecyclerView;
@@ -80,6 +83,8 @@ public class ChildrenManagerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_children_manager);
         ButterKnife.bind(this);
+
+        isFirstOpen = getIntent().getBooleanExtra(EXTRA_IS_FIRST_OPEN, false);
 
         mChildUsername.setVisibility(View.GONE);
 
@@ -260,8 +265,22 @@ public class ChildrenManagerActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        if (isFirstOpen) {
+            Intent intent = new Intent();
+            setResult(Activity.RESULT_FIRST_USER, intent);
+            finish();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
             case R.id.action_sort_username:
             case R.id.action_sort_sync:
                 clearMenuFilters();

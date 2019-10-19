@@ -359,7 +359,10 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                         .doAfterTerminate(() -> mDialogSync.close())
                         .subscribe(
                                 fitBitSync -> showAlertResultSync(true),
-                                err -> showAlertResultSync(false)
+                                err -> {
+                                    Log.w(LOG_TAG, "ERROR SYNC: " + err.getMessage());
+                                    showAlertResultSync(false);
+                                }
                         )
         );
     }

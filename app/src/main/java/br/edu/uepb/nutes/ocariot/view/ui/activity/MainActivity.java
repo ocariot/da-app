@@ -14,7 +14,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -55,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements
         WelcomeFragment.OnClickWelcomeListener,
         BottomNavigationView.OnNavigationItemSelectedListener {
     private final String LOG_TAG = MainActivity.class.getSimpleName();
+    public final int FIRST_OPEN_CHILDREN_MANAGER = 1;
     public static final String KEY_DO_NOT_LOGIN_FITBIT = "key_do_not_login_fitbit";
 
     private final int REQUEST_ENABLE_BLUETOOTH = 1;
@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements
     protected void onResume() {
         super.onResume();
         if (appPref.getLastSelectedChild() == null) {
-            openChildrenManagerActivity();
+            openChildrenManagerActivity(true);
             return;
         }
 
@@ -157,7 +157,7 @@ public class MainActivity extends AppCompatActivity implements
                 startActivity(new Intent(this, SettingsActivity.class));
                 break;
             case R.id.action_child:
-                openChildrenManagerActivity();
+                openChildrenManagerActivity(false);
                 break;
             default:
                 break;
@@ -285,10 +285,11 @@ public class MainActivity extends AppCompatActivity implements
     /**
      * Open children manager activity.
      */
-    private void openChildrenManagerActivity() {
-        startActivity(new Intent(this, ChildrenManagerActivity.class));
+    private void openChildrenManagerActivity(boolean isFirst) {
+        Intent it = new Intent(this, ChildrenManagerActivity.class);
+        it.putExtra(ChildrenManagerActivity.EXTRA_IS_FIRST_OPEN, isFirst);
+        startActivityForResult(it, FIRST_OPEN_CHILDREN_MANAGER);
     }
-
 
     /**
      * Checks if you have permission to use.
@@ -348,7 +349,9 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_ENABLE_BLUETOOTH && resultCode == Activity.RESULT_OK) {
-                requestLocationPermission();
+            requestLocationPermission();
+        } else if (requestCode == FIRST_OPEN_CHILDREN_MANAGER && resultCode == Activity.RESULT_FIRST_USER) {
+            finish();
         }
         super.onActivityResult(requestCode, resultCode, data);
     }

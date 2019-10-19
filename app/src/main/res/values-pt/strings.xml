@@ -26,7 +26,7 @@
     <string name="title_login_failed">Autenticação falhou!</string>
     <string name="title_connection_error">Erro de conexão!</string>
     <string name="title_access_blocked">Acesso bloqueado!</string>
-    <string name="title_last_measurement_month">Última medição do mês atual</string>
+    <string name="title_last_measurement">Última medição</string>
     <string name="title_processing">Processando</string>
     <string name="title_yes">Sim</string>
     <string name="title_no">Não</string>
@@ -62,7 +62,7 @@
     <string name="times_count">%d vezes</string>
 
     <!-- IoT -->
-    <string name="weight_month_average">Média do mês</string>
+    <string name="weight_average">Média</string>
     <string name="img_desc_heart">Imagem do Coração</string>
 
     <!-- FORMAT DATES -->

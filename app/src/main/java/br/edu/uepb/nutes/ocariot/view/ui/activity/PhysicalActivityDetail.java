@@ -25,8 +25,6 @@ import butterknife.ButterKnife;
  * @author Copyright (c) 2018, NUTES/UEPB
  */
 public class PhysicalActivityDetail extends AppCompatActivity {
-    private final String LOG_TAG = "PhysicalActivityDetail";
-
     public static String ACTIVITY_DETAIL = "activity_detail";
 
     @BindView(R.id.toolbar)

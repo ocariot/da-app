@@ -25,7 +25,7 @@
     <string name="title_login_failed">Login failed!</string>
     <string name="title_connection_error">Connection error!</string>
     <string name="title_access_blocked">Access blocked!</string>
-    <string name="title_last_measurement_month">Last measurement of current month</string>
+    <string name="title_last_measurement">Last measurement</string>
     <string name="title_processing">Processing</string>
     <string name="title_yes">Yes</string>
     <string name="title_no">No</string>
@@ -61,7 +61,7 @@
     <string name="times_count">%d times</string>
 
     <!-- IoT -->
-    <string name="weight_month_average">Month average</string>
+    <string name="weight_average">Average</string>
     <string name="img_desc_heart">Heart image</string>
 
     <!-- FORMAT DATES -->

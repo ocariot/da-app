@@ -32,7 +32,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="@string/title_last_measurement_month"
+                android:text="@string/title_last_measurement"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <LinearLayout
@@ -93,7 +93,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="@string/weight_month_average"
+                android:text="@string/weight_average"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <TextView
