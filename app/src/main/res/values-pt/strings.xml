@@ -80,10 +80,6 @@
     <string name="settings_title">Configurações</string>
     <string name="settings_account">Conta</string>
     <string name="settings_external_services">Serviços Externos</string>
-    <string name="key_fitibit">key_fitbit</string>
-    <string name="key_signout">key_signout</string>
-    <string name="key_sync_data">key_sync_data</string>
-    <string name="key_children">key_children_manager</string>
     <string name="settings_signout">Sair</string>
     <string name="settings_fitbit">Fitbit</string>
     <string name="settings_summary_signout">Você será desconectado do aplicativo e redirecionado para a tela de login.</string>

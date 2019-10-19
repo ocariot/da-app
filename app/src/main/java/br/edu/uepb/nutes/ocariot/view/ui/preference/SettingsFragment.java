@@ -68,15 +68,18 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.xml.preferences);
-
         mContext = getActivity();
         appPref = AppPreferencesHelper.getInstance(mContext);
         loginFitBit = new LoginFitBit(mContext);
         mDisposable = new CompositeDisposable();
         mAlertMessage = new AlertMessage(getActivity());
-
         child = appPref.getLastSelectedChild();
+
+        if (appPref.getUserAccessOcariot().getSubjectType().equals(User.Type.CHILD)) {
+            addPreferencesFromResource(R.xml.preferences_child);
+        } else {
+            addPreferencesFromResource(R.xml.preferences);
+        }
 
         mDialogSync = DialogLoading.newDialog(0,
                 mContext.getResources().getString(R.string.synchronizing),

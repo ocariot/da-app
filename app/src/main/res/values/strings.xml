@@ -79,10 +79,10 @@
     <string name="settings_title">Settings</string>
     <string name="settings_account">Account</string>
     <string name="settings_external_services">External Services</string>
-    <string name="key_fitibit">key_fitbit</string>
-    <string name="key_signout">key_signout</string>
-    <string name="key_sync_data">key_sync_data</string>
-    <string name="key_children">key_children_manager</string>
+    <string name="key_fitibit" translatable="false">key_fitbit</string>
+    <string name="key_signout" translatable="false">key_signout</string>
+    <string name="key_sync_data" translatable="false">key_sync_data</string>
+    <string name="key_children" translatable="false">key_children_manager</string>
     <string name="settings_signout">Sign Out</string>
     <string name="settings_fitbit">Fitbit</string>
     <string name="settings_summary_signout">You will be logged out of the application and redirected to login screen.</string>
