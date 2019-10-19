@@ -1,14 +1,12 @@
 package br.edu.uepb.nutes.ocariot.data.repository.remote.fitbit;
 
 import android.content.Context;
-import android.util.Log;
 
 import net.openid.appauth.AuthorizationService;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import br.edu.uepb.nutes.ocariot.BuildConfig;
@@ -182,9 +180,7 @@ public class FitBitNetRepository extends BaseNetRepository {
                             physicalActivity.setDistance(activity.getDistance() * 1000);
                         }
                         result.add(physicalActivity);
-                        Log.w("ACTIVITY_TEST", physicalActivity.toString());
                     }
-                    Log.w("ACTIVITY_TEST RESULT", Arrays.toString(result.toArray()) + " SIZE " + result.size());
                     return result;
                 })
                 .subscribeOn(Schedulers.io())

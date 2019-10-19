@@ -208,7 +208,6 @@ public class IotFragment extends Fragment {
         if ((BluetoothAdapter.getDefaultAdapter() != null &&
                 BluetoothAdapter.getDefaultAdapter().isEnabled()) &&
                 !mScanner.isScanStarted() && !mHRManager.isConnected()) {
-            Log.w(LOG_TAG, "onStart()");
             mScanner.startScan(mScannerCallback);
         }
         loadDataOcariot();

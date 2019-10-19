@@ -165,8 +165,6 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         }
 
         if (preference.getKey().equals(getString(R.string.key_children))) {
-//            Intent intent = new Intent(getActivity(), ChildrenManagerActivity.class);
-//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(new Intent(getActivity(), ChildrenManagerActivity.class));
             return true;
         }
@@ -376,10 +374,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     private void publishFitBitAuth() {
         UserAccess fitBitAuth = child.getFitBitAccess();
 
-        if (fitBitAuth == null || fitBitAuth.getAccessToken() == null) {
-            Log.d(LOG_TAG, "An error occurred while attempting to retrieve the Fitbit access token from local storage...");
-            return;
-        }
+        if (fitBitAuth == null || fitBitAuth.getAccessToken() == null) return;
 
         UserAccess userAccess = new UserAccess();
         userAccess.setAccessToken(fitBitAuth.getAccessToken());

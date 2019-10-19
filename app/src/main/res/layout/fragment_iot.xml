@@ -53,7 +53,7 @@
                         android:id="@+id/weight_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="20.2kg"
+                        android:text="--"
                         android:textColor="@color/colorAccent"
                         android:textSize="30sp" />
 
@@ -76,7 +76,7 @@
                         android:id="@+id/body_fat_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="21%"
+                        android:text="--"
                         android:textColor="@color/colorWarning"
                         android:textSize="30sp" />
 
@@ -100,7 +100,7 @@
                 android:id="@+id/weight_month_average_tv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="30kg"
+                android:text="--"
                 android:gravity="center"
                 android:textColor="@color/colorPurple"
                 android:textSize="30sp" />

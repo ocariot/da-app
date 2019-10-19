@@ -12,7 +12,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -156,7 +155,6 @@ public class SleepListFragment extends Fragment {
         mAdapter.setListener(new OnRecyclerViewListener<Sleep>() {
             @Override
             public void onItemClick(Sleep item) {
-                Log.w(LOG_TAG, "item: " + item.toString());
                 if (mListener != null) mListener.onClickSleep(item);
             }
 

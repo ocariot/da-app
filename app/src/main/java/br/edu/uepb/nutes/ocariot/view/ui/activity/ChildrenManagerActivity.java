@@ -280,18 +280,18 @@ public class ChildrenManagerActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
-                break;
+                return true;
             case R.id.action_sort_username:
             case R.id.action_sort_sync:
                 clearMenuFilters();
                 appPref.addInt(KEY_SORT_SELECTED, item.getItemId());
                 populateViewChildren(null);
+                item.setChecked(true);
                 break;
             default:
                 break;
         }
-        item.setChecked(true);
-        return false;
+        return super.onOptionsItemSelected(item);
     }
 
     private void clearMenuFilters() {
