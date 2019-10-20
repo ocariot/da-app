@@ -71,3 +71,24 @@ From Android Studio:
 [apk-spain-url]: #
 [apk-greece]: https://img.shields.io/badge/download%20apk-greece-blue.svg?style=for-the-badge&logo=android
 [apk-greece-url]: #
+
+--- 
+
+### Screenshots
+
+<img align="left" src="https://i.imgur.com/zc7UN5k.png" width="200" />
+<img align="left" src="https://i.imgur.com/5WLaJlq.png" width="200" />
+<img align="left" src="https://i.imgur.com/c5WjiZn.png" width="200" />
+<img src="https://i.imgur.com/gxOEdZq.png" width="200" />
+
+<img align="left" src="https://i.imgur.com/4xOngef.png" width="200" />
+<img align="left" src="https://i.imgur.com/wvlyHPs.png" width="200" />
+<img align="left" src="https://i.imgur.com/aoqYNzg.png" width="200" />
+<img src="https://i.imgur.com/MKTfM9e.png" width="200" />
+
+#####
+
+<img align="left" src="https://i.imgur.com/GITTjts.png" width="200" />
+<img align="left" src="https://i.imgur.com/GugwblV.png" width="200" />
+<img align="left" src="https://i.imgur.com/VSiuJNT.png" width="200" />
+<img src="https://i.imgur.com/VzM9jQU.png" width="200" />
