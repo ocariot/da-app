@@ -233,7 +233,8 @@ public class SleepDetail extends AppCompatActivity {
         mAwakeDurationClassicTextView.setText(mountDuration(summary.getAwake().getDuration()));
 
         // restless+awake
-        mRestlessAwakeDurationTextView.setText(mountDuration(summary.getRestless().getDuration()));
+        mRestlessAwakeDurationTextView.setText(mountDuration(summary.getRestless().getDuration() +
+                summary.getAwake().getDuration()));
     }
 
     private void populatePatternStages(SleepPatternSummary summary) {

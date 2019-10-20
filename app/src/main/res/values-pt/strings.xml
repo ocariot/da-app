@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">DA OCARIoT</string>
+    <string name="app_name">OCARIoT DA</string>
 
     <!-- TITLES -->
     <string name="title_physical_activities">Atividades físicas</string>
@@ -133,6 +133,7 @@
     <string name="alert_token_expired_fitbit">O token de acesso Fitbit para filho \"%s\" expirou ou foi revogado.\nPor favor, clique aqui para conceder acesso novamente&#8230;</string>
     <string name="alert_access_blocked">Desculpe, este aplicativo não suporta usuário do tipo administrador. Somente criança, família, educador e profissional de saúde são permitidos&#8230;</string>
     <string name="alert_revoke_fitbit_success">Acesso Fitbit revogado com sucesso. Não será mais possível executar a sincronização dos dados.</string>
+    <string name="alert_enable_bluetooth">Se você deseja que os dados de Frequência Cardíaca (Polar OH1) sejam exibidos automaticamente nesta tela, clique aqui para ativar o Bluetooth&#8230;</string>
 
     <!--  MENU  -->
     <string name="action_sort_username">Username</string>

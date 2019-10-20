@@ -1,15 +1,10 @@
 package br.edu.uepb.nutes.ocariot.view.ui.activity;
 
-import android.Manifest;
 import android.app.Activity;
-import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -19,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -56,9 +50,6 @@ public class MainActivity extends AppCompatActivity implements
     private final String LOG_TAG = MainActivity.class.getSimpleName();
     public final int FIRST_OPEN_CHILDREN_MANAGER = 1;
     public static final String KEY_DO_NOT_LOGIN_FITBIT = "key_do_not_login_fitbit";
-
-    private final int REQUEST_ENABLE_BLUETOOTH = 1;
-    private final int REQUEST_ENABLE_LOCATION = 2;
 
     private AppPreferencesHelper appPref;
     private PhysicalActivityListFragment physicalActivityListFragment;
@@ -247,7 +238,6 @@ public class MainActivity extends AppCompatActivity implements
      * Replace fragment environments view.
      */
     private void loadIotView() {
-        checkPermissions();
         replaceFragment(iotFragment);
         mBottomNavigationView.getMenu().getItem(2).setChecked(true);
         Objects.requireNonNull(getSupportActionBar())
@@ -291,66 +281,9 @@ public class MainActivity extends AppCompatActivity implements
         startActivityForResult(it, FIRST_OPEN_CHILDREN_MANAGER);
     }
 
-    /**
-     * Checks if you have permission to use.
-     * Required bluetooth ble and location.
-     */
-    public void checkPermissions() {
-        if (BluetoothAdapter.getDefaultAdapter() != null &&
-                !BluetoothAdapter.getDefaultAdapter().isEnabled()) {
-            requestBluetoothEnable();
-        } else if (!hasLocationPermissions()) {
-            requestLocationPermission();
-        }
-    }
-
-    /**
-     * Request Bluetooth permission
-     */
-    private void requestBluetoothEnable() {
-        startActivityForResult(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE),
-                REQUEST_ENABLE_BLUETOOTH);
-    }
-
-    /**
-     * Checks whether the location permission was given.
-     *
-     * @return boolean
-     */
-    public boolean hasLocationPermissions() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            return checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) ==
-                    PackageManager.PERMISSION_GRANTED;
-        }
-        return true;
-    }
-
-    /**
-     * Request Location permission.
-     */
-    protected void requestLocationPermission() {
-        ActivityCompat.requestPermissions(this,
-                new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_ENABLE_LOCATION);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        // If request is cancelled, the result arrays are empty.
-        if ((requestCode == REQUEST_ENABLE_LOCATION) &&
-                (grantResults.length > 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED)) {
-            Toast.makeText(this, R.string.message_permission_location, Toast.LENGTH_LONG).show();
-            requestLocationPermission();
-        }
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_ENABLE_BLUETOOTH && resultCode == Activity.RESULT_OK) {
-            requestLocationPermission();
-        } else if (requestCode == FIRST_OPEN_CHILDREN_MANAGER && resultCode == Activity.RESULT_FIRST_USER) {
+        if (requestCode == FIRST_OPEN_CHILDREN_MANAGER && resultCode == Activity.RESULT_FIRST_USER) {
             finish();
         }
         super.onActivityResult(requestCode, resultCode, data);

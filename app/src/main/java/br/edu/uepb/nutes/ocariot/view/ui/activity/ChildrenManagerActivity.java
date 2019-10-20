@@ -287,7 +287,7 @@ public class ChildrenManagerActivity extends AppCompatActivity {
                 appPref.addInt(KEY_SORT_SELECTED, item.getItemId());
                 populateViewChildren(null);
                 item.setChecked(true);
-                break;
+                return true;
             default:
                 break;
         }

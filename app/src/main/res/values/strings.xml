@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">DA OCARIoT</string>
+    <string name="app_name">OCARIoT DA</string>
 
     <!-- TITLES -->
     <string name="title_physical_activities">Physical activities</string>
@@ -136,6 +136,7 @@
     <string name="alert_token_expired_fitbit">The Fitbit fitBitAccess token for child \"%s\" has expired or been revoked.\nPlease, click here to grant fitBitAccess again&#8230;</string>
     <string name="alert_access_blocked">Sorry, this app does not support admin users. Only children, families, educators and health professionals are allowed&#8230;</string>
     <string name="alert_revoke_fitbit_success">Fitbit access successfully revoked. It will no longer be possible to perform data synchronization.</string>
+    <string name="alert_enable_bluetooth">If you want Heart Rate (Polar OH1) data to be automatically displayed on this screen, click here to enable Bluetooth&#8230;</string>
 
     <!--  MENU  -->
     <string name="action_sort_username">Username</string>

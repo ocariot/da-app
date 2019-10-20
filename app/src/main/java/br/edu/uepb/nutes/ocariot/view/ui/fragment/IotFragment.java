@@ -1,11 +1,16 @@
 package br.edu.uepb.nutes.ocariot.view.ui.fragment;
 
+import android.Manifest;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.le.ScanResult;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Build;
@@ -23,9 +28,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 
@@ -40,7 +47,6 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Objects;
-import java.util.Random;
 
 import br.edu.uepb.nutes.ocariot.R;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.Weight;
@@ -61,8 +67,11 @@ import io.reactivex.disposables.CompositeDisposable;
  *
  * @author Copyright (c) 2018, NUTES/UEPB
  */
-public class IotFragment extends Fragment {
+public class IotFragment extends Fragment implements View.OnClickListener {
     private final String LOG_TAG = "IotFragment";
+
+    private final int REQUEST_ENABLE_BLUETOOTH = 1;
+    private final int REQUEST_ENABLE_LOCATION = 2;
 
     private OcariotNetRepository ocariotRepository;
     private Context mContext;
@@ -124,6 +133,9 @@ public class IotFragment extends Fragment {
     @BindView(R.id.hr_avg_tv)
     TextView mAvgHRTextView;
 
+    @BindView(R.id.alert_enable_bluetooth)
+    FrameLayout mBoxEnableBluetooth;
+
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -171,6 +183,25 @@ public class IotFragment extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        // Register for broadcasts on BluetoothAdapter state change
+        IntentFilter filter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
+        mContext.registerReceiver(mBluetoothReceiver, filter);
+
+        if (BluetoothAdapter.getDefaultAdapter() != null &&
+                BluetoothAdapter.getDefaultAdapter().isEnabled()) {
+            mBoxEnableBluetooth.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mContext.unregisterReceiver(mBluetoothReceiver);
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
         mDisposable.dispose();
@@ -183,10 +214,7 @@ public class IotFragment extends Fragment {
         initDataSwipeRefresh();
         initChart();
         initAnimation();
-
-        new android.os.Handler().postDelayed(
-                () -> addEntry(new Random().nextInt((200 - 70 + 1) + 70)),
-                300);
+        mBoxEnableBluetooth.setOnClickListener(this);
     }
 
     /**
@@ -461,12 +489,80 @@ public class IotFragment extends Fragment {
         set.setDrawValues(false);
         set.setDrawFilled(true);
 
-        int color = ContextCompat.getColor(Objects.requireNonNull(getActivity()),
-                R.color.colorPrimaryDark);
+        int color = ContextCompat.getColor(mContext, R.color.colorPrimaryDark);
         set.setFillColor(color);
         set.setColor(color);
         set.setHighLightColor(color);
 
         return set;
     }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.alert_enable_bluetooth) {
+            startActivityForResult(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE),
+                    REQUEST_ENABLE_BLUETOOTH);
+        }
+    }
+
+    /**
+     * Checks whether the location permission was given.
+     *
+     * @return boolean
+     */
+    public boolean hasLocationPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return mContext.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) ==
+                    PackageManager.PERMISSION_GRANTED;
+        }
+        return true;
+    }
+
+    /**
+     * Request Location permission.
+     */
+    protected void requestLocationPermission() {
+        requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_ENABLE_LOCATION);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        // If request is cancelled, the result arrays are empty.
+        if ((requestCode == REQUEST_ENABLE_LOCATION) &&
+                (grantResults.length > 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED)) {
+            Toast.makeText(mContext, R.string.message_permission_location, Toast.LENGTH_LONG).show();
+            requestLocationPermission();
+        }
+    }
+
+    private final BroadcastReceiver mBluetoothReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+            if (action == null) return;
+            if (action.equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
+                final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE,
+                        BluetoothAdapter.ERROR);
+                switch (state) {
+                    case BluetoothAdapter.STATE_OFF:
+                        mBoxEnableBluetooth.setVisibility(View.VISIBLE);
+                        break;
+                    case BluetoothAdapter.STATE_TURNING_OFF:
+                        // Bluetooth is turning off;
+                        break;
+                    case BluetoothAdapter.STATE_ON:
+                        // Bluetooth has been on
+                        mBoxEnableBluetooth.setVisibility(View.GONE);
+                        if (!hasLocationPermissions()) requestLocationPermission();
+                        break;
+                    case BluetoothAdapter.STATE_TURNING_ON:
+                        // Bluetooth is turning on
+                        break;
+                }
+            }
+        }
+    };
 }

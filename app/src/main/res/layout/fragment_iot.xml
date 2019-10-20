@@ -7,10 +7,29 @@
     android:orientation="vertical"
     tools:context=".view.ui.fragment.IotFragment">
 
-        <LinearLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
+        <FrameLayout
+            android:id="@+id/alert_enable_bluetooth"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorWarning"
+            android:orientation="vertical"
+            android:padding="@dimen/default_padding"
+            android:visibility="visible">
+
+            <TextView
+                android:id="@+id/textSteps"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:gravity="center"
+                android:text="@string/alert_enable_bluetooth"
+                android:textColor="@android:color/white" />
+        </FrameLayout>
 
         <include
             android:id="@+id/box_no_data"
