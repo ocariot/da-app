@@ -1,5 +1,6 @@
 package br.edu.uepb.nutes.ocariot.data.repository.remote.fitbit;
 
+import br.edu.uepb.nutes.ocariot.BuildConfig;
 import br.edu.uepb.nutes.ocariot.data.model.fitbit.ActivitiesListFitBit;
 import br.edu.uepb.nutes.ocariot.data.model.fitbit.CaloriesListFitBit;
 import br.edu.uepb.nutes.ocariot.data.model.fitbit.MinutesFairlyActiveListFitBit;
@@ -21,7 +22,7 @@ import retrofit2.http.Query;
  * @author Copyright (c) 2018, NUTES/UEPB
  */
 public interface FitBitService {
-    String BASE_URL_FITBIT = "https://api.fitbit.com/";
+    String FITBIT_BASE_URL = BuildConfig.FITBIT_BASE_URL;
 
     @GET("1.2/user/-/activities/list.json")
     Single<ActivitiesListFitBit> listActivities(

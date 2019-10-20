@@ -14,6 +14,7 @@ import net.openid.appauth.ClientAuthentication;
 import net.openid.appauth.ClientSecretBasic;
 import net.openid.appauth.ResponseTypeValues;
 
+import br.edu.uepb.nutes.ocariot.BuildConfig;
 import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
 import io.reactivex.Single;
 
@@ -26,8 +27,8 @@ public class LoginFitBit {
     private final int REQUEST_LOGIN_FITBIT_SUCCESS = 2;
     private final int REQUEST_LOGIN_FITBIT_CANCELED = 3;
 
-    private final Uri AUTHORIZATION_ENDPOINT = Uri.parse("https://www.fitbit.com/oauth2/authorize");
-    private final Uri TOKEN_ENDPOINT = Uri.parse("https://api.fitbit.com/oauth2/token");
+    private final Uri AUTHORIZATION_ENDPOINT = Uri.parse(BuildConfig.FITBIT_AUTH_URL);
+    private final Uri TOKEN_ENDPOINT = Uri.parse(BuildConfig.FITBIT_TOKEN_URL);
 
     private final Uri REDIRECT_URI = Uri.parse("fitbitauth://finished");
 
@@ -41,7 +42,7 @@ public class LoginFitBit {
 
     public LoginFitBit(Context context) {
         this.mContext = context;
-        appPref = AppPreferencesHelper.getInstance(mContext);
+        appPref = AppPreferencesHelper.getInstance();
 
         initConfig();
     }

@@ -69,22 +69,16 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = getActivity();
-        appPref = AppPreferencesHelper.getInstance(mContext);
+        appPref = AppPreferencesHelper.getInstance();
         loginFitBit = new LoginFitBit(mContext);
         mDisposable = new CompositeDisposable();
         mAlertMessage = new AlertMessage(getActivity());
-        child = appPref.getLastSelectedChild();
 
         if (appPref.getUserAccessOcariot().getSubjectType().equals(User.Type.CHILD)) {
             addPreferencesFromResource(R.xml.preferences_child);
         } else {
             addPreferencesFromResource(R.xml.preferences);
         }
-
-        mDialogSync = DialogLoading.newDialog(0,
-                mContext.getResources().getString(R.string.synchronizing),
-                mContext.getResources().getString(R.string.synchronizing_data_fitbit, child.getUsername())
-        );
 
         // FitBit
         switchPrefFitBit = (SwitchPreference) findPreference(getString(R.string.key_fitibit));
@@ -101,13 +95,16 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
             findPreference(getString(R.string.key_children)).setOnPreferenceClickListener(this);
         }
 
-        checkAuthFitBit();
+        // Initialize configuration for return of Fitbit authentication and authorization.
+        initResultAuthFitBit();
     }
 
     @Override
     public void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
+        child = appPref.getLastSelectedChild();
+        populateView();
     }
 
     @Override
@@ -171,6 +168,14 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         return false;
     }
 
+    private void populateView() {
+        mDialogSync = DialogLoading.newDialog(0,
+                mContext.getResources().getString(R.string.synchronizing),
+                mContext.getResources().getString(R.string.synchronizing_data_fitbit, child.getUsername())
+        );
+        populateSwitchFitbit();
+    }
+
     private boolean fitbitValidConfigs() {
         if (appPref.getFitbitAppData() == null) return false;
         return appPref.getFitbitAppData().getClientId() != null &&
@@ -185,16 +190,9 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
      * If the AuthorizationException object is different from null,
      * it means that some authorization problem has occurred
      */
-    private void checkAuthFitBit() {
+    private void initResultAuthFitBit() {
         AuthorizationResponse authFitBitResponse = AuthorizationResponse.fromIntent(getActivity().getIntent());
         AuthorizationException authFitBitException = AuthorizationException.fromIntent(getActivity().getIntent());
-        if (child.getFitBitAccess() != null && child.getFitBitAccess().getStatus() != null &&
-                (child.getFitBitAccess().getStatus().equals("valid_token") ||
-                        child.getFitBitAccess().getStatus().equals("expired_token"))) {
-            switchPrefFitBit.setChecked(true);
-        } else {
-            switchPrefFitBit.setChecked(false);
-        }
 
         if (authFitBitException != null) {
             switchPrefFitBit.setChecked(false);
@@ -213,6 +211,20 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         } else if (authFitBitResponse != null) {
             // Request access token in server FitBit OAuth.
             getToken(authFitBitResponse);
+        }
+    }
+
+    /**
+     * Checks if Fitbit access has been provided for child
+     * and marks the Switch, otherwise uncheck.
+     */
+    private void populateSwitchFitbit() {
+        if (child.getFitBitAccess() != null && child.getFitBitAccess().getStatus() != null &&
+                (child.getFitBitAccess().getStatus().equals("valid_token") ||
+                        child.getFitBitAccess().getStatus().equals("expired_token"))) {
+            switchPrefFitBit.setChecked(true);
+        } else {
+            switchPrefFitBit.setChecked(false);
         }
     }
 
@@ -237,7 +249,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                 mContext.getResources().getString(R.string.dialog_revoke_fitbit_processing)
         );
         mDisposable.add(
-                OcariotNetRepository.getInstance(mContext)
+                OcariotNetRepository.getInstance()
                         .revokeFitBitAuth(child.get_id())
                         .doOnSubscribe(disposable -> dialog.show(getFragmentManager()))
                         .doOnTerminate(dialog::close)
@@ -354,7 +366,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         }
 
         mDisposable.add(
-                OcariotNetRepository.getInstance(mContext)
+                OcariotNetRepository.getInstance()
                         .fitBitSync(child.get_id())
                         .doOnSubscribe(disposable -> mDialogSync.show(getFragmentManager()))
                         .doAfterTerminate(() -> mDialogSync.close())
@@ -381,7 +393,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         userAccess.setRefreshToken(fitBitAuth.getRefreshToken());
 
         mDisposable.add(
-                OcariotNetRepository.getInstance(mContext)
+                OcariotNetRepository.getInstance()
                         .publishFitBitAuth(child.get_id(), userAccess)
                         .subscribe(() -> Log.d(LOG_TAG, "Fitbit authentication data sent successfully!"),
                                 err -> Log.e(LOG_TAG, "Error sending Fitbit authentication data: " + err.getMessage())

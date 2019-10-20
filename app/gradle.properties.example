@@ -1,0 +1,18 @@
+# GENERAL SETUP
+PREFERENCES_FILENAME=shared_preferences_ocariot
+
+# OCARIoT DEV SETUP
+OCARIOT_DEV_BASE_URL=https://localhost
+
+# OCARIoT PROD SETUP
+OCARIOT_PROD_BASE_URL=https://ocariot.nutes.uepb.edu.br
+
+#  FITBIT DEV SETUP
+FITBIT_DEV_BASE_URL=https://localhost:9090
+FITBIT_DEV_AUTH_URL=https://localhost/oauth2/authorize
+FITBIT_DEV_TOKEN_URL=https://localhost/oauth2/token
+
+#  FITBIT PROD SETUP
+FITBIT_PROD_BASE_URL=https://api.fitbit.com
+FITBIT_PROD_AUTH_URL=https://www.fitbit.com/oauth2/authorize
+FITBIT_PROD_TOKEN_URL=https://api.fitbit.com/oauth2/token

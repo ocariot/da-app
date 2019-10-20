@@ -25,8 +25,8 @@ public class SyncDataRepository {
     private String childId, startDate, endDate;
 
     private SyncDataRepository(Context context) {
-        fitbitRepo = FitBitNetRepository.getInstance(context);
-        ocariotRepo = OcariotNetRepository.getInstance(context);
+        fitbitRepo = FitBitNetRepository.getInstance();
+        ocariotRepo = OcariotNetRepository.getInstance();
         this.initConfig();
     }
 

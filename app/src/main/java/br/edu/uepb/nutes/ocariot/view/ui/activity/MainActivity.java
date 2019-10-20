@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements
         Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.title_physical_activities);
 
         lastViewIndex = 0; // 0 - Physical Activity, 1 - Sleep, 2 - Environment
-        appPref = AppPreferencesHelper.getInstance(this);
+        appPref = AppPreferencesHelper.getInstance();
         physicalActivityListFragment = PhysicalActivityListFragment.newInstance();
         sleepListFragment = SleepListFragment.newInstance();
         iotFragment = IotFragment.newInstance();

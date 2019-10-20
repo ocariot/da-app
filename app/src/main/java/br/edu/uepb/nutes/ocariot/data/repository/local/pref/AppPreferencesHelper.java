@@ -1,14 +1,19 @@
 package br.edu.uepb.nutes.ocariot.data.repository.local.pref;
 
-import android.content.Context;
 import android.content.SharedPreferences;
+import android.widget.Toast;
 
-import com.securepreferences.SecurePreferences;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 
+import br.edu.uepb.nutes.ocariot.BuildConfig;
+import br.edu.uepb.nutes.ocariot.OcariotApp;
 import br.edu.uepb.nutes.ocariot.data.model.common.UserAccess;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.Child;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.FitBitAppData;
 import br.edu.uepb.nutes.ocariot.exception.LocalPreferenceException;
+import in.co.ophio.secure.core.KeyStoreKeyGenerator;
+import in.co.ophio.secure.core.ObscuredPreferencesBuilder;
 
 /**
  * Class to perform operations on the device's shared preference.
@@ -24,13 +29,40 @@ public class AppPreferencesHelper implements PreferencesHelper {
     private static AppPreferencesHelper instance;
     private SharedPreferences mPrefs;
 
-    private AppPreferencesHelper(Context context) {
-        mPrefs = new SecurePreferences(context);
+    private AppPreferencesHelper() {
+        mPrefs = new ObscuredPreferencesBuilder()
+                .setApplication(OcariotApp.getAppContext())
+                .obfuscateValue(true)
+                .obfuscateKey(true)
+                .setSharePrefFileName(BuildConfig.PREFERENCES_FILENAME)
+                .setSecret(getKey())
+                .createSharedPrefs();
     }
 
-    public static synchronized AppPreferencesHelper getInstance(Context context) {
-        if (instance == null) instance = new AppPreferencesHelper(context);
+    public static synchronized AppPreferencesHelper getInstance() {
+        if (instance == null) instance = new AppPreferencesHelper();
         return instance;
+    }
+
+    /**
+     * use getKey to get an encrypted Key for obscuring preferences
+     *
+     * @return String
+     */
+    private String getKey() {
+        String secretKey;
+        KeyStoreKeyGenerator keyGenerator = KeyStoreKeyGenerator.get(OcariotApp.getAppContext(),
+                OcariotApp.getAppContext().getPackageName());
+        try {
+            secretKey =  keyGenerator.loadOrGenerateKeys();
+        } catch (GeneralSecurityException e) {
+            Toast.makeText(OcariotApp.getContext(), "can't create key", Toast.LENGTH_SHORT).show();
+            throw new RuntimeException("can't create  key");
+        } catch (IOException e) {
+            Toast.makeText(OcariotApp.getContext(), "can't create key", Toast.LENGTH_SHORT).show();
+            throw new RuntimeException("can't create key");
+        }
+        return secretKey;
     }
 
     @Override

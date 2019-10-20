@@ -57,7 +57,7 @@ public class WelcomeFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mAppPref = AppPreferencesHelper.getInstance(getActivity());
+        mAppPref = AppPreferencesHelper.getInstance();
         child = mAppPref.getLastSelectedChild();
     }
 

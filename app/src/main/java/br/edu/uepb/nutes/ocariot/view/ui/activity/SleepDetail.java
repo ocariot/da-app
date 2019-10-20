@@ -132,7 +132,7 @@ public class SleepDetail extends AppCompatActivity {
         ButterKnife.bind(this);
         setSupportActionBar(mToolbar);
 
-        appPref = AppPreferencesHelper.getInstance(this);
+        appPref = AppPreferencesHelper.getInstance();
 
         if (getIntent() != null) {
             sleep = getIntent().getParcelableExtra(SLEEP_DETAIL);

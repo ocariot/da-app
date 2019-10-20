@@ -1,7 +1,5 @@
 package br.edu.uepb.nutes.ocariot.data.repository.remote.fitbit;
 
-import android.content.Context;
-
 import net.openid.appauth.AuthorizationService;
 
 import org.greenrobot.eventbus.EventBus;
@@ -10,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.edu.uepb.nutes.ocariot.BuildConfig;
+import br.edu.uepb.nutes.ocariot.OcariotApp;
 import br.edu.uepb.nutes.ocariot.data.model.common.UserAccess;
 import br.edu.uepb.nutes.ocariot.data.model.fitbit.ActivityLevelFitBit;
 import br.edu.uepb.nutes.ocariot.data.model.fitbit.HeartRateZoneFitBit;
@@ -54,9 +53,10 @@ public class FitBitNetRepository extends BaseNetRepository {
 
     private FitBitService fitBitService;
     private AuthorizationService authService;
+    private AppPreferencesHelper appPref;
 
-    private FitBitNetRepository(Context context) {
-        super(context);
+    private FitBitNetRepository() {
+        super();
 
         super.addInterceptor(requestInterceptor());
         super.addInterceptor(responseInterceptor());
@@ -66,13 +66,14 @@ public class FitBitNetRepository extends BaseNetRepository {
             this.addInterceptor(logging);
         }
 
-        fitBitService = super.provideRetrofit(FitBitService.BASE_URL_FITBIT)
+        fitBitService = super.provideRetrofit(FitBitService.FITBIT_BASE_URL)
                 .create(FitBitService.class);
-        authService = new AuthorizationService(context);
+        appPref = AppPreferencesHelper.getInstance();
+        authService = new AuthorizationService(OcariotApp.getContext());
     }
 
-    public static FitBitNetRepository getInstance(Context context) {
-        if (mInstance == null) mInstance = new FitBitNetRepository(context);
+    public static FitBitNetRepository getInstance() {
+        if (mInstance == null) mInstance = new FitBitNetRepository();
         return mInstance;
     }
 
@@ -96,9 +97,7 @@ public class FitBitNetRepository extends BaseNetRepository {
                     .header("Content-type", "application/json")
                     .method(original.method(), original.body());
 
-            UserAccess userAccess = AppPreferencesHelper
-                    .getInstance(mContext)
-                    .getLastSelectedChild().getFitBitAccess();
+            UserAccess userAccess = appPref.getLastSelectedChild().getFitBitAccess();
 
             if (userAccess != null && userAccess.getAccessToken() != null) {
                 requestBuilder.header(

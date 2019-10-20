@@ -68,8 +68,8 @@ public class LoginActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         mDisposable = new CompositeDisposable();
 
-        ocariotRepository = OcariotNetRepository.getInstance(this);
-        appPref = AppPreferencesHelper.getInstance(this);
+        ocariotRepository = OcariotNetRepository.getInstance();
+        appPref = AppPreferencesHelper.getInstance();
         alertMessage = new AlertMessage(this);
 
         mSignInButton.setOnClickListener(v -> login());

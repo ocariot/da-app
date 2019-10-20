@@ -23,10 +23,10 @@ public class SettingsActivity extends BaseSettingsActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        appPref = AppPreferencesHelper.getInstance(this);
+        appPref = AppPreferencesHelper.getInstance();
         initToolBar();
 
-        if (AppPreferencesHelper.getInstance(this).getLastSelectedChild() == null) {
+        if (appPref.getLastSelectedChild() == null) {
             replaceFragment(SettingsSimpleFragment.newInstance());
             return;
         }

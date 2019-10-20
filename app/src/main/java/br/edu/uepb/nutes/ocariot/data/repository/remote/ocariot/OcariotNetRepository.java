@@ -1,7 +1,5 @@
 package br.edu.uepb.nutes.ocariot.data.repository.remote.ocariot;
 
-import android.content.Context;
-
 import com.auth0.android.jwt.JWT;
 
 import org.greenrobot.eventbus.EventBus;
@@ -44,11 +42,10 @@ public class OcariotNetRepository extends BaseNetRepository {
     private static OcariotNetRepository mInstance;
 
     private OcariotService ocariotService;
+    private AppPreferencesHelper appPref;
 
-    private OcariotNetRepository(Context context) {
-        super(context);
-        this.mContext = context;
-
+    private OcariotNetRepository() {
+        super();
         super.addInterceptor(requestInterceptor());
         super.addInterceptor(responseInterceptor());
         if (BuildConfig.DEBUG) {
@@ -57,12 +54,13 @@ public class OcariotNetRepository extends BaseNetRepository {
             this.addInterceptor(logging);
         }
 
-        ocariotService = super.provideRetrofit(OcariotService.BASE_URL_OCARIOT)
+        ocariotService = super.provideRetrofit(OcariotService.OCARIOT_BASE_URL)
                 .create(OcariotService.class);
+        appPref = AppPreferencesHelper.getInstance();
     }
 
-    public static OcariotNetRepository getInstance(Context context) {
-        if (mInstance == null) mInstance = new OcariotNetRepository(context);
+    public static synchronized OcariotNetRepository getInstance() {
+        if (mInstance == null) mInstance = new OcariotNetRepository();
         return mInstance;
     }
 
@@ -79,10 +77,7 @@ public class OcariotNetRepository extends BaseNetRepository {
                     .header("Content-type", "application/json")
                     .method(request.method(), request.body());
 
-            UserAccess userAccess = AppPreferencesHelper
-                    .getInstance(mContext)
-                    .getUserAccessOcariot();
-
+            UserAccess userAccess = appPref.getUserAccessOcariot();
             if (userAccess != null) {
                 requestBuilder.header(
                         "Authorization",
@@ -221,20 +216,8 @@ public class OcariotNetRepository extends BaseNetRepository {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Completable deleteActivity(String childId, String activityId) {
-        return ocariotService.deleteActivity(childId, activityId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
-    }
-
     public Single<MultiStatusResult<Sleep>> publishSleep(String childId, Sleep[] sleep) {
         return ocariotService.publishSleep(childId, sleep)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
-    }
-
-    public Completable deleteSleep(String childId, String sleepId) {
-        return ocariotService.deleteSleep(childId, sleepId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }

@@ -71,7 +71,7 @@ public class SettingsSimpleFragment extends PreferenceFragment implements Prefer
             AlertDialog.Builder mDialog = new AlertDialog.Builder(mContext);
             mDialog.setMessage(R.string.dialog_confirm_sign_out)
                     .setPositiveButton(android.R.string.yes, (dialog, which) -> {
-                                if (AppPreferencesHelper.getInstance(mContext).removeSession()) {
+                                if (AppPreferencesHelper.getInstance().removeSession()) {
                                     Intent intent = new Intent(getActivity(), LoginActivity.class);
                                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                     startActivity(intent);

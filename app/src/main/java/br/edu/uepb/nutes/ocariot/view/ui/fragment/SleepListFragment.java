@@ -87,8 +87,8 @@ public class SleepListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = Objects.requireNonNull(getActivity()).getApplicationContext();
-        ocariotRepository = OcariotNetRepository.getInstance(mContext);
-        appPref = AppPreferencesHelper.getInstance(mContext);
+        ocariotRepository = OcariotNetRepository.getInstance();
+        appPref = AppPreferencesHelper.getInstance();
 
         mDisposable = new CompositeDisposable();
         mAlertMessage = new AlertMessage(getActivity());

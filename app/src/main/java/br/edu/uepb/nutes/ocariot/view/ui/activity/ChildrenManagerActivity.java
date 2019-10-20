@@ -92,10 +92,10 @@ public class ChildrenManagerActivity extends AppCompatActivity {
         setSupportActionBar(mToolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
-        appPref = AppPreferencesHelper.getInstance(this);
+        appPref = AppPreferencesHelper.getInstance();
         userAccess = appPref.getUserAccessOcariot();
         mDisposable = new CompositeDisposable();
-        ocariotRepository = OcariotNetRepository.getInstance(this);
+        ocariotRepository = OcariotNetRepository.getInstance();
         mAlertMessage = new AlertMessage(this);
         mImgNoData.setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.children));
 

@@ -86,8 +86,8 @@ public class PhysicalActivityListFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mContext = Objects.requireNonNull(getActivity()).getApplicationContext();
 
-        ocariotRepository = OcariotNetRepository.getInstance(mContext);
-        appPref = AppPreferencesHelper.getInstance(mContext);
+        ocariotRepository = OcariotNetRepository.getInstance();
+        appPref = AppPreferencesHelper.getInstance();
         userAccess = appPref.getUserAccessOcariot();
 
         mDisposable = new CompositeDisposable();

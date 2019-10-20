@@ -2,6 +2,7 @@ package br.edu.uepb.nutes.ocariot.data.repository.remote.ocariot;
 
 import java.util.List;
 
+import br.edu.uepb.nutes.ocariot.BuildConfig;
 import br.edu.uepb.nutes.ocariot.data.model.common.UserAccess;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.Child;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.ChildrenGroup;
@@ -16,7 +17,6 @@ import br.edu.uepb.nutes.ocariot.data.model.ocariot.Weight;
 import io.reactivex.Completable;
 import io.reactivex.Single;
 import retrofit2.http.Body;
-import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -31,8 +31,7 @@ import retrofit2.http.Query;
  * @author Copyright (c) 2018, NUTES/UEPB
  */
 public interface OcariotService {
-    String BASE_URL_OCARIOT = "https://ocariot.nutes.uepb.edu.br"; // API GATEWAY
-//    String BASE_URL_OCARIOT = "https://192.168.0.113"; // API GATEWAY
+    String OCARIOT_BASE_URL = BuildConfig.OCARIOT_BASE_URL; // API GATEWAY
 
     // Child
     @POST("/v1/auth")
@@ -67,15 +66,8 @@ public interface OcariotService {
     );
 
     @POST("/v1/children/{child_id}/physicalactivities")
-    Single<PhysicalActivity> publishPhysicalActivity(@Path("child_id") String childId,
-                                                     @Body PhysicalActivity activity);
-
-    @POST("/v1/children/{child_id}/physicalactivities")
     Single<MultiStatusResult<PhysicalActivity>> publishPhysicalActivities(@Path("child_id") String childId,
                                                                           @Body PhysicalActivity[] activity);
-
-    @DELETE("/v1/children/{child_id}/physicalactivities/{activity_id}")
-    Completable deleteActivity(@Path("child_id") String childId, @Path("activity_id") String activityId);
 
     // Sleep
     @GET("/v1/children/{child_id}/sleep")
@@ -88,9 +80,6 @@ public interface OcariotService {
 
     @POST("/v1/children/{child_id}/sleep")
     Single<MultiStatusResult<Sleep>> publishSleep(@Path("child_id") String childId, @Body Sleep[] sleep);
-
-    @DELETE("/v1/children/{child_id}/sleep/{sleep_id}")
-    Completable deleteSleep(@Path("child_id") String childId, @Path("sleep_id") String sleepId);
 
     // Logs
     @POST("/v1/children/{child_id}/logs/{resource}")

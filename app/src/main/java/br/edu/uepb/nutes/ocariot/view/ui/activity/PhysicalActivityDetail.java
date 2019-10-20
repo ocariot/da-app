@@ -85,7 +85,7 @@ public class PhysicalActivityDetail extends AppCompatActivity {
         ButterKnife.bind(this);
         setSupportActionBar(mToolbar);
 
-        appPref = AppPreferencesHelper.getInstance(this);
+        appPref = AppPreferencesHelper.getInstance();
 
         if (getIntent() != null) {
             physicalActivity = getIntent().getParcelableExtra(ACTIVITY_DETAIL);
