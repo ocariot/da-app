@@ -2,9 +2,11 @@ package br.edu.uepb.nutes.ocariot.view.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.StringRes;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.inputmethod.EditorInfo;
@@ -27,7 +29,10 @@ import br.edu.uepb.nutes.ocariot.data.repository.remote.ocariot.OcariotNetReposi
 import br.edu.uepb.nutes.ocariot.utils.AlertMessage;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.HttpException;
 
 import static android.view.inputmethod.InputMethodManager.HIDE_NOT_ALWAYS;
@@ -154,34 +159,76 @@ public class LoginActivity extends AppCompatActivity {
      */
     private void getResources(UserAccess userAccess) {
         if (userAccess.getSubjectType().equalsIgnoreCase(User.Type.CHILD)) {
-            mDisposable.add(ocariotRepository.getFitBitAppData()
-                    .zipWith(ocariotRepository.getChildById(userAccess.getSubject()), ResponseData::new)
-                    .doOnSubscribe(disposable -> showProgress(true))
-                    .doAfterTerminate(() -> {
-                        showProgress(false);
-                        openMainActivity();
-                    })
-                    .subscribe(
-                            responseData -> {
-                                appPref.addFitbitAppData(responseData.fitBitAppData);
-                                appPref.addLastSelectedChild(responseData.child);
-                            }, err -> alertMessage.handleError(err)
-                    )
-            );
-        } else {
-            mDisposable.add(ocariotRepository
-                    .getFitBitAppData()
-                    .doOnSubscribe(disposable -> showProgress(true))
-                    .doAfterTerminate(() -> {
-                        showProgress(false);
-                        openMainActivity();
-                    })
-                    .subscribe(
-                            fitBitAppData -> appPref.addFitbitAppData(fitBitAppData),
-                            err -> alertMessage.handleError(err)
-                    )
-            );
+            getResourcesChild(userAccess);
+            return;
         }
+
+        mDisposable.add(ocariotRepository
+                .getFitBitAppData()
+                .doOnSubscribe(disposable -> showProgress(true))
+                .doAfterTerminate(() -> {
+                    showProgress(false);
+                    openMainActivity();
+                })
+                .subscribe(
+                        fitBitAppData -> appPref.addFitbitAppData(fitBitAppData),
+                        err -> alertMessage.handleError(err)
+                )
+        );
+    }
+
+    /**
+     * Get child resources on the server.
+     *
+     * @param userAccess {@link UserAccess}
+     */
+    private void getResourcesChild(UserAccess userAccess) {
+        Single<FitBitAppData> fitBitAppDataRequest = ocariotRepository.getFitBitAppData()
+                .onErrorReturn(throwable -> new FitBitAppData());
+        Single<Child> childRequest = ocariotRepository.getChildById(userAccess.getSubject())
+                .onErrorReturn(throwable -> new Child());
+        Single<UserAccess> childAccessRequest = ocariotRepository.getFitBitAuth(userAccess.getSubject())
+                .onErrorReturn(throwable -> new UserAccess());
+
+        mDisposable.add(
+                Single.zip(fitBitAppDataRequest, childRequest, childAccessRequest, ResponseData::new)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .doOnSubscribe(disposable -> showProgress(true))
+                        .doAfterTerminate(() -> {
+                            showProgress(false);
+                        })
+                        .subscribe(
+                                responseData -> {
+                                    if (responseData.fitBitAppData.isEmpty() ||
+                                            responseData.child.isEmpty() ||
+                                            responseData.fitBitAccess.isEmpty()
+                                    ) {
+                                        appPref.removeSession();
+                                        showMessageResourceError();
+                                        return;
+                                    }
+                                    appPref.addFitbitAppData(responseData.fitBitAppData);
+                                    responseData.child.setFitBitAccess(responseData.fitBitAccess);
+                                    appPref.addLastSelectedChild(responseData.child);
+                                    openMainActivity();
+                                }, err -> alertMessage.handleError(err)
+                        )
+        );
+    }
+
+    /**
+     * Displays error message when unable to retrieve user initial data.
+     */
+    private void showMessageResourceError() {
+        alertMessage.show(
+                R.string.title_error,
+                R.string.error_get_resources,
+                R.color.colorDanger,
+                R.drawable.ic_warning_dark, 10000,
+                true,
+                null
+        );
     }
 
     /**
@@ -227,10 +274,21 @@ public class LoginActivity extends AppCompatActivity {
     private class ResponseData {
         FitBitAppData fitBitAppData;
         Child child;
+        UserAccess fitBitAccess;
 
-        ResponseData(FitBitAppData fitBitAppData, Child child) {
+        ResponseData(FitBitAppData fitBitAppData, Child child, UserAccess fitBitAccess) {
             this.fitBitAppData = fitBitAppData;
             this.child = child;
+            this.fitBitAccess = fitBitAccess;
+        }
+
+        @Override
+        public String toString() {
+            return "ResponseData{" +
+                    "fitBitAppData=" + fitBitAppData +
+                    ", child=" + child +
+                    ", fitBitAccess=" + fitBitAccess +
+                    '}';
         }
     }
 }

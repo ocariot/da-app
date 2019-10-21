@@ -39,6 +39,10 @@ public class FitBitAppData {
         this.clientSecret = clientSecret;
     }
 
+    public boolean isEmpty() {
+        return this.clientId == null || this.getClientSecret() == null;
+    }
+
     /**
      * Convert json to Object.
      *

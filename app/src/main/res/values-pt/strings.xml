@@ -102,6 +102,7 @@
     <string name="error_login_invalid">Nome de usuário ou senha inválidos&#8230;</string>
     <string name="error_500">Ocorreu um erro na comunicação com o servidor. Por favor, tente novamente mais tarde&#8230;</string>
     <string name="error_403">Você não tem permissão para a funcionalidade que está tentando acessar. Por favor, entre em contato com o administrador&#8230;</string>
+    <string name="error_get_resources">Ocorreu um erro ao tentar recuperar seus dados. Por favor, tente novamente mais tarde&#8230;</string>
 
     <!-- MESSAGES -->
     <string name="message_no_data_display">Não há dados para exibir!</string>

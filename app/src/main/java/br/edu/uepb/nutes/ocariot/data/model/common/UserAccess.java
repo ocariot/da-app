@@ -158,6 +158,10 @@ public class UserAccess implements Parcelable {
         return true;
     }
 
+    public boolean isEmpty() {
+        return this.accessToken == null;
+    }
+
     public String getUserId() {
         return userId;
     }

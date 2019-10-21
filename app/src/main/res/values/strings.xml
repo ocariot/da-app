@@ -105,6 +105,7 @@
     <string name="error_login_invalid">Invalid username or password&#8230;</string>
     <string name="error_500">There was an error communicating with the server. Please try again later&#8230;</string>
     <string name="error_403">You do not have permission for the functionality you are trying to fitBitAccess. Please contact the administrator&#8230;</string>
+    <string name="error_get_resources">An error occurred while trying to recover your data. Please try again later&#8230;</string>
 
     <!-- MESSAGES -->
     <string name="message_no_data_display">No data to display!</string>

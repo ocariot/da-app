@@ -241,7 +241,7 @@ public class MainActivity extends AppCompatActivity implements
         replaceFragment(iotFragment);
         mBottomNavigationView.getMenu().getItem(2).setChecked(true);
         Objects.requireNonNull(getSupportActionBar())
-                .setTitle(R.string.title_weight);
+                .setTitle(R.string.title_iot);
         lastViewIndex = 2;
     }
 

@@ -79,9 +79,13 @@ public class User {
         public static String APPLICATION = "application"; // Must not login to APP!!!
     }
 
+    public boolean isEmpty() {
+        return this._id == null || this.username == null;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if(!(o instanceof User)) return false;
+        if (!(o instanceof User)) return false;
         User user = (User) o;
         return username.equals(user.username);
     }

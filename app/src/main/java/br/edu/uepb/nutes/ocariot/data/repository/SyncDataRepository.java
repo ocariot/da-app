@@ -108,7 +108,7 @@ public class SyncDataRepository {
     }
 
     private Single<MultiStatusResult<PhysicalActivity>> syncPhysicalActivities() {
-        return fitbitRepo.listActivities(null, endDate, "asc", 0, 100)
+        return fitbitRepo.listActivities(startDate, null, "desc", 0, 100)
                 .onErrorReturn(throwable -> new ArrayList<>())
                 .map(activitiesList -> activitiesList.toArray(new PhysicalActivity[0]))
                 .flatMap(activities -> ocariotRepo.publishPhysicalActivities(childId, activities))
