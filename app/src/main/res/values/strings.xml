@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">OCARIoT DA</string>
+    <string name="app_name" translatable="false">OCARIoT DA</string>
 
     <!-- TITLES -->
     <string name="title_physical_activities">Physical activities</string>
@@ -34,7 +34,7 @@
     <!-- Strings related to login -->
     <string name="prompt_username">Username</string>
     <string name="prompt_password">Password</string>
-    <string name="title_login_in">Login in</string>
+    <string name="title_login_in">Log In</string>
     <string name="img_desc_ocariot">OCARIoT logo</string>
 
     <!-- ACTIVITIES -->
@@ -74,21 +74,21 @@
     <string name="hour_format2">HH:mm:ss</string>
 
     <!-- SETTINGS -->
+    <string name="key_fitibit" translatable="false">key_fitbit</string>
+    <string name="key_signout" translatable="false">key_signout</string>
+    <string name="key_sync_data" translatable="false">key_sync_data</string>
+    <string name="key_children" translatable="false">key_children_manager</string>
+    <string name="settings_summary_version" translatable="false">1.6.2</string>
     <string name="login_with_fitbit">Login With Fitbit</string>
     <string name="login_do_not_user_fitbit">Do not currently use Fitbit</string>
     <string name="settings_title">Settings</string>
     <string name="settings_account">Account</string>
     <string name="settings_external_services">External Services</string>
-    <string name="key_fitibit" translatable="false">key_fitbit</string>
-    <string name="key_signout" translatable="false">key_signout</string>
-    <string name="key_sync_data" translatable="false">key_sync_data</string>
-    <string name="key_children" translatable="false">key_children_manager</string>
-    <string name="settings_signout">Sign Out</string>
+    <string name="settings_signout">Log Out</string>
     <string name="settings_fitbit">Fitbit</string>
     <string name="settings_summary_signout">You will be logged out of the application and redirected to login screen.</string>
     <string name="settings_summary_fitbit">Share activity, sleep, heart rate and weight data.</string>
     <string name="settings_version">Version</string>
-    <string name="settings_summary_version">1.6.1</string>
     <string name="settings_about">About</string>
     <string name="settings_children">Children</string>
     <string name="settings_summary_children">List of children</string>
