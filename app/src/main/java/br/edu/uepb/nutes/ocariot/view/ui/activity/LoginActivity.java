@@ -201,9 +201,7 @@ public class LoginActivity extends AppCompatActivity {
                         .subscribe(
                                 responseData -> {
                                     if (responseData.fitBitAppData.isEmpty() ||
-                                            responseData.child.isEmpty() ||
-                                            responseData.fitBitAccess.isEmpty()
-                                    ) {
+                                            responseData.child.isEmpty()) {
                                         appPref.removeSession();
                                         showMessageResourceError();
                                         return;

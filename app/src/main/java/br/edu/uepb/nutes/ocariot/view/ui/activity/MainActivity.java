@@ -98,19 +98,17 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        if (appPref.getLastSelectedChild() == null) {
-            openChildrenManagerActivity(true);
-            return;
-        }
-
         if (!appPref.getUserAccessOcariot().getSubjectType().equalsIgnoreCase(User.Type.CHILD)) {
+            if (appPref.getLastSelectedChild() == null) {
+                openChildrenManagerActivity(true);
+                return;
+            }
             Objects.requireNonNull(getSupportActionBar())
                     .setSubtitle(appPref.getLastSelectedChild().getUsername());
         }
 
         if (appPref.getLastSelectedChild().getFitBitAccess() != null
-                && (appPref.getLastSelectedChild().getFitBitAccess().getAccessToken() == null
-                || appPref.getLastSelectedChild().getFitBitAccess().isExpired())
+                && (appPref.getLastSelectedChild().getFitBitAccess().getAccessToken() == null)
                 && !appPref.getBoolean(KEY_DO_NOT_LOGIN_FITBIT)) {
             replaceFragment(WelcomeFragment.newInstance());
             mBottomNavigationView.setVisibility(View.GONE);

@@ -26,6 +26,7 @@ import br.edu.uepb.nutes.ocariot.data.repository.SyncDataRepository;
 import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
 import br.edu.uepb.nutes.ocariot.data.repository.remote.ocariot.OcariotNetRepository;
 import br.edu.uepb.nutes.ocariot.utils.AlertMessage;
+import br.edu.uepb.nutes.ocariot.utils.DateUtils;
 import br.edu.uepb.nutes.ocariot.utils.DialogLoading;
 import br.edu.uepb.nutes.ocariot.utils.MessageEvent;
 import br.edu.uepb.nutes.ocariot.view.ui.activity.ChildrenManagerActivity;
@@ -49,7 +50,8 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     private AppPreferencesHelper appPref;
     private DialogLoading mDialogSync;
     private AlertMessage mAlertMessage;
-    private Child child;
+    private Child mChild;
+    private Preference mSyncPreference;
 
     public SettingsFragment() {
         // Empty constructor required!
@@ -103,7 +105,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     public void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
-        child = appPref.getLastSelectedChild();
+        mChild = appPref.getLastSelectedChild();
         populateView();
     }
 
@@ -171,9 +173,18 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     private void populateView() {
         mDialogSync = DialogLoading.newDialog(0,
                 mContext.getResources().getString(R.string.synchronizing),
-                mContext.getResources().getString(R.string.synchronizing_data_fitbit, child.getUsername())
+                mContext.getResources().getString(R.string.synchronizing_data_fitbit, mChild.getUsername())
         );
         populateSwitchFitbit();
+        Preference prefSync = findPreference(getString(R.string.key_sync_data));
+        prefSync.setSummary(getResources().getString(R.string.synchronization_data)
+                .concat("\n\n")
+                .concat(getResources().getString(R.string.last_sync_date_time,
+                        DateUtils.convertDateTimeUTCToLocale(mChild.getLastSync(),
+                                getResources().getString(R.string.date_time_abb5),
+                                null))
+                )
+        );
     }
 
     private boolean fitbitValidConfigs() {
@@ -215,13 +226,13 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     }
 
     /**
-     * Checks if Fitbit access has been provided for child
+     * Checks if Fitbit access has been provided for mChild
      * and marks the Switch, otherwise uncheck.
      */
     private void populateSwitchFitbit() {
-        if (child.getFitBitAccess() != null && child.getFitBitAccess().getStatus() != null &&
-                (child.getFitBitAccess().getStatus().equals("valid_token") ||
-                        child.getFitBitAccess().getStatus().equals("expired_token"))) {
+        if (mChild.getFitBitAccess() != null && mChild.getFitBitAccess().getStatus() != null &&
+                (mChild.getFitBitAccess().getStatus().equals("valid_token") ||
+                        mChild.getFitBitAccess().getStatus().equals("expired_token"))) {
             switchPrefFitBit.setChecked(true);
         } else {
             switchPrefFitBit.setChecked(false);
@@ -235,7 +246,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         getActivity().runOnUiThread(() -> {
             AlertDialog.Builder mDialog = new AlertDialog.Builder(mContext);
             mDialog.setMessage(mContext.getResources()
-                    .getString(R.string.dialog_confirm_revoke_fitbit, child.getUsername()))
+                    .getString(R.string.dialog_confirm_revoke_fitbit, mChild.getUsername()))
                     .setPositiveButton(R.string.title_yes, (dialog, which) -> revokeFitBitAuth())
                     .setNegativeButton(R.string.title_no, null)
                     .create()
@@ -250,13 +261,13 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         );
         mDisposable.add(
                 OcariotNetRepository.getInstance()
-                        .revokeFitBitAuth(child.get_id())
+                        .revokeFitBitAuth(mChild.get_id())
                         .doOnSubscribe(disposable -> dialog.show(getFragmentManager()))
                         .doOnTerminate(dialog::close)
                         .subscribe(() -> {
                             switchPrefFitBit.setChecked(false);
-                            child.setFitBitAccess(null);
-                            appPref.addLastSelectedChild(child);
+                            mChild.setFitBitAccess(null);
+                            appPref.addLastSelectedChild(mChild);
 
                             mAlertMessage.show(
                                     R.string.title_success,
@@ -305,8 +316,8 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                             userAccess.setScope(mAuthState.getScope());
                             userAccess.setStatus("valid_token");
 
-                            child.setFitBitAccess(userAccess);
-                            appPref.addLastSelectedChild(child);
+                            mChild.setFitBitAccess(userAccess);
+                            appPref.addLastSelectedChild(mChild);
                             fitBitInitSync();
                         }, err -> {
                             switchPrefFitBit.setChecked(false);
@@ -323,15 +334,15 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     private void fitBitInitSync() {
         SyncDataRepository syncDataRepo = SyncDataRepository.getInstance(mContext);
 
-        if (child.getFitBitAccess() == null || child.getFitBitAccess().getAccessToken() == null) {
+        if (mChild.getFitBitAccess() == null || mChild.getFitBitAccess().getAccessToken() == null) {
             mAlertMessage.show(mContext.getResources().getString(R.string.alert_title_no_token_fitbit),
-                    mContext.getResources().getString(R.string.alert_no_token_fitbit, child.getUsername()),
+                    mContext.getResources().getString(R.string.alert_no_token_fitbit, mChild.getUsername()),
                     R.color.colorDanger, R.drawable.ic_warning_dark, 15000, true, null);
             return;
         }
 
         mDisposable.add(
-                syncDataRepo.syncAll(child.get_id())
+                syncDataRepo.syncAll(mChild.get_id())
                         .doOnSubscribe(disposable -> mDialogSync.show(getFragmentManager()))
                         .doAfterTerminate(() -> mDialogSync.close())
                         .subscribe(
@@ -345,11 +356,11 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     }
 
     private void fitBitSyncForced() {
-        if (child.getFitBitAccess() == null || child.getFitBitAccess().getStatus() == null ||
-                !child.getFitBitAccess().getStatus().equals("valid_token") &&
-                        !child.getFitBitAccess().getStatus().equals("expired_token")) {
+        if (mChild.getFitBitAccess() == null || mChild.getFitBitAccess().getStatus() == null ||
+                !mChild.getFitBitAccess().getStatus().equals("valid_token") &&
+                        !mChild.getFitBitAccess().getStatus().equals("expired_token")) {
             mAlertMessage.show(mContext.getResources().getString(R.string.alert_title_no_token_fitbit),
-                    mContext.getResources().getString(R.string.alert_no_token_fitbit, child.getUsername()),
+                    mContext.getResources().getString(R.string.alert_no_token_fitbit, mChild.getUsername()),
                     R.color.colorDanger, R.drawable.ic_warning_dark, 15000, true,
                     new AlertMessage.AlertMessageListener() {
                         @Override
@@ -367,7 +378,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
 
         mDisposable.add(
                 OcariotNetRepository.getInstance()
-                        .fitBitSync(child.get_id())
+                        .fitBitSync(mChild.get_id())
                         .doOnSubscribe(disposable -> mDialogSync.show(getFragmentManager()))
                         .doAfterTerminate(() -> mDialogSync.close())
                         .subscribe(
@@ -384,7 +395,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
      * Send Fitbit authentication data to server.
      */
     private void publishFitBitAuth() {
-        UserAccess fitBitAuth = child.getFitBitAccess();
+        UserAccess fitBitAuth = mChild.getFitBitAccess();
 
         if (fitBitAuth == null || fitBitAuth.getAccessToken() == null) return;
 
@@ -394,7 +405,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
 
         mDisposable.add(
                 OcariotNetRepository.getInstance()
-                        .publishFitBitAuth(child.get_id(), userAccess)
+                        .publishFitBitAuth(mChild.get_id(), userAccess)
                         .subscribe(() -> Log.d(LOG_TAG, "Fitbit authentication data sent successfully!"),
                                 err -> Log.e(LOG_TAG, "Error sending Fitbit authentication data: " + err.getMessage())
                         )
@@ -405,7 +416,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     public void onMessageEvent(MessageEvent event) {
         if (event.getName().equals(MessageEvent.EventType.FITBIT_ACCESS_TOKEN_EXPIRED)) {
             mAlertMessage.show(mContext.getResources().getString(R.string.alert_title_token_expired),
-                    mContext.getResources().getString(R.string.alert_token_expired_fitbit, child.getUsername()),
+                    mContext.getResources().getString(R.string.alert_token_expired_fitbit, mChild.getUsername()),
                     R.color.colorDanger, R.drawable.ic_warning_dark, 20000,
                     true, new AlertMessage.AlertMessageListener() {
                         @Override
@@ -427,8 +438,8 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                 .enableSwipeToDismiss()
                 .setTitle(isSuccess ? R.string.title_success : R.string.title_error)
                 .setText(isSuccess ? mContext.getResources()
-                        .getString(R.string.sync_data_fitbit_success, child.getUsername()) :
-                        mContext.getResources().getString(R.string.sync_data_fitbit_error, child.getUsername()))
+                        .getString(R.string.sync_data_fitbit_success, mChild.getUsername()) :
+                        mContext.getResources().getString(R.string.sync_data_fitbit_error, mChild.getUsername()))
                 .setBackgroundColorRes(isSuccess ? R.color.colorAccent : R.color.colorDanger)
                 .setIcon(isSuccess ? R.drawable.ic_happy_dark : R.drawable.ic_sad_dark);
         if (isSuccess) {

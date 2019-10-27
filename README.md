@@ -1,7 +1,7 @@
 # OCARIoT Data Acquisition
 [![License][license-image]][license-url] [![Vulnerabilities][known-vulnerabilities-image]][known-vulnerabilities-url] [![Commit][last-commit-image]][last-commit-url] [![Releases][releases-image]][releases-url] [![Contributors][contributors-image]][contributors-url] 
 
-[![DownloadBrazil][apk-brazil]][apk-brazil-url] [![DownloadSpain][apk-spain]][apk-spain-url] [![DownloadGreece][apk-greece]][apk-greece-url] 
+[![DownloadBrazil][apk-brazil]][apk-brazil-url] [![DownloadEurope][apk-europe]][apk-europe-url] 
 
 
 Native Android application responsible for OCARIoT platform data acquisition. The application acts as an external services access token manager. Currently, only Fitbit service is available.
@@ -67,10 +67,8 @@ From Android Studio:
 [contributors-url]: https://github.com/ocariot/da-app/graphs/contributors
 [apk-brazil]: https://img.shields.io/badge/download%20apk-brazil-green.svg?style=for-the-badge&logo=android
 [apk-brazil-url]: #
-[apk-spain]: https://img.shields.io/badge/download%20apk-spain-yellow.svg?style=for-the-badge&logo=android
-[apk-spain-url]: #
-[apk-greece]: https://img.shields.io/badge/download%20apk-greece-blue.svg?style=for-the-badge&logo=android
-[apk-greece-url]: #
+[apk-europe]: https://img.shields.io/badge/download%20apk-europe-blue.svg?style=for-the-badge&logo=android
+[apk-europe-url]: #
 
 --- 
 
