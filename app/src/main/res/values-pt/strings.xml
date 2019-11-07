@@ -89,7 +89,7 @@
 
     <!-- DIALOGS -->
     <string name="dialog_confirm_sign_out">Deseja realmente sair do aplicativo?\nVocê será redirecionado para a tela de login&#8230;</string>
-    <string name="dialog_confirm_revoke_fitbit">Deseja desconectar do Fitbit?\nNão será mais possível sincronizar os dados da criança \"%s\".</string>
+    <string name="dialog_confirm_revoke_fitbit">Deseja revogar o acesso Fitbit?\nNão será mais possível sincronizar os dados da criança \"%s\".</string>
     <string name="dialog_revoke_fitbit_processing">Processando pedido de revogação de acesso ao Fitbit&#8230;</string>
 
     <!-- ERROR MESSAGES -->

@@ -13,7 +13,7 @@
     <string name="title_children">Children</string>
     <string name="title_hours">hours</string>
     <string name="title_minutes">minutes</string>
-    <string name="title_sleep_efficiency">Sleep Efficiency</string>
+    <string name="title_sleep_efficiency">Sleep efficiency</string>
     <string name="title_asleep">Asleep</string>
     <string name="title_restless">Restless</string>
     <string name="title_awake">Awake</string>
@@ -22,19 +22,19 @@
     <string name="title_deep">Deep</string>
     <string name="title_error">Error!</string>
     <string name="title_success">Success!</string>
-    <string name="title_login_failed">Login failed!</string>
+    <string name="title_login_failed">Authentication failed!</string>
     <string name="title_connection_error">Connection error!</string>
     <string name="title_access_blocked">Access blocked!</string>
-    <string name="title_last_measurement">Last measurement</string>
-    <string name="title_processing">Processing</string>
+    <string name="title_last_measurement">Last measurement"</string>
+    <string name="title_processing">Processing"</string>
     <string name="title_yes">Yes</string>
     <string name="title_no">No</string>
-    <string name="img_sort">Icon Sort</string>
+    <string name="img_sort">Sort Icon</string>
 
     <!-- Strings related to login -->
     <string name="prompt_username">Username</string>
     <string name="prompt_password">Password</string>
-    <string name="title_login_in">Log In</string>
+    <string name="title_login_in">Login</string>
     <string name="img_desc_ocariot">OCARIoT logo</string>
 
     <!-- ACTIVITIES -->
@@ -79,65 +79,65 @@
     <string name="key_sync_data" translatable="false">key_sync_data</string>
     <string name="key_children" translatable="false">key_children_manager</string>
     <string name="settings_summary_version" translatable="false">1.6.2</string>
-    <string name="login_with_fitbit">Login With Fitbit</string>
+    <string name="login_with_fitbit">Provide access to Fitbit</string>
     <string name="login_do_not_user_fitbit">Do not currently use Fitbit</string>
     <string name="settings_title">Settings</string>
     <string name="settings_account">Account</string>
     <string name="settings_external_services">External Services</string>
-    <string name="settings_signout">Log Out</string>
+    <string name="settings_signout">Logout</string>
     <string name="settings_fitbit">Fitbit</string>
-    <string name="settings_summary_signout">You will be logged out of the application and redirected to login screen.</string>
-    <string name="settings_summary_fitbit">Share activity, sleep, heart rate and weight data.</string>
+    <string name="settings_summary_signout">You will be logged out of the app and redirected to the login screen.</string>
+    <string name="settings_summary_fitbit">Share activity, sleep, heart rate, and weight data.</string>
     <string name="settings_version">Version</string>
     <string name="settings_about">About</string>
     <string name="settings_children">Children</string>
-    <string name="settings_summary_children">List of children</string>
+    <string name="settings_summary_children">Children list</string>
 
     <!-- DIALOGS -->
-    <string name="dialog_confirm_sign_out">Do you really want to quit the application?\nYou will be redirected to login screen&#8230;</string>
-    <string name="dialog_confirm_revoke_fitbit">Do you want to disconnect from Fitbit?\nIt will no longer be possible to sync data from child \"%s\".</string>
+    <string name="dialog_confirm_sign_out">Do you really want to exit the application?\nYou will be redirected to the login screen&#8230;</string>
+    <string name="dialog_confirm_revoke_fitbit">Do you want to revoke Fitbit access?\nYou will no longer be able to sync data from child \"%s\".</string>
     <string name="dialog_revoke_fitbit_processing">Processing Fitbit access revocation request&#8230;</string>
 
     <!-- ERROR MESSAGES -->
-    <string name="error_connection">Unable to establish a communication. Please check if you have internet connection and try again&#8230;</string>
-    <string name="error_oauth_fitbit">An internal error occurred with the Fitbit OAuth server.</string>
+    <string name="error_connection">Unable to establish a communication. Make sure you have an internet connection and try again&#8230;</string>
+    <string name="error_oauth_fitbit">An internal error occurred on the Fitbit OAuth server.</string>
     <string name="error_configs_fitbit">Unable to retrieve Fitbit information required to perform the operation.\nPlease contact the administrator!</string>
     <string name="error_login_invalid">Invalid username or password&#8230;</string>
-    <string name="error_500">There was an error communicating with the server. Please try again later&#8230;</string>
-    <string name="error_403">You do not have permission for the functionality you are trying to fitBitAccess. Please contact the administrator&#8230;</string>
+    <string name="error_500">An error occurred communicating with the server. Please try again later&#8230;</string>
+    <string name="error_403">You do not have permission for the functionality you are trying to access. Please contact the administrator&#8230;</string>
     <string name="error_get_resources">An error occurred while trying to recover your data. Please try again later&#8230;</string>
 
     <!-- MESSAGES -->
-    <string name="message_no_data_display">No data to display!</string>
-    <string name="message_welcome">1. Log in to the selected child\'s Fitbit account;\n\n2. Provide authorization for APP OCARIoT to collect from Fitbit activity, sleep, heart rate and weight data;\n\n3. Done! Activity, sleep, heart rate, and weight logs will be captured by Fitbit devices and synchronized with the OCARIoT platform automatically or when prompted.</string>
-    <string name="message_welcome_child">1. Log in to your FitBit account;\n\n2. Provide authorization for APP OCARIoT to collect from Fitbit activity, sleep, heart rate and weight data;\n\n3. Done! Activity, sleep, heart rate, and weight logs will be captured by Fitbit devices and synchronized with the OCARIoT platform automatically or when prompted.</string>
-    <string name="message_selected_child">Selected child: %s</string>
-    <string name="message_about">This project received funding from the European Union\'s Horizon 2020 program under the grant agreement nº 777082 and the Brazilian\'s Ministry of Science, Technology, Innovation and Communication through RNP, agreement nº 3007.</string>
-    <string name="message_permission_location">Location permission is required when using Bluetooth Low Energy!</string>
+    <string name="message_no_data_display">There is no data to display!</string>
+    <string name="message_welcome">1. Log in to the selected child\'s Fitbit account;\n\n2. Provide permission for APP OCARIoT to collect Fitbit data on physical activity, sleep, heart rate and weight;\n\n3. Done! Activity, sleep, heart rate, and weight logs will be captured by Fitbit devices and synchronized with the OCARIoT platform automatically or when prompted.</string>
+    <string name="message_welcome_child">1. Authenticate to your Fitbit account;\n\n2. Provide permission for APP OCARIoT to collect Fitbit data on physical activity, sleep, heart rate and weight;\n\n3. Done! Activity, sleep, heart rate, and weight logs will be captured by Fitbit devices and synchronized with the OCARIoT platform automatically or when prompted.</string>
+    <string name="message_selected_child">Selected child %s"</string>
+    <string name="message_about">This project received funding from the European Union\'s Horizon 2020 program under concession agreement Nº 777082 and the Brazilian Ministry of Science, Technology, Innovation and Communication through RNP, agreement No. 3007.</string>
+    <string name="message_permission_location">Location permission is required to use Bluetooth Low Energy!</string>
 
     <!-- VALIDATION MESSAGES -->
     <string name="required_username">Username is required!</string>
     <string name="required_password">Password is required!</string>
 
     <!-- SYNC DATA -->
-    <string name="synchronization">Synchronization</string>
+    <string name="synchronization">Sync</string>
     <string name="synchronization_data">Synchronize data from external services with the OCARIoT platform.</string>
-    <string name="synchronizing">Synchronizing</string>
-    <string name="synchronizing_data_fitbit">Synchronizing Fitbit data from child \"%s\" with OCARIoT platform&#8230;</string>
-    <string name="sync_data_fitbit_error">An error occurred while trying to sync Fitbit data from child "%s" with the OCARIoT platform.\nPlease, try again later&#8230;</string>
-    <string name="sync_data_fitbit_success">Fitbit data from the "%s" child was successfully synchronized with the OCARIoT platform.</string>
+    <string name="synchronizing">Syncing</string>
+    <string name="synchronizing_data_fitbit">Syncing Fitbit data from child \"%s\" with the OCARIoT platform&#8230;</string>
+    <string name="sync_data_fitbit_error">An error occurred while trying to sync Fitbit data for child \"%s\" with the OCARIoT platform.\nPlease try again later&#8230;</string>
+    <string name="sync_data_fitbit_success">Fitbit data for child \"%s\" was successfully synchronized with the OCARIoT platform.</string>
     <string name="last_sync_date_time">Last sync: %s</string>
-    <string name="fitbit_get_access_token_error">An error occurred while trying to retrieve Fitbit access token.\nPlease try again later&#8230;</string>
+    <string name="fitbit_get_access_token_error">An error occurred while trying to retrieve Fitbit access token.\nPlease try later&#8230;</string>
 
     <!-- ALERTS -->
-    <string name="alert_title_token_expired">Authentication problem!</string>
-    <string name="alert_token_expired_ocariot">Your session has exceeded the 24 hour limit.\nWithin seconds you will be redirected to the login screen to perform a new authentication.</string>
-    <string name="alert_title_no_token_fitbit">Error trying to regain Fitbit access!</string>
-    <string name="alert_no_token_fitbit">To collect Fitbit data from child \"%s\" you must first provide data collection authorization.</string>
-    <string name="alert_token_expired_fitbit">The Fitbit fitBitAccess token for child \"%s\" has expired or been revoked.\nPlease, click here to grant fitBitAccess again&#8230;</string>
-    <string name="alert_access_blocked">Sorry, this app does not support admin users. Only children, families, educators and health professionals are allowed&#8230;</string>
-    <string name="alert_revoke_fitbit_success">Fitbit access successfully revoked. It will no longer be possible to perform data synchronization.</string>
-    <string name="alert_enable_bluetooth">If you want Heart Rate (Polar OH1) data to be automatically displayed on this screen, click here to enable Bluetooth&#8230;</string>
+    <string name="alert_title_token_expired">Authentication problem!"</string>
+    <string name="alert_token_expired_ocariot">Your session has exceeded the 24 hour limit.\nIn seconds, you will be redirected to the login screen to reauthenticate.</string>
+    <string name="alert_title_no_token_fitbit">An error occurred while trying to regain access to Fitbit!</string>
+    <string name="alert_no_token_fitbit">To collect Fitbit data from child \"%s\", you must first provide authorization to collect the data.</string>
+    <string name="alert_token_expired_fitbit">Fitbit access token for child \"%s\" has expired or been revoked.\nPlease click here to grant access again&#8230;</string>
+    <string name="alert_access_blocked">Sorry, this app does not support admin type user. Only child, family, educator and health professional are allowed&#8230;</string>
+    <string name="alert_revoke_fitbit_success">Fitbit access successfully revoked. You will no longer be able to perform data synchronization.</string>
+    <string name="alert_enable_bluetooth">If you want your Heart Rate (Polar OH1) data to be automatically displayed on this screen, click here to enable Bluetooth&#8230;</string>
 
     <!--  MENU  -->
     <string name="action_sort_username">Username</string>
