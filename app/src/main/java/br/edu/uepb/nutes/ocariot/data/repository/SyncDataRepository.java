@@ -39,7 +39,7 @@ public class SyncDataRepository {
 
     private void initConfig() {
         this.startDate = DateUtils.getCurrentDate();
-        this.endDate = DateUtils.addMonths(startDate, -6);
+        this.endDate = DateUtils.addMonths(startDate, -12);
     }
 
     public Single<Object[]> syncAll(String childId) {
