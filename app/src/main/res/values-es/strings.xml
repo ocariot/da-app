@@ -37,9 +37,9 @@
     <string name="img_desc_ocariot">Logo de OCARIoT</string>
 
     <!-- ACTIVITIES -->
-    <string name="cals">cal</string>
+    <string name="cals">cals</string>
     <string name="km">km</string>
-    <string name="cals_min">cal/min</string>
+    <string name="cals_min">cals/min</string>
     <string name="min">min</string>
     <string name="duration_min">%d min</string>
     <string name="calories">Calorías</string>
@@ -64,11 +64,11 @@
     <string name="img_desc_heart">Imagen del corazón</string>
 
     <!-- FORMAT DATES -->
-    <string name="date_format1">aaaa-MM-dd</string>
+    <string name="date_format1">yyyy-MM-dd</string>
     <string name="date_time_abb1">dd MMMM \'en\' HH:mm</string>
-    <string name="date_time_abb3">EEEE, MMMM dd, aaaa</string>
-    <string name="date_time_abb4">EEE, MMMM dd, aaaa</string>
-    <string name="date_time_abb5">EEE, dd/MM/aaaa \'en\' HH:mm:ss</string>
+    <string name="date_time_abb3">EEEE, MMMM dd, yyyy</string>
+    <string name="date_time_abb4">EEE, MMMM dd, yyyy</string>
+    <string name="date_time_abb5">EEE, dd/MM/yyyy \'en\' HH:mm:ss</string>
     <string name="hour_format1">HH:mm</string>
     <string name="hour_format2">HH:mm:ss</string>
 
@@ -96,10 +96,10 @@
     <string name="error_connection">Incapaz de establecer una comunicación. Asegúrese de tener una conexión a Internet y vuelva a intentarlo&#8230;</string>
     <string name="error_oauth_fitbit">Se produjo un error interno en el servidor de Fitbit OAuth.</string>
     <string name="error_configs_fitbit">No se puede recuperar la información de Fitbit requerida para realizar la operación.\n¡Póngase en contacto con el administrador!</string>
-    <string name="error_login_invalid">Usuario o contraseña invalido…</string>
-    <string name="error_500">Se produjo un error al comunicarse con el servidor. Por favor, inténtelo de nuevo más tarde…</string>
+    <string name="error_login_invalid">Usuario o contraseña invalido&#8230;</string>
+    <string name="error_500">Se produjo un error al comunicarse con el servidor. Por favor, inténtelo de nuevo más tarde&#8230;</string>
     <string name="error_403">No tiene permiso para la funcionalidad a la que está intentando acceder. Por favor, póngase en contacto con el administrador&#8230;</string>
-    <string name="error_get_resources">Se produjo un error al intentar recuperar sus datos. Por favor, inténtelo de nuevo más tarde…</string>
+    <string name="error_get_resources">Se produjo un error al intentar recuperar sus datos. Por favor, inténtelo de nuevo más tarde&#8230;</string>
 
     <!-- MESSAGES -->
     <string name="message_no_data_display">¡No hay datos para mostrar!</string>
@@ -120,7 +120,7 @@
     <string name="synchronizing_data_fitbit">Sincronizando datos de Fitbit del niño \"%s\" con la plataforma OCARIoT&#8230;</string>
     <string name="sync_data_fitbit_error">Se produjo un error al intentar sincronizar los datos de Fitbit para el niño \"%s\" con la plataforma OCARIoT.\nInténtentelo de nuevo más tarde&#8230;</string>
     <string name="sync_data_fitbit_success">Los datos de Fitbit para el niño \"%s\" se sincronizaron correctamente con la plataforma OCARIoT.</string>
-    <string name="last_sync_date_time">Última sincronización: %s</string>
+    <string name="last_sync_date_time">Última sinc: %s</string>
     <string name="fitbit_get_access_token_error">Se produjo un error al intentar recuperar el token de acceso de Fitbit.\nInténtelo de nuevo más tarde&#8230;</string>
 
     <!-- ALERTS -->

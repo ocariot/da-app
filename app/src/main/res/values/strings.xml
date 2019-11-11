@@ -139,7 +139,7 @@
     <string name="alert_revoke_fitbit_success">Fitbit access successfully revoked. You will no longer be able to perform data synchronization.</string>
     <string name="alert_enable_bluetooth">If you want your Heart Rate (Polar OH1) data to be automatically displayed on this screen, click here to enable Bluetooth&#8230;</string>
 
-    <!--  MENU  -->
+    <!-- MENU -->
     <string name="action_sort_username">Username</string>
     <string name="action_sort_sync">Synchronization</string>
 </resources>
