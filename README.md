@@ -65,10 +65,10 @@ From Android Studio:
 [releases-url]: https://github.com/ocariot/da-app/releases
 [contributors-image]: https://img.shields.io/github/contributors/ocariot/da-app.svg
 [contributors-url]: https://github.com/ocariot/da-app/graphs/contributors
-[apk-brazil]: https://img.shields.io/badge/download%20apk-brazil-green.svg?style=for-the-badge&logo=android
-[apk-brazil-url]: #
-[apk-europe]: https://img.shields.io/badge/download%20apk-europe-blue.svg?style=for-the-badge&logo=android
-[apk-europe-url]: #
+[apk-brazil]: https://img.shields.io/badge/download%20apk-BR-green.svg?style=for-the-badge&logo=android
+[apk-brazil-url]: https://github.com/ocariot/da-app/releases/download/1.7.0/da-BR_v1.7.0.apk
+[apk-europe]: https://img.shields.io/badge/download%20apk-EU-blue.svg?style=for-the-badge&logo=android
+[apk-europe-url]: https://github.com/ocariot/da-app/releases/download/1.7.0/da-EU_v1.7.0.apk
 
 --- 
 
