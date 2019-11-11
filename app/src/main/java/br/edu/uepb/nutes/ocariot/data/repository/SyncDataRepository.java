@@ -123,7 +123,7 @@ public class SyncDataRepository {
         String currentStartDate = DateUtils.addMonths(startDate, -1);
         String currentEndDate = startDate;
 
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < 12; i++) {
             requests.add(fitbitRepo.listSleep(currentStartDate, currentEndDate)
                     .onErrorReturn(throwable -> new ArrayList<>())
                     .map(sleepList -> sleepList.toArray(new Sleep[0]))
@@ -142,7 +142,7 @@ public class SyncDataRepository {
         String currentStartDate = DateUtils.addMonths(startDate, -1);
         String currentEndDate = startDate;
 
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < 12; i++) {
             requests.add(fitbitRepo.listWeights(currentStartDate, currentEndDate)
                     .onErrorReturn(throwable -> new ArrayList<>())
                     .map(weightList -> weightList.toArray(new Weight[0]))

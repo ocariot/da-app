@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- TITLES -->
+    <string name="title_physical_activities">Σωματική δραστηριότητα</string>
+    <string name="title_activities">Δραστηριότητες</string>
+    <string name="title_sleep">Υπνος</string>
+    <string name="title_weight">Βάρος</string>
+    <string name="title_body_fat">Σωματικό λίπος</string>
+    <string name="title_iot">IoT</string>
+    <string name="title_welcome">Kαλώς Hρθατε!</string>
+    <string name="title_settings">Ρυθμίσεις</string>
+    <string name="title_children">Παιδιά</string>
+    <string name="title_hours">ώρες</string>
+    <string name="title_minutes">λεπτά</string>
+    <string name="title_sleep_efficiency">Απόδοση ύπνου</string>
+    <string name="title_asleep">Κοιμισμένος</string>
+    <string name="title_restless">Ανήσυχος</string>
+    <string name="title_awake">Ξύπνιος</string>
+    <string name="title_rem">REM</string>
+    <string name="title_light">Ελαφρύς</string>
+    <string name="title_deep">Βαθύς</string>
+    <string name="title_error">Λάθος!</string>
+    <string name="title_success">Επιτυχία!</string>
+    <string name="title_login_failed">Η ταυτοποίηση απέτυχε!</string>
+    <string name="title_connection_error">Σφάλμα σύνδεσης!</string>
+    <string name="title_access_blocked">Η πρόσβαση έχει αποκλειστεί!</string>
+    <string name="title_last_measurement">Τελευταία μέτρηση</string>
+    <string name="title_processing">Επεξεργασία</string>
+    <string name="title_yes">Ναί</string>
+    <string name="title_no">Οχι</string>
+    <string name="img_sort">Ταξινόμηση εικονιδίου</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_username">Όνομα χρήστη</string>
+    <string name="prompt_password">Κωδικός πρόσβασης</string>
+    <string name="title_login_in">Σύνδεση</string>
+    <string name="img_desc_ocariot">Λογότυπο OCARIoT</string>
+
+    <!-- ACTIVITIES -->
+    <string name="cals">cals</string>
+    <string name="km">km</string>
+    <string name="cals_min">Θερμίδες/Λεπτό</string>
+    <string name="min">Λεπτά</string>
+    <string name="duration_min">%d Λεπτά</string>
+    <string name="calories">Θερμίδες</string>
+    <string name="steps">Βήματα</string>
+    <string name="levels">Επίπεδα</string>
+    <string name="level_sedentary">Καθιστική: %d Λεπτά</string>
+    <string name="level_lightly">Ελαφρά: %d λεπτά</string>
+    <string name="level_fairly">Ακριβώς: %d λεπτά</string>
+    <string name="level_very">Πολύ: %d λεπτά</string>
+    <string name="img_desc_activity">Απεικόνιση δραστηριότητας</string>
+    <string name="img_desc_clock">Απεικόνιση ρολογιού</string>
+    <string name="img_desc_calories">Απεικόνιση θερμίδων</string>
+    <string name="hr_avg">Μέσος καρδιακός ρυθμός</string>
+    <string name="activity_range_time">%s στο %s</string>
+    <string name="img_desc_distance">Απεικόνιση Απόστασης</string>
+
+    <!-- SLEEP -->
+    <string name="times_count">%d φορές</string>
+
+    <!-- IoT -->
+    <string name="weight_average">Μέση τιμή</string>
+    <string name="img_desc_heart">Απεικόνιση καρδιάς</string>
+
+    <!-- FORMAT DATES -->
+    <string name="date_format1">yyyy-MM-dd</string>
+    <string name="date_time_abb1">dd MMMM \'στο\' HH:mm</string>
+    <string name="date_time_abb3">EEEE, MMMM dd, yyyy</string>
+    <string name="date_time_abb4">EEE, MMMM dd, yyyy</string>
+    <string name="date_time_abb5">EEE, dd/MM/yyyy \'στο\' HH:mm:ss</string>
+    <string name="hour_format1">HH:mm</string>
+    <string name="hour_format2">HH:mm:ss</string>
+
+    <!-- SETTINGS -->
+    <string name="login_with_fitbit">Παρέχετε πρόσβαση στο Fitbit</string>
+    <string name="login_do_not_user_fitbit">Αυτήν τη στιγμή δεν χρησιμοποιείτε το Fitbit</string>
+    <string name="settings_title">Ρυθμίσεις</string>
+    <string name="settings_account">Λογαριασμός</string>
+    <string name="settings_external_services">Εξωτερικές υπηρεσίες</string>
+    <string name="settings_signout">Αποσύνδεση</string>
+    <string name="settings_fitbit">Fitbit</string>
+    <string name="settings_summary_signout">Θα αποσυνδεθείτε από την εφαρμογή και θα μεταφερθείτε στην οθόνη σύνδεσης.</string>
+    <string name="settings_summary_fitbit">Αναφέρετε τη δραστηριότητα, ύπνου, του καρδιακού ρυθμού και τα δεδομένα βάρους.</string>
+    <string name="settings_version">Έκδοση</string>
+    <string name="settings_about">Σχετικά με</string>
+    <string name="settings_children">Παιδιά</string>
+    <string name="settings_summary_children">Λίστα παιδιών</string>
+
+    <!-- DIALOGS -->
+    <string name="dialog_confirm_sign_out">Θέλετε να βγείτε από την εφαρμογή;\nνα μεταφερθείτε στην οθόνη σύνδεσης&#8230;</string>
+    <string name="dialog_confirm_revoke_fitbit">Θέλετε να ανακαλέσετε την πρόσβαση στο Fitbit;\nΔεν θα είστε πλέον σε θέση να συγχρονίσετε δεδομένα του παιδιου \"%s\".</string>
+    <string name="dialog_revoke_fitbit_processing">Processing Fitbit access revocation request&#8230;</string>
+
+    <!-- ERROR MESSAGES -->
+    <string name="error_connection">Δεν είναι δυνατή η σύνδεση. Βεβαιωθείτε ότι έχετε σύνδεση στο Internet και προσπαθήστε ξανά&#8230;</string>
+    <string name="error_oauth_fitbit">Παρουσιάστηκε εσωτερικό σφάλμα στο διακομιστή Fitbit OAuth.</string>
+    <string name="error_configs_fitbit">Δεν είναι δυνατή η ανάκτηση των πληροφοριών Fitbit που απαιτούνται για την εκτέλεση της ενέργειας.\nΕπικοινωνήστε με το διαχειριστή!</string>
+    <string name="error_login_invalid">Μη έγκυρο όνομα ή κωδικός&#8230;</string>
+    <string name="error_500">Παρουσιάστηκε σφάλμα στην επικοινωνία με το διακομιστή. Παρακαλώ δοκιμάστε ξανά αργότερα&#8230;</string>
+    <string name="error_403">Δεν έχετε άδεια για τη λειτουργία που προσπαθείτε να αποκτήσετε πρόσβαση. Επικοινωνήστε με τον διαχειριστή&#8230;</string>
+    <string name="error_get_resources">Παρουσιάστηκε σφάλμα κατά την προσπάθειά σας να ανακτήσετε τα δεδομένα σας. Παρακαλώ δοκιμάστε ξανά αργότερα&#8230;</string>
+
+    <!-- MESSAGES -->
+    <string name="message_no_data_display">Δεν υπάρχουν δεδομένα!</string>
+    <string name="message_welcome">1. Συνδεθείτε στον λογαριασμό Fitbit του επιλεγμένου παιδιού\n\n2. Παροχή άδειας στο APP OCARIoT για τη συλλογή δεδομένων Fitbit σχετικά με τη σωματική δραστηριότητα, τον ύπνο, τον καρδιακό ρυθμό και το βάρος\n\n3. Εγινε! Οι δραστηριότητες, ο ρυθμός ύπνου, ο καρδιακός ρυθμός και τα αρχεία καταγραφής βάρους θα ληφθούν από τις συσκευές Fitbit και θα συγχρονιστούν αυτόματα με την πλατφόρμα OCARIoT ή όταν θα σας ζητηθεί.</string>
+    <string name="message_welcome_child">1. Επαληθεύστε τον λογαριασμό σας στο Fitbit\n\n2. Παροχή άδειας στο APP OCARIoT για τη συλλογή δεδομένων Fitbit σχετικά με τη σωματική δραστηριότητα, τον ύπνο, τον καρδιακό ρυθμό και το βάρος\n\n3. Εγινε! Οι δραστηριότητες, ο ρυθμός ύπνου, ο καρδιακός ρυθμός και τα αρχεία καταγραφής βάρους θα ληφθούν από τις συσκευές Fitbit και θα συγχρονιστούν αυτόματα με την πλατφόρμα OCARIoT ή όταν θα σας ζητηθεί.</string>
+    <string name="message_selected_child">Επιλεγμένο παιδί %s</string>
+    <string name="message_about">Το σχέδιο αυτό χρηματοδοτήθηκε από το πρόγραμμα Horizon 2020 της Ευρωπαϊκής Ένωσης στο πλαίσιο της σύμβασης παραχώρησης αριθ. 777082 και του Υπουργείου Επιστημών, Τεχνολογίας, Καινοτομίας και Επικοινωνίας της Βραζιλίας μέσω του RNP, συμφωνία αριθ. 3007.</string>
+    <string name="message_permission_location">Απαιτείται άδεια τοποθεσίας για τη χρήση της τεχνολογίας χαμηλής ενέργειας Bluetooth!</string>
+
+    <!-- VALIDATION MESSAGES -->
+    <string name="required_username">Όνομα χρήστη απαιτείται!</string>
+    <string name="required_password">Ο κωδικός πρόσβασης απαιτείται!</string>
+
+    <!-- SYNC DATA -->
+    <string name="synchronization">Συγχρονισμός</string>
+    <string name="synchronization_data">Συγχρονισμός δεδομένων από εξωτερικές υπηρεσίες με την πλατφόρμα OCARIoT.</string>
+    <string name="synchronizing">Συγχρονισμός</string>
+    <string name="synchronizing_data_fitbit">Συγχρονισμός δεδομένων Fitbit από τα παιδια \"%s\" με την πλατφόρμα OCARIoT&#8230;</string>
+    <string name="sync_data_fitbit_error">Παρουσιάστηκε σφάλμα κατά την προσπάθεια συγχρονισμού δεδομένων Fitbit για το παιδί \"%s\" με την πλατφόρμα OCARIoT.\nΠαρακαλώ δοκιμάστε ξανά αργότερα&#8230;</string>
+    <string name="sync_data_fitbit_success">Τα δεδομένα Fitbit για το παιδί \"%s\" συγχρονίστηκαν επιτυχώς με την πλατφόρμα OCARIoT.</string>
+    <string name="last_sync_date_time">Συγχρονισμός: %s</string>
+    <string name="fitbit_get_access_token_error">Παρουσιάστηκε σφάλμα κατά την προσπάθεια ανάκτησης πρόσβασης Fitbit.\nΠαρακαλώ δοκιμάστε αργότερα&#8230;</string>
+
+    <!-- ALERTS -->
+    <string name="alert_title_token_expired">Πρόβλημα πιστοποίησης!</string>
+    <string name="alert_token_expired_ocariot">Η συνεδρία σας έχει ξεπεράσει το όριο των 24 ωρών.\nΣε δευτερόλεπτα, θα μεταφερθείτε στην οθόνη σύνδεσης για να επιβεβαιώσετε ξανά τα στοιχεία σας.</string>
+    <string name="alert_title_no_token_fitbit">An error occurred while trying to regain access to Fitbit!</string>
+    <string name="alert_no_token_fitbit">Για να συλλέξετε δεδομένα Fitbit από τα παιδια \"%s\", πρέπει πρώτα να δώσετε εξουσιοδότηση για τη συλλογή των δεδομένων.</string>
+    <string name="alert_token_expired_fitbit">Το αναγνωριστικό πρόσβασης Fitbit για τα παιδιά \"%s\" έχει λήξει ή έχει ανακληθεί.\nΠαρακαλώ κάντε κλικ εδώ για να παραχωρήσετε ξανά πρόσβαση&#8230;</string>
+    <string name="alert_access_blocked">Λυπούμαστε, αυτή η εφαρμογή δεν υποστηρίζει αυτον τον τύπο χρηστη. Επιτρέπονται μόνο παιδιά, οικογένειες, εκπαιδευτικοί και επαγγελματίες υγείας&#8230;</string>
+    <string name="alert_revoke_fitbit_success">Η πρόσβαση Fitbit ακυρώθηκε με επιτυχία. Δεν θα είστε πλέον σε θέση να πραγματοποιήσετε συγχρονισμό δεδομένων.</string>
+    <string name="alert_enable_bluetooth">Αν θέλετε να εμφανίζονται αυτόματα τα δεδομένα της καρδιακής συχνότητας (Polar OH1) σε αυτήν την οθόνη, κάντε κλικ εδώ για να ενεργοποιήσετε το Bluetooth&#8230;</string>
+
+    <!--  MENU  -->
+    <string name="action_sort_username">Όνομα χρήστη</string>
+    <string name="action_sort_sync">Συγχρονισμός</string>
+</resources>
