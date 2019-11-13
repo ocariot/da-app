@@ -1,10 +1,13 @@
 package br.edu.uepb.nutes.ocariot.data.repository.remote.ocariot;
 
+import android.util.Log;
+
 import com.auth0.android.jwt.JWT;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -148,7 +151,7 @@ public class OcariotNetRepository extends BaseNetRepository {
         return ocariotService
                 .getHealthProfessionalGroupsById(healthprofessionalId)
                 .map(this::getUniqueChildrenFromGroups)
-                .flatMap(this::populateFitBitAuthOfChildren)
+//                .flatMap(this::populateFitBitAuthOfChildren)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -160,10 +163,14 @@ public class OcariotNetRepository extends BaseNetRepository {
                 if (!children.contains(child)) children.add(child);
             }
         }
+        Log.w("RESULT", Arrays.toString(children.toArray()));
         return children;
     }
 
     private Single<List<Child>> populateFitBitAuthOfChildren(List<Child> children) {
+        List<Single<Child>> requests = this.mountFitBitAuthChildrenRequest(children);
+        if (requests.isEmpty()) return Single.just(new ArrayList<>());
+
         return Single
                 .zip(this.mountFitBitAuthChildrenRequest(children), objects -> objects)
                 .map(objects -> {

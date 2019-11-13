@@ -13,7 +13,7 @@
 
     <include
         android:id="@+id/box_no_data"
-        layout="@layout/no_data"
+        layout="@layout/no_children_data"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone" />
@@ -29,9 +29,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbarSize="3sp"
-            tools:listitem="@layout/child_item"
             android:scrollbarThumbVertical="@color/colorAccent"
-            android:scrollbars="vertical" />
+            android:scrollbars="vertical"
+            tools:listitem="@layout/child_item" />
     </android.support.v4.widget.SwipeRefreshLayout>
 
 </LinearLayout>
