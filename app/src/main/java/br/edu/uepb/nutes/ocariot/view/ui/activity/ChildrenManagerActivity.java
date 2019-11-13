@@ -1,11 +1,12 @@
 package br.edu.uepb.nutes.ocariot.view.ui.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.content.res.AppCompatResources;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
@@ -78,6 +79,9 @@ public class ChildrenManagerActivity extends AppCompatActivity {
     @BindView(R.id.child_username_bar)
     TextView mChildUsername;
 
+    @BindView(R.id.logout_button)
+    AppCompatButton mLogoutButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,7 +101,7 @@ public class ChildrenManagerActivity extends AppCompatActivity {
         mDisposable = new CompositeDisposable();
         ocariotRepository = OcariotNetRepository.getInstance();
         mAlertMessage = new AlertMessage(this);
-        mImgNoData.setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.children));
+        mLogoutButton.setOnClickListener(v -> this.openDialogSignOut());
 
         initComponents();
         disableBack();
@@ -238,8 +242,9 @@ public class ChildrenManagerActivity extends AppCompatActivity {
      * @param children {@link List <Child>}
      */
     private void populateViewChildren(List<Child> children) {
-        if (children != null) this.children = children;
+        if (children == null) return;
 
+        this.children = children;
         int sortSelected = appPref.getInt(KEY_SORT_SELECTED);
 
         if (sortSelected == R.id.action_sort_sync) {
@@ -357,5 +362,25 @@ public class ChildrenManagerActivity extends AppCompatActivity {
         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         getApplicationContext().startActivity(intent);
+    }
+
+    /**
+     * Show dialog confirm sign out in app.
+     */
+    private void openDialogSignOut() {
+        runOnUiThread(() -> {
+            AlertDialog.Builder mDialog = new AlertDialog.Builder(this);
+            mDialog.setMessage(R.string.dialog_confirm_sign_out)
+                    .setPositiveButton(R.string.title_yes, (dialog, which) -> {
+                                if (appPref.removeSession()) {
+                                    Intent intent = new Intent(this, LoginActivity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
+                                            Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    startActivity(intent);
+                                }
+                            }
+                    ).setNegativeButton(R.string.title_no, null)
+                    .create().show();
+        });
     }
 }
