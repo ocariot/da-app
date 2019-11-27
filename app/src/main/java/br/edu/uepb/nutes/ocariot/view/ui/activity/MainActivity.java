@@ -108,9 +108,8 @@ public class MainActivity extends AppCompatActivity implements
                     .setSubtitle(appPref.getLastSelectedChild().getUsername());
         }
 
-        if (appPref.getLastSelectedChild().getFitBitAccess() != null
-                && (appPref.getLastSelectedChild().getFitBitAccess().getAccessToken() == null)
-                && !appPref.getBoolean(KEY_DO_NOT_LOGIN_FITBIT)) {
+        if (!appPref.getLastSelectedChild().isFitbitAccessValid() &&
+                !appPref.getBoolean(KEY_DO_NOT_LOGIN_FITBIT)) {
             replaceFragment(WelcomeFragment.newInstance());
             mBottomNavigationView.setVisibility(View.GONE);
         } else {

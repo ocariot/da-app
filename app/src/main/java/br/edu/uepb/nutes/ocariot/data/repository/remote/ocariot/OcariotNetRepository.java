@@ -1,5 +1,7 @@
 package br.edu.uepb.nutes.ocariot.data.repository.remote.ocariot;
 
+import android.util.Log;
+
 import com.auth0.android.jwt.JWT;
 
 import org.greenrobot.eventbus.EventBus;
@@ -129,7 +131,6 @@ public class OcariotNetRepository extends BaseNetRepository {
 
     public Single<List<Child>> getChildrenOfFamily(String familyId) {
         return ocariotService.getFamilyChildrenById(familyId)
-                .flatMap(this::populateFitBitAuthOfChildren)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -138,7 +139,6 @@ public class OcariotNetRepository extends BaseNetRepository {
         return ocariotService
                 .getEducatorGroupsById(educatorId)
                 .map(this::getUniqueChildrenFromGroups)
-                .flatMap(this::populateFitBitAuthOfChildren)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -147,7 +147,6 @@ public class OcariotNetRepository extends BaseNetRepository {
         return ocariotService
                 .getHealthProfessionalGroupsById(healthprofessionalId)
                 .map(this::getUniqueChildrenFromGroups)
-                .flatMap(this::populateFitBitAuthOfChildren)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -159,38 +158,8 @@ public class OcariotNetRepository extends BaseNetRepository {
                 if (!children.contains(child)) children.add(child);
             }
         }
+        Log.w("OCARIOT_REPO", "TOTAL CHILDREN: " + children.size());
         return children;
-    }
-
-    private Single<List<Child>> populateFitBitAuthOfChildren(List<Child> children) {
-        List<Single<Child>> requests = this.mountFitBitAuthChildrenRequest(children);
-        if (requests.isEmpty()) return Single.just(new ArrayList<>());
-
-        return Single
-                .zip(requests, objects -> objects)
-                .map(objects -> {
-                    List<Child> result = new ArrayList<>();
-                    for (Object o : objects) result.add((Child) o);
-                    return result;
-                })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
-    }
-
-    private List<Single<Child>> mountFitBitAuthChildrenRequest(List<Child> children) {
-        List<Single<Child>> requests = new ArrayList<>();
-        for (Child child : children) {
-            requests.add(this.getFitBitAuth(child.get_id())
-                    .onErrorReturn(throwable -> new UserAccess())
-                    .map(userAccess -> {
-                        child.setFitBitAccess(userAccess);
-                        return child;
-                    })
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-            );
-        }
-        return requests;
     }
 
     public Single<List<PhysicalActivity>> listActivities(String childId, String sort, int page, int limit) {

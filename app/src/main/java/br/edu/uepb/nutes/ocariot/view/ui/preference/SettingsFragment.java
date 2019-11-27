@@ -240,9 +240,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
      * and marks the Switch, otherwise uncheck.
      */
     private void populateSwitchFitbit() {
-        if (mChild.getFitBitAccess() != null && mChild.getFitBitAccess().getStatus() != null &&
-                (mChild.getFitBitAccess().getStatus().equals("valid_token") ||
-                        mChild.getFitBitAccess().getStatus().equals("expired_token"))) {
+        if (mChild.isFitbitAccessValid()) {
             switchPrefFitBit.setChecked(true);
         } else {
             switchPrefFitBit.setChecked(false);
@@ -299,7 +297,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                             userAccess.setAccessToken(mAuthState.getAccessToken());
                             userAccess.setRefreshToken(mAuthState.getRefreshToken());
                             userAccess.setScope(mAuthState.getScope());
-                            userAccess.setStatus("valid_token");
+                            userAccess.setStatus(UserAccess.TokenStatus.VALID);
 
                             publishFitBitAuth(userAccess);
                         }, err -> {
@@ -323,14 +321,12 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                         .publishFitBitAuth(mChild.get_id(), userAccess)
                         .doOnSubscribe(disposable -> mDialogSync.show(getFragmentManager()))
                         .subscribe(() -> {
-                                    Log.d(LOG_TAG, "Fitbit authentication data sent successfully!");
                                     switchPrefFitBit.setChecked(true);
                                     mChild.setFitBitAccess(userAccess);
                                     appPref.addLastSelectedChild(mChild);
                                     fitBitInitSync();
                                 },
                                 err -> {
-                                    Log.e(LOG_TAG, "Error sending Fitbit authentication data: " + err.getMessage());
                                     mDialogSync.close();
                                     switchPrefFitBit.setChecked(false);
                                     showAlertResultSync(false);
@@ -359,9 +355,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
      * Force a new Fitbit sync.
      */
     private void fitBitSyncForced() {
-        if (mChild.getFitBitAccess() == null || mChild.getFitBitAccess().getStatus() == null ||
-                !mChild.getFitBitAccess().getStatus().equals("valid_token") &&
-                        !mChild.getFitBitAccess().getStatus().equals("expired_token")) {
+        if (!mChild.isFitbitAccessValid()) {
             mAlertMessage.show(mContext.getResources().getString(R.string.alert_title_no_token_fitbit),
                     mContext.getResources().getString(R.string.alert_no_token_fitbit, mChild.getUsername()),
                     R.color.colorDanger, R.drawable.ic_warning_dark, 15000, true,

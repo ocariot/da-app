@@ -205,4 +205,14 @@ public class UserAccess implements Parcelable {
     public String toString() {
         return new Gson().toJson(this);
     }
+
+    public static class TokenStatus {
+        public static String VALID = "valid_token";
+        public static String INVALID = "invalid_token";
+        public static String EXPIRED = "expired_token";
+        public static String INVALID_REFRESH = "invalid_grant";
+        public static String INVALID_CLIENT = "invalid_client";
+        public static String RATE_LIMIT = "rate_limit";
+        public static String NONE = "none";
+    }
 }

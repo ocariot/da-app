@@ -118,7 +118,6 @@ public class PhysicalActivityListFragment extends Fragment {
         super.onAttach(context);
 
         if (context instanceof OnClickActivityListener) {
-            Log.w("TEST", "123");
             mListener = (OnClickActivityListener) context;
         } else {
             throw new ClassCastException("The implementation of the " +

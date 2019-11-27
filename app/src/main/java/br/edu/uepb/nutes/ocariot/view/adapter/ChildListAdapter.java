@@ -66,9 +66,7 @@ public class ChildListAdapter extends BaseAdapter<Child> {
             // Fitbit status
             ColorStateList colorFitbitStatus = ColorStateList.valueOf(mContext.getResources()
                     .getColor(R.color.colorFitbitInactive));
-            if (child.getFitBitAccess() != null && child.getFitBitAccess().getStatus() != null &&
-                    (child.getFitBitAccess().getStatus().equals("valid_token") ||
-                            child.getFitBitAccess().getStatus().equals("expired_token"))) {
+            if (child.isFitbitAccessValid()) {
                 colorFitbitStatus = ColorStateList.valueOf(mContext.getResources()
                         .getColor(R.color.colorFitbitActive));
             }

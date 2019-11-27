@@ -105,6 +105,7 @@
     <string name="error_login_invalid">Invalid username or password&#8230;</string>
     <string name="error_500">An error occurred communicating with the server. Please try again later&#8230;</string>
     <string name="error_403">You do not have permission for the functionality you are trying to access. Please contact the administrator&#8230;</string>
+    <string name="error_400">Could not perform operation. Please try again later&#8230;</string>
     <string name="error_get_resources">An error occurred while trying to recover your data. Please try again later&#8230;</string>
 
     <!-- MESSAGES -->
