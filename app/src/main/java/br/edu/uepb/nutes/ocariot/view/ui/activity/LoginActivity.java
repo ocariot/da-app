@@ -2,17 +2,16 @@ package br.edu.uepb.nutes.ocariot.view.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.StringRes;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatButton;
-import android.support.v7.widget.AppCompatEditText;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.AppCompatEditText;
 
 import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.flaviofaria.kenburnsview.RandomTransitionGenerator;
@@ -195,9 +194,7 @@ public class LoginActivity extends AppCompatActivity {
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnSubscribe(disposable -> showProgress(true))
-                        .doAfterTerminate(() -> {
-                            showProgress(false);
-                        })
+                        .doAfterTerminate(() -> showProgress(false))
                         .subscribe(
                                 responseData -> {
                                     if (responseData.fitBitAppData.isEmpty() ||

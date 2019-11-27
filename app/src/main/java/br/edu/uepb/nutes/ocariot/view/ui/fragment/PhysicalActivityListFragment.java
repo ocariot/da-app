@@ -1,20 +1,24 @@
 package br.edu.uepb.nutes.ocariot.view.ui.fragment;
 
+import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.content.res.AppCompatResources;
-import android.support.v7.widget.AppCompatImageView;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.content.res.AppCompatResources;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.ethanhua.skeleton.Skeleton;
 import com.ethanhua.skeleton.SkeletonScreen;
@@ -30,6 +34,7 @@ import br.edu.uepb.nutes.ocariot.data.repository.remote.ocariot.OcariotNetReposi
 import br.edu.uepb.nutes.ocariot.utils.AlertMessage;
 import br.edu.uepb.nutes.ocariot.view.adapter.PhysicalActivityListAdapter;
 import br.edu.uepb.nutes.ocariot.view.adapter.base.OnRecyclerViewListener;
+import br.edu.uepb.nutes.ocariot.view.ui.preference.SettingsFragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.disposables.CompositeDisposable;
@@ -40,8 +45,6 @@ import io.reactivex.disposables.CompositeDisposable;
  * @author Copyright (c) 2018, NUTES/UEPB
  */
 public class PhysicalActivityListFragment extends Fragment {
-    private final String LOG_TAG = "PhysicalActivityList";
-
     private PhysicalActivityListAdapter mAdapter;
     private OcariotNetRepository ocariotRepository;
     private AppPreferencesHelper appPref;
@@ -115,6 +118,7 @@ public class PhysicalActivityListFragment extends Fragment {
         super.onAttach(context);
 
         if (context instanceof OnClickActivityListener) {
+            Log.w("TEST", "123");
             mListener = (OnClickActivityListener) context;
         } else {
             throw new ClassCastException("The implementation of the " +

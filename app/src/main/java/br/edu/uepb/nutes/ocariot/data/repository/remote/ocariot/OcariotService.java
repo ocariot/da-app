@@ -6,7 +6,6 @@ import br.edu.uepb.nutes.ocariot.BuildConfig;
 import br.edu.uepb.nutes.ocariot.data.model.common.UserAccess;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.Child;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.ChildrenGroup;
-import br.edu.uepb.nutes.ocariot.data.model.ocariot.Environment;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.FitBitAppData;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.FitBitSync;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.LogData;
@@ -17,10 +16,7 @@ import br.edu.uepb.nutes.ocariot.data.model.ocariot.Weight;
 import io.reactivex.Completable;
 import io.reactivex.Single;
 import retrofit2.http.Body;
-import retrofit2.http.Field;
-import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
-import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -48,13 +44,6 @@ public interface OcariotService {
 
     @GET("/v1/healthprofessionals/{healthprofessional_id}/children/groups")
     Single<List<ChildrenGroup>> getHealthProfessionalGroupsById(@Path("healthprofessional_id") String educatorId);
-
-    @FormUrlEncoded
-    @PATCH("/v1/children/{child_id}/")
-    Completable updateLastSync(
-            @Path("child_id") String childId,
-            @Field("last_sync") String dataTime
-    );
 
     // Physical Activity
     @GET("/v1/children/{child_id}/physicalactivities")
@@ -97,21 +86,11 @@ public interface OcariotService {
     Single<List<Weight>> listhWeights(
             @Path("child_id") String childId,
             @Query("timestamp") String startDate,
-            @Query("timestamp") String endDate
+            @Query("timestamp") String endDate,
+            @Query("sort") String sort
     );
 
-    // Environments
-    @GET("/v1/environments")
-    Single<List<Environment>> listEnvironments(
-            @Query("sort") String sort,
-            @Query("page") int page,
-            @Query("limit") int limit,
-            @Query("institution_id") String institutionId,
-            @Query("location.room") String room,
-            @Query("timestamp") String startDate,
-            @Query("timestamp") String endDate
-    );
-
+    // Fitbit
     @GET("/v1/fitbit")
     Single<FitBitAppData> getFitBitAppData();
 
@@ -119,7 +98,6 @@ public interface OcariotService {
     Completable publishFitBitAuth(
             @Path("user_id") String childId,
             @Body UserAccess userAccess,
-            @Query("init_sync") boolean initSync,
             @Query("last_sync") String lastSync
     );
 

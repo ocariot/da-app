@@ -4,19 +4,20 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatButton;
-import android.support.v7.widget.AppCompatImageView;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.ethanhua.skeleton.Skeleton;
 import com.ethanhua.skeleton.SkeletonScreen;
@@ -242,9 +243,8 @@ public class ChildrenManagerActivity extends AppCompatActivity {
      * @param children {@link List <Child>}
      */
     private void populateViewChildren(List<Child> children) {
-        if (children == null) return;
+        if (children != null) this.children = children;
 
-        this.children = children;
         int sortSelected = appPref.getInt(KEY_SORT_SELECTED);
 
         if (sortSelected == R.id.action_sort_sync) {
@@ -288,6 +288,7 @@ public class ChildrenManagerActivity extends AppCompatActivity {
                 return true;
             case R.id.action_sort_username:
             case R.id.action_sort_sync:
+                if (this.children == null || this.children.isEmpty()) return false;
                 clearMenuFilters();
                 appPref.addInt(KEY_SORT_SELECTED, item.getItemId());
                 populateViewChildren(null);

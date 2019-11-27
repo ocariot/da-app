@@ -1,7 +1,8 @@
 package br.edu.uepb.nutes.ocariot.view.adapter.base;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Class Base Recycler.ViewHolder.

@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.5">
 
-            <android.support.v7.widget.AppCompatImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/clock_img"
                 android:layout_width="20dp"
                 android:layout_height="20dp"

@@ -1,14 +1,11 @@
 package br.edu.uepb.nutes.ocariot.data.repository.remote.fitbit;
 
-import net.openid.appauth.AuthorizationService;
-
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import br.edu.uepb.nutes.ocariot.BuildConfig;
-import br.edu.uepb.nutes.ocariot.OcariotApp;
 import br.edu.uepb.nutes.ocariot.data.model.common.UserAccess;
 import br.edu.uepb.nutes.ocariot.data.model.fitbit.ActivityLevelFitBit;
 import br.edu.uepb.nutes.ocariot.data.model.fitbit.HeartRateZoneFitBit;
@@ -18,8 +15,6 @@ import br.edu.uepb.nutes.ocariot.data.model.fitbit.MinutesVeryActiveListFitBit;
 import br.edu.uepb.nutes.ocariot.data.model.fitbit.PhysicalActivityFitBit;
 import br.edu.uepb.nutes.ocariot.data.model.fitbit.SleepFitBit;
 import br.edu.uepb.nutes.ocariot.data.model.fitbit.SleepLevelDataFitBit;
-import br.edu.uepb.nutes.ocariot.data.model.fitbit.UserFitBit;
-import br.edu.uepb.nutes.ocariot.data.model.fitbit.UserResultFitBit;
 import br.edu.uepb.nutes.ocariot.data.model.fitbit.WeightFitBit;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.ActivityLevel;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.HeartRateZone;
@@ -52,7 +47,6 @@ public class FitBitNetRepository extends BaseNetRepository {
     private static FitBitNetRepository mInstance;
 
     private FitBitService fitBitService;
-    private AuthorizationService authService;
     private AppPreferencesHelper appPref;
 
     private FitBitNetRepository() {
@@ -69,19 +63,11 @@ public class FitBitNetRepository extends BaseNetRepository {
         fitBitService = super.provideRetrofit(FitBitService.FITBIT_BASE_URL)
                 .create(FitBitService.class);
         appPref = AppPreferencesHelper.getInstance();
-        authService = new AuthorizationService(OcariotApp.getContext());
     }
 
     public static FitBitNetRepository getInstance() {
         if (mInstance == null) mInstance = new FitBitNetRepository();
         return mInstance;
-    }
-
-    /**
-     * Dispose AuthorizationService oAuth2 service.
-     */
-    public void dispose() {
-        if (authService != null) authService.dispose();
     }
 
     /**
@@ -217,13 +203,6 @@ public class FitBitNetRepository extends BaseNetRepository {
                     }
                     return result;
                 })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
-    }
-
-    public Single<UserFitBit> getProfile() {
-        return fitBitService.getProfile()
-                .map(UserResultFitBit::getUser)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }

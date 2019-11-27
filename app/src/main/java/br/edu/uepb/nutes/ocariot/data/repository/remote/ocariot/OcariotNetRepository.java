@@ -1,13 +1,10 @@
 package br.edu.uepb.nutes.ocariot.data.repository.remote.ocariot;
 
-import android.util.Log;
-
 import com.auth0.android.jwt.JWT;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -15,7 +12,6 @@ import br.edu.uepb.nutes.ocariot.BuildConfig;
 import br.edu.uepb.nutes.ocariot.data.model.common.UserAccess;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.Child;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.ChildrenGroup;
-import br.edu.uepb.nutes.ocariot.data.model.ocariot.Environment;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.FitBitAppData;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.FitBitSync;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.LogData;
@@ -151,7 +147,7 @@ public class OcariotNetRepository extends BaseNetRepository {
         return ocariotService
                 .getHealthProfessionalGroupsById(healthprofessionalId)
                 .map(this::getUniqueChildrenFromGroups)
-//                .flatMap(this::populateFitBitAuthOfChildren)
+                .flatMap(this::populateFitBitAuthOfChildren)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -163,7 +159,6 @@ public class OcariotNetRepository extends BaseNetRepository {
                 if (!children.contains(child)) children.add(child);
             }
         }
-        Log.w("RESULT", Arrays.toString(children.toArray()));
         return children;
     }
 
@@ -172,7 +167,7 @@ public class OcariotNetRepository extends BaseNetRepository {
         if (requests.isEmpty()) return Single.just(new ArrayList<>());
 
         return Single
-                .zip(this.mountFitBitAuthChildrenRequest(children), objects -> objects)
+                .zip(requests, objects -> objects)
                 .map(objects -> {
                     List<Child> result = new ArrayList<>();
                     for (Object o : objects) result.add((Child) o);
@@ -198,12 +193,6 @@ public class OcariotNetRepository extends BaseNetRepository {
         return requests;
     }
 
-    public Completable updateLastSync(String childId, String date) {
-        return ocariotService.updateLastSync(childId, date)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
-    }
-
     public Single<List<PhysicalActivity>> listActivities(String childId, String sort, int page, int limit) {
         return ocariotService.listActivities(childId, sort, page, limit)
                 .subscribeOn(Schedulers.io())
@@ -225,14 +214,6 @@ public class OcariotNetRepository extends BaseNetRepository {
 
     public Single<MultiStatusResult<Sleep>> publishSleep(String childId, Sleep[] sleep) {
         return ocariotService.publishSleep(childId, sleep)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
-    }
-
-    public Single<List<Environment>> listEnvironments(String sort, int page, int limit,
-                                                      String institutionId, String room,
-                                                      String startDate, String endDate) {
-        return ocariotService.listEnvironments(sort, page, limit, institutionId, room, startDate, endDate)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -273,8 +254,8 @@ public class OcariotNetRepository extends BaseNetRepository {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Single<List<Weight>> listWeights(String childId, String startDate, String endDate) {
-        return ocariotService.listhWeights(childId, startDate, endDate)
+    public Single<List<Weight>> listWeights(String childId, String startDate, String endDate, String sort) {
+        return ocariotService.listhWeights(childId, startDate, endDate, sort)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -287,7 +268,7 @@ public class OcariotNetRepository extends BaseNetRepository {
 
     public Completable publishFitBitAuth(String childId, UserAccess userAccess) {
         return ocariotService
-                .publishFitBitAuth(childId, userAccess, false, DateUtils.getCurrentDatetimeUTC())
+                .publishFitBitAuth(childId, userAccess, DateUtils.getCurrentDatetimeUTC())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }

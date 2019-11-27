@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -48,7 +48,7 @@
         android:gravity="bottom"
         android:orientation="vertical">
 
-        <android.support.v7.widget.AppCompatButton
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/fitbit_button"
             style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="match_parent"
@@ -56,7 +56,7 @@
             android:layout_gravity="bottom"
             android:text="@string/login_with_fitbit" />
 
-        <android.support.v7.widget.AppCompatButton
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/do_not_login_fitbit_button"
             style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="match_parent"
@@ -67,4 +67,4 @@
 
     </LinearLayout>
 
-</LinearLayout>
+</androidx.appcompat.widget.LinearLayoutCompat>

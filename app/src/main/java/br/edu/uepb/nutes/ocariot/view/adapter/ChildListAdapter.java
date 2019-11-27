@@ -2,12 +2,13 @@ package br.edu.uepb.nutes.ocariot.view.adapter;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.support.v4.widget.ImageViewCompat;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.core.widget.ImageViewCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
@@ -112,7 +113,6 @@ public class ChildListAdapter extends BaseAdapter<Child> {
         ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
-
             mView = view.getRootView();
         }
     }

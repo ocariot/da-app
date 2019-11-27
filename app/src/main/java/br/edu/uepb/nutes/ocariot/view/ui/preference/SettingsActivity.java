@@ -2,8 +2,9 @@ package br.edu.uepb.nutes.ocariot.view.ui.preference;
 
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
-import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
+
+import androidx.appcompat.app.ActionBar;
 
 import br.edu.uepb.nutes.ocariot.R;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.User;
@@ -43,7 +44,7 @@ public class SettingsActivity extends BaseSettingsActivity implements
     }
 
     private void initToolBar() {
-        actionBar = getDelegate().getSupportActionBar();
+        actionBar = super.getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
