@@ -21,6 +21,7 @@ import java.util.Objects;
  */
 public class UserAccess implements Parcelable {
     public static final String KEY_SCOPE = "scope";
+    public static final String KEY_SCOPES = "scopes";
     public static final String KEY_SUB_TYPE = "sub_type";
 
     @SerializedName(value = "access_token", alternate = {"token"})

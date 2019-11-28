@@ -35,6 +35,7 @@ import br.edu.uepb.nutes.ocariot.view.ui.activity.ChildrenManagerActivity;
 import br.edu.uepb.nutes.ocariot.view.ui.activity.LoginActivity;
 import br.edu.uepb.nutes.ocariot.view.ui.activity.MainActivity;
 import io.reactivex.disposables.CompositeDisposable;
+import retrofit2.HttpException;
 
 /**
  * SettingsFragment implementation.
@@ -143,6 +144,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     public void onDetach() {
         super.onDetach();
         mDisposable.dispose();
+        Alerter.hide();
     }
 
     @Override
@@ -292,13 +294,8 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         mDisposable.add(
                 loginFitBit
                         .doAuthorizationToken(authFitBitResponse)
-                        .subscribe(mAuthState -> {
-                            UserAccess userAccess = new UserAccess();
-                            userAccess.setAccessToken(mAuthState.getAccessToken());
-                            userAccess.setRefreshToken(mAuthState.getRefreshToken());
-                            userAccess.setScope(mAuthState.getScope());
-                            userAccess.setStatus(UserAccess.TokenStatus.VALID);
-
+                        .subscribe(userAccess -> {
+                            switchPrefFitBit.setChecked(true);
                             publishFitBitAuth(userAccess);
                         }, err -> {
                             switchPrefFitBit.setChecked(false);
@@ -321,7 +318,6 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                         .publishFitBitAuth(mChild.get_id(), userAccess)
                         .doOnSubscribe(disposable -> mDialogSync.show(getFragmentManager()))
                         .subscribe(() -> {
-                                    switchPrefFitBit.setChecked(true);
                                     mChild.setFitBitAccess(userAccess);
                                     appPref.addLastSelectedChild(mChild);
                                     fitBitInitSync();
@@ -329,7 +325,16 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                                 err -> {
                                     mDialogSync.close();
                                     switchPrefFitBit.setChecked(false);
-                                    showAlertResultSync(false);
+                                    if (err instanceof HttpException) {
+                                        HttpException httpEx = ((HttpException) err);
+                                        if (httpEx.code() == 400) {
+                                            mAlertMessage.show(R.string.title_error,
+                                                    R.string.error_400_1, R.color.colorDanger,
+                                                    R.drawable.ic_sad_dark);
+                                            return;
+                                        }
+                                    }
+                                    mAlertMessage.handleError(err);
                                 }
                         )
         );
@@ -341,7 +346,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
      */
     private void fitBitInitSync() {
         mDisposable.add(
-                SyncDataRepository.getInstance(mContext)
+                SyncDataRepository.getInstance()
                         .syncAll(mChild.get_id())
                         .doAfterTerminate(() -> mDialogSync.close())
                         .subscribe(
@@ -421,6 +426,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
      * @param isSuccess boolean
      */
     private void showAlertResultSync(boolean isSuccess) {
+
         Alerter alerter = Alerter.create(getActivity())
                 .setDuration(30000)
                 .enableSwipeToDismiss()

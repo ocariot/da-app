@@ -100,6 +100,7 @@
     <string name="error_500">Se produjo un error al comunicarse con el servidor. Por favor, inténtelo de nuevo más tarde&#8230;</string>
     <string name="error_403">No tiene permiso para la funcionalidad a la que está intentando acceder. Por favor, póngase en contacto con el administrador&#8230;</string>
     <string name="error_400">No se pudo realizar la operación. Por favor, inténtelo de nuevo más tarde&#8230;</string>
+    <string name="error_400_1">No se pudo completar la operación. Intente nuevamente y asegúrese de proporcionar acceso a datos de actividad, sueño, frecuencia cardíaca y peso.</string>
     <string name="error_get_resources">Se produjo un error al intentar recuperar sus datos. Por favor, inténtelo de nuevo más tarde&#8230;</string>
 
     <!-- MESSAGES -->

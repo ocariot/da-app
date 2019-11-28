@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
+import com.auth0.android.jwt.JWT;
+
 import net.openid.appauth.AuthState;
 import net.openid.appauth.AuthorizationRequest;
 import net.openid.appauth.AuthorizationResponse;
@@ -14,7 +16,10 @@ import net.openid.appauth.ClientAuthentication;
 import net.openid.appauth.ClientSecretBasic;
 import net.openid.appauth.ResponseTypeValues;
 
+import java.util.Objects;
+
 import br.edu.uepb.nutes.ocariot.BuildConfig;
+import br.edu.uepb.nutes.ocariot.data.model.common.UserAccess;
 import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
 import io.reactivex.Single;
 
@@ -98,9 +103,9 @@ public class LoginFitBit {
      * Retrieve access token based on authorization code.
      *
      * @param authResp {@link AuthorizationResponse}
-     * @return Single<AuthState>
+     * @return Single<UserAccess>
      */
-    Single<AuthState> doAuthorizationToken(final AuthorizationResponse authResp) {
+    Single<UserAccess> doAuthorizationToken(final AuthorizationResponse authResp) {
         final ClientAuthentication clientAuth = new ClientSecretBasic(CLIENT_SECRET);
         if (mAuthService == null) mAuthService = new AuthorizationService(mContext);
 
@@ -112,7 +117,19 @@ public class LoginFitBit {
                         emitter.onError(e);
                         return;
                     }
-                    emitter.onSuccess(mAuthState);
+
+                    UserAccess userAccess = new UserAccess();
+                    JWT jwt = new JWT(Objects.requireNonNull(mAuthState.getAccessToken()));
+
+                    userAccess.setSubject(jwt.getSubject());
+                    userAccess.setAccessToken(mAuthState.getAccessToken());
+                    userAccess.setRefreshToken(mAuthState.getRefreshToken());
+                    userAccess.setExpirationDate(Objects.requireNonNull(jwt.getExpiresAt()).getTime());
+                    userAccess.setScope(jwt.getClaim(UserAccess.KEY_SCOPES).asString());
+                    userAccess.setSubjectType(jwt.getClaim(UserAccess.KEY_SUB_TYPE).asString());
+                    userAccess.setStatus(UserAccess.TokenStatus.VALID);
+
+                    emitter.onSuccess(userAccess);
                 }));
     }
 }
