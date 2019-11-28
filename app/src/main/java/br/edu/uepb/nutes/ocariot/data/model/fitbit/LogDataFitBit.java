@@ -1,10 +1,12 @@
 package br.edu.uepb.nutes.ocariot.data.model.fitbit;
 
+import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
+@Keep
 public class LogDataFitBit {
     @SerializedName(value = "dateTime", alternate = {"date"})
     private String date;

@@ -3,6 +3,7 @@ package br.edu.uepb.nutes.ocariot.data.model.ocariot;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
@@ -13,6 +14,7 @@ import com.google.gson.annotations.SerializedName;
  *
  * @author Copyright (c) 2018, NUTES/UEPB
  */
+@Keep
 public class SleepPatternDataSet implements Parcelable {
     @SerializedName(value = "start_time", alternate = {"dateTime"})
     private String startTime;

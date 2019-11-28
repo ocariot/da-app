@@ -25,6 +25,7 @@ public class AppPreferencesHelper implements PreferencesHelper {
     private final String PREF_KEY_AUTH_OCARIOT = "pref_key_user_access_ocariot";
     private final String PREF_KEY_LAST_SELECTED_CHILD = "pref_key_user_profile";
     private final String PREF_KEY_FITBIT_DATA = "pref_key_fitbit_data";
+    private final String PREF_KEY_OCARIOT_API = "pref_key_ocariot_api";
 
     private static AppPreferencesHelper instance;
     private SharedPreferences mPrefs;
@@ -66,6 +67,11 @@ public class AppPreferencesHelper implements PreferencesHelper {
     }
 
     @Override
+    public boolean addOcariotURL(final String url) {
+        return mPrefs.edit().putString(PREF_KEY_OCARIOT_API, url).commit();
+    }
+
+    @Override
     public boolean addUserAccessOcariot(final UserAccess userAccess) {
         if (userAccess.getAccessToken() == null || userAccess.getAccessToken().isEmpty()) {
             throw new LocalPreferenceException("attribute accessToken can not be null or empty!");
@@ -99,6 +105,11 @@ public class AppPreferencesHelper implements PreferencesHelper {
     public boolean addInt(String key, int value) {
         checkKey(key);
         return mPrefs.edit().putInt(key, value).commit();
+    }
+
+    @Override
+    public String getOcariotURL() {
+        return mPrefs.getString(PREF_KEY_OCARIOT_API, null);
     }
 
     @Override

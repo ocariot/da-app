@@ -3,6 +3,7 @@ package br.edu.uepb.nutes.ocariot.data.model.ocariot;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
@@ -16,6 +17,7 @@ import java.util.Objects;
  *
  * @author Copyright (c) 2018, NUTES/UEPB
  */
+@Keep
 public class Environment implements Parcelable {
     @SerializedName("id")
     private String _id; // _id in server remote (UUID)

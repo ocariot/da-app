@@ -1,5 +1,6 @@
 package br.edu.uepb.nutes.ocariot.data.model.ocariot;
 
+import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
@@ -12,6 +13,7 @@ import br.edu.uepb.nutes.ocariot.data.model.common.UserAccess;
  *
  * @author Copyright (c) 2018, NUTES/UEPB
  */
+@Keep
 public class Child extends User implements Comparable<Child> {
     @SerializedName("gender")
     private String gender;

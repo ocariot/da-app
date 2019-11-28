@@ -1,10 +1,13 @@
 package br.edu.uepb.nutes.ocariot.data.model.ocariot;
 
+import androidx.annotation.Keep;
+
 /**
  * Types of activities supported by the OCARIoT platform.
  *
  * @author Copyright (c) 2018, NUTES/UEPB
  */
+@Keep
 public class ActivityType {
     public static String RUN = "Run";
     public static String WALK = "Walk";

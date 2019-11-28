@@ -4,13 +4,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatEditText;
 
 import com.flaviofaria.kenburnsview.KenBurnsView;
@@ -18,6 +21,8 @@ import com.flaviofaria.kenburnsview.RandomTransitionGenerator;
 
 import java.util.Objects;
 
+import br.com.simplepass.loadingbutton.customViews.CircularProgressButton;
+import br.edu.uepb.nutes.ocariot.BuildConfig;
 import br.edu.uepb.nutes.ocariot.R;
 import br.edu.uepb.nutes.ocariot.data.model.common.UserAccess;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.Child;
@@ -52,13 +57,25 @@ public class LoginActivity extends AppCompatActivity {
     AppCompatEditText mPasswordEditText;
 
     @BindView(R.id.sign_in_button)
-    AppCompatButton mSignInButton;
+    CircularProgressButton mSignInButton;
 
     @BindView(R.id.image_back)
     KenBurnsView mImageBack;
 
     @BindView(R.id.logo)
     ImageView mImageLogo;
+
+    @BindView(R.id.region_radioGroup)
+    RadioGroup regionRadioGroup;
+
+    @BindView(R.id.brazil_radioButton)
+    RadioButton brazilRadioButton;
+
+    @BindView(R.id.europe_radioButton)
+    RadioButton europeRadioButton;
+
+    @BindView(R.id.locale_hint_text)
+    TextView localeText;
 
     private OcariotNetRepository ocariotRepository;
     private AppPreferencesHelper appPref;
@@ -70,13 +87,18 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-        mDisposable = new CompositeDisposable();
 
-        ocariotRepository = OcariotNetRepository.getInstance();
         appPref = AppPreferencesHelper.getInstance();
+        mDisposable = new CompositeDisposable();
         alertMessage = new AlertMessage(this);
 
+        // Must be called before booting Ocariot Repository!!!
+        initComponents();
+    }
+
+    private void initComponents() {
         mSignInButton.setOnClickListener(v -> login());
+
         mPasswordEditText.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEND) login();
             return false;
@@ -85,6 +107,33 @@ public class LoginActivity extends AppCompatActivity {
         AccelerateDecelerateInterpolator ACCELERATE_DECELERATE = new AccelerateDecelerateInterpolator();
         RandomTransitionGenerator generator = new RandomTransitionGenerator(30000, ACCELERATE_DECELERATE);
         mImageBack.setTransitionGenerator(generator); // set new transition on kenburns view
+
+        regionRadioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            slideUp(localeText);
+            if (checkedId == R.id.brazil_radioButton) {
+                localeText.setText(R.string.brazilian_pilot);
+                europeRadioButton.setScaleX(0.85f);
+                europeRadioButton.setScaleY(0.85f);
+                brazilRadioButton.setScaleX(1f);
+                brazilRadioButton.setScaleY(1f);
+                appPref.addOcariotURL(BuildConfig.OCARIOT_BR_BASE_URL);
+            } else if (checkedId == R.id.europe_radioButton) {
+                localeText.setText(R.string.european_pilot);
+                brazilRadioButton.setScaleX(0.85f);
+                brazilRadioButton.setScaleY(0.85f);
+                europeRadioButton.setScaleX(1f);
+                europeRadioButton.setScaleY(1f);
+                appPref.addOcariotURL(BuildConfig.OCARIOT_EU_BASE_URL);
+            }
+            ocariotRepository = OcariotNetRepository.getInstance();
+        });
+
+        if (appPref.getOcariotURL() == null) appPref.addOcariotURL(BuildConfig.OCARIOT_BR_BASE_URL);
+        if (appPref.getOcariotURL().equals(BuildConfig.OCARIOT_EU_BASE_URL)) {
+            europeRadioButton.setChecked(true);
+        } else {
+            brazilRadioButton.setChecked(true);
+        }
     }
 
     @Override
@@ -95,6 +144,18 @@ public class LoginActivity extends AppCompatActivity {
         if (userAccess != null) {
             openMainActivity();
         }
+    }
+
+    private void slideUp(View view) {
+        view.setVisibility(View.VISIBLE);
+        TranslateAnimation animate = new TranslateAnimation(
+                0,
+                0,
+                30,
+                0);
+        animate.setDuration(500);
+        animate.setFillAfter(true);
+        view.startAnimation(animate);
     }
 
     @Override
@@ -263,7 +324,8 @@ public class LoginActivity extends AppCompatActivity {
      * Shows/hide the progress bar.
      */
     private void showProgress(final boolean show) {
-        runOnUiThread(() -> mProgressBar.setVisibility(show ? View.VISIBLE : View.GONE));
+        if (show) mSignInButton.startAnimation();
+        else mSignInButton.revertAnimation();
     }
 
     private class ResponseData {

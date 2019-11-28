@@ -27,8 +27,6 @@ import retrofit2.http.Query;
  * @author Copyright (c) 2018, NUTES/UEPB
  */
 public interface OcariotService {
-    String OCARIOT_BASE_URL = BuildConfig.OCARIOT_BASE_URL; // API GATEWAY
-
     // Child
     @POST("/v1/auth")
     Single<UserAccess> authUser(@Body Child user);

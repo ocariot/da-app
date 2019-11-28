@@ -11,6 +11,8 @@ import br.edu.uepb.nutes.ocariot.data.model.ocariot.FitBitAppData;
  */
 public interface PreferencesHelper {
 
+    boolean addOcariotURL(final String utl);
+
     boolean addUserAccessOcariot(final UserAccess userAccess);
 
     boolean addLastSelectedChild(final Child user);
@@ -20,6 +22,8 @@ public interface PreferencesHelper {
     boolean addBoolean(String key, boolean value);
 
     boolean addInt(String key, int value);
+
+    String getOcariotURL();
 
     UserAccess getUserAccessOcariot();
 

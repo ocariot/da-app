@@ -145,4 +145,6 @@
     <string name="action_sort_username">Username</string>
     <string name="action_sort_sync">Synchronization</string>
     <string name="action_search" translatable="false">Search</string>
+    <string name="brazilian_pilot">Brazilian pilot</string>
+    <string name="european_pilot">European pilot</string>
 </resources>

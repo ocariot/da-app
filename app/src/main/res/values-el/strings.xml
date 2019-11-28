@@ -138,4 +138,6 @@
     <!--  MENU  -->
     <string name="action_sort_username">Όνομα χρήστη</string>
     <string name="action_sort_sync">Συγχρονισμός</string>
+    <string name="brazilian_pilot">Brazilian pilot</string>
+    <string name="european_pilot">European pilot</string>
 </resources>

@@ -1,10 +1,12 @@
 package br.edu.uepb.nutes.ocariot.data.model.ocariot;
 
+import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
+@Keep
 public class FitBitSync {
     @SerializedName("activities")
     private int activities;

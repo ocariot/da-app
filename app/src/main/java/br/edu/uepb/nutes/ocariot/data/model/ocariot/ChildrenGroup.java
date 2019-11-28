@@ -1,5 +1,6 @@
 package br.edu.uepb.nutes.ocariot.data.model.ocariot;
 
+import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
@@ -13,6 +14,7 @@ import java.util.Objects;
  *
  * @author Copyright (c) 2018, NUTES/UEPB
  */
+@Keep
 public class ChildrenGroup {
     @SerializedName("id")
     private String _id;
