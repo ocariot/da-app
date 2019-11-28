@@ -1,7 +1,7 @@
 # OCARIoT Data Acquisition
 [![License][license-image]][license-url] [![Vulnerabilities][known-vulnerabilities-image]][known-vulnerabilities-url] [![Commit][last-commit-image]][last-commit-url] [![Releases][releases-image]][releases-url] [![Contributors][contributors-image]][contributors-url] 
 
-[![DownloadBrazil][apk-brazil]][apk-brazil-url] [![DownloadEurope][apk-europe]][apk-europe-url] 
+[![Download][apk-download]][apk-brazil-url]
 
 
 Native Android application responsible for OCARIoT platform data acquisition. The application acts as an external services access token manager. Currently, only Fitbit service is available.
@@ -28,7 +28,7 @@ Native Android application responsible for OCARIoT platform data acquisition. Th
 
    ```console
    git clone https://github.com/ocariot/da-app.git
-   
+
    ```
 2. **Set up the environment:**
    - Make a copy of the `gradle.properties.example` file in the `/app` directory named `gradle.properties` _(This file will not be tracked by git because it is in .gitignore)_.
@@ -65,10 +65,8 @@ From Android Studio:
 [releases-url]: https://github.com/ocariot/da-app/releases
 [contributors-image]: https://img.shields.io/github/contributors/ocariot/da-app.svg
 [contributors-url]: https://github.com/ocariot/da-app/graphs/contributors
-[apk-brazil]: https://img.shields.io/badge/download%20apk-BR-green.svg?style=for-the-badge&logo=android
-[apk-brazil-url]: https://github.com/ocariot/da-app/releases/download/1.7.0/da-BR_v1.7.0.apk
-[apk-europe]: https://img.shields.io/badge/download%20apk-EU-blue.svg?style=for-the-badge&logo=android
-[apk-europe-url]: https://github.com/ocariot/da-app/releases/download/1.7.0/da-EU_v1.7.0.apk
+[apk-download]: https://img.shields.io/badge/download%20apk-BR/EU-blue.svg?style=for-the-badge&logo=android
+[apk-brazil-url]: https://github.com/ocariot/da-app/releases/download/1.9.0/ocariot_da_v1.9.0.apk
 
 --- 
 
