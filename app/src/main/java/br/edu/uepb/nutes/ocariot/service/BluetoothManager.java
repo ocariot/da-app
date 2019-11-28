@@ -4,16 +4,16 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.content.Context;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
 
 import no.nordicsemi.android.ble.BleManager;
 import no.nordicsemi.android.ble.callback.DataReceivedCallback;
 
 public abstract class BluetoothManager extends BleManager<BluetoothManagerCallback> {
-    private final String TAG = "ManagerDevices";
-    protected BluetoothGattCharacteristic mCharacteristic;
+    BluetoothGattCharacteristic mCharacteristic;
 
-    public BluetoothManager(@NonNull Context context) {
+    BluetoothManager(@NonNull Context context) {
         super(context);
     }
 
@@ -30,9 +30,7 @@ public abstract class BluetoothManager extends BleManager<BluetoothManagerCallba
         return mGattCallback;
     }
 
-    DataReceivedCallback dataReceivedCallback = (device, data) -> {
-        mCallbacks.measurementReceiver(device, data);
-    };
+    DataReceivedCallback dataReceivedCallback = (device, data) -> mCallbacks.measurementReceiver(device, data);
 
     public void disconnectDevice() {
         disconnect();

@@ -12,7 +12,7 @@
     android:paddingEnd="@dimen/default_padding"
     android:paddingBottom="@dimen/item_padding">
 
-    <android.support.v7.widget.AppCompatImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/activity_img"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -59,7 +59,7 @@
                 android:layout_weight="0.7"
                 android:layout_height="wrap_content">
 
-                <android.support.v7.widget.AppCompatImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/clock_img"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
@@ -92,7 +92,7 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content">
 
-                <android.support.v7.widget.AppCompatImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_marginStart="25dp"
@@ -124,7 +124,7 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content">
 
-                <android.support.v7.widget.AppCompatImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="15dp"
                     android:layout_height="15dp"
                     android:layout_marginStart="25dp"

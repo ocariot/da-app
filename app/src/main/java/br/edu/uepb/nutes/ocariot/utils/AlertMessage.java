@@ -2,6 +2,7 @@ package br.edu.uepb.nutes.ocariot.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 
 import com.tapadoo.alerter.Alerter;
 
@@ -48,16 +49,18 @@ public class AlertMessage {
         if (error instanceof HttpException) {
             HttpException httpEx = ((HttpException) error);
             switch (httpEx.code()) {
+                case 400:
+                    showError(R.string.title_error, R.string.error_400);
+                    return;
                 case 403:
                     showError(R.string.title_error, R.string.error_403);
-                    break;
+                    return;
                 case 500:
                     showError(R.string.title_error, R.string.error_500);
-                    break;
+                    return;
                 default:
-                    break;
+                    return;
             }
-            return;
         }
         showError(R.string.title_connection_error, R.string.error_connection);
     }

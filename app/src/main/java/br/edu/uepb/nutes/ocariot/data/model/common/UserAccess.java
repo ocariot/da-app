@@ -2,7 +2,8 @@ package br.edu.uepb.nutes.ocariot.data.model.common;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
 
 import com.auth0.android.jwt.JWT;
 import com.google.gson.Gson;
@@ -20,6 +21,7 @@ import java.util.Objects;
  */
 public class UserAccess implements Parcelable {
     public static final String KEY_SCOPE = "scope";
+    public static final String KEY_SCOPES = "scopes";
     public static final String KEY_SUB_TYPE = "sub_type";
 
     @SerializedName(value = "access_token", alternate = {"token"})
@@ -203,5 +205,15 @@ public class UserAccess implements Parcelable {
     @Override
     public String toString() {
         return new Gson().toJson(this);
+    }
+
+    public static class TokenStatus {
+        public static String VALID = "valid_token";
+        public static String INVALID = "invalid_token";
+        public static String EXPIRED = "expired_token";
+        public static String INVALID_REFRESH = "invalid_grant";
+        public static String INVALID_CLIENT = "invalid_client";
+        public static String RATE_LIMIT = "rate_limit";
+        public static String NONE = "none";
     }
 }

@@ -1,6 +1,6 @@
 package br.edu.uepb.nutes.ocariot.data.model.ocariot;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
@@ -24,6 +24,9 @@ public class Child extends User implements Comparable<Child> {
 
     @SerializedName("fitbit_access")
     private UserAccess fitBitAccess;
+
+    @SerializedName("fitbit_status")
+    private String fitbitStatus;
 
     public Child() {
     }
@@ -62,6 +65,15 @@ public class Child extends User implements Comparable<Child> {
 
     public void setFitBitAccess(UserAccess fitBitAccess) {
         this.fitBitAccess = fitBitAccess;
+        if (fitBitAccess == null) this.fitbitStatus = UserAccess.TokenStatus.NONE;
+        else this.fitbitStatus = fitBitAccess.getStatus();
+    }
+
+    public boolean isFitbitAccessValid() {
+        if (this.fitbitStatus == null) return false;
+        return fitbitStatus.equalsIgnoreCase(UserAccess.TokenStatus.VALID) ||
+                fitbitStatus.equalsIgnoreCase(UserAccess.TokenStatus.EXPIRED) ||
+                fitbitStatus.equalsIgnoreCase(UserAccess.TokenStatus.RATE_LIMIT);
     }
 
     /**

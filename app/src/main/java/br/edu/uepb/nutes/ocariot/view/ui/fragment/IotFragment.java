@@ -15,14 +15,6 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.ImageViewCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.content.res.AppCompatResources;
-import android.support.v7.widget.AppCompatImageView;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,7 +26,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.content.res.AppCompatResources;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.core.content.ContextCompat;
+import androidx.core.widget.ImageViewCompat;
+import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -262,8 +262,9 @@ public class IotFragment extends Fragment implements View.OnClickListener {
                 ocariotRepository
                         .listWeights(
                                 appPref.getLastSelectedChild().get_id(),
-                                "gte:".concat(DateUtils.addMonths(DateUtils.getCurrentDate(), -1)),
-                                "lt:".concat(DateUtils.addDaysToDatetimeString(DateUtils.getCurrentDatetimeUTC(), 1))
+                                "gte:".concat(DateUtils.addMonths(DateUtils.getCurrentDatetimeUTC(), -12)),
+                                "lt:".concat(DateUtils.addDaysToDatetimeString(DateUtils.getCurrentDatetimeUTC(), 1)),
+                                "-timestamp"
                         )
                         .doOnSubscribe(disposable -> loading(true))
                         .doAfterTerminate(() -> loading(false))
@@ -510,7 +511,7 @@ public class IotFragment extends Fragment implements View.OnClickListener {
      *
      * @return boolean
      */
-    public boolean hasLocationPermissions() {
+    private boolean hasLocationPermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             return mContext.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) ==
                     PackageManager.PERMISSION_GRANTED;
@@ -521,7 +522,7 @@ public class IotFragment extends Fragment implements View.OnClickListener {
     /**
      * Request Location permission.
      */
-    protected void requestLocationPermission() {
+    private void requestLocationPermission() {
         requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_ENABLE_LOCATION);
     }
 

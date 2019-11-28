@@ -1,8 +1,10 @@
 package br.edu.uepb.nutes.ocariot.view.ui.preference;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
@@ -33,6 +35,7 @@ import br.edu.uepb.nutes.ocariot.view.ui.activity.ChildrenManagerActivity;
 import br.edu.uepb.nutes.ocariot.view.ui.activity.LoginActivity;
 import br.edu.uepb.nutes.ocariot.view.ui.activity.MainActivity;
 import io.reactivex.disposables.CompositeDisposable;
+import retrofit2.HttpException;
 
 /**
  * SettingsFragment implementation.
@@ -51,7 +54,6 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     private DialogLoading mDialogSync;
     private AlertMessage mAlertMessage;
     private Child mChild;
-    private Preference mSyncPreference;
 
     public SettingsFragment() {
         // Empty constructor required!
@@ -124,15 +126,25 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        if (context instanceof OnClickSettingsListener)
+        if (context instanceof OnClickSettingsListener) {
             mListener = (OnClickSettingsListener) context;
-        else throw new ClassCastException();
+        } else throw new ClassCastException();
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            mListener = (OnClickSettingsListener) activity;
+        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         mDisposable.dispose();
+        Alerter.hide();
     }
 
     @Override
@@ -180,9 +192,9 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         prefSync.setSummary(getResources().getString(R.string.synchronization_data)
                 .concat("\n\n")
                 .concat(getResources().getString(R.string.last_sync_date_time,
-                        DateUtils.convertDateTimeUTCToLocale(mChild.getLastSync(),
+                        mChild.getLastSync() != null ? DateUtils.convertDateTimeUTCToLocale(mChild.getLastSync(),
                                 getResources().getString(R.string.date_time_abb5),
-                                null))
+                                null) : "--")
                 )
         );
     }
@@ -230,9 +242,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
      * and marks the Switch, otherwise uncheck.
      */
     private void populateSwitchFitbit() {
-        if (mChild.getFitBitAccess() != null && mChild.getFitBitAccess().getStatus() != null &&
-                (mChild.getFitBitAccess().getStatus().equals("valid_token") ||
-                        mChild.getFitBitAccess().getStatus().equals("expired_token"))) {
+        if (mChild.isFitbitAccessValid()) {
             switchPrefFitBit.setChecked(true);
         } else {
             switchPrefFitBit.setChecked(false);
@@ -254,30 +264,6 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         });
     }
 
-    private void revokeFitBitAuth() {
-        DialogLoading dialog = DialogLoading.newDialog(0,
-                mContext.getResources().getString(R.string.title_processing),
-                mContext.getResources().getString(R.string.dialog_revoke_fitbit_processing)
-        );
-        mDisposable.add(
-                OcariotNetRepository.getInstance()
-                        .revokeFitBitAuth(mChild.get_id())
-                        .doOnSubscribe(disposable -> dialog.show(getFragmentManager()))
-                        .doOnTerminate(dialog::close)
-                        .subscribe(() -> {
-                            switchPrefFitBit.setChecked(false);
-                            mChild.setFitBitAccess(null);
-                            appPref.addLastSelectedChild(mChild);
-
-                            mAlertMessage.show(
-                                    R.string.title_success,
-                                    R.string.alert_revoke_fitbit_success,
-                                    R.color.colorAccent,
-                                    R.drawable.ic_action_check_dark);
-                        }, err -> mAlertMessage.handleError(err))
-        );
-    }
-
     /**
      * Show dialog confirm sign out in app.
      */
@@ -294,7 +280,8 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                                 }
                             }
                     ).setNegativeButton(R.string.title_no, null)
-                    .create().show();
+                    .create()
+                    .show();
         });
     }
 
@@ -307,18 +294,9 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         mDisposable.add(
                 loginFitBit
                         .doAuthorizationToken(authFitBitResponse)
-                        .doOnError(throwable -> switchPrefFitBit.setChecked(false))
-                        .subscribe(mAuthState -> {
+                        .subscribe(userAccess -> {
                             switchPrefFitBit.setChecked(true);
-                            UserAccess userAccess = new UserAccess();
-                            userAccess.setAccessToken(mAuthState.getAccessToken());
-                            userAccess.setRefreshToken(mAuthState.getRefreshToken());
-                            userAccess.setScope(mAuthState.getScope());
-                            userAccess.setStatus("valid_token");
-
-                            mChild.setFitBitAccess(userAccess);
-                            appPref.addLastSelectedChild(mChild);
-                            fitBitInitSync();
+                            publishFitBitAuth(userAccess);
                         }, err -> {
                             switchPrefFitBit.setChecked(false);
                             mAlertMessage.show(
@@ -331,34 +309,58 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         );
     }
 
-    private void fitBitInitSync() {
-        SyncDataRepository syncDataRepo = SyncDataRepository.getInstance(mContext);
-
-        if (mChild.getFitBitAccess() == null || mChild.getFitBitAccess().getAccessToken() == null) {
-            mAlertMessage.show(mContext.getResources().getString(R.string.alert_title_no_token_fitbit),
-                    mContext.getResources().getString(R.string.alert_no_token_fitbit, mChild.getUsername()),
-                    R.color.colorDanger, R.drawable.ic_warning_dark, 15000, true, null);
-            return;
-        }
-
+    /**
+     * Send Fitbit authentication data to server.
+     */
+    private void publishFitBitAuth(UserAccess userAccess) {
         mDisposable.add(
-                syncDataRepo.syncAll(mChild.get_id())
+                OcariotNetRepository.getInstance()
+                        .publishFitBitAuth(mChild.get_id(), userAccess)
                         .doOnSubscribe(disposable -> mDialogSync.show(getFragmentManager()))
+                        .subscribe(() -> {
+                                    mChild.setFitBitAccess(userAccess);
+                                    appPref.addLastSelectedChild(mChild);
+                                    fitBitInitSync();
+                                },
+                                err -> {
+                                    mDialogSync.close();
+                                    switchPrefFitBit.setChecked(false);
+                                    if (err instanceof HttpException) {
+                                        HttpException httpEx = ((HttpException) err);
+                                        if (httpEx.code() == 400) {
+                                            mAlertMessage.show(R.string.title_error,
+                                                    R.string.error_400_1, R.color.colorDanger,
+                                                    R.drawable.ic_sad_dark);
+                                            return;
+                                        }
+                                    }
+                                    mAlertMessage.handleError(err);
+                                }
+                        )
+        );
+    }
+
+    /**
+     * Fitbit Initial Sync.
+     * Must be called after access token is saved to server.
+     */
+    private void fitBitInitSync() {
+        mDisposable.add(
+                SyncDataRepository.getInstance()
+                        .syncAll(mChild.get_id())
                         .doAfterTerminate(() -> mDialogSync.close())
                         .subscribe(
-                                objects -> {
-                                    showAlertResultSync(true);
-                                    publishFitBitAuth();
-                                },
+                                objects -> showAlertResultSync(true),
                                 err -> showAlertResultSync(false)
                         )
         );
     }
 
+    /**
+     * Force a new Fitbit sync.
+     */
     private void fitBitSyncForced() {
-        if (mChild.getFitBitAccess() == null || mChild.getFitBitAccess().getStatus() == null ||
-                !mChild.getFitBitAccess().getStatus().equals("valid_token") &&
-                        !mChild.getFitBitAccess().getStatus().equals("expired_token")) {
+        if (!mChild.isFitbitAccessValid()) {
             mAlertMessage.show(mContext.getResources().getString(R.string.alert_title_no_token_fitbit),
                     mContext.getResources().getString(R.string.alert_no_token_fitbit, mChild.getUsername()),
                     R.color.colorDanger, R.drawable.ic_warning_dark, 15000, true,
@@ -392,24 +394,64 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     }
 
     /**
-     * Send Fitbit authentication data to server.
+     * Revokes the Fitbit access token.
      */
-    private void publishFitBitAuth() {
-        UserAccess fitBitAuth = mChild.getFitBitAccess();
-
-        if (fitBitAuth == null || fitBitAuth.getAccessToken() == null) return;
-
-        UserAccess userAccess = new UserAccess();
-        userAccess.setAccessToken(fitBitAuth.getAccessToken());
-        userAccess.setRefreshToken(fitBitAuth.getRefreshToken());
-
+    private void revokeFitBitAuth() {
+        DialogLoading dialog = DialogLoading.newDialog(0,
+                mContext.getResources().getString(R.string.title_processing),
+                mContext.getResources().getString(R.string.dialog_revoke_fitbit_processing)
+        );
         mDisposable.add(
                 OcariotNetRepository.getInstance()
-                        .publishFitBitAuth(mChild.get_id(), userAccess)
-                        .subscribe(() -> Log.d(LOG_TAG, "Fitbit authentication data sent successfully!"),
-                                err -> Log.e(LOG_TAG, "Error sending Fitbit authentication data: " + err.getMessage())
-                        )
+                        .revokeFitBitAuth(mChild.get_id())
+                        .doOnSubscribe(disposable -> dialog.show(getFragmentManager()))
+                        .doOnTerminate(dialog::close)
+                        .subscribe(() -> {
+                            switchPrefFitBit.setChecked(false);
+                            mChild.setFitBitAccess(null);
+                            appPref.addLastSelectedChild(mChild);
+
+                            mAlertMessage.show(
+                                    R.string.title_success,
+                                    R.string.alert_revoke_fitbit_success,
+                                    R.color.colorAccent,
+                                    R.drawable.ic_action_check_dark);
+                        }, err -> mAlertMessage.handleError(err))
         );
+    }
+
+    /**
+     * Display Fitbit data sync success or error message.
+     *
+     * @param isSuccess boolean
+     */
+    private void showAlertResultSync(boolean isSuccess) {
+
+        Alerter alerter = Alerter.create(getActivity())
+                .setDuration(30000)
+                .enableSwipeToDismiss()
+                .setTitle(isSuccess ? R.string.title_success : R.string.title_error)
+                .setText(isSuccess ? mContext.getResources()
+                        .getString(R.string.sync_data_fitbit_success, mChild.getUsername()) :
+                        mContext.getResources().getString(R.string.sync_data_fitbit_error, mChild.getUsername()))
+                .setBackgroundColorRes(isSuccess ? R.color.colorAccent : R.color.colorDanger)
+                .setIcon(isSuccess ? R.drawable.ic_happy_dark : R.drawable.ic_sad_dark);
+        if (isSuccess) {
+            alerter.setOnClickListener(v -> {
+                Intent intent = new Intent(getActivity(), MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            });
+        }
+        alerter.show();
+    }
+
+    /**
+     * Open CustomTab for Fitbit authorization.
+     */
+    private void openFitbitAuth() {
+        mListener.onPrefClick(getResources().getString(R.string.key_fitibit));
+        loginFitBit.doAuthorizationCode();
     }
 
     @Subscribe(threadMode = ThreadMode.POSTING)
@@ -430,31 +472,6 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                         }
                     });
         }
-    }
-
-    private void showAlertResultSync(boolean isSuccess) {
-        Alerter alerter = Alerter.create(getActivity())
-                .setDuration(30000)
-                .enableSwipeToDismiss()
-                .setTitle(isSuccess ? R.string.title_success : R.string.title_error)
-                .setText(isSuccess ? mContext.getResources()
-                        .getString(R.string.sync_data_fitbit_success, mChild.getUsername()) :
-                        mContext.getResources().getString(R.string.sync_data_fitbit_error, mChild.getUsername()))
-                .setBackgroundColorRes(isSuccess ? R.color.colorAccent : R.color.colorDanger)
-                .setIcon(isSuccess ? R.drawable.ic_happy_dark : R.drawable.ic_sad_dark);
-        if (isSuccess) {
-            alerter.setOnClickListener(v -> {
-                Intent intent = new Intent(getActivity(), MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-            });
-        }
-        alerter.show();
-    }
-
-    private void openFitbitAuth() {
-        mListener.onPrefClick(mContext.getResources().getString(R.string.key_fitibit));
-        loginFitBit.doAuthorizationCode();
     }
 
     public interface OnClickSettingsListener {

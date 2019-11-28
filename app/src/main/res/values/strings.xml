@@ -78,7 +78,7 @@
     <string name="key_signout" translatable="false">key_signout</string>
     <string name="key_sync_data" translatable="false">key_sync_data</string>
     <string name="key_children" translatable="false">key_children_manager</string>
-    <string name="settings_summary_version" translatable="false">1.7.0</string>
+    <string name="settings_summary_version" translatable="false">1.7.2</string>
     <string name="login_with_fitbit">Provide access to Fitbit</string>
     <string name="login_do_not_user_fitbit">Do not currently use Fitbit</string>
     <string name="settings_title">Settings</string>
@@ -105,6 +105,8 @@
     <string name="error_login_invalid">Invalid username or password&#8230;</string>
     <string name="error_500">An error occurred communicating with the server. Please try again later&#8230;</string>
     <string name="error_403">You do not have permission for the functionality you are trying to access. Please contact the administrator&#8230;</string>
+    <string name="error_400">Could not perform operation. Please try again later&#8230;</string>
+    <string name="error_400_1">Unable to complete the operation. Try again and be sure to provide access to Activity, Sleep, Heart Rate and Weight data.</string>
     <string name="error_get_resources">An error occurred while trying to recover your data. Please try again later&#8230;</string>
 
     <!-- MESSAGES -->
@@ -142,4 +144,5 @@
     <!-- MENU -->
     <string name="action_sort_username">Username</string>
     <string name="action_sort_sync">Synchronization</string>
+    <string name="action_search" translatable="false">Search</string>
 </resources>

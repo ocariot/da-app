@@ -9,7 +9,6 @@ import br.edu.uepb.nutes.ocariot.data.model.fitbit.MinutesSedentaryListFitBit;
 import br.edu.uepb.nutes.ocariot.data.model.fitbit.MinutesVeryActiveListFitBit;
 import br.edu.uepb.nutes.ocariot.data.model.fitbit.SleepListFitBit;
 import br.edu.uepb.nutes.ocariot.data.model.fitbit.StepsListFitBit;
-import br.edu.uepb.nutes.ocariot.data.model.fitbit.UserResultFitBit;
 import br.edu.uepb.nutes.ocariot.data.model.fitbit.WeightListFitBit;
 import io.reactivex.Single;
 import retrofit2.http.GET;
@@ -38,9 +37,6 @@ public interface FitBitService {
             @Path("start-date") String startDate,
             @Path("end-date") String endDate
     );
-
-    @GET("1/user/-/profile.json")
-    Single<UserResultFitBit> getProfile();
 
     @GET("1.2/user/-/activities/tracker/steps/date/{start-date}/{end-date}.json")
     Single<StepsListFitBit> getSteps(
