@@ -12,247 +12,255 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <RelativeLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="@dimen/default_padding">
-
-        <TextView
-            android:id="@+id/activity_date_tv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="2018-86-34"
-            android:textSize="16sp" />
-
-        <TextView
-            android:id="@+id/activity_date_start_details_tv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/activity_date_tv"
-            android:layout_alignParentStart="true"
-            android:text="Monday, June 17, 2019" />
-
-        <TextView
-            android:id="@+id/activity_range_duration_details_tv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/activity_date_start_details_tv"
-            android:layout_alignParentStart="true"
-            android:text="@string/activity_range_time" />
-
-        <View
-            android:id="@+id/line1_view"
-            android:layout_width="fill_parent"
-            android:layout_height="1dp"
-            android:layout_below="@+id/activity_range_duration_details_tv"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
-            android:background="@color/colorLineDivider" />
-
-        <ImageView
-            android:id="@+id/clock_img"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_below="@+id/line1_view"
-            android:contentDescription="@string/img_desc_clock"
-            android:tint="@color/colorPrimary"
-            app:srcCompat="@drawable/ic_clock" />
-
-        <TextView
-            android:id="@+id/activity_duration_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/clock_img"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="3dp"
-            android:layout_toEndOf="@+id/clock_img"
-            android:text="@string/duration_min"
-            android:textSize="18sp" />
-
-        <TextView
-            android:id="@+id/activity_steps_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/clock_img"
-            android:layout_alignParentStart="true"
-            android:layout_marginTop="10dp"
-            android:text="4500"
-            android:textColor="@color/colorAccent"
-            android:textSize="32sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/activity_steps_tv"
-            android:layout_marginStart="2dp"
-            android:layout_toEndOf="@+id/activity_steps_tv"
-            android:text="@string/steps" />
-
-        <TextView
-            android:id="@+id/activity_calories_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/activity_steps_tv"
-            android:layout_alignParentStart="true"
-            android:text="800"
-            android:textColor="@color/colorAccent"
-            android:textSize="32sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/activity_calories_tv"
-            android:layout_marginStart="2dp"
-            android:layout_toEndOf="@+id/activity_calories_tv"
-            android:text="@string/calories" />
-
-        <TextView
-            android:id="@+id/activity_calories_min_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/activity_calories_tv"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="3dp"
-            android:text="0"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/calories_min_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/activity_calories_min_tv"
-            android:layout_marginStart="2dp"
-            android:layout_toEndOf="@+id/activity_calories_min_tv"
-            android:text="@string/cals_min" />
-
-        <TextView
-            android:id="@+id/activity_distance_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/calories_min_tv"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="3dp"
-            android:layout_marginTop="10dp"
-            android:text="--"
-            android:textSize="20sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/activity_distance_tv"
-            android:layout_marginStart="2dp"
-            android:layout_toEndOf="@+id/activity_distance_tv"
-            android:text="@string/km" />
-
-        <View
-            android:id="@+id/line2_view"
-            android:layout_width="fill_parent"
-            android:layout_height="1dp"
-            android:layout_below="@+id/activity_distance_tv"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
-            android:background="@color/colorLineDivider" />
+        android:paddingTop="@dimen/default_padding"
+        android:scrollbarSize="2dp"
+        android:scrollbarThumbVertical="@color/colorPrimary">
 
         <RelativeLayout
-            android:id="@+id/activity_box_levels"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/line2_view">
+            android:padding="@dimen/default_padding">
 
             <TextView
-                android:id="@+id/activity_levels_tv"
+                android:id="@+id/activity_date_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="2018-86-34"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/activity_date_start_details_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/activity_date_tv"
+                android:layout_alignParentStart="true"
+                android:text="Monday, June 17, 2019" />
+
+            <TextView
+                android:id="@+id/activity_range_duration_details_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/activity_date_start_details_tv"
+                android:layout_alignParentStart="true"
+                android:text="@string/activity_range_time" />
+
+            <View
+                android:id="@+id/line1_view"
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/activity_range_duration_details_tv"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:background="@color/colorLineDivider" />
+
+            <ImageView
+                android:id="@+id/clock_img"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_below="@+id/line1_view"
+                android:contentDescription="@string/img_desc_clock"
+                android:tint="@color/colorPrimary"
+                app:srcCompat="@drawable/ic_clock" />
+
+            <TextView
+                android:id="@+id/activity_duration_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/clock_img"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="3dp"
+                android:layout_toEndOf="@+id/clock_img"
+                android:text="@string/duration_min"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/activity_steps_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/clock_img"
                 android:layout_alignParentStart="true"
-                android:layout_marginBottom="10dp"
-                android:text="@string/levels"
+                android:layout_marginTop="10dp"
+                android:text="4500"
+                android:textColor="@color/colorAccent"
+                android:textSize="32sp"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/activity_title_level_sedentary_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/activity_levels_tv"
-                android:layout_alignParentStart="true"
-                android:layout_marginStart="@dimen/default_padding"
-                android:text="@string/level_sedentary" />
+                android:layout_alignBaseline="@+id/activity_steps_tv"
+                android:layout_marginStart="2dp"
+                android:layout_toEndOf="@+id/activity_steps_tv"
+                android:text="@string/steps" />
 
             <TextView
-                android:id="@+id/activity_title_level_fairly_tv"
+                android:id="@+id/activity_calories_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/activity_title_level_sedentary_tv"
+                android:layout_below="@+id/activity_steps_tv"
                 android:layout_alignParentStart="true"
-                android:layout_marginStart="@dimen/default_padding"
-                android:layout_marginTop="5dp"
-                android:text="@string/level_fairly" />
+                android:text="800"
+                android:textColor="@color/colorAccent"
+                android:textSize="32sp"
+                android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/activity_title_level_lightly_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/activity_title_level_fairly_tv"
-                android:layout_alignParentStart="true"
-                android:layout_marginStart="@dimen/default_padding"
-                android:layout_marginTop="5dp"
-                android:text="@string/level_lightly" />
+                android:layout_alignBaseline="@+id/activity_calories_tv"
+                android:layout_marginStart="2dp"
+                android:layout_toEndOf="@+id/activity_calories_tv"
+                android:text="@string/calories" />
 
             <TextView
-                android:id="@+id/activity_title_level_very_tv"
+                android:id="@+id/activity_calories_min_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/activity_title_level_lightly_tv"
+                android:layout_below="@+id/activity_calories_tv"
                 android:layout_alignParentStart="true"
-                android:layout_marginStart="@dimen/default_padding"
-                android:layout_marginTop="5dp"
-                android:text="@string/level_very" />
+                android:layout_marginStart="3dp"
+                android:text="0"
+                android:textSize="20sp" />
 
+            <TextView
+                android:id="@+id/calories_min_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/activity_calories_min_tv"
+                android:layout_marginStart="2dp"
+                android:layout_toEndOf="@+id/activity_calories_min_tv"
+                android:text="@string/cals_min" />
+
+            <TextView
+                android:id="@+id/activity_distance_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/calories_min_tv"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="3dp"
+                android:layout_marginTop="10dp"
+                android:text="--"
+                android:textSize="20sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/activity_distance_tv"
+                android:layout_marginStart="2dp"
+                android:layout_toEndOf="@+id/activity_distance_tv"
+                android:text="@string/km" />
+
+            <View
+                android:id="@+id/line2_view"
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/activity_distance_tv"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:background="@color/colorLineDivider" />
 
             <RelativeLayout
-                android:id="@+id/box_hr"
+                android:id="@+id/activity_box_levels"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/activity_title_level_very_tv">
-
-                <View
-                    android:id="@+id/line3_view"
-                    android:layout_width="fill_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginBottom="20dp"
-                    android:background="@color/colorLineDivider" />
+                android:layout_height="match_parent"
+                android:layout_below="@+id/line2_view">
 
                 <TextView
-                    android:id="@+id/hr_zones_tv"
+                    android:id="@+id/activity_levels_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/line3_view"
+                    android:layout_alignParentStart="true"
                     android:layout_marginBottom="10dp"
-                    android:text="@string/hr_avg"
+                    android:text="@string/levels"
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/hr_avg_tv"
+                    android:id="@+id/activity_title_level_sedentary_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/hr_zones_tv"
+                    android:layout_below="@+id/activity_levels_tv"
                     android:layout_alignParentStart="true"
-                    android:layout_marginStart="3dp"
-                    android:text="120"
-                    style="@android:style/TextAppearance.Medium" />
+                    android:layout_marginStart="@dimen/default_padding"
+                    android:text="@string/level_sedentary" />
 
                 <TextView
+                    android:id="@+id/activity_title_level_fairly_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignBaseline="@+id/hr_avg_tv"
-                    android:layout_marginStart="3dp"
-                    android:layout_toEndOf="@+id/hr_avg_tv"
-                    android:text="bpm" />
+                    android:layout_below="@+id/activity_title_level_sedentary_tv"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="@dimen/default_padding"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/level_fairly" />
 
+                <TextView
+                    android:id="@+id/activity_title_level_lightly_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/activity_title_level_fairly_tv"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="@dimen/default_padding"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/level_lightly" />
+
+                <TextView
+                    android:id="@+id/activity_title_level_very_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/activity_title_level_lightly_tv"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="@dimen/default_padding"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/level_very" />
+
+
+                <RelativeLayout
+                    android:id="@+id/box_hr"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/activity_title_level_very_tv">
+
+                    <View
+                        android:id="@+id/line3_view"
+                        android:layout_width="fill_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="20dp"
+                        android:background="@color/colorLineDivider" />
+
+                    <TextView
+                        android:id="@+id/hr_zones_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/line3_view"
+                        android:layout_marginBottom="10dp"
+                        android:text="@string/hr_avg"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/hr_avg_tv"
+                        style="@android:style/TextAppearance.Medium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/hr_zones_tv"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginStart="3dp"
+                        android:text="120" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/hr_avg_tv"
+                        android:layout_marginStart="3dp"
+                        android:layout_toEndOf="@+id/hr_avg_tv"
+                        android:text="bpm" />
+
+                </RelativeLayout>
             </RelativeLayout>
-        </RelativeLayout>
 
-    </RelativeLayout>
+        </RelativeLayout>
+    </androidx.core.widget.NestedScrollView>
 </LinearLayout>

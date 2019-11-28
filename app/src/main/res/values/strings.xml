@@ -144,4 +144,5 @@
     <!-- MENU -->
     <string name="action_sort_username">Username</string>
     <string name="action_sort_sync">Synchronization</string>
+    <string name="action_search" translatable="false">Search</string>
 </resources>

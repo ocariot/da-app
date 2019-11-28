@@ -192,9 +192,9 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         prefSync.setSummary(getResources().getString(R.string.synchronization_data)
                 .concat("\n\n")
                 .concat(getResources().getString(R.string.last_sync_date_time,
-                        DateUtils.convertDateTimeUTCToLocale(mChild.getLastSync(),
+                        mChild.getLastSync() != null ? DateUtils.convertDateTimeUTCToLocale(mChild.getLastSync(),
                                 getResources().getString(R.string.date_time_abb5),
-                                null))
+                                null) : "--")
                 )
         );
     }
