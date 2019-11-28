@@ -6,8 +6,8 @@ android {
         applicationId "br.edu.uepb.nutes.ocariot"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 4
-        versionName "1.7.1"
+        versionCode 5
+        versionName "1.8.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         manifestPlaceholders = [
