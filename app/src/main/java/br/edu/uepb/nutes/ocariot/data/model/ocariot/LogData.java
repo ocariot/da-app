@@ -1,10 +1,12 @@
 package br.edu.uepb.nutes.ocariot.data.model.ocariot;
 
+import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
+@Keep
 public class LogData {
     @SerializedName("date")
     private String date;

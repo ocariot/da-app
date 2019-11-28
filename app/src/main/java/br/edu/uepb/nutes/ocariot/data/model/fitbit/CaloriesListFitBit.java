@@ -1,5 +1,6 @@
 package br.edu.uepb.nutes.ocariot.data.model.fitbit;
 
+import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
@@ -7,6 +8,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+@Keep
 public class CaloriesListFitBit {
     @SerializedName("activities-tracker-calories")
     private List<LogDataFitBit> calories;

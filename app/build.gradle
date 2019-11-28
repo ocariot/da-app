@@ -6,8 +6,8 @@ android {
         applicationId "br.edu.uepb.nutes.ocariot"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 5
-        versionName "1.8.0"
+        versionCode 6
+        versionName "1.9.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         manifestPlaceholders = [
@@ -19,7 +19,8 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField "String", "PREFERENCES_FILENAME", "\"$PREFERENCES_FILENAME\""
-            buildConfigField "String", "OCARIOT_BASE_URL", "\"$OCARIOT_DEV_BASE_URL\""
+            buildConfigField "String", "OCARIOT_BR_BASE_URL", "\"$OCARIOT_BR_BASE_URL\""
+            buildConfigField "String", "OCARIOT_EU_BASE_URL", "\"$OCARIOT_EU_BASE_URL\""
             buildConfigField "String", "FITBIT_BASE_URL", "\"$FITBIT_DEV_BASE_URL\""
             buildConfigField "String", "FITBIT_AUTH_URL", "\"$FITBIT_DEV_AUTH_URL\""
             buildConfigField "String", "FITBIT_TOKEN_URL", "\"$FITBIT_DEV_TOKEN_URL\""
@@ -28,7 +29,8 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField "String", "PREFERENCES_FILENAME", "\"$PREFERENCES_FILENAME\""
-            buildConfigField "String", "OCARIOT_BASE_URL", "\"$OCARIOT_PROD_BASE_URL\""
+            buildConfigField "String", "OCARIOT_BR_BASE_URL", "\"$OCARIOT_BR_BASE_URL\""
+            buildConfigField "String", "OCARIOT_EU_BASE_URL", "\"$OCARIOT_EU_BASE_URL\""
             buildConfigField "String", "FITBIT_BASE_URL", "\"$FITBIT_PROD_BASE_URL\""
             buildConfigField "String", "FITBIT_AUTH_URL", "\"$FITBIT_PROD_AUTH_URL\""
             buildConfigField "String", "FITBIT_TOKEN_URL", "\"$FITBIT_PROD_TOKEN_URL\""
@@ -75,6 +77,7 @@ dependencies {
     implementation 'com.ethanhua:skeleton:1.1.2'
     implementation 'io.supercharge:shimmerlayout:2.1.0'
     implementation 'com.flaviofaria:kenburnsview:1.0.7'
+    implementation 'br.com.simplepass:loading-button-android:2.2.0'
 
     // EventBus
     implementation 'org.greenrobot:eventbus:3.1.1'

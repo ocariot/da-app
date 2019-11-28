@@ -138,4 +138,6 @@
     <!--  MENU  -->
     <string name="action_sort_username">Nome de usuário</string>
     <string name="action_sort_sync">Sincronização</string>
+    <string name="brazilian_pilot">Piloto brasileiro</string>
+    <string name="european_pilot">Piloto europeu</string>
 </resources>

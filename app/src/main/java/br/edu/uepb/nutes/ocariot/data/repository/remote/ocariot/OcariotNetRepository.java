@@ -40,8 +40,6 @@ import okhttp3.logging.HttpLoggingInterceptor;
  * @author Copyright (c) 2018, NUTES/UEPB
  */
 public class OcariotNetRepository extends BaseNetRepository {
-    private static OcariotNetRepository mInstance;
-
     private OcariotService ocariotService;
     private AppPreferencesHelper appPref;
 
@@ -55,14 +53,13 @@ public class OcariotNetRepository extends BaseNetRepository {
             this.addInterceptor(logging);
         }
 
-        ocariotService = super.provideRetrofit(OcariotService.OCARIOT_BASE_URL)
-                .create(OcariotService.class);
         appPref = AppPreferencesHelper.getInstance();
+        ocariotService = super.provideRetrofit(appPref.getOcariotURL())
+                .create(OcariotService.class);
     }
 
     public static synchronized OcariotNetRepository getInstance() {
-        if (mInstance == null) mInstance = new OcariotNetRepository();
-        return mInstance;
+        return new OcariotNetRepository();
     }
 
     /**

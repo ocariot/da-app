@@ -3,11 +3,13 @@ package br.edu.uepb.nutes.ocariot.data.model.ocariot;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
+@Keep
 public class HeartRateZone implements Parcelable {
     @SerializedName("average")
     private int average;

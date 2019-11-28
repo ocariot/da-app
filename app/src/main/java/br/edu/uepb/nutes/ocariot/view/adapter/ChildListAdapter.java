@@ -29,7 +29,7 @@ import butterknife.ButterKnife;
  */
 public class ChildListAdapter extends BaseAdapter<Child> implements Filterable {
     private final Context mContext;
-    private List<Child> childListFiltered;
+    private List<?> childListFiltered;
 
     public ChildListAdapter(Context context) {
         this.childListFiltered = super.getItems();
@@ -49,7 +49,7 @@ public class ChildListAdapter extends BaseAdapter<Child> implements Filterable {
     @Override
     public void showData(RecyclerView.ViewHolder holder, int position, List<Child> itemsList) {
         if (holder instanceof ViewHolder) {
-            final Child child = childListFiltered.get(position);
+            final Child child = (Child) childListFiltered.get(position);
             ViewHolder h = (ViewHolder) holder;
 
             h.name.setText(child.getUsername());
@@ -123,7 +123,7 @@ public class ChildListAdapter extends BaseAdapter<Child> implements Filterable {
 
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
-                childListFiltered = (List<Child>) results.values;
+                childListFiltered = (List<?>) results.values;
                 notifyDataSetChanged();
             }
         };

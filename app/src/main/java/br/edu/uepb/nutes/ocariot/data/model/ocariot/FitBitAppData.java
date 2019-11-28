@@ -1,5 +1,6 @@
 package br.edu.uepb.nutes.ocariot.data.model.ocariot;
 
+import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
@@ -8,6 +9,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 
+@Keep
 public class FitBitAppData {
     @SerializedName("client_id")
     private String clientId;

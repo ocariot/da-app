@@ -3,6 +3,7 @@ package br.edu.uepb.nutes.ocariot.data.model.common;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
 import com.auth0.android.jwt.JWT;
@@ -19,6 +20,7 @@ import java.util.Objects;
  *
  * @author Copyright (c) 2018, NUTES/UEPB
  */
+@Keep
 public class UserAccess implements Parcelable {
     public static final String KEY_SCOPE = "scope";
     public static final String KEY_SCOPES = "scopes";

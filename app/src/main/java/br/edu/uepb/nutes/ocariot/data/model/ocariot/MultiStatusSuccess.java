@@ -1,5 +1,6 @@
 package br.edu.uepb.nutes.ocariot.data.model.ocariot;
 
+import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
@@ -10,6 +11,7 @@ import com.google.gson.annotations.SerializedName;
  *
  * @author Copyright (c) 2018, NUTES/UEPB
  */
+@Keep
 public class MultiStatusSuccess<T> {
     @SerializedName("code")
     private String code;

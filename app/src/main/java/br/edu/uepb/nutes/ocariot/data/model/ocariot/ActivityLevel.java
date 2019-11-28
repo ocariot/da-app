@@ -3,6 +3,7 @@ package br.edu.uepb.nutes.ocariot.data.model.ocariot;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
@@ -12,6 +13,7 @@ import com.google.gson.annotations.SerializedName;
  *
  * @author Copyright (c) 2018, NUTES/UEPB
  */
+@Keep
 public class ActivityLevel implements Parcelable, Comparable<ActivityLevel> {
     public static String SEDENTARY_LEVEL = "sedentary";
     public static String LIGHTLY_LEVEL = "lightly";

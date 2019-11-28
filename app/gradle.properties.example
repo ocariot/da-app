@@ -1,11 +1,11 @@
 # GENERAL SETUP
 PREFERENCES_FILENAME=shared_preferences_ocariot
 
-# OCARIoT DEV SETUP
-OCARIOT_DEV_BASE_URL=https://localhost
+# OCARIoT BRAZILIAN PILOT
+OCARIOT_BR_BASE_URL=https://ocariot.nutes.uepb.edu.br
 
-# OCARIoT PROD SETUP
-OCARIOT_PROD_BASE_URL=https://ocariot.nutes.uepb.edu.br
+# OCARIoT EUROPEAN PILOT
+OCARIOT_EU_BASE_URL=https://api.ocariot.lst.tfo.upm.es
 
 #  FITBIT DEV SETUP
 FITBIT_DEV_BASE_URL=https://localhost:9090
