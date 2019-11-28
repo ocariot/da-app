@@ -52,9 +52,9 @@ public class AppPreferencesHelper implements PreferencesHelper {
     private String getKey() {
         String secretKey;
         KeyStoreKeyGenerator keyGenerator = KeyStoreKeyGenerator.get(OcariotApp.getAppContext(),
-                OcariotApp.getAppContext().getPackageName());
+                BuildConfig.APPLICATION_ID);
         try {
-            secretKey =  keyGenerator.loadOrGenerateKeys();
+            secretKey = keyGenerator.loadOrGenerateKeys();
         } catch (GeneralSecurityException e) {
             Toast.makeText(OcariotApp.getContext(), "can't create key", Toast.LENGTH_SHORT).show();
             throw new RuntimeException("can't create  key");

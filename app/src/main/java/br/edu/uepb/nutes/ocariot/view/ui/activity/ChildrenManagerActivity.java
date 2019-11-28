@@ -2,21 +2,25 @@ package br.edu.uepb.nutes.ocariot.view.ui.activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatButton;
-import android.support.v7.widget.AppCompatImageView;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.ethanhua.skeleton.Skeleton;
 import com.ethanhua.skeleton.SkeletonScreen;
@@ -60,6 +64,7 @@ public class ChildrenManagerActivity extends AppCompatActivity {
     private Menu mMenu;
     private List<Child> children;
     private boolean isFirstOpen;
+    private SearchView searchView;
 
     @BindView(R.id.children_list)
     RecyclerView mRecyclerView;
@@ -123,7 +128,30 @@ public class ChildrenManagerActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_children_manager, menu);
         this.mMenu = menu;
-        return super.onCreateOptionsMenu(menu);
+
+        // Associate searchable configuration with the SearchView
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setMaxWidth(Integer.MAX_VALUE);
+
+        // listening to search query text change
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // filter recycler view when query submitted
+                mAdapter.getFilter().filter(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String query) {
+                // filter recycler view when text is changed
+                mAdapter.getFilter().filter(query);
+                return false;
+            }
+        });
+        return true;
     }
 
     @Override
@@ -242,9 +270,8 @@ public class ChildrenManagerActivity extends AppCompatActivity {
      * @param children {@link List <Child>}
      */
     private void populateViewChildren(List<Child> children) {
-        if (children == null) return;
+        if (children != null) this.children = children;
 
-        this.children = children;
         int sortSelected = appPref.getInt(KEY_SORT_SELECTED);
 
         if (sortSelected == R.id.action_sort_sync) {
@@ -271,6 +298,12 @@ public class ChildrenManagerActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        // close search view on back button pressed
+        if (!searchView.isIconified()) {
+            searchView.setIconified(true);
+            return;
+        }
+
         if (isFirstOpen) {
             Intent intent = new Intent();
             setResult(Activity.RESULT_FIRST_USER, intent);
@@ -283,11 +316,14 @@ public class ChildrenManagerActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_search:
+                return true;
             case android.R.id.home:
                 onBackPressed();
                 return true;
             case R.id.action_sort_username:
             case R.id.action_sort_sync:
+                if (this.children == null || this.children.isEmpty()) return false;
                 clearMenuFilters();
                 appPref.addInt(KEY_SORT_SELECTED, item.getItemId());
                 populateViewChildren(null);
@@ -300,14 +336,14 @@ public class ChildrenManagerActivity extends AppCompatActivity {
     }
 
     private void clearMenuFilters() {
-        Menu submenu = mMenu.getItem(0).getSubMenu();
+        Menu submenu = mMenu.getItem(1).getSubMenu();
         for (int i = 0; i < submenu.size(); i++) {
             submenu.getItem(i).setChecked(false);
         }
     }
 
     private void selectMenuFilters() {
-        Menu submenu = mMenu.getItem(0).getSubMenu();
+        Menu submenu = mMenu.getItem(1).getSubMenu();
         int sortSelected = appPref.getInt(KEY_SORT_SELECTED);
         if (sortSelected != -1) {
             for (int i = 0; i < submenu.size(); i++) {

@@ -1,5 +1,8 @@
 package br.edu.uepb.nutes.ocariot.data.model.ocariot;
 
+import androidx.annotation.NonNull;
+
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 public class FitBitLogsSync {
@@ -70,14 +73,9 @@ public class FitBitLogsSync {
         this.sedentaryMinutes = sedentaryMinutes;
     }
 
+    @NonNull
     @Override
     public String toString() {
-        return "FitBitLogsSync{" +
-                "steps=" + steps +
-                ", calories=" + calories +
-                ", activeMinutes=" + activeMinutes +
-                ", lightlyActiveMinutes=" + lightlyActiveMinutes +
-                ", sedentaryMinutes=" + sedentaryMinutes +
-                '}';
+        return new Gson().toJson(this);
     }
 }

@@ -1,7 +1,8 @@
 package br.edu.uepb.nutes.ocariot.service;
 
 import android.bluetooth.BluetoothDevice;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
 
 public interface HRManagerCallback extends DeviceStatusCallback {
     /**

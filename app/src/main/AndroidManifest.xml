@@ -6,15 +6,12 @@
 
     <application
         android:name=".OcariotApp"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <activity
-            android:name=".view.ui.activity.MainActivity"
-            android:theme="@style/AppTheme" />
 
         <activity
             android:name=".view.ui.activity.LoginActivity"
@@ -27,7 +24,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.ui.activity.ChildrenManagerActivity" />
+        <activity
+            android:name=".view.ui.activity.MainActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".view.ui.activity.ChildrenManagerActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".view.ui.activity.PhysicalActivityDetail"
             android:parentActivityName=".view.ui.activity.MainActivity"
@@ -47,6 +50,7 @@
         <activity
             android:name=".view.ui.preference.SettingsActivity"
             android:label="@string/settings_title"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Preferences" />
         <activity android:name="net.openid.appauth.RedirectUriReceiverActivity">
             <intent-filter>

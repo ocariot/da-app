@@ -2,13 +2,17 @@ package br.edu.uepb.nutes.ocariot.view.adapter;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.support.v4.widget.ImageViewCompat;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.core.widget.ImageViewCompat;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import br.edu.uepb.nutes.ocariot.R;
@@ -23,10 +27,12 @@ import butterknife.ButterKnife;
  *
  * @author Copyright (c) 2018, NUTES/UEPB
  */
-public class ChildListAdapter extends BaseAdapter<Child> {
+public class ChildListAdapter extends BaseAdapter<Child> implements Filterable {
     private final Context mContext;
+    private List<Child> childListFiltered;
 
     public ChildListAdapter(Context context) {
+        this.childListFiltered = super.getItems();
         this.mContext = context;
     }
 
@@ -43,7 +49,7 @@ public class ChildListAdapter extends BaseAdapter<Child> {
     @Override
     public void showData(RecyclerView.ViewHolder holder, int position, List<Child> itemsList) {
         if (holder instanceof ViewHolder) {
-            final Child child = itemsList.get(position);
+            final Child child = childListFiltered.get(position);
             ViewHolder h = (ViewHolder) holder;
 
             h.name.setText(child.getUsername());
@@ -65,9 +71,7 @@ public class ChildListAdapter extends BaseAdapter<Child> {
             // Fitbit status
             ColorStateList colorFitbitStatus = ColorStateList.valueOf(mContext.getResources()
                     .getColor(R.color.colorFitbitInactive));
-            if (child.getFitBitAccess() != null && child.getFitBitAccess().getStatus() != null &&
-                    (child.getFitBitAccess().getStatus().equals("valid_token") ||
-                            child.getFitBitAccess().getStatus().equals("expired_token"))) {
+            if (child.isFitbitAccessValid()) {
                 colorFitbitStatus = ColorStateList.valueOf(mContext.getResources()
                         .getColor(R.color.colorFitbitActive));
             }
@@ -94,6 +98,42 @@ public class ChildListAdapter extends BaseAdapter<Child> {
         // Not implemented!
     }
 
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                String charString = charSequence.toString();
+                if (charString.isEmpty()) {
+                    childListFiltered = ChildListAdapter.super.getItems();
+                } else {
+                    List<Child> filteredList = new ArrayList<>();
+                    for (Child row : ChildListAdapter.super.getItems()) {
+                        if (row.getUsername().toLowerCase().contains(charString.toLowerCase())) {
+                            filteredList.add(row);
+                        }
+                    }
+                    childListFiltered = filteredList;
+                }
+
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = childListFiltered;
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                childListFiltered = (List<Child>) results.values;
+                notifyDataSetChanged();
+            }
+        };
+    }
+
+    @Override
+    public int getItemCount() {
+        return childListFiltered.size();
+    }
+
     class ViewHolder extends RecyclerView.ViewHolder {
         final View mView;
 
@@ -112,7 +152,6 @@ public class ChildListAdapter extends BaseAdapter<Child> {
         ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
-
             mView = view.getRootView();
         }
     }

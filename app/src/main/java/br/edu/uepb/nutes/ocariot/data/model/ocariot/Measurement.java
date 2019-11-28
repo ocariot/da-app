@@ -2,7 +2,8 @@ package br.edu.uepb.nutes.ocariot.data.model.ocariot;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
@@ -108,4 +109,3 @@ public class Measurement implements Parcelable {
         return new Gson().toJson(this);
     }
 }
-

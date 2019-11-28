@@ -1,8 +1,7 @@
 package br.edu.uepb.nutes.ocariot.data.repository;
 
-import android.content.Context;
-
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.LogData;
@@ -10,6 +9,7 @@ import br.edu.uepb.nutes.ocariot.data.model.ocariot.MultiStatusResult;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.PhysicalActivity;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.Sleep;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.Weight;
+import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
 import br.edu.uepb.nutes.ocariot.data.repository.remote.fitbit.FitBitNetRepository;
 import br.edu.uepb.nutes.ocariot.data.repository.remote.ocariot.OcariotNetRepository;
 import br.edu.uepb.nutes.ocariot.utils.DateUtils;
@@ -22,18 +22,20 @@ public class SyncDataRepository {
 
     private FitBitNetRepository fitbitRepo;
     private OcariotNetRepository ocariotRepo;
+    private AppPreferencesHelper appPref;
     private String childId, startDate, endDate;
 
-    private SyncDataRepository(Context context) {
+    private SyncDataRepository() {
         fitbitRepo = FitBitNetRepository.getInstance();
         ocariotRepo = OcariotNetRepository.getInstance();
+        appPref = AppPreferencesHelper.getInstance();
         this.initConfig();
     }
 
-    public static SyncDataRepository getInstance(Context context) {
+    public static SyncDataRepository getInstance() {
         if (mInstance != null) return mInstance;
 
-        mInstance = new SyncDataRepository(context);
+        mInstance = new SyncDataRepository();
         return mInstance;
     }
 
@@ -50,14 +52,29 @@ public class SyncDataRepository {
         this.childId = childId;
 
         List<Single<?>> requests = new ArrayList<>();
-        requests.add(syncSteps());
-        requests.add(syncCalories());
-        requests.add(syncActiveMinutes());
-        requests.add(syncLightlyActiveMinutes());
-        requests.add(syncSedentaryMinutes());
-        requests.add(syncPhysicalActivities());
-        requests.addAll(getListSyncSleep());
-        requests.addAll(getListSyncWeights());
+
+        List<String> scopes = Arrays.asList(appPref.getLastSelectedChild()
+                .getFitBitAccess().getScope().split(" "));
+
+        // Scope reference from fitbit to activity data
+        if (scopes.contains("ract")) {
+            requests.add(syncSteps());
+            requests.add(syncCalories());
+            requests.add(syncActiveMinutes());
+            requests.add(syncLightlyActiveMinutes());
+            requests.add(syncSedentaryMinutes());
+            requests.add(syncPhysicalActivities());
+        }
+
+        // Scope reference from fitbit to sleep data
+        if (scopes.contains("rsle")) {
+            requests.addAll(getListSyncSleep());
+        }
+
+        // Scope reference from fitbit to weight data
+        if (scopes.contains("rwei")) {
+            requests.addAll(getListSyncWeights());
+        }
 
         return Single.zip(requests, objects -> objects);
     }
