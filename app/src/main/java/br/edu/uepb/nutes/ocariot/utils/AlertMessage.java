@@ -2,12 +2,13 @@ package br.edu.uepb.nutes.ocariot.utils;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 
 import com.tapadoo.alerter.Alerter;
 
 import br.edu.uepb.nutes.ocariot.R;
+import br.edu.uepb.nutes.ocariot.exception.ConnectivityException;
 import retrofit2.HttpException;
+import timber.log.Timber;
 
 public class AlertMessage {
     private Context mContext;
@@ -46,6 +47,11 @@ public class AlertMessage {
     }
 
     public void handleError(Throwable error) {
+        if (error instanceof ConnectivityException) {
+            Timber.d(error);
+            showError(R.string.title_connection_error, R.string.error_connection);
+            return;
+        }
         if (error instanceof HttpException) {
             HttpException httpEx = ((HttpException) error);
             switch (httpEx.code()) {
@@ -55,14 +61,12 @@ public class AlertMessage {
                 case 403:
                     showError(R.string.title_error, R.string.error_403);
                     return;
-                case 500:
-                    showError(R.string.title_error, R.string.error_500);
-                    return;
                 default:
-                    return;
+                    break;
             }
         }
-        showError(R.string.title_connection_error, R.string.error_connection);
+        Timber.w(error);
+        showError(R.string.title_error, R.string.error_500);
     }
 
     private void showError(int title, int text) {

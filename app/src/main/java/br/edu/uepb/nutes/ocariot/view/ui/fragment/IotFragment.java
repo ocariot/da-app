@@ -16,7 +16,6 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,6 +60,7 @@ import br.edu.uepb.nutes.simpleblescanner.SimpleScannerCallback;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.disposables.CompositeDisposable;
+import timber.log.Timber;
 
 /**
  * A fragment representing iot devices.
@@ -68,8 +68,6 @@ import io.reactivex.disposables.CompositeDisposable;
  * @author Copyright (c) 2018, NUTES/UEPB
  */
 public class IotFragment extends Fragment implements View.OnClickListener {
-    private final String LOG_TAG = "IotFragment";
-
     private final int REQUEST_ENABLE_BLUETOOTH = 1;
     private final int REQUEST_ENABLE_LOCATION = 2;
 
@@ -261,7 +259,7 @@ public class IotFragment extends Fragment implements View.OnClickListener {
         mDisposable.add(
                 ocariotRepository
                         .listWeights(
-                                appPref.getLastSelectedChild().get_id(),
+                                appPref.getLastSelectedChild().getId(),
                                 "gte:".concat(DateUtils.addMonths(DateUtils.getCurrentDatetimeUTC(), -12)),
                                 "lt:".concat(DateUtils.addDaysToDatetimeString(DateUtils.getCurrentDatetimeUTC(), 1)),
                                 "-timestamp"
@@ -329,7 +327,7 @@ public class IotFragment extends Fragment implements View.OnClickListener {
         @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
         @Override
         public void onScanResult(int callbackType, @NonNull ScanResult result) {
-            Log.w(LOG_TAG, "onScanResult(): " + result.getDevice().getName());
+            Timber.d("onScanResult(): %s", result.getDevice().getName());
             mHRManager.connectDevice(result.getDevice());
             mScanner.stopScan();
         }
@@ -341,12 +339,12 @@ public class IotFragment extends Fragment implements View.OnClickListener {
 
         @Override
         public void onScanFailed(int errorCode) {
-            Log.w(LOG_TAG, "onScanFailed(): " + errorCode);
+            Timber.d("onScanFailed(): %s", errorCode);
         }
 
         @Override
         public void onFinish() {
-            Log.w(LOG_TAG, "onFinish():");
+            Timber.d("onFinish()");
         }
     };
 
@@ -365,12 +363,12 @@ public class IotFragment extends Fragment implements View.OnClickListener {
 
         @Override
         public void onConnected(@NonNull BluetoothDevice device) {
-            Log.w(LOG_TAG, "onConnected(): " + device.getName());
+            Timber.d("onConnected(): %s", device.getName());
         }
 
         @Override
         public void onDisconnected(@NonNull BluetoothDevice device) {
-            Log.w(LOG_TAG, "onDisconnected(): " + device.getName());
+            Timber.d("onDisconnected(): %s", device.getName());
             heartAnimation.pause();
             ImageViewCompat.setImageTintList(mHeartImage, ColorStateList.valueOf(
                     getResources().getColor(R.color.colorLineDivider)));

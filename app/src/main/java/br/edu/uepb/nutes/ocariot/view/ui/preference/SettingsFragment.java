@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.SwitchPreference;
-import android.util.Log;
 
 import com.tapadoo.alerter.Alerter;
 
@@ -36,6 +35,7 @@ import br.edu.uepb.nutes.ocariot.view.ui.activity.LoginActivity;
 import br.edu.uepb.nutes.ocariot.view.ui.activity.MainActivity;
 import io.reactivex.disposables.CompositeDisposable;
 import retrofit2.HttpException;
+import timber.log.Timber;
 
 /**
  * SettingsFragment implementation.
@@ -315,7 +315,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     private void publishFitBitAuth(UserAccess userAccess) {
         mDisposable.add(
                 OcariotNetRepository.getInstance()
-                        .publishFitBitAuth(mChild.get_id(), userAccess)
+                        .publishFitBitAuth(mChild.getId(), userAccess)
                         .doOnSubscribe(disposable -> mDialogSync.show(getFragmentManager()))
                         .subscribe(() -> {
                                     mChild.setFitBitAccess(userAccess);
@@ -347,7 +347,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     private void fitBitInitSync() {
         mDisposable.add(
                 SyncDataRepository.getInstance()
-                        .syncAll(mChild.get_id())
+                        .syncAll(mChild.getId())
                         .doAfterTerminate(() -> mDialogSync.close())
                         .subscribe(
                                 objects -> showAlertResultSync(true),
@@ -380,13 +380,13 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
 
         mDisposable.add(
                 OcariotNetRepository.getInstance()
-                        .fitBitSync(mChild.get_id())
+                        .fitBitSync(mChild.getId())
                         .doOnSubscribe(disposable -> mDialogSync.show(getFragmentManager()))
                         .doAfterTerminate(() -> mDialogSync.close())
                         .subscribe(
                                 fitBitSync -> showAlertResultSync(true),
                                 err -> {
-                                    Log.w(LOG_TAG, "ERROR SYNC: " + err.getMessage());
+                                    Timber.e(err);
                                     showAlertResultSync(false);
                                 }
                         )
@@ -403,7 +403,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         );
         mDisposable.add(
                 OcariotNetRepository.getInstance()
-                        .revokeFitBitAuth(mChild.get_id())
+                        .revokeFitBitAuth(mChild.getId())
                         .doOnSubscribe(disposable -> dialog.show(getFragmentManager()))
                         .doOnTerminate(dialog::close)
                         .subscribe(() -> {

@@ -12,7 +12,7 @@ import com.google.gson.annotations.SerializedName;
 @Keep
 public class Weight implements Parcelable {
     @SerializedName("id")
-    private String _id; // _id in server remote (UUID)
+    private String id; // id in server remote (UUID)
 
     @SerializedName("timestamp")
     private String timestamp;
@@ -40,7 +40,7 @@ public class Weight implements Parcelable {
     }
 
     protected Weight(Parcel in) {
-        _id = in.readString();
+        id = in.readString();
         timestamp = in.readString();
         value = in.readDouble();
         unit = in.readString();
@@ -51,7 +51,7 @@ public class Weight implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(_id);
+        dest.writeString(id);
         dest.writeString(timestamp);
         dest.writeDouble(value);
         dest.writeString(unit);
@@ -76,12 +76,12 @@ public class Weight implements Parcelable {
         }
     };
 
-    public String get_id() {
-        return _id;
+    public String getId() {
+        return id;
     }
 
-    public void set_id(String _id) {
-        this._id = _id;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getTimestamp() {

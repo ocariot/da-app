@@ -31,6 +31,7 @@ public class Child extends User implements Comparable<Child> {
     private String fitbitStatus;
 
     public Child() {
+        super(User.Type.CHILD);
     }
 
     public Child(String username, String password) {
@@ -96,6 +97,6 @@ public class Child extends User implements Comparable<Child> {
 
     @Override
     public int compareTo(Child o) {
-        return this.username.compareToIgnoreCase(o.getUsername());
+        return super.getUsername().compareToIgnoreCase(o.getUsername());
     }
 }

@@ -8,9 +8,9 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
-import br.edu.uepb.nutes.ocariot.BuildConfig;
 import br.edu.uepb.nutes.ocariot.data.model.common.UserAccess;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.Child;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.ChildrenGroup;
@@ -32,7 +32,7 @@ import io.reactivex.schedulers.Schedulers;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
-import okhttp3.logging.HttpLoggingInterceptor;
+import timber.log.Timber;
 
 /**
  * Repository to consume the OCARIoT API.
@@ -47,11 +47,6 @@ public class OcariotNetRepository extends BaseNetRepository {
         super();
         super.addInterceptor(requestInterceptor());
         super.addInterceptor(responseInterceptor());
-        if (BuildConfig.DEBUG) {
-            HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-            logging.level(HttpLoggingInterceptor.Level.BODY);
-            this.addInterceptor(logging);
-        }
 
         appPref = AppPreferencesHelper.getInstance();
         ocariotService = super.provideRetrofit(appPref.getOcariotURL())
@@ -110,6 +105,7 @@ public class OcariotNetRepository extends BaseNetRepository {
                     if (userAccess != null && userAccess.getAccessToken() != null) {
                         JWT jwt = new JWT(userAccess.getAccessToken());
                         userAccess.setSubject(jwt.getSubject());
+                        userAccess.setUserId(jwt.getSubject());
                         userAccess.setExpirationDate(Objects.requireNonNull(jwt.getExpiresAt()).getTime());
                         userAccess.setScope(jwt.getClaim(UserAccess.KEY_SCOPE).asString());
                         userAccess.setSubjectType(jwt.getClaim(UserAccess.KEY_SUB_TYPE).asString());
@@ -155,7 +151,7 @@ public class OcariotNetRepository extends BaseNetRepository {
                 if (!children.contains(child)) children.add(child);
             }
         }
-        Log.w("OCARIOT_REPO", "TOTAL CHILDREN: " + children.size());
+        Timber.d("TOTAL CHILDREN: %d", children.size());
         return children;
     }
 
