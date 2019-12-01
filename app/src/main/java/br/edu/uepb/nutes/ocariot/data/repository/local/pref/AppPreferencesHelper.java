@@ -133,8 +133,7 @@ public class AppPreferencesHelper implements PreferencesHelper {
 
     @Override
     public boolean removeSession() {
-        return mPrefs.edit().remove(PREF_KEY_AUTH_OCARIOT).commit() &&
-                mPrefs.edit().remove(PREF_KEY_LAST_SELECTED_CHILD).commit();
+        return mPrefs.edit().clear().commit();
     }
 
     @Override

@@ -28,7 +28,7 @@ public class SettingsActivity extends BaseSettingsActivity implements
         initToolBar();
 
         if (appPref.getLastSelectedChild() == null) {
-            replaceFragment(SettingsSimpleFragment.newInstance());
+            finish();
             return;
         }
         replaceFragment(SettingsFragment.newInstance());

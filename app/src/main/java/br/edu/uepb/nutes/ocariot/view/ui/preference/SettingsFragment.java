@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.SwitchPreference;
@@ -43,8 +44,6 @@ import timber.log.Timber;
  * @author Copyright (c) 2018, NUTES/UEPB
  */
 public class SettingsFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener {
-    public final String LOG_TAG = "SettingsFragment";
-
     private SwitchPreference switchPrefFitBit;
     private LoginFitBit loginFitBit;
     private OnClickSettingsListener mListener;
@@ -54,6 +53,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     private DialogLoading mDialogSync;
     private AlertMessage mAlertMessage;
     private Child mChild;
+    private UserAccess mUserAccess;
 
     public SettingsFragment() {
         // Empty constructor required!
@@ -77,16 +77,27 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         loginFitBit = new LoginFitBit(mContext);
         mDisposable = new CompositeDisposable();
         mAlertMessage = new AlertMessage(getActivity());
+        mUserAccess = appPref.getUserAccessOcariot();
 
-        if (appPref.getUserAccessOcariot().getSubjectType().equals(User.Type.CHILD)) {
+        if (mUserAccess.getSubjectType().equals(User.Type.CHILD)) {
             addPreferencesFromResource(R.xml.preferences_child);
+        } else if (mUserAccess.getSubjectType().equals(User.Type.FAMILY)) {
+            addPreferencesFromResource(R.xml.preferences_family);
         } else {
             addPreferencesFromResource(R.xml.preferences);
         }
 
+        initEvents();
+        // Initialize configuration for return of Fitbit authentication and authorization.
+        initResultAuthFitBit();
+    }
+
+    private void initEvents() {
         // FitBit
         switchPrefFitBit = (SwitchPreference) findPreference(getString(R.string.key_fitibit));
-        switchPrefFitBit.setOnPreferenceClickListener(this);
+        if (switchPrefFitBit != null) {
+            switchPrefFitBit.setOnPreferenceClickListener(this);
+        }
 
         // Sign Out
         findPreference(getString(R.string.key_signout)).setOnPreferenceClickListener(this);
@@ -95,12 +106,10 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         findPreference(getString(R.string.key_sync_data)).setOnPreferenceClickListener(this);
 
         // List of Children
-        if (!appPref.getUserAccessOcariot().getSubjectType().equalsIgnoreCase(User.Type.CHILD)) {
-            findPreference(getString(R.string.key_children)).setOnPreferenceClickListener(this);
+        Preference listChildrenPrefFitBit = findPreference(getString(R.string.key_children));
+        if (listChildrenPrefFitBit != null) {
+            listChildrenPrefFitBit.setOnPreferenceClickListener(this);
         }
-
-        // Initialize configuration for return of Fitbit authentication and authorization.
-        initResultAuthFitBit();
     }
 
     @Override
@@ -187,16 +196,24 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                 mContext.getResources().getString(R.string.synchronizing),
                 mContext.getResources().getString(R.string.synchronizing_data_fitbit, mChild.getUsername())
         );
+        updateViewLastSync();
         populateSwitchFitbit();
-        Preference prefSync = findPreference(getString(R.string.key_sync_data));
-        prefSync.setSummary(getResources().getString(R.string.synchronization_data)
-                .concat("\n\n")
-                .concat(getResources().getString(R.string.last_sync_date_time,
-                        mChild.getLastSync() != null ? DateUtils.convertDateTimeUTCToLocale(mChild.getLastSync(),
-                                getResources().getString(R.string.date_time_abb5),
-                                null) : "--")
-                )
-        );
+    }
+
+    /**
+     * Updates key preference equal to "key_sync_data" with last sync date.
+     */
+    private void updateViewLastSync() {
+        new Handler().post(() -> {
+            Preference prefSync = findPreference(getString(R.string.key_sync_data));
+            prefSync.setSummary(getResources().getString(R.string.synchronization_data)
+                    .concat("\n\n")
+                    .concat(getResources().getString(R.string.last_sync_date_time, mChild.getLastSync() != null ?
+                            DateUtils.convertDateTimeUTCToLocale(mChild.getLastSync(),
+                                    getResources().getString(R.string.date_time_abb5), null) : "--")
+                    )
+            );
+        });
     }
 
     private boolean fitbitValidConfigs() {
@@ -242,6 +259,11 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
      * and marks the Switch, otherwise uncheck.
      */
     private void populateSwitchFitbit() {
+        if (mUserAccess.getSubjectType().equals(User.Type.CHILD) ||
+                mUserAccess.getSubjectType().equals(User.Type.FAMILY)) {
+            return;
+        }
+
         if (mChild.isFitbitAccessValid()) {
             switchPrefFitBit.setChecked(true);
         } else {
@@ -372,6 +394,10 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
 
                         @Override
                         public void onClickListener() {
+                            if (mUserAccess.getSubjectType().equals(User.Type.CHILD) ||
+                                    mUserAccess.getSubjectType().equals(User.Type.FAMILY)) {
+                                return;
+                            }
                             openFitbitAuth();
                         }
                     });
@@ -384,7 +410,12 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                         .doOnSubscribe(disposable -> mDialogSync.show(getFragmentManager()))
                         .doAfterTerminate(() -> mDialogSync.close())
                         .subscribe(
-                                fitBitSync -> showAlertResultSync(true),
+                                fitBitSync -> {
+                                    mChild.setLastSync(DateUtils.getCurrentDatetimeUTC());
+                                    appPref.addLastSelectedChild(mChild);
+                                    updateViewLastSync();
+                                    showAlertResultSync(true);
+                                },
                                 err -> {
                                     Timber.e(err);
                                     showAlertResultSync(false);
@@ -426,7 +457,6 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
      * @param isSuccess boolean
      */
     private void showAlertResultSync(boolean isSuccess) {
-
         Alerter alerter = Alerter.create(getActivity())
                 .setDuration(30000)
                 .enableSwipeToDismiss()
