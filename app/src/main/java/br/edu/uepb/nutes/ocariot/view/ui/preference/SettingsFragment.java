@@ -24,12 +24,12 @@ import br.edu.uepb.nutes.ocariot.R;
 import br.edu.uepb.nutes.ocariot.data.model.common.UserAccess;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.Child;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.User;
-import br.edu.uepb.nutes.ocariot.data.repository.SyncDataRepository;
 import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
 import br.edu.uepb.nutes.ocariot.data.repository.remote.ocariot.OcariotNetRepository;
 import br.edu.uepb.nutes.ocariot.utils.AlertMessage;
 import br.edu.uepb.nutes.ocariot.utils.DateUtils;
 import br.edu.uepb.nutes.ocariot.utils.DialogLoading;
+import br.edu.uepb.nutes.ocariot.utils.FirebaseLogEvent;
 import br.edu.uepb.nutes.ocariot.utils.MessageEvent;
 import br.edu.uepb.nutes.ocariot.view.ui.activity.ChildrenManagerActivity;
 import br.edu.uepb.nutes.ocariot.view.ui.activity.LoginActivity;
@@ -90,6 +90,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         initEvents();
         // Initialize configuration for return of Fitbit authentication and authorization.
         initResultAuthFitBit();
+        Alerter.hide();
     }
 
     private void initEvents() {
@@ -154,6 +155,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         super.onDetach();
         mDisposable.dispose();
         Alerter.hide();
+        Timber.d("OPSSSSSSSS >>>>>");
     }
 
     @Override
@@ -180,7 +182,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         }
 
         if (preference.getKey().equals(getString(R.string.key_sync_data))) {
-            fitBitSyncForced();
+            fitBitSync();
             return true;
         }
 
@@ -320,6 +322,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                             switchPrefFitBit.setChecked(true);
                             publishFitBitAuth(userAccess);
                         }, err -> {
+                            Timber.e(err);
                             switchPrefFitBit.setChecked(false);
                             mAlertMessage.show(
                                     R.string.title_error,
@@ -337,12 +340,13 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     private void publishFitBitAuth(UserAccess userAccess) {
         mDisposable.add(
                 OcariotNetRepository.getInstance()
-                        .publishFitBitAuth(mChild.getId(), userAccess)
+                        .publishFitBitAuth(mChild.getId(), userAccess, null)
                         .doOnSubscribe(disposable -> mDialogSync.show(getFragmentManager()))
                         .subscribe(() -> {
                                     mChild.setFitBitAccess(userAccess);
                                     appPref.addLastSelectedChild(mChild);
-                                    fitBitInitSync();
+                                    fitBitSync();
+                                    FirebaseLogEvent.fitbitAuthGranted(mChild.getId());
                                 },
                                 err -> {
                                     mDialogSync.close();
@@ -351,7 +355,8 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                                         HttpException httpEx = ((HttpException) err);
                                         if (httpEx.code() == 400) {
                                             mAlertMessage.show(R.string.title_error,
-                                                    R.string.error_400_1, R.color.colorDanger,
+                                                    R.string.error_400_1,
+                                                    R.color.colorDanger,
                                                     R.drawable.ic_sad_dark);
                                             return;
                                         }
@@ -363,25 +368,9 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     }
 
     /**
-     * Fitbit Initial Sync.
-     * Must be called after access token is saved to server.
-     */
-    private void fitBitInitSync() {
-        mDisposable.add(
-                SyncDataRepository.getInstance()
-                        .syncAll(mChild.getId())
-                        .doAfterTerminate(() -> mDialogSync.close())
-                        .subscribe(
-                                objects -> showAlertResultSync(true),
-                                err -> showAlertResultSync(false)
-                        )
-        );
-    }
-
-    /**
      * Force a new Fitbit sync.
      */
-    private void fitBitSyncForced() {
+    private void fitBitSync() {
         if (!mChild.isFitbitAccessValid()) {
             mAlertMessage.show(mContext.getResources().getString(R.string.alert_title_no_token_fitbit),
                     mContext.getResources().getString(R.string.alert_no_token_fitbit, mChild.getUsername()),
@@ -407,7 +396,9 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         mDisposable.add(
                 OcariotNetRepository.getInstance()
                         .fitBitSync(mChild.getId())
-                        .doOnSubscribe(disposable -> mDialogSync.show(getFragmentManager()))
+                        .doOnSubscribe(disposable -> {
+                            if (!mDialogSync.isVisible()) mDialogSync.show(getFragmentManager());
+                        })
                         .doAfterTerminate(() -> mDialogSync.close())
                         .subscribe(
                                 fitBitSync -> {
@@ -415,6 +406,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                                     appPref.addLastSelectedChild(mChild);
                                     updateViewLastSync();
                                     showAlertResultSync(true);
+                                    FirebaseLogEvent.fitbitSync(mChild.getId());
                                 },
                                 err -> {
                                     Timber.e(err);
@@ -437,18 +429,30 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                         .revokeFitBitAuth(mChild.getId())
                         .doOnSubscribe(disposable -> dialog.show(getFragmentManager()))
                         .doOnTerminate(dialog::close)
-                        .subscribe(() -> {
-                            switchPrefFitBit.setChecked(false);
-                            mChild.setFitBitAccess(null);
-                            appPref.addLastSelectedChild(mChild);
-
-                            mAlertMessage.show(
-                                    R.string.title_success,
-                                    R.string.alert_revoke_fitbit_success,
-                                    R.color.colorAccent,
-                                    R.drawable.ic_action_check_dark);
-                        }, err -> mAlertMessage.handleError(err))
+                        .subscribe(this::revokeSuccess, err -> {
+                            if (err instanceof HttpException) {
+                                HttpException httpEx = ((HttpException) err);
+                                if (httpEx.code() == 400) {
+                                    revokeSuccess();
+                                    return;
+                                }
+                            }
+                            mAlertMessage.handleError(err);
+                        })
         );
+    }
+
+    private void revokeSuccess() {
+        FirebaseLogEvent.fitbitAuthRevoke(mChild.getId());
+        switchPrefFitBit.setChecked(false);
+        mChild.setFitBitAccess(null);
+        appPref.addLastSelectedChild(mChild);
+
+        mAlertMessage.show(
+                R.string.title_success,
+                R.string.alert_revoke_fitbit_success,
+                R.color.colorAccent,
+                R.drawable.ic_action_check_dark);
     }
 
     /**

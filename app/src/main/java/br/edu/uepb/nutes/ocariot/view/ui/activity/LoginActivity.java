@@ -20,13 +20,11 @@ import androidx.appcompat.widget.AppCompatEditText;
 
 import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.flaviofaria.kenburnsview.RandomTransitionGenerator;
-import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.Objects;
 
 import br.com.simplepass.loadingbutton.customViews.CircularProgressButton;
 import br.edu.uepb.nutes.ocariot.BuildConfig;
-import br.edu.uepb.nutes.ocariot.OcariotApp;
 import br.edu.uepb.nutes.ocariot.R;
 import br.edu.uepb.nutes.ocariot.data.model.common.UserAccess;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.Child;
@@ -35,6 +33,7 @@ import br.edu.uepb.nutes.ocariot.data.model.ocariot.User;
 import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
 import br.edu.uepb.nutes.ocariot.data.repository.remote.ocariot.OcariotNetRepository;
 import br.edu.uepb.nutes.ocariot.utils.AlertMessage;
+import br.edu.uepb.nutes.ocariot.utils.FirebaseLogEvent;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Single;
@@ -205,7 +204,7 @@ public class LoginActivity extends AppCompatActivity {
                     }
                     appPref.addUserAccessOcariot(userAccess); // save user logged
                     getResources(userAccess);
-                    sendFirebaseEventLogin(userAccess.getUserId(), userAccess.getSubjectType());
+                    FirebaseLogEvent.login(userAccess.getUserId(), userAccess.getSubjectType());
                 }, error -> {
                     if (error instanceof HttpException) {
                         HttpException httpEx = ((HttpException) error);
@@ -333,13 +332,6 @@ public class LoginActivity extends AppCompatActivity {
     private void showProgress(final boolean show) {
         if (show) mSignInButton.startAnimation();
         else mSignInButton.revertAnimation();
-    }
-
-    public static void sendFirebaseEventLogin(String userId, String userType) {
-        Bundle bundle = new Bundle();
-        bundle.putString("user_id", userId);
-        bundle.putString("user_type", userType);
-        OcariotApp.getFirebaseAnalytics().logEvent(FirebaseAnalytics.Event.LOGIN, bundle);
     }
 
     private class ResponseData {
