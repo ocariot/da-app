@@ -32,6 +32,10 @@ public abstract class BaseNetRepository {
     private OkHttpClient.Builder mClient;
 
     public BaseNetRepository() {
+        if(!BuildConfig.UNSAFE_CONNECTION) mClient = new OkHttpClient().newBuilder();
+        else mClient = getUnsafeOkHttpClient();
+
+        mClient.followRedirects(false).cache(provideHttpCache());
         if (BuildConfig.DEBUG) {
             HttpLoggingInterceptor logging = new HttpLoggingInterceptor(s -> Timber.tag("OkHttp").d(s));
             logging.level(HttpLoggingInterceptor.Level.BODY);
@@ -50,14 +54,12 @@ public abstract class BaseNetRepository {
         gsonBuilder.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES);
         return gsonBuilder.create();
     }
-
-    private OkHttpClient provideOkHttpClient() {
-        if (mClient == null) mClient = new OkHttpClient().newBuilder();
-        mClient.followRedirects(false)
-                .cache(provideHttpCache());
-
-        return mClient.build();
-    }
+//
+//    private OkHttpClient provideOkHttpClient() {
+//        if (mClient == null) mClient = new OkHttpClient().newBuilder();
+//        mClient.followRedirects(false).cache(provideHttpCache());
+//        return mClient.build();
+//    }
 
     protected void addInterceptor(Interceptor interceptor) {
         if (interceptor == null) return;
@@ -71,11 +73,12 @@ public abstract class BaseNetRepository {
                 .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create(provideGson()))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .client(provideOkHttpClient())
+                .client(mClient.build())
                 .build();
     }
 
     private OkHttpClient.Builder getUnsafeOkHttpClient() {
+        Timber.d("Unsafe OkHttpClient initialized!");
         try {
             // Create a trust manager that does not validate certificate chains
             final TrustManager[] trustAllCerts = new TrustManager[]{

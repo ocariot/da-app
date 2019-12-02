@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import br.edu.uepb.nutes.ocariot.BuildConfig;
 import br.edu.uepb.nutes.ocariot.data.model.common.UserAccess;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.Child;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.ChildrenGroup;
@@ -34,6 +35,8 @@ import timber.log.Timber;
  * @author Copyright (c) 2018, NUTES/UEPB
  */
 public class OcariotNetRepository extends BaseNetRepository {
+    private static OcariotNetRepository mInstance;
+
     private OcariotService ocariotService;
     private AppPreferencesHelper appPref;
 
@@ -43,12 +46,16 @@ public class OcariotNetRepository extends BaseNetRepository {
         super.addInterceptor(responseInterceptor());
 
         appPref = AppPreferencesHelper.getInstance();
-        ocariotService = super.provideRetrofit(appPref.getOcariotURL())
+        ocariotService = super.provideRetrofit(AppPreferencesHelper.getInstance().getOcariotURL())
                 .create(OcariotService.class);
     }
 
     public static synchronized OcariotNetRepository getInstance() {
-        return new OcariotNetRepository();
+        if (mInstance == null || AppPreferencesHelper.getInstance().changedOcariotUrl()) {
+            mInstance = new OcariotNetRepository();
+            AppPreferencesHelper.getInstance().changedOcariotUrl(false);
+        }
+        return mInstance;
     }
 
     /**

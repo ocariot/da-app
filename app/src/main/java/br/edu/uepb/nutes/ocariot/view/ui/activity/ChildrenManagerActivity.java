@@ -109,12 +109,12 @@ public class ChildrenManagerActivity extends AppCompatActivity {
         mLogoutButton.setOnClickListener(v -> this.openDialogSignOut());
 
         initComponents();
-        disableBack();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        disableBack();
         EventBus.getDefault().register(this);
     }
 
@@ -245,23 +245,27 @@ public class ChildrenManagerActivity extends AppCompatActivity {
                             .doAfterTerminate(() -> loading(false))
                             .subscribe(this::populateViewChildren, err -> mAlertMessage.handleError(err))
             );
-        } else if (userAccess.getSubjectType().equalsIgnoreCase(User.Type.EDUCATOR)) {
+            return;
+        }
+        if (userAccess.getSubjectType().equalsIgnoreCase(User.Type.EDUCATOR)) {
             mDisposable.add(ocariotRepository
                     .getChildrenOfEducator(userAccess.getSubject())
                     .doOnSubscribe(disposable -> loading(true))
                     .doAfterTerminate(() -> loading(false))
                     .subscribe(this::populateViewChildren, err -> mAlertMessage.handleError(err))
             );
-        } else if (userAccess.getSubjectType().equalsIgnoreCase(User.Type.HEALTH_PROFESSIONAL)) {
+            return;
+        }
+        if (userAccess.getSubjectType().equalsIgnoreCase(User.Type.HEALTH_PROFESSIONAL)) {
             mDisposable.add(ocariotRepository
                     .getChildrenOfHealthProfessional(userAccess.getSubject())
                     .doOnSubscribe(disposable -> loading(true))
                     .doAfterTerminate(() -> loading(false))
                     .subscribe(this::populateViewChildren, err -> mAlertMessage.handleError(err))
             );
-        } else {
-            populateViewChildren(new ArrayList<>());
+            return;
         }
+        populateViewChildren(new ArrayList<>());
     }
 
     /**

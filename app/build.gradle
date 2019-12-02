@@ -22,9 +22,9 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField "String", "PREFERENCES_FILENAME", "\"$PREFERENCES_FILENAME\""
+            buildConfigField "boolean", "UNSAFE_CONNECTION", "$UNSAFE_CONNECTION"
             buildConfigField "String", "OCARIOT_BR_BASE_URL", "\"$OCARIOT_BR_BASE_URL\""
             buildConfigField "String", "OCARIOT_EU_BASE_URL", "\"$OCARIOT_EU_BASE_URL\""
-            buildConfigField "String", "FITBIT_BASE_URL", "\"$FITBIT_DEV_BASE_URL\""
             buildConfigField "String", "FITBIT_AUTH_URL", "\"$FITBIT_DEV_AUTH_URL\""
             buildConfigField "String", "FITBIT_TOKEN_URL", "\"$FITBIT_DEV_TOKEN_URL\""
         }
@@ -33,9 +33,9 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField "String", "PREFERENCES_FILENAME", "\"$PREFERENCES_FILENAME\""
+            buildConfigField "boolean", "UNSAFE_CONNECTION", "false"
             buildConfigField "String", "OCARIOT_BR_BASE_URL", "\"$OCARIOT_BR_BASE_URL\""
             buildConfigField "String", "OCARIOT_EU_BASE_URL", "\"$OCARIOT_EU_BASE_URL\""
-            buildConfigField "String", "FITBIT_BASE_URL", "\"$FITBIT_PROD_BASE_URL\""
             buildConfigField "String", "FITBIT_AUTH_URL", "\"$FITBIT_PROD_AUTH_URL\""
             buildConfigField "String", "FITBIT_TOKEN_URL", "\"$FITBIT_PROD_TOKEN_URL\""
         }
@@ -68,7 +68,7 @@ dependencies {
 
     //  Encode/Decode
     implementation 'com.auth0.android:jwtdecode:1.2.0'
-    implementation 'in.co.ophio:secure-preferences:0.1.3'
+    implementation 'com.scottyab:secure-preferences-lib:0.1.7'
 
     // OAuth2 Client
     implementation 'net.openid:appauth:0.7.1'

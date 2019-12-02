@@ -41,6 +41,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.HttpException;
+import timber.log.Timber;
 
 import static android.view.inputmethod.InputMethodManager.HIDE_NOT_ALWAYS;
 
@@ -118,6 +119,8 @@ public class LoginActivity extends AppCompatActivity {
 
         regionRadioGroup.setOnCheckedChangeListener((group, checkedId) -> {
             slideUp(localeText);
+            Timber.d("URL CHANGED!!!");
+            appPref.changedOcariotUrl(true);
             if (checkedId == R.id.brazil_radioButton) {
                 localeText.setText(R.string.brazilian_pilot);
                 europeRadioButton.setScaleX(0.85f);

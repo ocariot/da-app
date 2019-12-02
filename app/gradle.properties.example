@@ -1,5 +1,6 @@
 # GENERAL SETUP
-PREFERENCES_FILENAME=shared_preferences_ocariot
+PREFERENCES_FILENAME=br.edu.uepb.nutes.ocariot.prefs
+UNSAFE_CONNECTION=true
 
 # OCARIoT BRAZILIAN PILOT
 OCARIOT_BR_BASE_URL=https://ocariot.nutes.uepb.edu.br
@@ -8,7 +9,6 @@ OCARIOT_BR_BASE_URL=https://ocariot.nutes.uepb.edu.br
 OCARIOT_EU_BASE_URL=https://api.ocariot.lst.tfo.upm.es
 
 #  FITBIT DEV SETUP
-FITBIT_DEV_BASE_URL=https://localhost:9090
 FITBIT_DEV_AUTH_URL=https://localhost/oauth2/authorize
 FITBIT_DEV_TOKEN_URL=https://localhost/oauth2/token
 
