@@ -73,6 +73,7 @@ public class DialogLoading extends DialogFragment {
     public void show(FragmentManager fragmentManager) {
         this.fragmentManager = fragmentManager;
         Fragment dialogFragment = fragmentManager.findFragmentByTag(DIALOG_TAG);
+
         if (dialogFragment == null) {
             this.show(fragmentManager, DIALOG_TAG);
         }

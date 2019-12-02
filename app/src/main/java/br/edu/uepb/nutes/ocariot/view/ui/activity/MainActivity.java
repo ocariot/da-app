@@ -24,6 +24,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.Objects;
 
 import br.edu.uepb.nutes.ocariot.R;
+import br.edu.uepb.nutes.ocariot.data.model.common.UserAccess;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.PhysicalActivity;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.Sleep;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.User;
@@ -52,13 +53,6 @@ public class MainActivity extends AppCompatActivity implements
     public final int FIRST_OPEN_CHILDREN_MANAGER = 1;
     public static final String KEY_DO_NOT_LOGIN_FITBIT = "key_do_not_login_fitbit";
 
-    private AppPreferencesHelper appPref;
-    private PhysicalActivityListFragment physicalActivityListFragment;
-    private SleepListFragment sleepListFragment;
-    private IotFragment iotFragment;
-    private int lastViewIndex;
-    private AlertMessage mAlertMessage;
-
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
 
@@ -70,6 +64,14 @@ public class MainActivity extends AppCompatActivity implements
 
     @BindView(R.id.child_username_bar)
     TextView mChildUsernameBar;
+
+    private AppPreferencesHelper appPref;
+    private PhysicalActivityListFragment physicalActivityListFragment;
+    private SleepListFragment sleepListFragment;
+    private IotFragment iotFragment;
+    private int lastViewIndex;
+    private AlertMessage mAlertMessage;
+    private UserAccess mUserAccess;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements
         sleepListFragment = SleepListFragment.newInstance();
         iotFragment = IotFragment.newInstance();
         mAlertMessage = new AlertMessage(this);
+        mUserAccess = appPref.getUserAccessOcariot();
 
         mBottomNavigationView.setOnNavigationItemSelectedListener(this);
     }
@@ -99,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        if (!appPref.getUserAccessOcariot().getSubjectType().equalsIgnoreCase(User.Type.CHILD)) {
+        if (!mUserAccess.getSubjectType().equalsIgnoreCase(User.Type.CHILD)) {
             if (appPref.getLastSelectedChild() == null) {
                 openChildrenManagerActivity(true);
                 return;
@@ -108,8 +111,11 @@ public class MainActivity extends AppCompatActivity implements
                     .setSubtitle(appPref.getLastSelectedChild().getUsername());
         }
 
-        if (!appPref.getLastSelectedChild().isFitbitAccessValid() &&
-                !appPref.getBoolean(KEY_DO_NOT_LOGIN_FITBIT)) {
+        if ((!mUserAccess.getSubjectType().equals(User.Type.CHILD) &&
+                !mUserAccess.getSubjectType().equals(User.Type.FAMILY)) &&
+                (!appPref.getLastSelectedChild().isFitbitAccessValid() &&
+                        !appPref.getBoolean(KEY_DO_NOT_LOGIN_FITBIT))
+        ) {
             replaceFragment(WelcomeFragment.newInstance());
             mBottomNavigationView.setVisibility(View.GONE);
         } else {

@@ -4,7 +4,6 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattService;
 import android.content.Context;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -12,10 +11,9 @@ import java.util.UUID;
 
 import br.edu.uepb.nutes.ocariot.utils.DateUtils;
 import no.nordicsemi.android.ble.data.Data;
+import timber.log.Timber;
 
 public class HRManager extends BluetoothManager {
-    private final String LOG_TAG = "HRManager";
-
     public static final UUID HR_SERVICE_UUID = UUID.fromString("0000180D-0000-1000-8000-00805f9b34fb");
 
     private final UUID BODY_SENSOR_LOCATION_CHARACTERISTIC_UUID = UUID.fromString("00002A38-0000-1000-8000-00805f9b34fb");
@@ -76,23 +74,23 @@ public class HRManager extends BluetoothManager {
 
         @Override
         public void onDeviceConnecting(@NonNull BluetoothDevice device) {
-            Log.w(LOG_TAG, "Connecting to " + device.getName());
+            Timber.d("onDeviceConnecting() - %s", device.getName());
         }
 
         @Override
         public void onDeviceConnected(@NonNull BluetoothDevice device) {
-            Log.w(LOG_TAG, "Connected to " + device.getName());
+            Timber.d("onDeviceConnected() - %s", device.getName());
             mHeartRateCallback.onConnected(device);
         }
 
         @Override
         public void onDeviceDisconnecting(@NonNull BluetoothDevice device) {
-            Log.w(LOG_TAG, "Disconnecting from " + device.getName());
+            Timber.d("onDeviceDisconnecting() - %s", device.getName());
         }
 
         @Override
         public void onDeviceDisconnected(@NonNull BluetoothDevice device) {
-            Log.w(LOG_TAG, "Disconnected from " + device.getName());
+            Timber.d("onDeviceDisconnected() - %s", device.getName());
             mHeartRateCallback.onDisconnected(device);
         }
 
@@ -103,7 +101,7 @@ public class HRManager extends BluetoothManager {
 
         @Override
         public void onServicesDiscovered(@NonNull BluetoothDevice device, boolean optionalServicesFound) {
-            Log.w(LOG_TAG, "Services Discovered from " + device.getName());
+            Timber.d("Services Discovered from %s", device.getName());
         }
 
         @Override
@@ -113,22 +111,22 @@ public class HRManager extends BluetoothManager {
 
         @Override
         public void onBondingRequired(@NonNull BluetoothDevice device) {
-            Log.w(LOG_TAG, "onBondingRequired > " + device.getName());
+            Timber.d("onBondingRequired() - %s", device.getName());
         }
 
         @Override
         public void onBonded(@NonNull BluetoothDevice device) {
-            Log.w(LOG_TAG, "onBonded" + device.getName());
+            Timber.d("onBonded() - %s", device.getName());
         }
 
         @Override
         public void onBondingFailed(@NonNull BluetoothDevice device) {
-            Log.w(LOG_TAG, "onBondingFailed" + device.getName());
+            Timber.d("onBondingFailed() - %s", device.getName());
         }
 
         @Override
         public void onError(@NonNull BluetoothDevice device, @NonNull String message, int errorCode) {
-            Log.w(LOG_TAG, "Error from " + device.getName() + " - " + message);
+            Timber.d("Error from %s - %s", device.getName(), message);
         }
 
         @Override

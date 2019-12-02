@@ -19,7 +19,7 @@ import java.util.Objects;
 @Keep
 public class Institution implements Parcelable {
     @SerializedName("id")
-    private String _id; // _id in server remote (UUID)
+    private String id; // id in server remote (UUID)
 
     @SerializedName("type")
     private String type;
@@ -45,7 +45,7 @@ public class Institution implements Parcelable {
     }
 
     protected Institution(Parcel in) {
-        _id = in.readString();
+        id = in.readString();
         name = in.readString();
         type = in.readString();
         address = in.readString();
@@ -55,7 +55,7 @@ public class Institution implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(_id);
+        dest.writeString(id);
         dest.writeString(name);
         dest.writeString(type);
         dest.writeString(address);
@@ -80,12 +80,12 @@ public class Institution implements Parcelable {
         }
     };
 
-    public String get_id() {
-        return _id;
+    public String getId() {
+        return id;
     }
 
-    public void set_id(String _id) {
-        this._id = _id;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -130,7 +130,7 @@ public class Institution implements Parcelable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(_id, name, type, address, latitude, longitude);
+        return Objects.hash(id, name, type, address, latitude, longitude);
     }
 
     @Override

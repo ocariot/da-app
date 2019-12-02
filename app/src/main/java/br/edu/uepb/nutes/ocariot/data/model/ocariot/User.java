@@ -5,28 +5,33 @@ import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
-import com.google.gson.reflect.TypeToken;
 
 import java.util.Objects;
 
 @Keep
 public class User {
     @SerializedName("id")
-    protected String _id; // _id in server remote (UUID)
+    private String id;
 
     @SerializedName("username")
-    protected String username;
+    private String username;
 
     @SerializedName("password")
-    protected String password;
+    private String password;
 
     @SerializedName("institution_id")
-    protected String institutionId;
+    private String institutionId;
 
     @SerializedName("last_login")
-    protected String lastLogin;
+    private String lastLogin;
+
+    private transient String type;
 
     public User() {
+    }
+
+    public User(String type) {
+        this.type = type;
     }
 
     public User(String username, String password) {
@@ -34,12 +39,12 @@ public class User {
         this.password = password;
     }
 
-    public String get_id() {
-        return _id;
+    public String getId() {
+        return id;
     }
 
-    public void set_id(String _id) {
-        this._id = _id;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getUsername() {
@@ -74,17 +79,16 @@ public class User {
         this.lastLogin = lastLogin;
     }
 
-    public static class Type {
-        public static String ADMIN = "admin";
-        public static String CHILD = "child";
-        public static String EDUCATOR = "educator";
-        public static String HEALTH_PROFESSIONAL = "healthprofessional";
-        public static String FAMILY = "family";
-        public static String APPLICATION = "application"; // Must not login to APP!!!
+    public boolean isEmpty() {
+        return this.id == null || this.username == null;
     }
 
-    public boolean isEmpty() {
-        return this._id == null || this.username == null;
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     @Override
@@ -108,21 +112,18 @@ public class User {
         return new Gson().toJson(this);
     }
 
-    /**
-     * Convert json to Object.
-     *
-     * @param json String
-     * @return User
-     */
-    public static User jsonDeserialize(String json) {
-        java.lang.reflect.Type typeUser = new TypeToken<User>() {
-        }.getType();
-        return new Gson().fromJson(json, typeUser);
-    }
-
     @NonNull
     @Override
     public String toString() {
         return new Gson().toJson(this);
+    }
+
+    public static class Type {
+        public static String ADMIN = "admin";
+        public static String CHILD = "child";
+        public static String EDUCATOR = "educator";
+        public static String HEALTH_PROFESSIONAL = "healthprofessional";
+        public static String FAMILY = "family";
+        public static String APPLICATION = "application"; // Must not login to APP!!!
     }
 }

@@ -12,13 +12,16 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import br.edu.uepb.nutes.ocariot.BuildConfig;
 import br.edu.uepb.nutes.ocariot.OcariotApp;
 import okhttp3.Cache;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+import timber.log.Timber;
 
 /**
  * Base class to be inherited for repository implementation.
@@ -29,6 +32,12 @@ public abstract class BaseNetRepository {
     private OkHttpClient.Builder mClient;
 
     public BaseNetRepository() {
+        if (BuildConfig.DEBUG) {
+            HttpLoggingInterceptor logging = new HttpLoggingInterceptor(s -> Timber.tag("OkHttp").d(s));
+            logging.level(HttpLoggingInterceptor.Level.BODY);
+            this.addInterceptor(logging);
+            this.addInterceptor(new NetworkConnectionInterceptor());
+        }
     }
 
     private Cache provideHttpCache() {

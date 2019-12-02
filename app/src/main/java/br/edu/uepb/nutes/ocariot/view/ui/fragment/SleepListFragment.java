@@ -197,7 +197,7 @@ public class SleepListFragment extends Fragment {
 
         mDisposable.add(
                 ocariotRepository
-                        .listSleep(appPref.getLastSelectedChild().get_id(), "-start_time", 1, 100)
+                        .listSleep(appPref.getLastSelectedChild().getId(), "-start_time", 1, 100)
                         .doOnSubscribe(disposable -> loading(true))
                         .doAfterTerminate(() -> loading(false))
                         .subscribe(this::populateViewSleep, error -> mAlertMessage.handleError(error))

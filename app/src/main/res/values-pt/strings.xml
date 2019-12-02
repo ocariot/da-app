@@ -93,7 +93,7 @@
     <string name="dialog_revoke_fitbit_processing">Processando pedido de revogação de acesso ao Fitbit&#8230;</string>
 
     <!-- ERROR MESSAGES -->
-    <string name="error_connection">Não foi possível estabelecer uma comunicação. Verifique se você possui conexão à Internet e tente novamente&#8230;</string>
+    <string name="error_connection">Não foi possível estabelecer uma comunicação. Verifique se você possui conexão à internet e tente novamente&#8230;</string>
     <string name="error_oauth_fitbit">Ocorreu um erro interno no servidor OAuth do Fitbit.</string>
     <string name="error_configs_fitbit">Não foi possível recuperar as informações do Fitbit necessárias para executar a operação.\nPor favor, entre em contato com o administrador!</string>
     <string name="error_login_invalid">Nome de usuário ou senha inválidos&#8230;</string>
