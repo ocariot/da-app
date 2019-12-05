@@ -20,7 +20,7 @@ import java.util.Objects;
 @Keep
 public class Environment implements Parcelable {
     @SerializedName("id")
-    private String _id; // _id in server remote (UUID)
+    private String id; // id in server remote (UUID)
 
     @SerializedName("institution_id")
     private String institutionId;
@@ -40,16 +40,16 @@ public class Environment implements Parcelable {
     public Environment() {
     }
 
-    public Environment(String institution_id, Location location,
+    public Environment(String institutionId, Location location,
                        List<Measurement> measurements, String timestamp) {
-        this.institutionId = institution_id;
+        this.institutionId = institutionId;
         this.location = location;
         this.measurements = measurements;
         this.timestamp = timestamp;
     }
 
     protected Environment(Parcel in) {
-        _id = in.readString();
+        id = in.readString();
         institutionId = in.readString();
         location = in.readParcelable(Location.class.getClassLoader());
         measurements = in.createTypedArrayList(Measurement.CREATOR);
@@ -59,7 +59,7 @@ public class Environment implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(_id);
+        dest.writeString(id);
         dest.writeString(institutionId);
         dest.writeParcelable(location, flags);
         dest.writeTypedList(measurements);
@@ -84,12 +84,12 @@ public class Environment implements Parcelable {
         }
     };
 
-    public String get_id() {
-        return _id;
+    public String getId() {
+        return id;
     }
 
-    public void set_id(String _id) {
-        this._id = _id;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getInstitutionId() {
@@ -134,7 +134,7 @@ public class Environment implements Parcelable {
 
     public double getTemperature() {
         for (Measurement m : getMeasurements()) {
-            if (m.getType().equalsIgnoreCase(MeasurementType.TEMPERATURE))
+            if (m.getType().equalsIgnoreCase(Measurement.Type.TEMPERATURE))
                 return m.getValue();
         }
         return 0;
@@ -142,7 +142,7 @@ public class Environment implements Parcelable {
 
     public double getHumidity() {
         for (Measurement m : getMeasurements()) {
-            if (m.getType().equalsIgnoreCase(MeasurementType.HUMIDITY))
+            if (m.getType().equalsIgnoreCase(Measurement.Type.HUMIDITY))
                 return m.getValue();
         }
         return 0;
@@ -154,7 +154,7 @@ public class Environment implements Parcelable {
 
         Environment that = (Environment) o;
         return climatized == that.climatized &&
-                Objects.equals(_id, that._id) &&
+                Objects.equals(id, that.id) &&
                 Objects.equals(institutionId, that.institutionId) &&
                 Objects.equals(location, that.location) &&
                 Objects.equals(measurements, that.measurements) &&
@@ -163,7 +163,7 @@ public class Environment implements Parcelable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(_id, institutionId, location, measurements, timestamp, climatized);
+        return Objects.hash(id, institutionId, location, measurements, timestamp, climatized);
     }
 
     @NonNull

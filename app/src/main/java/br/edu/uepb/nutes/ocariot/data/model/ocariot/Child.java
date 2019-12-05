@@ -6,6 +6,8 @@ import androidx.annotation.NonNull;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Objects;
+
 import br.edu.uepb.nutes.ocariot.data.model.common.UserAccess;
 
 /**
@@ -31,6 +33,7 @@ public class Child extends User implements Comparable<Child> {
     private String fitbitStatus;
 
     public Child() {
+        super(User.Type.CHILD);
     }
 
     public Child(String username, String password) {
@@ -88,6 +91,18 @@ public class Child extends User implements Comparable<Child> {
         return new Gson().fromJson(json, Child.class);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), super.getUsername());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Child)) return false;
+        Child child = (Child) o;
+        return Objects.equals(super.getUsername(), child.getUsername());
+    }
+
     @NonNull
     @Override
     public String toString() {
@@ -96,6 +111,6 @@ public class Child extends User implements Comparable<Child> {
 
     @Override
     public int compareTo(Child o) {
-        return this.username.compareToIgnoreCase(o.getUsername());
+        return super.getUsername().compareToIgnoreCase(o.getUsername());
     }
 }

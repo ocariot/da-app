@@ -26,7 +26,7 @@ public class Sleep extends Activity implements Parcelable {
     }
 
     protected Sleep(Parcel in) {
-        super.set_id(in.readString());
+        super.setId(in.readString());
         super.setStartTime(in.readString());
         super.setEndTime(in.readString());
         super.setDuration(in.readLong());
@@ -37,7 +37,7 @@ public class Sleep extends Activity implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(super.get_id());
+        dest.writeString(super.getId());
         dest.writeString(super.getStartTime());
         dest.writeString(super.getEndTime());
         dest.writeLong(super.getDuration());
@@ -94,4 +94,14 @@ public class Sleep extends Activity implements Parcelable {
     public String toString() {
         return new Gson().toJson(this);
     }
+
+    public class Type {
+        private Type() {
+            throw new IllegalStateException("Utility class. Does not allow inheritance or instances to be created!");
+        }
+
+        public static final String CLASSIC = "classic";
+        public static final String STAGES = "stages";
+    }
+
 }

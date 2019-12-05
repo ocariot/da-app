@@ -29,6 +29,7 @@ public class DialogLoading extends DialogFragment {
      * Empty constructor is required for DialogFragment
      */
     public DialogLoading() {
+        // not implemented!
     }
 
     /**
@@ -73,6 +74,7 @@ public class DialogLoading extends DialogFragment {
     public void show(FragmentManager fragmentManager) {
         this.fragmentManager = fragmentManager;
         Fragment dialogFragment = fragmentManager.findFragmentByTag(DIALOG_TAG);
+
         if (dialogFragment == null) {
             this.show(fragmentManager, DIALOG_TAG);
         }

@@ -9,6 +9,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import java.util.List;
 import java.util.Locale;
 
 import br.edu.uepb.nutes.ocariot.R;
@@ -26,7 +27,7 @@ import butterknife.ButterKnife;
  * @author Copyright (c) 2018, NUTES/UEPB
  */
 public class PhysicalActivityDetail extends AppCompatActivity {
-    public static String ACTIVITY_DETAIL = "activity_detail";
+    public static final String ACTIVITY_DETAIL = "activity_detail";
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -101,6 +102,39 @@ public class PhysicalActivityDetail extends AppCompatActivity {
         populateView(physicalActivity);
     }
 
+    private void populateLevels(List<ActivityLevel> levels) {
+        boxLevels.setVisibility(View.GONE);
+        if (levels == null || levels.isEmpty()) return;
+
+        boxLevels.setVisibility(View.VISIBLE);
+        sedentaryTextView.setVisibility(View.VISIBLE);
+        fairlyTextView.setVisibility(View.VISIBLE);
+        lightlyTextView.setVisibility(View.VISIBLE);
+
+        for (ActivityLevel activityLevel : levels) {
+            switch (activityLevel.getName()) {
+                case ActivityLevel.SEDENTARY_LEVEL:
+                    sedentaryTextView.setText(getResources().getString(
+                            R.string.level_sedentary, activityLevel.getDuration() / 60000));
+                    break;
+                case ActivityLevel.FAIRLY_LEVEL:
+                    fairlyTextView.setText(getResources().getString(
+                            R.string.level_fairly, activityLevel.getDuration() / 60000));
+                    break;
+                case ActivityLevel.LIGHTLY_LEVEL:
+                    lightlyTextView.setText(getResources().getString(
+                            R.string.level_lightly, activityLevel.getDuration() / 60000));
+                    break;
+                case ActivityLevel.VERY_LEVEL:
+                    veryTextView.setText(getResources().getString(
+                            R.string.level_very, activityLevel.getDuration() / 60000));
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
     private void populateView(PhysicalActivity a) {
         dateStartTextView.setText(DateUtils.convertDateTimeUTCToLocale(a.getStartTime(),
                 getResources().getString(R.string.date_format1), null));
@@ -122,34 +156,14 @@ public class PhysicalActivityDetail extends AppCompatActivity {
             caloriesMinuteTextView.setText(String.valueOf(a.getCalories() / duration));
         }
 
-        if (a.getLevels() != null && !a.getLevels().isEmpty()) {
-            sedentaryTextView.setVisibility(View.VISIBLE);
-            fairlyTextView.setVisibility(View.VISIBLE);
-            lightlyTextView.setVisibility(View.VISIBLE);
+        // levels
+        populateLevels(a.getLevels());
 
-            for (ActivityLevel activityLevel : a.getLevels()) {
-                if (activityLevel.getName().equals(ActivityLevel.SEDENTARY_LEVEL)) {
-                    sedentaryTextView.setText(getResources().getString(
-                            R.string.level_sedentary, activityLevel.getDuration() / 60000));
-                } else if (activityLevel.getName().equals(ActivityLevel.FAIRLY_LEVEL)) {
-                    fairlyTextView.setText(getResources().getString(
-                            R.string.level_fairly, activityLevel.getDuration() / 60000));
-                } else if (activityLevel.getName().equals(ActivityLevel.LIGHTLY_LEVEL)) {
-                    lightlyTextView.setText(getResources().getString(
-                            R.string.level_lightly, activityLevel.getDuration() / 60000));
-                } else if (activityLevel.getName().equals(ActivityLevel.VERY_LEVEL)) {
-                    veryTextView.setText(getResources().getString(
-                            R.string.level_very, activityLevel.getDuration() / 60000));
-                }
-            }
-        } else {
-            boxLevels.setVisibility(View.GONE);
-        }
-
+        // heart rate
+        boxHRZones.setVisibility(View.GONE);
         if (a.getHeartRate() != null && a.getHeartRate().getAverage() > 0) {
+            boxHRZones.setVisibility(View.VISIBLE);
             avgHeartRate.setText(String.valueOf(a.getHeartRate().getAverage()));
-        } else {
-            boxHRZones.setVisibility(View.GONE);
         }
 
         // distance

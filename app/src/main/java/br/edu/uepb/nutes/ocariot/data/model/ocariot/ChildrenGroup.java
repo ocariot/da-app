@@ -17,7 +17,7 @@ import java.util.Objects;
 @Keep
 public class ChildrenGroup {
     @SerializedName("id")
-    private String _id;
+    private String id;
 
     @SerializedName("name")
     private String name;
@@ -36,12 +36,12 @@ public class ChildrenGroup {
         this.children = children;
     }
 
-    public String get_id() {
-        return _id;
+    public String getId() {
+        return id;
     }
 
-    public void set_id(String _id) {
-        this._id = _id;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -73,13 +73,13 @@ public class ChildrenGroup {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ChildrenGroup that = (ChildrenGroup) o;
-        return Objects.equals(_id, that._id) &&
+        return Objects.equals(id, that.id) &&
                 name.equals(that.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(_id, name);
+        return Objects.hash(id, name);
     }
 
     /**

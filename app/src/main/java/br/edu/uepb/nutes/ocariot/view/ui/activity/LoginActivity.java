@@ -1,8 +1,10 @@
 package br.edu.uepb.nutes.ocariot.view.ui.activity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.EditorInfo;
@@ -31,6 +33,7 @@ import br.edu.uepb.nutes.ocariot.data.model.ocariot.User;
 import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
 import br.edu.uepb.nutes.ocariot.data.repository.remote.ocariot.OcariotNetRepository;
 import br.edu.uepb.nutes.ocariot.utils.AlertMessage;
+import br.edu.uepb.nutes.ocariot.utils.FirebaseLogEvent;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Single;
@@ -88,6 +91,11 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        }
+
         appPref = AppPreferencesHelper.getInstance();
         mDisposable = new CompositeDisposable();
         alertMessage = new AlertMessage(this);
@@ -104,12 +112,13 @@ public class LoginActivity extends AppCompatActivity {
             return false;
         });
 
-        AccelerateDecelerateInterpolator ACCELERATE_DECELERATE = new AccelerateDecelerateInterpolator();
-        RandomTransitionGenerator generator = new RandomTransitionGenerator(30000, ACCELERATE_DECELERATE);
+        AccelerateDecelerateInterpolator accelerateDecelerate = new AccelerateDecelerateInterpolator();
+        RandomTransitionGenerator generator = new RandomTransitionGenerator(30000, accelerateDecelerate);
         mImageBack.setTransitionGenerator(generator); // set new transition on kenburns view
 
         regionRadioGroup.setOnCheckedChangeListener((group, checkedId) -> {
             slideUp(localeText);
+            appPref.changedOcariotUrl(true);
             if (checkedId == R.id.brazil_radioButton) {
                 localeText.setText(R.string.brazilian_pilot);
                 europeRadioButton.setScaleX(0.85f);
@@ -185,7 +194,8 @@ public class LoginActivity extends AppCompatActivity {
                 .doOnSubscribe(disposable -> showProgress(true))
                 .doAfterTerminate(() -> showProgress(false))
                 .subscribe(userAccess -> {
-                    if (userAccess.getSubjectType().equalsIgnoreCase(User.Type.ADMIN)) {
+                    if (userAccess.getSubjectType().equalsIgnoreCase(User.Type.ADMIN) ||
+                            userAccess.getSubjectType().equalsIgnoreCase(User.Type.APPLICATION)) {
                         alertMessage.show(R.string.title_access_blocked,
                                 R.string.alert_access_blocked,
                                 R.color.colorWarning,
@@ -195,6 +205,7 @@ public class LoginActivity extends AppCompatActivity {
                     }
                     appPref.addUserAccessOcariot(userAccess); // save user logged
                     getResources(userAccess);
+                    FirebaseLogEvent.login(userAccess.getSubjectType());
                 }, error -> {
                     if (error instanceof HttpException) {
                         HttpException httpEx = ((HttpException) error);
@@ -226,10 +237,8 @@ public class LoginActivity extends AppCompatActivity {
         mDisposable.add(ocariotRepository
                 .getFitBitAppData()
                 .doOnSubscribe(disposable -> showProgress(true))
-                .doAfterTerminate(() -> {
-                    showProgress(false);
-                    openMainActivity();
-                })
+                .doAfterTerminate(() -> showProgress(false))
+                .doAfterTerminate(this::openMainActivity)
                 .subscribe(
                         fitBitAppData -> appPref.addFitbitAppData(fitBitAppData),
                         err -> alertMessage.handleError(err)
@@ -247,11 +256,9 @@ public class LoginActivity extends AppCompatActivity {
                 .onErrorReturn(throwable -> new FitBitAppData());
         Single<Child> childRequest = ocariotRepository.getChildById(userAccess.getSubject())
                 .onErrorReturn(throwable -> new Child());
-        Single<UserAccess> childAccessRequest = ocariotRepository.getFitBitAuth(userAccess.getSubject())
-                .onErrorReturn(throwable -> new UserAccess());
 
         mDisposable.add(
-                Single.zip(fitBitAppDataRequest, childRequest, childAccessRequest, ResponseData::new)
+                Single.zip(fitBitAppDataRequest, childRequest, ResponseData::new)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnSubscribe(disposable -> showProgress(true))
@@ -265,8 +272,8 @@ public class LoginActivity extends AppCompatActivity {
                                         return;
                                     }
                                     appPref.addFitbitAppData(responseData.fitBitAppData);
-                                    responseData.child.setFitBitAccess(responseData.fitBitAccess);
                                     appPref.addLastSelectedChild(responseData.child);
+
                                     openMainActivity();
                                 }, err -> alertMessage.handleError(err)
                         )
@@ -331,21 +338,10 @@ public class LoginActivity extends AppCompatActivity {
     private class ResponseData {
         FitBitAppData fitBitAppData;
         Child child;
-        UserAccess fitBitAccess;
 
-        ResponseData(FitBitAppData fitBitAppData, Child child, UserAccess fitBitAccess) {
+        ResponseData(FitBitAppData fitBitAppData, Child child) {
             this.fitBitAppData = fitBitAppData;
             this.child = child;
-            this.fitBitAccess = fitBitAccess;
-        }
-
-        @Override
-        public String toString() {
-            return "ResponseData{" +
-                    "fitBitAppData=" + fitBitAppData +
-                    ", child=" + child +
-                    ", fitBitAccess=" + fitBitAccess +
-                    '}';
         }
     }
 }

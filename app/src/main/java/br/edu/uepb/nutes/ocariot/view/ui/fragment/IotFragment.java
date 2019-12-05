@@ -16,7 +16,6 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +30,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.AppCompatImageView;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.widget.ImageViewCompat;
 import androidx.fragment.app.Fragment;
@@ -61,17 +61,16 @@ import br.edu.uepb.nutes.simpleblescanner.SimpleScannerCallback;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.disposables.CompositeDisposable;
+import timber.log.Timber;
 
 /**
  * A fragment representing iot devices.
  *
  * @author Copyright (c) 2018, NUTES/UEPB
  */
-public class IotFragment extends Fragment implements View.OnClickListener {
-    private final String LOG_TAG = "IotFragment";
-
-    private final int REQUEST_ENABLE_BLUETOOTH = 1;
-    private final int REQUEST_ENABLE_LOCATION = 2;
+public class IotFragment extends Fragment implements View.OnClickListener, HRManagerCallback {
+    private static final int REQUEST_ENABLE_BLUETOOTH = 1;
+    private static final int REQUEST_ENABLE_LOCATION = 2;
 
     private OcariotNetRepository ocariotRepository;
     private Context mContext;
@@ -81,7 +80,11 @@ public class IotFragment extends Fragment implements View.OnClickListener {
     private SimpleBleScanner mScanner;
     private HRManager mHRManager;
     private ObjectAnimator heartAnimation;
-    private int minHR, maxHR, avgHR, sumHR, totalHR;
+    private int minHR;
+    private int maxHR;
+    private int avgHR;
+    private int sumHR;
+    private int totalHR;
 
     // We need this variable to lock and unlock loading more.
     // We should not charge more when a request has already been made.
@@ -162,7 +165,7 @@ public class IotFragment extends Fragment implements View.OnClickListener {
                 .addScanPeriod(Integer.MAX_VALUE) // 15s in milliseconds
                 .build();
         mHRManager = HRManager.getInstance(mContext);
-        mHRManager.setHeartRateCallback(mHRManagerCallback);
+        mHRManager.setHeartRateCallback(this);
         minHR = Integer.MAX_VALUE;
     }
 
@@ -193,6 +196,15 @@ public class IotFragment extends Fragment implements View.OnClickListener {
                 BluetoothAdapter.getDefaultAdapter().isEnabled()) {
             mBoxEnableBluetooth.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (bluetoothIsAvailable() && !mScanner.isScanStarted() && !mHRManager.isConnected()) {
+            mScanner.startScan(mScannerCallback);
+        }
+        loadDataOcariot();
     }
 
     @Override
@@ -230,17 +242,6 @@ public class IotFragment extends Fragment implements View.OnClickListener {
         heartAnimation.setRepeatMode(ObjectAnimator.REVERSE);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if ((BluetoothAdapter.getDefaultAdapter() != null &&
-                BluetoothAdapter.getDefaultAdapter().isEnabled()) &&
-                !mScanner.isScanStarted() && !mHRManager.isConnected()) {
-            mScanner.startScan(mScannerCallback);
-        }
-        loadDataOcariot();
-    }
-
     /**
      * Initialize SwipeRefresh
      */
@@ -261,7 +262,7 @@ public class IotFragment extends Fragment implements View.OnClickListener {
         mDisposable.add(
                 ocariotRepository
                         .listWeights(
-                                appPref.getLastSelectedChild().get_id(),
+                                appPref.getLastSelectedChild().getId(),
                                 "gte:".concat(DateUtils.addMonths(DateUtils.getCurrentDatetimeUTC(), -12)),
                                 "lt:".concat(DateUtils.addDaysToDatetimeString(DateUtils.getCurrentDatetimeUTC(), 1)),
                                 "-timestamp"
@@ -329,60 +330,35 @@ public class IotFragment extends Fragment implements View.OnClickListener {
         @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
         @Override
         public void onScanResult(int callbackType, @NonNull ScanResult result) {
-            Log.w(LOG_TAG, "onScanResult(): " + result.getDevice().getName());
+            Timber.d("onScanResult(): %s", result.getDevice().getName());
             mHRManager.connectDevice(result.getDevice());
             mScanner.stopScan();
         }
 
         @Override
         public void onBatchScanResults(@NonNull List<ScanResult> results) {
-
+            // Not implemented!
         }
 
         @Override
         public void onScanFailed(int errorCode) {
-            Log.w(LOG_TAG, "onScanFailed(): " + errorCode);
+            Timber.d("onScanFailed(): %s", errorCode);
         }
 
         @Override
         public void onFinish() {
-            Log.w(LOG_TAG, "onFinish():");
-        }
-    };
-
-    private HRManagerCallback mHRManagerCallback = new HRManagerCallback() {
-        @Override
-        public void onMeasurementReceived(@NonNull BluetoothDevice device, int heartRate, String timestamp) {
-            if (heartRate > 0) {
-                totalHR++;
-                sumHR += heartRate;
-                minHR = heartRate < minHR ? heartRate : minHR;
-                maxHR = heartRate > maxHR ? heartRate : maxHR;
-                avgHR = sumHR / totalHR;
-            }
-            updateViewHR(heartRate, timestamp);
-        }
-
-        @Override
-        public void onConnected(@NonNull BluetoothDevice device) {
-            Log.w(LOG_TAG, "onConnected(): " + device.getName());
-        }
-
-        @Override
-        public void onDisconnected(@NonNull BluetoothDevice device) {
-            Log.w(LOG_TAG, "onDisconnected(): " + device.getName());
-            heartAnimation.pause();
-            ImageViewCompat.setImageTintList(mHeartImage, ColorStateList.valueOf(
-                    getResources().getColor(R.color.colorLineDivider)));
-            mBoxHR.setVisibility(View.GONE);
-            mScanner.startScan(mScannerCallback);
+            Timber.d("onFinish()");
         }
     };
 
     private void updateViewHR(int hr, String timestamp) {
+        Timber.d("HR: %d -> %s", hr, timestamp);
         if (getActivity() == null) return;
         Objects.requireNonNull(getActivity())
                 .runOnUiThread(() -> {
+                    // Update chart
+                    addEntry((float) hr);
+
                     if (heartAnimation.isPaused() || !heartAnimation.isRunning()) {
                         heartAnimation.start();
                         ImageViewCompat.setImageTintList(mHeartImage, ColorStateList.valueOf(
@@ -391,9 +367,6 @@ public class IotFragment extends Fragment implements View.OnClickListener {
                         mBoxHRSummary.setVisibility(View.VISIBLE);
                     }
                     mHR.setText(String.valueOf(hr));
-
-                    // Update chart
-                    addEntry((float) hr);
 
                     // Update summary
                     mMinHRTextView.setText(String.valueOf(minHR));
@@ -506,24 +479,16 @@ public class IotFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    /**
-     * Checks whether the location permission was given.
-     *
-     * @return boolean
-     */
-    private boolean hasLocationPermissions() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            return mContext.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) ==
-                    PackageManager.PERMISSION_GRANTED;
-        }
-        return true;
+    private boolean bluetoothIsAvailable() {
+        return BluetoothAdapter.getDefaultAdapter() != null && BluetoothAdapter.getDefaultAdapter().isEnabled();
     }
 
     /**
      * Request Location permission.
      */
     private void requestLocationPermission() {
-        requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_ENABLE_LOCATION);
+        ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()),
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_ENABLE_LOCATION);
     }
 
     @Override
@@ -536,7 +501,9 @@ public class IotFragment extends Fragment implements View.OnClickListener {
                 (grantResults.length > 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED)) {
             Toast.makeText(mContext, R.string.message_permission_location, Toast.LENGTH_LONG).show();
             requestLocationPermission();
+            return;
         }
+        if (bluetoothIsAvailable()) mScanner.startScan(mScannerCallback);
     }
 
     private final BroadcastReceiver mBluetoothReceiver = new BroadcastReceiver() {
@@ -551,19 +518,46 @@ public class IotFragment extends Fragment implements View.OnClickListener {
                     case BluetoothAdapter.STATE_OFF:
                         mBoxEnableBluetooth.setVisibility(View.VISIBLE);
                         break;
-                    case BluetoothAdapter.STATE_TURNING_OFF:
-                        // Bluetooth is turning off;
-                        break;
                     case BluetoothAdapter.STATE_ON:
-                        // Bluetooth has been on
                         mBoxEnableBluetooth.setVisibility(View.GONE);
-                        if (!hasLocationPermissions()) requestLocationPermission();
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                                mContext.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                                        != PackageManager.PERMISSION_GRANTED) {
+                            requestLocationPermission();
+                        }
                         break;
-                    case BluetoothAdapter.STATE_TURNING_ON:
-                        // Bluetooth is turning on
+                    default:
                         break;
                 }
             }
         }
     };
+
+    @Override
+    public void onMeasurementReceived(@NonNull BluetoothDevice device, int heartRate, String timestamp) {
+        if (heartRate > 0) {
+            totalHR++;
+            sumHR += heartRate;
+            minHR = heartRate < minHR ? heartRate : minHR;
+            maxHR = heartRate > maxHR ? heartRate : maxHR;
+            avgHR = sumHR / totalHR;
+        }
+        updateViewHR(heartRate, timestamp);
+    }
+
+    @Override
+    public void onConnected(@NonNull BluetoothDevice device) {
+        Timber.d("onConnected(): %s", device.getName());
+    }
+
+    @Override
+    public void onDisconnected(@NonNull BluetoothDevice device) {
+        Timber.d("onDisconnected(): %s", device.getName());
+        heartAnimation.pause();
+        ImageViewCompat.setImageTintList(mHeartImage, ColorStateList.valueOf(
+                getResources().getColor(R.color.colorLineDivider)));
+        mBoxHR.setVisibility(View.GONE);
+        if (bluetoothIsAvailable()) mScanner.startScan(mScannerCallback);
+    }
 }

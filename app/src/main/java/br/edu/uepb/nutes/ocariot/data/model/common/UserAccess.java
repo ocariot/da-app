@@ -170,8 +170,8 @@ public class UserAccess implements Parcelable {
         return userId;
     }
 
-    public void setUserId(String user_id) {
-        this.userId = user_id;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getStatus() {
@@ -209,13 +209,17 @@ public class UserAccess implements Parcelable {
         return new Gson().toJson(this);
     }
 
-    public static class TokenStatus {
-        public static String VALID = "valid_token";
-        public static String INVALID = "invalid_token";
-        public static String EXPIRED = "expired_token";
-        public static String INVALID_REFRESH = "invalid_grant";
-        public static String INVALID_CLIENT = "invalid_client";
-        public static String RATE_LIMIT = "rate_limit";
-        public static String NONE = "none";
+    public class TokenStatus {
+        private TokenStatus() {
+            throw new IllegalStateException("Utility class. Does not allow inheritance or instances to be created!");
+        }
+
+        public static final String VALID = "valid_token";
+        public static final String INVALID = "invalid_token";
+        public static final String EXPIRED = "expired_token";
+        public static final String INVALID_REFRESH = "invalid_grant";
+        public static final String INVALID_CLIENT = "invalid_client";
+        public static final String RATE_LIMIT = "rate_limit";
+        public static final String NONE = "none";
     }
 }

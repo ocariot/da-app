@@ -37,9 +37,11 @@ public class MessageEvent {
                 '}';
     }
 
-    public static class EventType {
-        public static String OCARIOT_ACCESS_TOKEN_EXPIRED = "ocariot_access_token_expired_event";
-        public static String FITBIT_ACCESS_TOKEN_EXPIRED = "fitbit_access_token_expired_event";
-        public static String FITBIT_NO_ACCESS_TOKEN = "fitbit_no_access_token_event";
+    public final class EventType {
+        private EventType() {
+            throw new IllegalStateException("Utility class. Does not allow inheritance or instances to be created!");
+        }
+
+        public static final String OCARIOT_ACCESS_TOKEN_EXPIRED = "ocariot_access_token_expired_event";
     }
 }

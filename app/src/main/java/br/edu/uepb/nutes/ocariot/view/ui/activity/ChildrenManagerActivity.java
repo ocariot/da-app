@@ -51,7 +51,7 @@ import io.reactivex.disposables.CompositeDisposable;
 
 public class ChildrenManagerActivity extends AppCompatActivity {
     public static final String EXTRA_IS_FIRST_OPEN = "extra_is_first_open";
-    private final String KEY_SORT_SELECTED = "key_sort_selected";
+    private static final String KEY_SORT_SELECTED = "key_sort_selected";
 
     private ChildListAdapter mAdapter;
     private AppPreferencesHelper appPref;
@@ -109,12 +109,12 @@ public class ChildrenManagerActivity extends AppCompatActivity {
         mLogoutButton.setOnClickListener(v -> this.openDialogSignOut());
 
         initComponents();
-        disableBack();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        disableBack();
         EventBus.getDefault().register(this);
     }
 
@@ -147,7 +147,7 @@ public class ChildrenManagerActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String query) {
                 // filter recycler view when text is changed
-                mAdapter.getFilter().filter(query);
+                onQueryTextSubmit(query);
                 return false;
             }
         });
@@ -245,23 +245,27 @@ public class ChildrenManagerActivity extends AppCompatActivity {
                             .doAfterTerminate(() -> loading(false))
                             .subscribe(this::populateViewChildren, err -> mAlertMessage.handleError(err))
             );
-        } else if (userAccess.getSubjectType().equalsIgnoreCase(User.Type.EDUCATOR)) {
+            return;
+        }
+        if (userAccess.getSubjectType().equalsIgnoreCase(User.Type.EDUCATOR)) {
             mDisposable.add(ocariotRepository
                     .getChildrenOfEducator(userAccess.getSubject())
                     .doOnSubscribe(disposable -> loading(true))
                     .doAfterTerminate(() -> loading(false))
                     .subscribe(this::populateViewChildren, err -> mAlertMessage.handleError(err))
             );
-        } else if (userAccess.getSubjectType().equalsIgnoreCase(User.Type.HEALTH_PROFESSIONAL)) {
+            return;
+        }
+        if (userAccess.getSubjectType().equalsIgnoreCase(User.Type.HEALTH_PROFESSIONAL)) {
             mDisposable.add(ocariotRepository
                     .getChildrenOfHealthProfessional(userAccess.getSubject())
                     .doOnSubscribe(disposable -> loading(true))
                     .doAfterTerminate(() -> loading(false))
                     .subscribe(this::populateViewChildren, err -> mAlertMessage.handleError(err))
             );
-        } else {
-            populateViewChildren(new ArrayList<>());
+            return;
         }
+        populateViewChildren(new ArrayList<>());
     }
 
     /**

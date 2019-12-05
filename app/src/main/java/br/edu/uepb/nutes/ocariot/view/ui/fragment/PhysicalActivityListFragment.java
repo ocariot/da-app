@@ -1,10 +1,7 @@
 package br.edu.uepb.nutes.ocariot.view.ui.fragment;
 
-import android.app.Activity;
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +31,6 @@ import br.edu.uepb.nutes.ocariot.data.repository.remote.ocariot.OcariotNetReposi
 import br.edu.uepb.nutes.ocariot.utils.AlertMessage;
 import br.edu.uepb.nutes.ocariot.view.adapter.PhysicalActivityListAdapter;
 import br.edu.uepb.nutes.ocariot.view.adapter.base.OnRecyclerViewListener;
-import br.edu.uepb.nutes.ocariot.view.ui.preference.SettingsFragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.disposables.CompositeDisposable;
@@ -114,7 +110,7 @@ public class PhysicalActivityListFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
 
         if (context instanceof OnClickActivityListener) {
@@ -200,7 +196,7 @@ public class PhysicalActivityListFragment extends Fragment {
         mDisposable.add(
                 ocariotRepository
                         .listActivities(
-                                appPref.getLastSelectedChild().get_id(),
+                                appPref.getLastSelectedChild().getId(),
                                 "-start_time",
                                 1,
                                 100

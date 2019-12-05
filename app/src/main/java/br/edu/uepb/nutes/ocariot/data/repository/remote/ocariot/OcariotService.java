@@ -2,14 +2,11 @@ package br.edu.uepb.nutes.ocariot.data.repository.remote.ocariot;
 
 import java.util.List;
 
-import br.edu.uepb.nutes.ocariot.BuildConfig;
 import br.edu.uepb.nutes.ocariot.data.model.common.UserAccess;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.Child;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.ChildrenGroup;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.FitBitAppData;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.FitBitSync;
-import br.edu.uepb.nutes.ocariot.data.model.ocariot.LogData;
-import br.edu.uepb.nutes.ocariot.data.model.ocariot.MultiStatusResult;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.PhysicalActivity;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.Sleep;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.Weight;
@@ -52,10 +49,6 @@ public interface OcariotService {
             @Query("limit") int limit
     );
 
-    @POST("/v1/children/{child_id}/physicalactivities")
-    Single<MultiStatusResult<PhysicalActivity>> publishPhysicalActivities(@Path("child_id") String childId,
-                                                                          @Body PhysicalActivity[] activity);
-
     // Sleep
     @GET("/v1/children/{child_id}/sleep")
     Single<List<Sleep>> listSleep(
@@ -64,21 +57,6 @@ public interface OcariotService {
             @Query("page") int page,
             @Query("limit") int limit
     );
-
-    @POST("/v1/children/{child_id}/sleep")
-    Single<MultiStatusResult<Sleep>> publishSleep(@Path("child_id") String childId, @Body Sleep[] sleep);
-
-    // Logs
-    @POST("/v1/children/{child_id}/logs/{resource}")
-    Single<MultiStatusResult<LogData>> publishLog(
-            @Path("child_id") String childId,
-            @Path("resource") String resource,
-            @Body LogData[] logData
-    );
-
-    // Weight
-    @POST("/v1/children/{child_id}/weights")
-    Single<MultiStatusResult<Weight>> publishWeights(@Path("child_id") String childId, @Body Weight[] weights);
 
     @GET("/v1/children/{child_id}/weights?sort=-timestamp")
     Single<List<Weight>> listhWeights(
@@ -101,9 +79,6 @@ public interface OcariotService {
 
     @POST("/v1/users/{user_id}/fitbit/auth/revoke")
     Completable revokeFitBitAuth(@Path("user_id") String childId);
-
-    @GET("/v1/users/{user_id}/fitbit/auth")
-    Single<UserAccess> getFitBitAuth(@Path("user_id") String childId);
 
     @POST("/v1/users/{user_id}/fitbit/sync")
     Single<FitBitSync> fitBitSync(@Path("user_id") String childId);
