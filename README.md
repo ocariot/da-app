@@ -66,7 +66,7 @@ From Android Studio:
 [contributors-image]: https://img.shields.io/github/contributors/ocariot/da-app.svg
 [contributors-url]: https://github.com/ocariot/da-app/graphs/contributors
 [apk-download]: https://img.shields.io/badge/download%20apk-BR/EU-blue.svg?style=for-the-badge&logo=android
-[apk-brazil-url]: https://github.com/ocariot/da-app/releases/download/1.9.2/ocariot_da_v1.9.2.apk
+[apk-brazil-url]: https://github.com/ocariot/da-app/releases/download/1.9.3/ocariot_da_v1.9.3.apk
 
 --- 
 
