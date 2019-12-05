@@ -13,6 +13,8 @@ public interface PreferencesHelper {
 
     boolean addOcariotURL(final String utl);
 
+    boolean changedOcariotUrl(final boolean value);
+
     boolean addUserAccessOcariot(final UserAccess userAccess);
 
     boolean addLastSelectedChild(final Child user);
@@ -24,6 +26,8 @@ public interface PreferencesHelper {
     boolean addInt(String key, int value);
 
     String getOcariotURL();
+
+    boolean changedOcariotUrl();
 
     UserAccess getUserAccessOcariot();
 

@@ -1,10 +1,8 @@
 package br.edu.uepb.nutes.ocariot.data.repository.local.pref;
 
 import android.content.SharedPreferences;
-import android.widget.Toast;
 
-import java.io.IOException;
-import java.security.GeneralSecurityException;
+import com.securepreferences.SecurePreferences;
 
 import br.edu.uepb.nutes.ocariot.BuildConfig;
 import br.edu.uepb.nutes.ocariot.OcariotApp;
@@ -12,8 +10,6 @@ import br.edu.uepb.nutes.ocariot.data.model.common.UserAccess;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.Child;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.FitBitAppData;
 import br.edu.uepb.nutes.ocariot.exception.LocalPreferenceException;
-import in.co.ophio.secure.core.KeyStoreKeyGenerator;
-import in.co.ophio.secure.core.ObscuredPreferencesBuilder;
 
 /**
  * Class to perform operations on the device's shared preference.
@@ -22,22 +18,18 @@ import in.co.ophio.secure.core.ObscuredPreferencesBuilder;
  * @author Copyright (c) 2018, NUTES/UEPB
  */
 public class AppPreferencesHelper implements PreferencesHelper {
-    private final String PREF_KEY_AUTH_OCARIOT = "pref_key_user_access_ocariot";
-    private final String PREF_KEY_LAST_SELECTED_CHILD = "pref_key_user_profile";
-    private final String PREF_KEY_FITBIT_DATA = "pref_key_fitbit_data";
-    private final String PREF_KEY_OCARIOT_API = "pref_key_ocariot_api";
+    private static final String PREF_KEY_AUTH_OCARIOT = "pref_key_user_access_ocariot";
+    private static final String PREF_KEY_LAST_SELECTED_CHILD = "pref_key_user_profile";
+    private static final String PREF_KEY_FITBIT_DATA = "pref_key_fitbit_data";
+    private static final String PREF_KEY_OCARIOT_API = "pref_key_ocariot_api";
+    private static final String PREF_KEY_CHANGED_OCARIOT_API = "pref_key_changed_ocariot_api";
 
     private static AppPreferencesHelper instance;
     private SharedPreferences mPrefs;
 
     private AppPreferencesHelper() {
-        mPrefs = new ObscuredPreferencesBuilder()
-                .setApplication(OcariotApp.getAppContext())
-                .obfuscateValue(true)
-                .obfuscateKey(true)
-                .setSharePrefFileName(BuildConfig.PREFERENCES_FILENAME)
-                .setSecret(getKey())
-                .createSharedPrefs();
+        mPrefs = new SecurePreferences(OcariotApp.getAppContext(), "",
+                BuildConfig.PREFERENCES_FILENAME);
     }
 
     public static synchronized AppPreferencesHelper getInstance() {
@@ -45,30 +37,14 @@ public class AppPreferencesHelper implements PreferencesHelper {
         return instance;
     }
 
-    /**
-     * use getKey to get an encrypted Key for obscuring preferences
-     *
-     * @return String
-     */
-    private String getKey() {
-        String secretKey;
-        KeyStoreKeyGenerator keyGenerator = KeyStoreKeyGenerator.get(OcariotApp.getAppContext(),
-                BuildConfig.APPLICATION_ID);
-        try {
-            secretKey = keyGenerator.loadOrGenerateKeys();
-        } catch (GeneralSecurityException e) {
-            Toast.makeText(OcariotApp.getContext(), "can't create key", Toast.LENGTH_SHORT).show();
-            throw new RuntimeException("can't create  key");
-        } catch (IOException e) {
-            Toast.makeText(OcariotApp.getContext(), "can't create key", Toast.LENGTH_SHORT).show();
-            throw new RuntimeException("can't create key");
-        }
-        return secretKey;
-    }
-
     @Override
     public boolean addOcariotURL(final String url) {
         return mPrefs.edit().putString(PREF_KEY_OCARIOT_API, url).commit();
+    }
+
+    @Override
+    public boolean changedOcariotUrl(boolean value) {
+        return mPrefs.edit().putBoolean(PREF_KEY_CHANGED_OCARIOT_API, value).commit();
     }
 
     @Override
@@ -110,6 +86,11 @@ public class AppPreferencesHelper implements PreferencesHelper {
     @Override
     public String getOcariotURL() {
         return mPrefs.getString(PREF_KEY_OCARIOT_API, null);
+    }
+
+    @Override
+    public boolean changedOcariotUrl() {
+        return mPrefs.getBoolean(PREF_KEY_CHANGED_OCARIOT_API, false);
     }
 
     @Override

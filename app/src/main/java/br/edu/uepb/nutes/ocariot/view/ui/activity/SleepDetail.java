@@ -33,7 +33,6 @@ import br.edu.uepb.nutes.ocariot.R;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.Sleep;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.SleepPatternDataSet;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.SleepPatternSummary;
-import br.edu.uepb.nutes.ocariot.data.model.ocariot.SleepType;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.User;
 import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
 import br.edu.uepb.nutes.ocariot.utils.DateUtils;
@@ -46,7 +45,7 @@ import butterknife.ButterKnife;
  * @author Copyright (c) 2018, NUTES/UEPB
  */
 public class SleepDetail extends AppCompatActivity {
-    public static String SLEEP_DETAIL = "sleep_detail";
+    public static final String SLEEP_DETAIL = "sleep_detail";
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -181,9 +180,9 @@ public class SleepDetail extends AppCompatActivity {
                 dateStart, dateEnd));
 
         int dividend = 0;
-        if (sleep.getType().equalsIgnoreCase(SleepType.CLASSIC)) {
+        if (sleep.getType().equalsIgnoreCase(Sleep.Type.CLASSIC)) {
             dividend = sleep.getPattern().getSummary().getAsleep().getDuration();
-        } else if (sleep.getType().equalsIgnoreCase(SleepType.STAGES)) {
+        } else if (sleep.getType().equalsIgnoreCase(Sleep.Type.STAGES)) {
             dividend = (sleep.getPattern().getSummary().getDeep().getDuration()) +
                     (sleep.getPattern().getSummary().getLight().getDuration()) +
                     (sleep.getPattern().getSummary().getRem().getDuration());
@@ -204,11 +203,11 @@ public class SleepDetail extends AppCompatActivity {
         mDateStartGraph.setText(dateStart);
         mDateEndGraph.setText(dateEnd);
 
-        if (sleep.getType().equalsIgnoreCase(SleepType.CLASSIC)) {
+        if (sleep.getType().equalsIgnoreCase(Sleep.Type.CLASSIC)) {
             boxStages.setVisibility(View.GONE);
             boxClassic.setVisibility(View.VISIBLE);
             populatePatternClassic(sleep.getPattern().getSummary());
-        } else if (sleep.getType().equalsIgnoreCase(SleepType.STAGES)) {
+        } else if (sleep.getType().equalsIgnoreCase(Sleep.Type.STAGES)) {
             boxClassic.setVisibility(View.GONE);
             boxStages.setVisibility(View.VISIBLE);
             populatePatternStages(sleep.getPattern().getSummary());
@@ -234,8 +233,9 @@ public class SleepDetail extends AppCompatActivity {
         mAwakeDurationClassicTextView.setText(mountDuration(summary.getAwake().getDuration()));
 
         // restless+awake
-        mRestlessAwakeDurationTextView.setText(mountDuration(summary.getRestless().getDuration() +
-                summary.getAwake().getDuration()));
+        mRestlessAwakeDurationTextView.setText(
+                mountDuration((summary.getRestless().getDuration() + summary.getAwake().getDuration()))
+        );
     }
 
     private void populatePatternStages(SleepPatternSummary summary) {
@@ -257,8 +257,8 @@ public class SleepDetail extends AppCompatActivity {
     }
 
     private String mountDuration(long duration) {
-        int hours = (int) Math.floor(duration / 3600000);
-        int minutes = (int) Math.floor((duration / 60000) % 60);
+        int hours = (int) (duration / 3600000);
+        int minutes = (int) ((duration / 60000) % 60);
 
         if (hours > 0 || minutes > 0) {
             return (hours > 0 ? String.format(Locale.getDefault(), "%02dh ", hours) : "")
@@ -275,25 +275,20 @@ public class SleepDetail extends AppCompatActivity {
         for (int i = 0; i < sleep.getPattern().getDataSet().size(); i++) {
             // turn your data into Entry objects
             SleepPatternDataSet item = sleep.getPattern().getDataSet().get(i);
+            String patternName = item.getName().toLowerCase();
             int total = (int) item.getDuration() / 60000;
             for (int j = 0; j < total; j++) {
                 aux++;
-                if (item.getName().equalsIgnoreCase("awake")) {
+                if (patternName.equals("awake")) {
                     entries.add(new Entry(aux, 1, item));
                     colors.add(ContextCompat.getColor(this, R.color.colorWarning));
-                } else if (item.getName().equalsIgnoreCase("asleep")) {
+                } else if (patternName.equals("asleep") || patternName.equals("rem")) {
                     entries.add(new Entry(aux, 2, item));
                     colors.add(ContextCompat.getColor(this, R.color.colorPrimaryDark));
-                } else if (item.getName().equalsIgnoreCase("restless")) {
+                } else if (patternName.equals("restless") || patternName.equals("light")) {
                     entries.add(new Entry(aux, 3, item));
                     colors.add(ContextCompat.getColor(this, R.color.colorPrimary));
-                } else if (item.getName().equalsIgnoreCase("rem")) {
-                    entries.add(new Entry(aux, 2, item));
-                    colors.add(ContextCompat.getColor(this, R.color.colorPrimaryDark));
-                } else if (item.getName().equalsIgnoreCase("light")) {
-                    entries.add(new Entry(aux, 3, item));
-                    colors.add(ContextCompat.getColor(this, R.color.colorPrimary));
-                } else if (item.getName().equalsIgnoreCase("deep")) {
+                } else if (patternName.equals("deep")) {
                     entries.add(new Entry(aux, 4, item));
                     colors.add(ContextCompat.getColor(this, R.color.colorPurple));
                 }
@@ -316,7 +311,7 @@ public class SleepDetail extends AppCompatActivity {
         mSleepChart.getAxisLeft().setAxisMinimum(0f);
         mSleepChart.getAxisLeft().setAxisMaximum(4f);
         mSleepChart.getXAxis().setAxisMinimum(1f);
-        mSleepChart.getXAxis().setAxisMaximum(entries.size() - 1);
+        mSleepChart.getXAxis().setAxisMaximum((float) (entries.size() - 1));
         mSleepChart.getXAxis().setEnabled(false);
         mSleepChart.getXAxis().setDrawGridLines(false);
         mSleepChart.getXAxis().setDrawAxisLine(false);
@@ -359,12 +354,12 @@ public class SleepDetail extends AppCompatActivity {
             if (value == 1f) {
                 result = getString(R.string.title_awake);
             } else if (value == 2f) {
-                result = sleep.getType().equalsIgnoreCase(SleepType.STAGES) ?
+                result = sleep.getType().equalsIgnoreCase(Sleep.Type.STAGES) ?
                         getString(R.string.title_rem) : getString(R.string.title_asleep);
             } else if (value == 3f) {
-                result = sleep.getType().equalsIgnoreCase(SleepType.STAGES) ?
+                result = sleep.getType().equalsIgnoreCase(Sleep.Type.STAGES) ?
                         getString(R.string.title_light) : getString(R.string.title_restless);
-            } else if (sleep.getType().equalsIgnoreCase(SleepType.STAGES) && value == 4f) {
+            } else if (sleep.getType().equalsIgnoreCase(Sleep.Type.STAGES) && value == 4f) {
                 result = getString(R.string.title_deep);
             }
             return result;

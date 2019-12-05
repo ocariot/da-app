@@ -39,14 +39,14 @@ public class PhysicalActivityListAdapter extends BaseAdapter<PhysicalActivity> {
 
     @Override
     public RecyclerView.ViewHolder createViewHolder(View view) {
-        return new ViewHolder(view);
+        return new ViewHolderActivity(view);
     }
 
     @Override
     public void showData(RecyclerView.ViewHolder holder, int position, List<PhysicalActivity> itemsList) {
-        if (holder instanceof ViewHolder) {
+        if (holder instanceof ViewHolderActivity) {
             final PhysicalActivity activity = itemsList.get(position);
-            ViewHolder h = (ViewHolder) holder;
+            ViewHolderActivity h = (ViewHolderActivity) holder;
 
             h.name.setText(activity.getName());
             h.dateStart.setText(DateUtils.convertDateTimeUTCToLocale(activity.getStartTime(),
@@ -55,28 +55,10 @@ public class PhysicalActivityListAdapter extends BaseAdapter<PhysicalActivity> {
             h.duration.setText(String.valueOf(duration));
             h.calories.setText(String.valueOf(activity.getCalories()));
 
-            String name = activity.getName();
-            if (name.equals(ActivityType.WALK)) {
-                h.image.setImageResource(R.drawable.ic_walk);
-            } else if (name.equals(ActivityType.RUN)) {
-                h.image.setImageResource(R.drawable.ic_run);
-            } else if (name.equals(ActivityType.BIKE)
-                    || name.equals(ActivityType.MOUNTAIN_BIKING)
-                    || name.equals(ActivityType.OUTDOOR_BIKE)) {
-                h.image.setImageResource(R.drawable.ic_bike);
-            } else if (name.equals(ActivityType.WORKOUT)) {
-                h.image.setImageResource(R.drawable.ic_workout);
-            } else if (name.equals(ActivityType.FITSTAR_PERSONAL)) {
-                h.image.setImageResource(R.drawable.ic_star);
-            } else if (name.equals(ActivityType.SWIM)) {
-                h.image.setImageResource(R.drawable.ic_swimming);
-            } else if (name.equals(ActivityType.SPORT)) {
-                h.image.setImageResource(R.drawable.ic_sport);
-            } else {
-                h.image.setImageResource(R.drawable.ic_workout);
-            }
+            populateImgByName(h.image, activity.getName());
 
             // distance
+            h.boxDistance.setVisibility(View.INVISIBLE);
             if (activity.getDistance() != null && activity.getDistance() > 0) {
                 double distance = activity.getDistance() / 1000;
                 double distanceRest = activity.getDistance() % 1000;
@@ -86,8 +68,6 @@ public class PhysicalActivityListAdapter extends BaseAdapter<PhysicalActivity> {
                     h.distance.setText(String.format(Locale.getDefault(), "%d", (int) distance));
                 }
                 h.boxDistance.setVisibility(View.VISIBLE);
-            } else {
-                h.boxDistance.setVisibility(View.INVISIBLE);
             }
 
             // OnClick Item
@@ -97,12 +77,34 @@ public class PhysicalActivityListAdapter extends BaseAdapter<PhysicalActivity> {
         }
     }
 
+    private void populateImgByName(ImageView img, String name) {
+        if (name.equals(ActivityType.WALK)) {
+            img.setImageResource(R.drawable.ic_walk);
+        } else if (name.equals(ActivityType.RUN)) {
+            img.setImageResource(R.drawable.ic_run);
+        } else if (name.equals(ActivityType.BIKE)
+                || name.equals(ActivityType.MOUNTAIN_BIKING)
+                || name.equals(ActivityType.OUTDOOR_BIKE)) {
+            img.setImageResource(R.drawable.ic_bike);
+        } else if (name.equals(ActivityType.WORKOUT)) {
+            img.setImageResource(R.drawable.ic_workout);
+        } else if (name.equals(ActivityType.FITSTAR_PERSONAL)) {
+            img.setImageResource(R.drawable.ic_star);
+        } else if (name.equals(ActivityType.SWIM)) {
+            img.setImageResource(R.drawable.ic_swimming);
+        } else if (name.equals(ActivityType.SPORT)) {
+            img.setImageResource(R.drawable.ic_sport);
+        } else {
+            img.setImageResource(R.drawable.ic_workout);
+        }
+    }
+
     @Override
     public void clearAnimation(RecyclerView.ViewHolder holder) {
         // Not implemented!
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolderActivity extends RecyclerView.ViewHolder {
         final View mView;
 
         @BindView(R.id.activity_img)
@@ -126,7 +128,7 @@ public class PhysicalActivityListAdapter extends BaseAdapter<PhysicalActivity> {
         @BindView(R.id.box_distance)
         LinearLayout boxDistance;
 
-        ViewHolder(View view) {
+        ViewHolderActivity(View view) {
             super(view);
             ButterKnife.bind(this, view);
             mView = view.getRootView();

@@ -94,4 +94,14 @@ public class Sleep extends Activity implements Parcelable {
     public String toString() {
         return new Gson().toJson(this);
     }
+
+    public class Type {
+        private Type() {
+            throw new IllegalStateException("Utility class. Does not allow inheritance or instances to be created!");
+        }
+
+        public static final String CLASSIC = "classic";
+        public static final String STAGES = "stages";
+    }
+
 }

@@ -16,10 +16,6 @@ import com.tapadoo.alerter.Alerter;
 import net.openid.appauth.AuthorizationException;
 import net.openid.appauth.AuthorizationResponse;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
 import br.edu.uepb.nutes.ocariot.R;
 import br.edu.uepb.nutes.ocariot.data.model.common.UserAccess;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.Child;
@@ -30,7 +26,6 @@ import br.edu.uepb.nutes.ocariot.utils.AlertMessage;
 import br.edu.uepb.nutes.ocariot.utils.DateUtils;
 import br.edu.uepb.nutes.ocariot.utils.DialogLoading;
 import br.edu.uepb.nutes.ocariot.utils.FirebaseLogEvent;
-import br.edu.uepb.nutes.ocariot.utils.MessageEvent;
 import br.edu.uepb.nutes.ocariot.view.ui.activity.ChildrenManagerActivity;
 import br.edu.uepb.nutes.ocariot.view.ui.activity.LoginActivity;
 import br.edu.uepb.nutes.ocariot.view.ui.activity.MainActivity;
@@ -116,20 +111,8 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     @Override
     public void onStart() {
         super.onStart();
-        EventBus.getDefault().register(this);
         mChild = appPref.getLastSelectedChild();
         populateView();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
     }
 
     @Override
@@ -155,7 +138,6 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         super.onDetach();
         mDisposable.dispose();
         Alerter.hide();
-        Timber.d("OPSSSSSSSS >>>>>");
     }
 
     @Override
@@ -265,11 +247,9 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                 mUserAccess.getSubjectType().equals(User.Type.FAMILY)) {
             return;
         }
-
+        switchPrefFitBit.setChecked(false);
         if (mChild.isFitbitAccessValid()) {
             switchPrefFitBit.setChecked(true);
-        } else {
-            switchPrefFitBit.setChecked(false);
         }
     }
 
@@ -346,7 +326,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                                     mChild.setFitBitAccess(userAccess);
                                     appPref.addLastSelectedChild(mChild);
                                     fitBitSync();
-                                    FirebaseLogEvent.fitbitAuthGranted(mChild.getId());
+                                    FirebaseLogEvent.fitbitAuthGranted();
                                 },
                                 err -> {
                                     mDialogSync.close();
@@ -406,7 +386,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                                     appPref.addLastSelectedChild(mChild);
                                     updateViewLastSync();
                                     showAlertResultSync(true);
-                                    FirebaseLogEvent.fitbitSync(mChild.getId());
+                                    FirebaseLogEvent.fitbitSync();
                                 },
                                 err -> {
                                     Timber.e(err);
@@ -443,7 +423,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     }
 
     private void revokeSuccess() {
-        FirebaseLogEvent.fitbitAuthRevoke(mChild.getId());
+        FirebaseLogEvent.fitbitAuthRevoke();
         switchPrefFitBit.setChecked(false);
         mChild.setFitBitAccess(null);
         appPref.addLastSelectedChild(mChild);
@@ -486,26 +466,6 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     private void openFitbitAuth() {
         mListener.onPrefClick(getResources().getString(R.string.key_fitibit));
         loginFitBit.doAuthorizationCode();
-    }
-
-    @Subscribe(threadMode = ThreadMode.POSTING)
-    public void onMessageEvent(MessageEvent event) {
-        if (event.getName().equals(MessageEvent.EventType.FITBIT_ACCESS_TOKEN_EXPIRED)) {
-            mAlertMessage.show(mContext.getResources().getString(R.string.alert_title_token_expired),
-                    mContext.getResources().getString(R.string.alert_token_expired_fitbit, mChild.getUsername()),
-                    R.color.colorDanger, R.drawable.ic_warning_dark, 20000,
-                    true, new AlertMessage.AlertMessageListener() {
-                        @Override
-                        public void onHideListener() {
-                            // not implemented!
-                        }
-
-                        @Override
-                        public void onClickListener() {
-                            openFitbitAuth();
-                        }
-                    });
-        }
     }
 
     public interface OnClickSettingsListener {

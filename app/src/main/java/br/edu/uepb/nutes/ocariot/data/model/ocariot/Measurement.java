@@ -110,4 +110,13 @@ public class Measurement implements Parcelable {
     public String toString() {
         return new Gson().toJson(this);
     }
+
+    class Type {
+        private Type() {
+            throw new IllegalStateException("Utility class. Does not allow inheritance or instances to be created!");
+        }
+
+        static final String TEMPERATURE = "temperature";
+        static final String HUMIDITY = "humidity";
+    }
 }

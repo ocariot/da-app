@@ -112,12 +112,13 @@ public class LoginActivity extends AppCompatActivity {
             return false;
         });
 
-        AccelerateDecelerateInterpolator ACCELERATE_DECELERATE = new AccelerateDecelerateInterpolator();
-        RandomTransitionGenerator generator = new RandomTransitionGenerator(30000, ACCELERATE_DECELERATE);
+        AccelerateDecelerateInterpolator accelerateDecelerate = new AccelerateDecelerateInterpolator();
+        RandomTransitionGenerator generator = new RandomTransitionGenerator(30000, accelerateDecelerate);
         mImageBack.setTransitionGenerator(generator); // set new transition on kenburns view
 
         regionRadioGroup.setOnCheckedChangeListener((group, checkedId) -> {
             slideUp(localeText);
+            appPref.changedOcariotUrl(true);
             if (checkedId == R.id.brazil_radioButton) {
                 localeText.setText(R.string.brazilian_pilot);
                 europeRadioButton.setScaleX(0.85f);
@@ -204,7 +205,7 @@ public class LoginActivity extends AppCompatActivity {
                     }
                     appPref.addUserAccessOcariot(userAccess); // save user logged
                     getResources(userAccess);
-                    FirebaseLogEvent.login(userAccess.getUserId(), userAccess.getSubjectType());
+                    FirebaseLogEvent.login(userAccess.getSubjectType());
                 }, error -> {
                     if (error instanceof HttpException) {
                         HttpException httpEx = ((HttpException) error);

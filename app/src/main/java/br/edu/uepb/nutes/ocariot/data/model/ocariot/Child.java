@@ -6,6 +6,8 @@ import androidx.annotation.NonNull;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Objects;
+
 import br.edu.uepb.nutes.ocariot.data.model.common.UserAccess;
 
 /**
@@ -87,6 +89,18 @@ public class Child extends User implements Comparable<Child> {
      */
     public static Child jsonDeserialize(String json) {
         return new Gson().fromJson(json, Child.class);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), super.getUsername());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Child)) return false;
+        Child child = (Child) o;
+        return Objects.equals(super.getUsername(), child.getUsername());
     }
 
     @NonNull

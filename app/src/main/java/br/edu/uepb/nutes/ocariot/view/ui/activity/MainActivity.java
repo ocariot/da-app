@@ -50,7 +50,6 @@ public class MainActivity extends AppCompatActivity implements
         SleepListFragment.OnClickSleepListener,
         WelcomeFragment.OnClickWelcomeListener,
         BottomNavigationView.OnNavigationItemSelectedListener {
-    public final int FIRST_OPEN_CHILDREN_MANAGER = 1;
     public static final String KEY_DO_NOT_LOGIN_FITBIT = "key_do_not_login_fitbit";
 
     @BindView(R.id.toolbar)
@@ -282,12 +281,12 @@ public class MainActivity extends AppCompatActivity implements
     private void openChildrenManagerActivity(boolean isFirst) {
         Intent it = new Intent(this, ChildrenManagerActivity.class);
         it.putExtra(ChildrenManagerActivity.EXTRA_IS_FIRST_OPEN, isFirst);
-        startActivityForResult(it, FIRST_OPEN_CHILDREN_MANAGER);
+        startActivityForResult(it, Activity.RESULT_FIRST_USER);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == FIRST_OPEN_CHILDREN_MANAGER && resultCode == Activity.RESULT_FIRST_USER) {
+        if (requestCode == Activity.RESULT_FIRST_USER && resultCode == Activity.RESULT_FIRST_USER) {
             finish();
         }
         super.onActivityResult(requestCode, resultCode, data);

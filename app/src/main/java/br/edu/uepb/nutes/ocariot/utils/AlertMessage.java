@@ -58,6 +58,8 @@ public class AlertMessage {
                 case 400:
                     showError(R.string.title_error, R.string.error_400);
                     return;
+                case 401: //
+                    return;
                 case 403:
                     showError(R.string.title_error, R.string.error_403);
                     return;

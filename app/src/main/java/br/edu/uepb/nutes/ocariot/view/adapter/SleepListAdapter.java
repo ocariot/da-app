@@ -13,7 +13,6 @@ import java.util.Locale;
 
 import br.edu.uepb.nutes.ocariot.R;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.Sleep;
-import br.edu.uepb.nutes.ocariot.data.model.ocariot.SleepType;
 import br.edu.uepb.nutes.ocariot.utils.DateUtils;
 import br.edu.uepb.nutes.ocariot.view.adapter.base.BaseAdapter;
 import butterknife.BindView;
@@ -38,14 +37,14 @@ public class SleepListAdapter extends BaseAdapter<Sleep> {
 
     @Override
     public RecyclerView.ViewHolder createViewHolder(View view) {
-        return new ViewHolder(view);
+        return new ViewHolderSleep(view);
     }
 
     @Override
     public void showData(RecyclerView.ViewHolder holder, int position, List<Sleep> itemsList) {
-        if (holder instanceof ViewHolder) {
+        if (holder instanceof ViewHolderSleep) {
             final Sleep sleep = itemsList.get(position);
-            ViewHolder h = (ViewHolder) holder;
+            ViewHolderSleep h = (ViewHolderSleep) holder;
 
             h.dateStart.setText(DateUtils.convertDateTimeUTCToLocale(sleep.getStartTime(),
                     context.getResources().getString(R.string.date_time_abb4), null));
@@ -58,9 +57,9 @@ public class SleepListAdapter extends BaseAdapter<Sleep> {
                     sleep.getDuration() / 3600000, (sleep.getDuration() / 60000) % 60));
 
             int dividend = 0;
-            if (sleep.getType().equalsIgnoreCase(SleepType.CLASSIC)) {
+            if (sleep.getType().equalsIgnoreCase(Sleep.Type.CLASSIC)) {
                 dividend = sleep.getPattern().getSummary().getAsleep().getDuration();
-            } else if (sleep.getType().equalsIgnoreCase(SleepType.STAGES)) {
+            } else if (sleep.getType().equalsIgnoreCase(Sleep.Type.STAGES)) {
                 dividend = (sleep.getPattern().getSummary().getDeep().getDuration()) +
                         (sleep.getPattern().getSummary().getLight().getDuration()) +
                         (sleep.getPattern().getSummary().getRem().getDuration());
@@ -89,7 +88,7 @@ public class SleepListAdapter extends BaseAdapter<Sleep> {
         // Not implemented!
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolderSleep extends RecyclerView.ViewHolder {
         final View mView;
 
         @BindView(R.id.sleep_date_start_tv)
@@ -104,7 +103,7 @@ public class SleepListAdapter extends BaseAdapter<Sleep> {
         @BindView(R.id.sleep_efficiency_tv)
         TextView efficiency;
 
-        ViewHolder(View view) {
+        ViewHolderSleep(View view) {
             super(view);
             ButterKnife.bind(this, view);
             mView = view.getRootView();

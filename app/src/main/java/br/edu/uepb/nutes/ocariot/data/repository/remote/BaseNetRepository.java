@@ -32,12 +32,24 @@ public abstract class BaseNetRepository {
     private OkHttpClient.Builder mClient;
 
     public BaseNetRepository() {
+        mClient = getUnsafeOkHttpClient();
+        mClient.followRedirects(false).cache(provideHttpCache());
+
         if (BuildConfig.DEBUG) {
             HttpLoggingInterceptor logging = new HttpLoggingInterceptor(s -> Timber.tag("OkHttp").d(s));
             logging.level(HttpLoggingInterceptor.Level.BODY);
             this.addInterceptor(logging);
             this.addInterceptor(new NetworkConnectionInterceptor());
         }
+    }
+
+    protected Retrofit provideRetrofit(String baseUrl) {
+        return new Retrofit.Builder()
+                .baseUrl(baseUrl)
+                .addConverterFactory(GsonConverterFactory.create(provideGson()))
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .client(mClient.build())
+                .build();
     }
 
     private Cache provideHttpCache() {
@@ -51,31 +63,18 @@ public abstract class BaseNetRepository {
         return gsonBuilder.create();
     }
 
-    private OkHttpClient provideOkHttpClient() {
-        if (mClient == null) mClient = new OkHttpClient().newBuilder();
-        mClient.followRedirects(false)
-                .cache(provideHttpCache());
-
-        return mClient.build();
-    }
-
     protected void addInterceptor(Interceptor interceptor) {
         if (interceptor == null) return;
-        if (mClient == null) mClient = this.getUnsafeOkHttpClient();
-
         mClient.addInterceptor(interceptor);
     }
 
-    protected Retrofit provideRetrofit(String baseUrl) {
-        return new Retrofit.Builder()
-                .baseUrl(baseUrl)
-                .addConverterFactory(GsonConverterFactory.create(provideGson()))
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .client(provideOkHttpClient())
-                .build();
-    }
-
     private OkHttpClient.Builder getUnsafeOkHttpClient() {
+        Timber.d("OkHttpClient initialized!");
+        OkHttpClient.Builder client = new OkHttpClient.Builder()
+                .connectTimeout(1, TimeUnit.MINUTES)
+                .readTimeout(1, TimeUnit.MINUTES)
+                .writeTimeout(1, TimeUnit.MINUTES);
+
         try {
             // Create a trust manager that does not validate certificate chains
             final TrustManager[] trustAllCerts = new TrustManager[]{
@@ -98,21 +97,17 @@ public abstract class BaseNetRepository {
             };
 
             // Install the all-trusting trust manager
-            final SSLContext sslContext = SSLContext.getInstance("SSL");
+            final SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
             sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
 
             // Create an ssl socket factory with our all-trusting manager
             final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
 
-            OkHttpClient.Builder builder = new OkHttpClient.Builder()
-                    .connectTimeout(1, TimeUnit.MINUTES)
-                    .readTimeout(1, TimeUnit.MINUTES)
-                    .writeTimeout(1, TimeUnit.MINUTES)
-                    .sslSocketFactory(sslSocketFactory, (X509TrustManager) trustAllCerts[0])
-                    .hostnameVerifier((hostname, session) -> true);
-            return builder;
+            client.sslSocketFactory(sslSocketFactory, (X509TrustManager) trustAllCerts[0])
+                    .hostnameVerifier((hostname, session) -> hostname.equalsIgnoreCase(session.getPeerHost()));
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            Timber.w("getUnsafeOkHttpClient() %s", e.getMessage());
         }
+        return client;
     }
 }

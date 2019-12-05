@@ -29,6 +29,7 @@ public class DialogLoading extends DialogFragment {
      * Empty constructor is required for DialogFragment
      */
     public DialogLoading() {
+        // not implemented!
     }
 
     /**
