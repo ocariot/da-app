@@ -8,8 +8,8 @@ android {
         applicationId "br.edu.uepb.nutes.ocariot"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 7
-        versionName "1.9.1"
+        versionCode 8
+        versionName "1.9.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         manifestPlaceholders = [
@@ -22,7 +22,6 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField "String", "PREFERENCES_FILENAME", "\"$PREFERENCES_FILENAME\""
-            buildConfigField "boolean", "UNSAFE_CONNECTION", "$UNSAFE_CONNECTION"
             buildConfigField "String", "OCARIOT_BR_BASE_URL", "\"$OCARIOT_BR_BASE_URL\""
             buildConfigField "String", "OCARIOT_EU_BASE_URL", "\"$OCARIOT_EU_BASE_URL\""
             buildConfigField "String", "FITBIT_AUTH_URL", "\"$FITBIT_DEV_AUTH_URL\""
@@ -33,7 +32,6 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField "String", "PREFERENCES_FILENAME", "\"$PREFERENCES_FILENAME\""
-            buildConfigField "boolean", "UNSAFE_CONNECTION", "false"
             buildConfigField "String", "OCARIOT_BR_BASE_URL", "\"$OCARIOT_BR_BASE_URL\""
             buildConfigField "String", "OCARIOT_EU_BASE_URL", "\"$OCARIOT_EU_BASE_URL\""
             buildConfigField "String", "FITBIT_AUTH_URL", "\"$FITBIT_PROD_AUTH_URL\""

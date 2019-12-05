@@ -119,7 +119,6 @@ public class LoginActivity extends AppCompatActivity {
 
         regionRadioGroup.setOnCheckedChangeListener((group, checkedId) -> {
             slideUp(localeText);
-            Timber.d("URL CHANGED!!!");
             appPref.changedOcariotUrl(true);
             if (checkedId == R.id.brazil_radioButton) {
                 localeText.setText(R.string.brazilian_pilot);
@@ -207,7 +206,7 @@ public class LoginActivity extends AppCompatActivity {
                     }
                     appPref.addUserAccessOcariot(userAccess); // save user logged
                     getResources(userAccess);
-                    FirebaseLogEvent.login(userAccess.getUserId(), userAccess.getSubjectType());
+                    FirebaseLogEvent.login(userAccess.getSubjectType());
                 }, error -> {
                     if (error instanceof HttpException) {
                         HttpException httpEx = ((HttpException) error);

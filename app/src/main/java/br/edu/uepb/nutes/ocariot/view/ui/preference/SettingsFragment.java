@@ -155,7 +155,6 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         super.onDetach();
         mDisposable.dispose();
         Alerter.hide();
-        Timber.d("OPSSSSSSSS >>>>>");
     }
 
     @Override
@@ -346,7 +345,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                                     mChild.setFitBitAccess(userAccess);
                                     appPref.addLastSelectedChild(mChild);
                                     fitBitSync();
-                                    FirebaseLogEvent.fitbitAuthGranted(mChild.getId());
+                                    FirebaseLogEvent.fitbitAuthGranted();
                                 },
                                 err -> {
                                     mDialogSync.close();
@@ -406,7 +405,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                                     appPref.addLastSelectedChild(mChild);
                                     updateViewLastSync();
                                     showAlertResultSync(true);
-                                    FirebaseLogEvent.fitbitSync(mChild.getId());
+                                    FirebaseLogEvent.fitbitSync();
                                 },
                                 err -> {
                                     Timber.e(err);
@@ -443,7 +442,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     }
 
     private void revokeSuccess() {
-        FirebaseLogEvent.fitbitAuthRevoke(mChild.getId());
+        FirebaseLogEvent.fitbitAuthRevoke();
         switchPrefFitBit.setChecked(false);
         mChild.setFitBitAccess(null);
         appPref.addLastSelectedChild(mChild);

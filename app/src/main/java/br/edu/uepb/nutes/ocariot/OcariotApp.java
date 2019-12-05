@@ -4,7 +4,6 @@ import android.app.Application;
 import android.content.Context;
 
 import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.jetbrains.annotations.NotNull;
@@ -23,21 +22,18 @@ public class OcariotApp extends Application {
         instance = (OcariotApp) getApplicationContext();
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(getContext());
 
-        // Crashlytics
-        CrashlyticsCore core = new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build();
-        Fabric.with(this, new Crashlytics.Builder().core(core).build());
-
-        // Logs Timber
-        if (BuildConfig.DEBUG) {
-            Timber.plant(new Timber.DebugTree() {
-                @Override
-                protected String createStackElementTag(@NotNull StackTraceElement element) {
-                    return super.createStackElementTag(element) + ":" + element.getLineNumber();
-                }
-            });
+        if (!BuildConfig.DEBUG) {
+            Fabric.with(this, new Crashlytics());
+            Timber.plant(new CrashReportingTree());
+            return;
         }
-        Fabric.with(this, new Crashlytics());
-        Timber.plant(new CrashReportingTree());
+
+        Timber.plant(new Timber.DebugTree() {
+            @Override
+            protected String createStackElementTag(@NotNull StackTraceElement element) {
+                return super.createStackElementTag(element) + ":" + element.getLineNumber();
+            }
+        });
     }
 
     public static OcariotApp getAppContext() {

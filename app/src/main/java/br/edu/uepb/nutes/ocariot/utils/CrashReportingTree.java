@@ -3,12 +3,11 @@ package br.edu.uepb.nutes.ocariot.utils;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.answers.CustomEvent;
 
 import org.jetbrains.annotations.Nullable;
 
 import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
+import retrofit2.HttpException;
 import timber.log.Timber;
 
 public class CrashReportingTree extends Timber.Tree {
@@ -27,16 +26,16 @@ public class CrashReportingTree extends Timber.Tree {
         Crashlytics.setString(CRASHLYTICS_KEY_TAG, tag);
         Crashlytics.setString(CRASHLYTICS_KEY_MESSAGE, message);
         Crashlytics.setUserIdentifier(AppPreferencesHelper.getInstance().getUserAccessOcariot().getUserId());
-        Crashlytics.setString("user", AppPreferencesHelper.getInstance().getUserAccessOcariot().getUserId());
-        Crashlytics.setString("child", AppPreferencesHelper.getInstance().getLastSelectedChild().getId());
+
+        if (throwable instanceof HttpException) {
+            HttpException httpEx = ((HttpException) throwable);
+            Crashlytics.setString("http_message", httpEx.getMessage());
+        }
+
         if (throwable == null) {
             Crashlytics.logException(new Throwable(message));
             return;
         }
         Crashlytics.logException(throwable);
-
-        if (priority == Log.INFO) {
-            Answers.getInstance().logCustom(new CustomEvent(message));
-        }
     }
 }
