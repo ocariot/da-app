@@ -39,12 +39,12 @@
 
         <LinearLayout
             android:id="@+id/box_weight"
-            android:padding="@dimen/default_padding"
-            android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="visible"
-            android:orientation="vertical">
+            android:layout_marginTop="10dp"
+            android:orientation="vertical"
+            android:padding="@dimen/default_padding"
+            android:visibility="visible">
 
             <TextView
                 android:layout_width="match_parent"
@@ -106,10 +106,11 @@
                 </LinearLayout>
 
             </LinearLayout>
+
             <TextView
                 android:layout_width="match_parent"
-                android:layout_marginTop="20dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
                 android:gravity="center"
                 android:text="@string/weight_average"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
@@ -118,8 +119,8 @@
                 android:id="@+id/weight_month_average_tv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="--"
                 android:gravity="center"
+                android:text="--"
                 android:textColor="@color/colorPurple"
                 android:textSize="30sp" />
         </LinearLayout>
@@ -127,8 +128,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingBottom="42dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingBottom="42dp">
 
             <View
                 android:id="@+id/line2_view"
@@ -184,10 +185,10 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="32dp"
-                        android:gravity="left|bottom"
                         android:layout_marginStart="10dp"
+                        android:gravity="left|bottom"
                         android:text="bpm"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Small"  />
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
                 </RelativeLayout>
             </LinearLayout>
 
@@ -217,8 +218,8 @@
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:text="0"
-                            android:textColor="@color/colorPrimaryDark"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+                            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                            android:textColor="@color/colorPrimaryDark" />
 
                         <TextView
                             android:layout_width="100dp"
@@ -226,8 +227,8 @@
                             android:layout_below="@+id/hr_min_tv"
                             android:gravity="center"
                             android:text="min"
-                            android:textColor="@color/colorPrimaryDark"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                            android:textColor="@color/colorPrimaryDark" />
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -242,8 +243,8 @@
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:text="0"
-                            android:textColor="@color/colorPrimaryDark"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+                            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                            android:textColor="@color/colorPrimaryDark" />
 
                         <TextView
                             android:layout_width="100dp"
@@ -251,8 +252,8 @@
                             android:layout_below="@+id/hr_max_tv"
                             android:gravity="center"
                             android:text="max"
-                            android:textColor="@color/colorPrimaryDark"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                            android:textColor="@color/colorPrimaryDark" />
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -267,8 +268,8 @@
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:text="0"
-                            android:textColor="@color/colorPrimaryDark"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+                            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                            android:textColor="@color/colorPrimaryDark" />
 
                         <TextView
                             android:layout_width="100dp"
@@ -276,8 +277,8 @@
                             android:layout_below="@+id/hr_avg_tv"
                             android:gravity="center"
                             android:text="avg"
-                            android:textColor="@color/colorPrimaryDark"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                            android:textColor="@color/colorPrimaryDark" />
                     </RelativeLayout>
                 </LinearLayout>
 

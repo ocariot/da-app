@@ -78,7 +78,7 @@
     <string name="key_signout" translatable="false">key_signout</string>
     <string name="key_sync_data" translatable="false">key_sync_data</string>
     <string name="key_children" translatable="false">key_children_manager</string>
-    <string name="settings_summary_version" translatable="false">1.9.2</string>
+    <string name="settings_summary_version" translatable="false">1.9.3</string>
     <string name="login_with_fitbit">Provide access to Fitbit</string>
     <string name="login_do_not_user_fitbit">Do not currently use Fitbit</string>
     <string name="settings_title">Settings</string>

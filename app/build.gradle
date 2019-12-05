@@ -8,8 +8,8 @@ android {
         applicationId "br.edu.uepb.nutes.ocariot"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 8
-        versionName "1.9.2"
+        versionCode 9
+        versionName "1.9.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         manifestPlaceholders = [
@@ -30,6 +30,7 @@ android {
         release {
             debuggable false
             minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField "String", "PREFERENCES_FILENAME", "\"$PREFERENCES_FILENAME\""
             buildConfigField "String", "OCARIOT_BR_BASE_URL", "\"$OCARIOT_BR_BASE_URL\""
