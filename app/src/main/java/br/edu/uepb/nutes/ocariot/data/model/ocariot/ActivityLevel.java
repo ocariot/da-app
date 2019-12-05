@@ -8,6 +8,8 @@ import androidx.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Objects;
+
 /**
  * Represents ActivityLevel object.
  *
@@ -15,10 +17,10 @@ import com.google.gson.annotations.SerializedName;
  */
 @Keep
 public class ActivityLevel implements Parcelable, Comparable<ActivityLevel> {
-    public static String SEDENTARY_LEVEL = "sedentary";
-    public static String LIGHTLY_LEVEL = "lightly";
-    public static String FAIRLY_LEVEL = "fairly";
-    public static String VERY_LEVEL = "very";
+    public static final String SEDENTARY_LEVEL = "sedentary";
+    public static final String LIGHTLY_LEVEL = "lightly";
+    public static final String FAIRLY_LEVEL = "fairly";
+    public static final String VERY_LEVEL = "very";
 
     @SerializedName(value = "name")
     private String name; // Name of activity level (sedentary, light, fair or very).
@@ -80,12 +82,25 @@ public class ActivityLevel implements Parcelable, Comparable<ActivityLevel> {
         return 0;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "ActivityLevel{" +
                 "duration=" + duration +
                 ", name='" + name + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof ActivityLevel)) return false;
+        ActivityLevel that = (ActivityLevel) o;
+        return duration == that.duration && Objects.equals(name, that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, duration);
     }
 
     @Override

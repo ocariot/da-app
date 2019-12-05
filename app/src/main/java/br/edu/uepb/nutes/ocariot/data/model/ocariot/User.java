@@ -25,7 +25,7 @@ public class User {
     @SerializedName("last_login")
     private String lastLogin;
 
-    private transient String type;
+    private String type;
 
     public User() {
     }
@@ -119,11 +119,15 @@ public class User {
     }
 
     public static class Type {
-        public static String ADMIN = "admin";
-        public static String CHILD = "child";
-        public static String EDUCATOR = "educator";
-        public static String HEALTH_PROFESSIONAL = "healthprofessional";
-        public static String FAMILY = "family";
-        public static String APPLICATION = "application"; // Must not login to APP!!!
+        private Type() {
+            throw new IllegalStateException("Utility class. Does not allow inheritance or instances to be created!");
+        }
+
+        public static final String ADMIN = "admin";
+        public static final String CHILD = "child";
+        public static final String EDUCATOR = "educator";
+        public static final String HEALTH_PROFESSIONAL = "healthprofessional";
+        public static final String FAMILY = "family";
+        public static final String APPLICATION = "application"; // Must not login to APP!!!
     }
 }

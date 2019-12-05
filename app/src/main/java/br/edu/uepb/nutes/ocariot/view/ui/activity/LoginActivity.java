@@ -41,7 +41,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.HttpException;
-import timber.log.Timber;
 
 import static android.view.inputmethod.InputMethodManager.HIDE_NOT_ALWAYS;
 
@@ -113,8 +112,8 @@ public class LoginActivity extends AppCompatActivity {
             return false;
         });
 
-        AccelerateDecelerateInterpolator ACCELERATE_DECELERATE = new AccelerateDecelerateInterpolator();
-        RandomTransitionGenerator generator = new RandomTransitionGenerator(30000, ACCELERATE_DECELERATE);
+        AccelerateDecelerateInterpolator accelerateDecelerate = new AccelerateDecelerateInterpolator();
+        RandomTransitionGenerator generator = new RandomTransitionGenerator(30000, accelerateDecelerate);
         mImageBack.setTransitionGenerator(generator); // set new transition on kenburns view
 
         regionRadioGroup.setOnCheckedChangeListener((group, checkedId) -> {

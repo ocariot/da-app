@@ -43,14 +43,14 @@ public class ChildListAdapter extends BaseAdapter<Child> implements Filterable {
 
     @Override
     public RecyclerView.ViewHolder createViewHolder(View view) {
-        return new ViewHolder(view);
+        return new ViewHolderChild(view);
     }
 
     @Override
     public void showData(RecyclerView.ViewHolder holder, int position, List<Child> itemsList) {
-        if (holder instanceof ViewHolder) {
+        if (holder instanceof ViewHolderChild) {
             final Child child = (Child) childListFiltered.get(position);
-            ViewHolder h = (ViewHolder) holder;
+            ViewHolderChild h = (ViewHolderChild) holder;
 
             h.name.setText(child.getUsername());
 
@@ -134,7 +134,7 @@ public class ChildListAdapter extends BaseAdapter<Child> implements Filterable {
         return childListFiltered.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolderChild extends RecyclerView.ViewHolder {
         final View mView;
 
         @BindView(R.id.name_child)
@@ -149,7 +149,7 @@ public class ChildListAdapter extends BaseAdapter<Child> implements Filterable {
         @BindView(R.id.gender_img)
         ImageView gender;
 
-        ViewHolder(View view) {
+        ViewHolderChild(View view) {
             super(view);
             ButterKnife.bind(this, view);
             mView = view.getRootView();

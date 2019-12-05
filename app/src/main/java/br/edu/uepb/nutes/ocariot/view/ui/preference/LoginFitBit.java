@@ -29,13 +29,12 @@ import io.reactivex.Single;
  * @author Copyright (c) 2018, NUTES/UEPB
  */
 public class LoginFitBit {
-    private final int REQUEST_LOGIN_FITBIT_SUCCESS = 2;
-    private final int REQUEST_LOGIN_FITBIT_CANCELED = 3;
+    private static final int REQUEST_LOGIN_FITBIT_SUCCESS = 2;
+    private static final int REQUEST_LOGIN_FITBIT_CANCELED = 3;
 
-    private final Uri AUTHORIZATION_ENDPOINT = Uri.parse(BuildConfig.FITBIT_AUTH_URL);
-    private final Uri TOKEN_ENDPOINT = Uri.parse(BuildConfig.FITBIT_TOKEN_URL);
-
-    private final Uri REDIRECT_URI = Uri.parse("fitbitauth://finished");
+    private final Uri authURL = Uri.parse(BuildConfig.FITBIT_AUTH_URL);
+    private final Uri tokenURL = Uri.parse(BuildConfig.FITBIT_TOKEN_URL);
+    private final Uri redirectURL = Uri.parse("fitbitauth://finished");
 
     private Context mContext;
 
@@ -43,7 +42,7 @@ public class LoginFitBit {
     private AuthorizationService mAuthService;
     private AuthorizationRequest mAuthRequest;
     private AppPreferencesHelper appPref;
-    private String CLIENT_SECRET;
+    private String clientSecret;
 
     public LoginFitBit(Context context) {
         this.mContext = context;
@@ -56,20 +55,20 @@ public class LoginFitBit {
      * Initialize settings to obtain authorization code.
      */
     private void initConfig() {
-        String CLIENT_ID = appPref.getFitbitAppData().getClientId();
-        CLIENT_SECRET = appPref.getFitbitAppData().getClientSecret();
+        String clientId = appPref.getFitbitAppData().getClientId();
+        clientSecret = appPref.getFitbitAppData().getClientSecret();
 
         AuthorizationServiceConfiguration serviceConfig = new AuthorizationServiceConfiguration(
-                AUTHORIZATION_ENDPOINT, // authorization endpoint
-                TOKEN_ENDPOINT // token endpoint
+                authURL, // authorization endpoint
+                tokenURL // token endpoint
         );
 
         AuthorizationRequest.Builder authRequestBuilder =
                 new AuthorizationRequest.Builder(
                         serviceConfig, // the authorization service configuration
-                        CLIENT_ID, // the client ID, typically pre-registered and static
+                        clientId, // the client ID, typically pre-registered and static
                         ResponseTypeValues.CODE, // the response_type value: we want a code
-                        REDIRECT_URI); // the redirect URI to which the auth response is sent
+                        redirectURL); // the redirect URI to which the auth response is sent
 
         mAuthState = new AuthState(serviceConfig);
 
@@ -106,7 +105,7 @@ public class LoginFitBit {
      * @return Single<UserAccess>
      */
     Single<UserAccess> doAuthorizationToken(final AuthorizationResponse authResp) {
-        final ClientAuthentication clientAuth = new ClientSecretBasic(CLIENT_SECRET);
+        final ClientAuthentication clientAuth = new ClientSecretBasic(clientSecret);
         if (mAuthService == null) mAuthService = new AuthorizationService(mContext);
 
         return Single.create(emitter -> mAuthService.performTokenRequest(

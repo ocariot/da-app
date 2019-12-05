@@ -1,5 +1,6 @@
 package br.edu.uepb.nutes.ocariot.service;
 
+import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattService;
@@ -16,10 +17,9 @@ import timber.log.Timber;
 public class HRManager extends BluetoothManager {
     public static final UUID HR_SERVICE_UUID = UUID.fromString("0000180D-0000-1000-8000-00805f9b34fb");
 
-    private final UUID BODY_SENSOR_LOCATION_CHARACTERISTIC_UUID = UUID.fromString("00002A38-0000-1000-8000-00805f9b34fb");
-    private final UUID HEART_RATE_MEASUREMENT_CHARACTERISTIC_UUID = UUID.fromString("00002A37-0000-1000-8000-00805f9b34fb");
-    private final byte HEART_RATE_VALUE_FORMAT = 0x01; // 1 bit
+    private final UUID heartRateCharacteristicUUID = UUID.fromString("00002A37-0000-1000-8000-00805f9b34fb");
 
+    @SuppressLint("StaticFieldLeak")
     private static HRManager managerInstance = null;
     private HRManagerCallback mHeartRateCallback;
 
@@ -52,7 +52,7 @@ public class HRManager extends BluetoothManager {
     void setCharacteristicWrite(BluetoothGatt gatt) {
         final BluetoothGattService service = gatt.getService(HR_SERVICE_UUID);
         if (service != null) {
-            mCharacteristic = service.getCharacteristic(HEART_RATE_MEASUREMENT_CHARACTERISTIC_UUID);
+            mCharacteristic = service.getCharacteristic(heartRateCharacteristicUUID);
         }
     }
 
@@ -64,11 +64,12 @@ public class HRManager extends BluetoothManager {
 
             // false 	Heart Rate Value Format is set to UINT8. Units: beats per minute (bpm)
             // true 	Heart Rate Value Format is set to UINT16. Units: beats per minute (bpm)
-            final boolean value16bit = (flags & HEART_RATE_VALUE_FORMAT) > 0;
+            // 1 bit
+            byte heartRateValueFormat = 0x01;
+            final boolean value16bit = (flags & heartRateValueFormat) > 0;
 
             // heart rate value is 8 or 16 bit long
             int heartRate = data.getIntValue(value16bit ? Data.FORMAT_UINT16 : Data.FORMAT_UINT8, offset++); // bits per minute
-
             mHeartRateCallback.onMeasurementReceived(device, heartRate, DateUtils.getCurrentDatetimeUTC());
         }
 
@@ -96,7 +97,7 @@ public class HRManager extends BluetoothManager {
 
         @Override
         public void onLinkLossOccurred(@NonNull BluetoothDevice device) {
-
+            Timber.d("onLinkLossOccurred() - %s", device.getName());
         }
 
         @Override
@@ -106,7 +107,7 @@ public class HRManager extends BluetoothManager {
 
         @Override
         public void onDeviceReady(@NonNull BluetoothDevice device) {
-
+            Timber.d("onDeviceReady() - %s", device.getName());
         }
 
         @Override
@@ -131,7 +132,7 @@ public class HRManager extends BluetoothManager {
 
         @Override
         public void onDeviceNotSupported(@NonNull BluetoothDevice device) {
-
+            Timber.d("onDeviceNotSupported() - %s", device.getName());
         }
     };
 }

@@ -18,11 +18,11 @@ import br.edu.uepb.nutes.ocariot.exception.LocalPreferenceException;
  * @author Copyright (c) 2018, NUTES/UEPB
  */
 public class AppPreferencesHelper implements PreferencesHelper {
-    private final String PREF_KEY_AUTH_OCARIOT = "pref_key_user_access_ocariot";
-    private final String PREF_KEY_LAST_SELECTED_CHILD = "pref_key_user_profile";
-    private final String PREF_KEY_FITBIT_DATA = "pref_key_fitbit_data";
-    private final String PREF_KEY_OCARIOT_API = "pref_key_ocariot_api";
-    private final String PREF_KEY_CHANGED_OCARIOT_API = "pref_key_changed_ocariot_api";
+    private static final String PREF_KEY_AUTH_OCARIOT = "pref_key_user_access_ocariot";
+    private static final String PREF_KEY_LAST_SELECTED_CHILD = "pref_key_user_profile";
+    private static final String PREF_KEY_FITBIT_DATA = "pref_key_fitbit_data";
+    private static final String PREF_KEY_OCARIOT_API = "pref_key_ocariot_api";
+    private static final String PREF_KEY_CHANGED_OCARIOT_API = "pref_key_changed_ocariot_api";
 
     private static AppPreferencesHelper instance;
     private SharedPreferences mPrefs;

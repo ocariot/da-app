@@ -40,11 +40,6 @@ public abstract class BluetoothManager extends BleManager<BluetoothManagerCallba
 
     abstract void setCharacteristicWrite(BluetoothGatt gatt);
 
-    /**
-     * BluetoothGatt callbacks object.
-     */
-    private boolean mSupported;
-
     private final BleManagerGattCallback mGattCallback = new BleManagerGattCallback() {
 
         @Override
@@ -55,18 +50,12 @@ public abstract class BluetoothManager extends BleManager<BluetoothManagerCallba
         @Override
         public boolean isRequiredServiceSupported(@NonNull final BluetoothGatt gatt) {
             setCharacteristicWrite(gatt);
-            boolean writeRequest = false;
-            if (mCharacteristic != null) {
-                final int rxProperties = mCharacteristic.getProperties();
-                writeRequest = (rxProperties & BluetoothGattCharacteristic.PROPERTY_WRITE) > 0;
-            }
-
-            mSupported = mCharacteristic != null && writeRequest;
             return true;
         }
 
         @Override
         protected void onDeviceDisconnected() {
+            // not implemented!
         }
     };
 }

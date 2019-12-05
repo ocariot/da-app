@@ -5,7 +5,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -16,25 +15,21 @@ import java.util.TimeZone;
  */
 public final class DateUtils {
     private static final String DATE_FORMAT_DATE_TIME = "yyyy-MM-dd'T'HH:mm:ss";
+    private static final String DATE_FORMAT = "yyyy-MM-dd";
 
-    /**
-     * Get/Retrieve calendar instance.
-     *
-     * @return The Calendar.
-     */
-    private static Calendar getCalendar() {
-        return GregorianCalendar.getInstance();
+    private DateUtils() {
+        throw new IllegalStateException("Utility class. Does not allow inheritance or instances to be created!");
     }
 
     private static Calendar convertStringDateToCalendar(String date, String format) {
-        if (format == null || format.length() == 0) format = "yyyy-MM-dd";
+        if (format == null || format.length() == 0) format = DATE_FORMAT;
 
         Calendar calendar = Calendar.getInstance();
         try {
             DateFormat df = new SimpleDateFormat(format, Locale.getDefault());
             calendar.setTime(df.parse(date));
         } catch (ParseException e) {
-            e.printStackTrace();
+            return calendar;
         }
         return calendar;
     }
@@ -49,7 +44,7 @@ public final class DateUtils {
     private static String formatDate(long milliseconds, String formatDate) {
         if (formatDate == null) return null;
 
-        Calendar calendar = DateUtils.getCalendar();
+        Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(milliseconds);
 
         DateFormat dateFormat = new SimpleDateFormat(formatDate, Locale.getDefault());
@@ -69,9 +64,8 @@ public final class DateUtils {
             DateFormat formatUTC = new SimpleDateFormat(DateUtils.DATE_FORMAT_DATE_TIME, Locale.getDefault());
             return formatUTC.parse(datetime);
         } catch (ParseException e) {
-            e.printStackTrace();
+            return null;
         }
-        return null;
     }
 
     /**
@@ -90,7 +84,7 @@ public final class DateUtils {
             dateUTC = formatUTC.parse(datetime);
             formatUTC.setTimeZone(TimeZone.getTimeZone("UTC"));
         } catch (ParseException e) {
-            e.printStackTrace();
+            return "";
         }
 
         return formatUTC.format(dateUTC);
@@ -118,7 +112,7 @@ public final class DateUtils {
             utcFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
             dateUTC = utcFormat.parse(datetime);
         } catch (ParseException e) {
-            e.printStackTrace();
+            return "";
         }
 
         return formatLocale.format(dateUTC);
@@ -141,7 +135,7 @@ public final class DateUtils {
      * @return String
      */
     public static String getCurrentDate() {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT, Locale.getDefault());
         format.setTimeZone(TimeZone.getTimeZone("UTC"));
         return format.format(new Date());
     }
@@ -207,6 +201,6 @@ public final class DateUtils {
     public static String addMonths(String date, int months) {
         Calendar calendar = convertStringDateToCalendar(date, null);
         calendar.add(Calendar.MONTH, months);
-        return formatDate(calendar.getTimeInMillis(), "yyyy-MM-dd");
+        return formatDate(calendar.getTimeInMillis(), DATE_FORMAT);
     }
 }

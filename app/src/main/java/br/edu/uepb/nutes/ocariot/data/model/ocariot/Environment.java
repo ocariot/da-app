@@ -40,9 +40,9 @@ public class Environment implements Parcelable {
     public Environment() {
     }
 
-    public Environment(String institution_id, Location location,
+    public Environment(String institutionId, Location location,
                        List<Measurement> measurements, String timestamp) {
-        this.institutionId = institution_id;
+        this.institutionId = institutionId;
         this.location = location;
         this.measurements = measurements;
         this.timestamp = timestamp;
@@ -134,7 +134,7 @@ public class Environment implements Parcelable {
 
     public double getTemperature() {
         for (Measurement m : getMeasurements()) {
-            if (m.getType().equalsIgnoreCase(MeasurementType.TEMPERATURE))
+            if (m.getType().equalsIgnoreCase(Measurement.Type.TEMPERATURE))
                 return m.getValue();
         }
         return 0;
@@ -142,7 +142,7 @@ public class Environment implements Parcelable {
 
     public double getHumidity() {
         for (Measurement m : getMeasurements()) {
-            if (m.getType().equalsIgnoreCase(MeasurementType.HUMIDITY))
+            if (m.getType().equalsIgnoreCase(Measurement.Type.HUMIDITY))
                 return m.getValue();
         }
         return 0;

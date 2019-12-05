@@ -41,8 +41,6 @@ import io.reactivex.disposables.CompositeDisposable;
  * @author Copyright (c) 2018, NUTES/UEPB
  */
 public class SleepListFragment extends Fragment {
-    private final String LOG_TAG = "SleepListFragment";
-
     private SleepListAdapter mAdapter;
     private OcariotNetRepository ocariotRepository;
     private AppPreferencesHelper appPref;
@@ -112,7 +110,7 @@ public class SleepListFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         if (context instanceof OnClickSleepListener) {
             mListener = (OnClickSleepListener) context;
