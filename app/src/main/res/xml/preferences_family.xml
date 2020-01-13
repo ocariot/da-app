@@ -20,7 +20,11 @@
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/settings_about">
-        <Preference android:summary="@string/message_about" />
+        <Preference android:summary="@string/message_about">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://sites.google.com/view/ocariot-privacy/" />
+        </Preference>
 
         <Preference
             android:summary="@string/settings_summary_version"

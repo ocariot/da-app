@@ -33,7 +33,6 @@ import br.edu.uepb.nutes.ocariot.R;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.Sleep;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.SleepPatternDataSet;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.SleepPatternSummary;
-import br.edu.uepb.nutes.ocariot.data.model.ocariot.User;
 import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
 import br.edu.uepb.nutes.ocariot.utils.DateUtils;
 import butterknife.BindView;
@@ -167,10 +166,7 @@ public class SleepDetail extends AppCompatActivity {
             mActionBar.setTitle(DateUtils.convertDateTimeUTCToLocale(sleep.getStartTime(),
                     getString(R.string.date_time_abb4), null));
         }
-        if (!appPref.getUserAccessOcariot().getSubjectType()
-                .equalsIgnoreCase(User.Type.CHILD)) {
-            mActionBar.setSubtitle(appPref.getLastSelectedChild().getUsername());
-        }
+        mActionBar.setSubtitle(appPref.getLastSelectedChild().getUsername());
     }
 
     private void populateView() {
@@ -279,18 +275,27 @@ public class SleepDetail extends AppCompatActivity {
             int total = (int) item.getDuration() / 60000;
             for (int j = 0; j < total; j++) {
                 aux++;
-                if (patternName.equals("awake")) {
-                    entries.add(new Entry(aux, 1, item));
-                    colors.add(ContextCompat.getColor(this, R.color.colorWarning));
-                } else if (patternName.equals("asleep") || patternName.equals("rem")) {
-                    entries.add(new Entry(aux, 2, item));
-                    colors.add(ContextCompat.getColor(this, R.color.colorPrimaryDark));
-                } else if (patternName.equals("restless") || patternName.equals("light")) {
-                    entries.add(new Entry(aux, 3, item));
-                    colors.add(ContextCompat.getColor(this, R.color.colorPrimary));
-                } else if (patternName.equals("deep")) {
-                    entries.add(new Entry(aux, 4, item));
-                    colors.add(ContextCompat.getColor(this, R.color.colorPurple));
+                switch (patternName) {
+                    case "awake":
+                        entries.add(new Entry(aux, 1, item));
+                        colors.add(ContextCompat.getColor(this, R.color.colorWarning));
+                        break;
+                    case "asleep":
+                    case "rem":
+                        entries.add(new Entry(aux, 2, item));
+                        colors.add(ContextCompat.getColor(this, R.color.colorPrimaryDark));
+                        break;
+                    case "restless":
+                    case "light":
+                        entries.add(new Entry(aux, 3, item));
+                        colors.add(ContextCompat.getColor(this, R.color.colorPrimary));
+                        break;
+                    case "deep":
+                        entries.add(new Entry(aux, 4, item));
+                        colors.add(ContextCompat.getColor(this, R.color.colorPurple));
+                        break;
+                    default:
+                        break;
                 }
             }
         }

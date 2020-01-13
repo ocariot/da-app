@@ -6,10 +6,10 @@ android {
     buildToolsVersion = '28.0.3'
     defaultConfig {
         applicationId "br.edu.uepb.nutes.ocariot"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 28
-        versionCode 9
-        versionName "1.9.3"
+        versionCode 10
+        versionName "1.9.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         manifestPlaceholders = [

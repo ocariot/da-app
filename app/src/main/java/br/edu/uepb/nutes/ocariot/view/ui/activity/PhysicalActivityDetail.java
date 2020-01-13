@@ -15,7 +15,6 @@ import java.util.Locale;
 import br.edu.uepb.nutes.ocariot.R;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.ActivityLevel;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.PhysicalActivity;
-import br.edu.uepb.nutes.ocariot.data.model.ocariot.User;
 import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
 import br.edu.uepb.nutes.ocariot.utils.DateUtils;
 import butterknife.BindView;
@@ -186,10 +185,6 @@ public class PhysicalActivityDetail extends AppCompatActivity {
         mActionBar.setDisplayShowTitleEnabled(true);
         mActionBar.setHomeAsUpIndicator(R.drawable.ic_close_dark);
         mActionBar.setTitle(physicalActivity.getName());
-
-        if (!appPref.getUserAccessOcariot().getSubjectType()
-                .equalsIgnoreCase(User.Type.CHILD)) {
-            mActionBar.setSubtitle(appPref.getLastSelectedChild().getUsername());
-        }
+        mActionBar.setSubtitle(appPref.getLastSelectedChild().getUsername());
     }
 }
