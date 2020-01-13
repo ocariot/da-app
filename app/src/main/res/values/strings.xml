@@ -78,7 +78,7 @@
     <string name="key_signout" translatable="false">key_signout</string>
     <string name="key_sync_data" translatable="false">key_sync_data</string>
     <string name="key_children" translatable="false">key_children_manager</string>
-    <string name="settings_summary_version" translatable="false">1.9.3</string>
+    <string name="settings_summary_version" translatable="false">1.9.4</string>
     <string name="login_with_fitbit">Provide access to Fitbit</string>
     <string name="login_do_not_user_fitbit">Do not currently use Fitbit</string>
     <string name="settings_title">Settings</string>
@@ -107,12 +107,10 @@
     <string name="error_403">You do not have permission for the functionality you are trying to access. Please contact the administrator&#8230;</string>
     <string name="error_400">Could not perform operation. Please try again later&#8230;</string>
     <string name="error_400_1">Unable to complete the operation. Try again and be sure to provide access to Activity, Sleep, Heart Rate and Weight data.</string>
-    <string name="error_get_resources">An error occurred while trying to recover your data. Please try again later&#8230;</string>
 
     <!-- MESSAGES -->
     <string name="message_no_data_display">There is no data to display!</string>
     <string name="message_welcome">1. Log in to the selected child\'s Fitbit account;\n\n2. Provide permission for APP OCARIoT to collect Fitbit data on physical activity, sleep, heart rate and weight;\n\n3. Done! Activity, sleep, heart rate, and weight logs will be captured by Fitbit devices and synchronized with the OCARIoT platform automatically or when prompted.</string>
-    <string name="message_welcome_child">1. Authenticate to your Fitbit account;\n\n2. Provide permission for APP OCARIoT to collect Fitbit data on physical activity, sleep, heart rate and weight;\n\n3. Done! Activity, sleep, heart rate, and weight logs will be captured by Fitbit devices and synchronized with the OCARIoT platform automatically or when prompted.</string>
     <string name="message_selected_child">Selected child %s"</string>
     <string name="message_about">This project received funding from the European Union\'s Horizon 2020 program under concession agreement Nº 777082 and the Brazilian Ministry of Science, Technology, Innovation and Communication through RNP, agreement No. 3007.</string>
     <string name="message_permission_location">Location permission is required to use Bluetooth Low Energy!</string>
@@ -136,8 +134,7 @@
     <string name="alert_token_expired_ocariot">Your session has exceeded the 24 hour limit.\nIn seconds, you will be redirected to the login screen to reauthenticate.</string>
     <string name="alert_title_no_token_fitbit">An error occurred while trying to regain access to Fitbit!</string>
     <string name="alert_no_token_fitbit">To collect Fitbit data from child \"%s\", you must first provide authorization to collect the data.</string>
-    <string name="alert_token_expired_fitbit">Fitbit access token for child \"%s\" has expired or been revoked.\nPlease click here to grant access again&#8230;</string>
-    <string name="alert_access_blocked">Sorry, this app does not support admin type user. Only child, family, educator and health professional are allowed&#8230;</string>
+    <string name="alert_access_blocked">Sorry, this app only allows access to family, educator or health professional.&#8230;</string>
     <string name="alert_revoke_fitbit_success">Fitbit access successfully revoked. You will no longer be able to perform data synchronization.</string>
     <string name="alert_enable_bluetooth">If you want your Heart Rate (Polar OH1) data to be automatically displayed on this screen, click here to enable Bluetooth&#8230;</string>
 

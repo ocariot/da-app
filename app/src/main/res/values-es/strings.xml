@@ -101,12 +101,10 @@
     <string name="error_403">No tiene permiso para la funcionalidad a la que está intentando acceder. Por favor, póngase en contacto con el administrador&#8230;</string>
     <string name="error_400">No se pudo realizar la operación. Por favor, inténtelo de nuevo más tarde&#8230;</string>
     <string name="error_400_1">No se pudo completar la operación. Intente nuevamente y asegúrese de proporcionar acceso a datos de actividad, sueño, frecuencia cardíaca y peso.</string>
-    <string name="error_get_resources">Se produjo un error al intentar recuperar sus datos. Por favor, inténtelo de nuevo más tarde&#8230;</string>
 
     <!-- MESSAGES -->
     <string name="message_no_data_display">¡No hay datos para mostrar!</string>
     <string name="message_welcome">1. Inicie sesión en la cuenta Fitbit del niño seleccionado;\n\n2. Proporcione permiso a APP OCARIoT para recopilar datos de Fitbit sobre actividad física, sueño, frecuencia cardíaca y peso;\n\n3. ¡Hecho! Los registros de actividad, sueño, frecuencia cardíaca y peso serán capturados por los dispositivos Fitbit y sincronizados con la plataforma OCARIoT automáticamente o cuando se le solicite.</string>
-    <string name="message_welcome_child">1. Autentícate en tu cuenta de Fitbit;\n\n2. Proporcione permiso a APP OCARIoT para recopilar datos de Fitbit sobre actividad física, sueño, frecuencia cardíaca y peso;\n\n3. ¡Hecho! Los registros de actividad, sueño, frecuencia cardíaca y peso serán capturados por los dispositivos Fitbit y sincronizados con la plataforma OCARIoT automáticamente o cuando se le solicite.</string>
     <string name="message_selected_child">Niño seleccionado %s</string>
     <string name="message_about">Este proyecto recibió fondos del programa Horizonte 2020 de la Unión Europea en virtud del acuerdo de concesión Nº 777082 y del Ministerio de Ciencia, Tecnología, Innovación y Comunicación de Brasil a través de RNP, acuerdo No. 3007.</string>
     <string name="message_permission_location">¡Se requiere permiso de ubicación para usar Bluetooth Low Energy!</string>
@@ -130,8 +128,7 @@
     <string name="alert_token_expired_ocariot">Su sesión ha excedido el límite de 24 horas.\nEn segundos, será redirigido a la pantalla de inicio de sesión para volver a autenticarse.</string>
     <string name="alert_title_no_token_fitbit">¡Se produjo un error al intentar recuperar el acceso a Fitbit!</string>
     <string name="alert_no_token_fitbit">Para recopilar datos de Fitbit del niño \"%s\", primero debe proporcionar autorización.</string>
-    <string name="alert_token_expired_fitbit">El token de acceso de Fitbit para el niño \"%s\" ha caducado o ha sido revocado.\nHaga clic aquí para otorgar acceso nuevamente&#8230;</string>
-    <string name="alert_access_blocked">Lo sentimos, esta aplicación no admite usuarios de tipo administrador. Solo se permiten niños, familias, educadores y profesionales de la salud&#8230;</string>
+    <string name="alert_access_blocked">Lo sentimos, esta aplicación sólo permite el acceso a la familia, educador o profesional de la salud&#8230;</string>
     <string name="alert_revoke_fitbit_success">Acceso a Fitbit revocado correctamente. Ya no podrá realizar la sincronización de datos.</string>
     <string name="alert_enable_bluetooth">Si desea que sus datos de frecuencia cardíaca (Polar OH1) se muestren automáticamente en esta pantalla, haga clic aquí para habilitar Bluetooth&#8230;</string>
 
