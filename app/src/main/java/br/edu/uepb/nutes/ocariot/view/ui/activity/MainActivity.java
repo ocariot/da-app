@@ -101,17 +101,15 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        if (!mUserAccess.getSubjectType().equalsIgnoreCase(User.Type.CHILD)) {
-            if (appPref.getLastSelectedChild() == null) {
-                openChildrenManagerActivity(true);
-                return;
-            }
-            Objects.requireNonNull(getSupportActionBar())
-                    .setSubtitle(appPref.getLastSelectedChild().getUsername());
+        if (appPref.getLastSelectedChild() == null) {
+            openChildrenManagerActivity(true);
+            return;
         }
 
-        if ((!mUserAccess.getSubjectType().equals(User.Type.CHILD) &&
-                !mUserAccess.getSubjectType().equals(User.Type.FAMILY)) &&
+        Objects.requireNonNull(getSupportActionBar())
+                .setSubtitle(appPref.getLastSelectedChild().getUsername());
+
+        if (!mUserAccess.getSubjectType().equals(User.Type.FAMILY) &&
                 (!appPref.getLastSelectedChild().isFitbitAccessValid() &&
                         !appPref.getBoolean(KEY_DO_NOT_LOGIN_FITBIT))
         ) {
@@ -134,10 +132,6 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        MenuItem menuItem = menu.findItem(R.id.action_child);
-        if (appPref.getUserAccessOcariot().getSubjectType().equalsIgnoreCase(User.Type.CHILD)) {
-            menuItem.setVisible(false);
-        }
         return super.onCreateOptionsMenu(menu);
     }
 

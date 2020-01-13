@@ -74,9 +74,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         mAlertMessage = new AlertMessage(getActivity());
         mUserAccess = appPref.getUserAccessOcariot();
 
-        if (mUserAccess.getSubjectType().equals(User.Type.CHILD)) {
-            addPreferencesFromResource(R.xml.preferences_child);
-        } else if (mUserAccess.getSubjectType().equals(User.Type.FAMILY)) {
+        if (mUserAccess.getSubjectType().equals(User.Type.FAMILY)) {
             addPreferencesFromResource(R.xml.preferences_family);
         } else {
             addPreferencesFromResource(R.xml.preferences);
@@ -243,8 +241,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
      * and marks the Switch, otherwise uncheck.
      */
     private void populateSwitchFitbit() {
-        if (mUserAccess.getSubjectType().equals(User.Type.CHILD) ||
-                mUserAccess.getSubjectType().equals(User.Type.FAMILY)) {
+        if (mUserAccess.getSubjectType().equals(User.Type.FAMILY)) {
             return;
         }
         switchPrefFitBit.setChecked(false);
@@ -363,8 +360,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
 
                         @Override
                         public void onClickListener() {
-                            if (mUserAccess.getSubjectType().equals(User.Type.CHILD) ||
-                                    mUserAccess.getSubjectType().equals(User.Type.FAMILY)) {
+                            if (mUserAccess.getSubjectType().equals(User.Type.FAMILY)) {
                                 return;
                             }
                             openFitbitAuth();

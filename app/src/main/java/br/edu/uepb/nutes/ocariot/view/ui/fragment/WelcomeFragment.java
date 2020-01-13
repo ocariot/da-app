@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.AppCompatButton;
@@ -17,7 +18,6 @@ import java.util.Objects;
 
 import br.edu.uepb.nutes.ocariot.R;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.Child;
-import br.edu.uepb.nutes.ocariot.data.model.ocariot.User;
 import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
 import br.edu.uepb.nutes.ocariot.utils.DateUtils;
 import br.edu.uepb.nutes.ocariot.view.ui.activity.MainActivity;
@@ -44,7 +44,6 @@ public class WelcomeFragment extends Fragment {
 
     private Child child;
     private OnClickWelcomeListener mListener;
-    private AppPreferencesHelper mAppPref;
 
     public WelcomeFragment() {
         // Required empty public constructor
@@ -57,9 +56,7 @@ public class WelcomeFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mAppPref = AppPreferencesHelper.getInstance();
-        child = mAppPref.getLastSelectedChild();
+        child = AppPreferencesHelper.getInstance().getLastSelectedChild();
     }
 
     @Override
@@ -75,15 +72,10 @@ public class WelcomeFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         initComponents();
 
-        if (mAppPref.getUserAccessOcariot().getSubjectType().equalsIgnoreCase(User.Type.CHILD)) {
-            mChildUsername.setText(child.getUsername());
-            mInstructions.setText(R.string.message_welcome_child);
-        } else {
-            mChildUsername.setText(getResources().getString(
-                    R.string.message_selected_child,
-                    child.getUsername())
-            );
-        }
+        mChildUsername.setText(getResources().getString(
+                R.string.message_selected_child,
+                child.getUsername())
+        );
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             mInstructions.setJustificationMode(JUSTIFICATION_MODE_INTER_WORD);
@@ -110,7 +102,7 @@ public class WelcomeFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         if (!(context instanceof OnClickWelcomeListener)) {
             throw new RuntimeException(context.toString()

@@ -7,7 +7,6 @@ import android.view.MenuItem;
 import androidx.appcompat.app.ActionBar;
 
 import br.edu.uepb.nutes.ocariot.R;
-import br.edu.uepb.nutes.ocariot.data.model.ocariot.User;
 import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
 
 /**
@@ -37,8 +36,7 @@ public class SettingsActivity extends BaseSettingsActivity implements
     @Override
     protected void onStart() {
         super.onStart();
-        if (actionBar != null && !appPref.getUserAccessOcariot().getSubjectType()
-                .equalsIgnoreCase(User.Type.CHILD)) {
+        if (actionBar != null) {
             actionBar.setSubtitle(appPref.getLastSelectedChild().getUsername());
         }
     }
