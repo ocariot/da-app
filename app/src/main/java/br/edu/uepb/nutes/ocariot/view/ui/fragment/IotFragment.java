@@ -212,7 +212,7 @@ public class IotFragment extends Fragment implements View.OnClickListener, HRMan
     public void onStop() {
         super.onStop();
         mContext.unregisterReceiver(mBluetoothReceiver);
-        mScanner.stopScan();
+        if (bluetoothIsAvailable()) mScanner.stopScan();
     }
 
     @Override
