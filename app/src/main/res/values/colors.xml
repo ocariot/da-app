@@ -15,7 +15,5 @@
     <color name="colorLineDivider">#e2e2e2</color>
     <color name="colorInputText">#d3d3d3</color>
     <color name="colorBackgroundNavigation">#f0f0f0</color>
-    <color name="colorFitbitActive">#1babb4</color>
-    <color name="colorFitbitInactive">#d6d6d6</color>
 
 </resources>

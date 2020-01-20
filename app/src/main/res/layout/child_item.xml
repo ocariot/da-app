@@ -20,8 +20,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/gender_img"
-        android:layout_marginTop="-2dp"
         android:layout_marginStart="40dp"
+        android:layout_marginTop="-2dp"
         android:text="B0001"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textColor="@color/colorBlackLight"
@@ -32,19 +32,23 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/name_child"
-        android:layout_marginTop="2dp"
         android:layout_marginStart="40dp"
+        android:layout_marginTop="2dp"
         android:text="@string/last_sync_date_time"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textColor="@color/colorBlackLight" />
 
-    <ImageView
-        android:id="@+id/fitbit_status_img"
+    <CheckBox
+        android:id="@+id/fitbit_status_cb"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_alignParentEnd="true"
-        android:contentDescription="@null"
         android:layout_marginTop="10dp"
-        android:tint="@color/colorFitbitActive"
-        android:src="@drawable/ic_fitbit_logo" />
+        android:background="@drawable/checkbox_fitbit"
+        android:button="@null"
+        android:checked="false"
+        android:clickable="false"
+        android:contentDescription="@null"
+        android:focusable="false"
+        android:focusableInTouchMode="false" />
 </RelativeLayout>
