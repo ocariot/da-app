@@ -198,7 +198,7 @@ public class IotFragment extends Fragment implements View.OnClickListener, HRMan
     public void onResume() {
         super.onResume();
         loadDataOcariot();
-        if (ConnectionUtils.bluetoothIsEnabled()) {
+        if (ConnectionUtils.isBluetoothAvailable()) {
             mBoxEnableBluetooth.setVisibility(View.GONE);
             if (!hasLocationPermissions()) {
                 requestLocationPermission();
@@ -213,7 +213,7 @@ public class IotFragment extends Fragment implements View.OnClickListener, HRMan
     public void onStop() {
         super.onStop();
         mContext.unregisterReceiver(mBluetoothReceiver);
-        if (ConnectionUtils.bluetoothIsEnabled()) mScanner.stopScan();
+        if (ConnectionUtils.isBluetoothAvailable()) mScanner.stopScan();
     }
 
     @Override
@@ -358,21 +358,27 @@ public class IotFragment extends Fragment implements View.OnClickListener, HRMan
         Objects.requireNonNull(getActivity())
                 .runOnUiThread(() -> {
                     // Update chart
-                    addEntry((float) hr);
+                    try {
+                        addEntry((float) hr);
 
-                    if (heartAnimation.isPaused() || !heartAnimation.isRunning()) {
-                        heartAnimation.start();
-                        ImageViewCompat.setImageTintList(mHeartImage, ColorStateList.valueOf(
-                                getResources().getColor(R.color.colorDanger)));
-                        mBoxHR.setVisibility(View.VISIBLE);
-                        mBoxHRSummary.setVisibility(View.VISIBLE);
+                        if (heartAnimation.isPaused() || !heartAnimation.isRunning()) {
+                            heartAnimation.start();
+                            ImageViewCompat.setImageTintList(mHeartImage, ColorStateList.valueOf(
+                                    getResources().getColor(R.color.colorDanger)));
+                            mBoxHR.setVisibility(View.VISIBLE);
+                            mBoxHRSummary.setVisibility(View.VISIBLE);
+                        }
+                        mHR.setText(String.valueOf(hr));
+
+                        // Update summary
+                        if (totalHR > 0) {
+                            mMinHRTextView.setText(String.valueOf(minHR));
+                            mMaxHRTextView.setText(String.valueOf(maxHR));
+                            mAvgHRTextView.setText(String.valueOf(sumHR / totalHR));
+                        }
+                    } catch (RuntimeException e) {
+                        Timber.d("Error adding chart entry: %s", e.getMessage());
                     }
-                    mHR.setText(String.valueOf(hr));
-
-                    // Update summary
-                    mMinHRTextView.setText(String.valueOf(minHR));
-                    mMaxHRTextView.setText(String.valueOf(maxHR));
-                    mAvgHRTextView.setText(String.valueOf(sumHR / totalHR));
                 });
     }
 
@@ -399,6 +405,7 @@ public class IotFragment extends Fragment implements View.OnClickListener, HRMan
 
         // enable touch gestures
         mChart.setTouchEnabled(true);
+        mChart.animateX(1500);
 
         // enable scaling and dragging
         mChart.setDragEnabled(true);
@@ -513,7 +520,7 @@ public class IotFragment extends Fragment implements View.OnClickListener, HRMan
             requestLocationPermission();
             return;
         }
-        if (ConnectionUtils.bluetoothIsEnabled()) {
+        if (ConnectionUtils.isBluetoothAvailable()) {
             mScanner.stopScan();
             mScanner.startScan(mScannerCallback);
         }
@@ -559,6 +566,7 @@ public class IotFragment extends Fragment implements View.OnClickListener, HRMan
     @Override
     public void onConnected(@NonNull BluetoothDevice device) {
         Timber.d("onConnected(): %s", device.getName());
+        device.createBond();
     }
 
     @Override
@@ -568,5 +576,9 @@ public class IotFragment extends Fragment implements View.OnClickListener, HRMan
         ImageViewCompat.setImageTintList(mHeartImage, ColorStateList.valueOf(
                 getResources().getColor(R.color.colorLineDivider)));
         mBoxHR.setVisibility(View.GONE);
+        if (ConnectionUtils.isBluetoothAvailable()) {
+            mScanner.stopScan();
+            mScanner.startScan(mScannerCallback);
+        }
     }
 }

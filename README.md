@@ -3,20 +3,25 @@
 
 [![Download][apk-download]][apk-download-url]
 
-<p align="center"><img src="https://i.imgur.com/Z31yxK2.png"/></p>
+<p align="center"><img width="120" src="https://i.imgur.com/Z31yxK2.png"/></p>
 
 Native Android application responsible for OCARIoT platform data acquisition. The application acts as an external services access token manager. Currently, only Fitbit service is available.
 
 **Main Features:**
 - Fitbit access token management:
-  - **Family**, **Educator** or **Healthcare Professional** may grant the OCARIoT platform access to collect Fitbit data from children who have privileges to manage their data;
-  - Fitbit access revocation;
-  - Support for Fitbit data synchronization with OCARIoT platform.
-- Listing of data saved on OCARIoT platform:
-  - Physical Activity;
+  - The educator and the qualified professional can grant the OCARIoT platform permission to collect Fitbit data from children who have privileges to manage their data according to the consent of those responsible;
+  - Support to request collection of Fitbit data from the child at any time, automatically saving to the OCARIoT platform;
+  - Revocation of permission to collect Fitbit data;
+
+- Display of data saved on the OCARIoT platform:
+  - Physical activity;
   - Sleep;
   - Weight.
-- Display of Heart Rate data collected in real time from Polar OH1 device.
+  
+- Display of heart rate data collected in real time. Supported devices:
+  - Polar OH;
+  - Polar H10.
+
 
 ## Prerequisites
 - Android SDK v28
@@ -28,7 +33,6 @@ Native Android application responsible for OCARIoT platform data acquisition. Th
 
    ```console
    git clone https://github.com/ocariot/da-app.git
-
    ```
 2. **Set up the environment:**
    - Make a copy of the `gradle.properties.example` file in the `/app` directory named `gradle.properties` _(This file will not be tracked by git because it is in .gitignore)_.

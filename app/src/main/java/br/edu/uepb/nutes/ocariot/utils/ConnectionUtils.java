@@ -27,7 +27,7 @@ public class ConnectionUtils {
      *
      * @return true to enabled or false otherwise.
      */
-    public static boolean bluetoothIsEnabled() {
+    public static boolean isBluetoothAvailable() {
         return BluetoothAdapter.getDefaultAdapter() != null &&
                 BluetoothAdapter.getDefaultAdapter().isEnabled();
     }
