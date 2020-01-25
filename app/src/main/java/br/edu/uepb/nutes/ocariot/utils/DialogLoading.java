@@ -3,6 +3,7 @@ package br.edu.uepb.nutes.ocariot.utils;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 
 import br.edu.uepb.nutes.ocariot.R;
+import timber.log.Timber;
 
 /**
  * Dialog Loading.
@@ -80,12 +82,21 @@ public class DialogLoading extends DialogFragment {
         }
     }
 
+    @Override
+    public void show(FragmentManager manager, String tag) {
+        try {
+            super.show(manager, tag);
+        } catch (IllegalStateException e) {
+            Timber.d(e);
+        }
+    }
+
     public void close() {
         if (fragmentManager == null) return;
         Fragment dialogFragment = fragmentManager.findFragmentByTag(DIALOG_TAG);
 
-        if (dialogFragment != null && this.isVisible()) {
-            this.dismiss();
+        if (dialogFragment != null && super.isVisible()) {
+            super.dismissAllowingStateLoss();
         }
     }
 }

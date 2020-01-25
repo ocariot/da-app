@@ -118,10 +118,10 @@
     <string name="synchronization_data">Sincronize dados de serviços externos com a plataforma OCARIoT.</string>
     <string name="synchronizing">Sincronizando</string>
     <string name="synchronizing_data_fitbit">Sincronizando dados Fitbit da criança \"%s\" com a plataforma OCARIoT&#8230;</string>
-    <string name="sync_data_fitbit_error">Ocorreu um erro ao tentar sincronizar os dados do Fitbit do criança "%s" com a plataforma OCARIoT.\nPor favor, tente novamente mais tarde&#8230;</string>
-    <string name="sync_data_fitbit_success">Os dados do Fitbit da criança "%s" foram sincronizados com sucesso com a plataforma OCARIoT.</string>
+    <string name="sync_data_fitbit_error">Ocorreu um erro ao tentar sincronizar os dados Fitbit da criança "%s" com a plataforma OCARIoT.\nPor favor, tente novamente mais tarde&#8230;</string>
+    <string name="sync_data_fitbit_success">Os dados Fitbit da criança "%s" foram sincronizados com sucesso com a plataforma OCARIoT.</string>
     <string name="last_sync_date_time">Última sinc: %s</string>
-    <string name="fitbit_get_access_token_error">Ocorreu um erro ao tentar recuperar token de acesso do Fitbit.\nPor favor, tente mais tarde&#8230;</string>
+    <string name="fitbit_get_access_token_error">Ocorreu um erro ao tentar recuperar o token de acesso Fitbit.\nPor favor, tente mais tarde&#8230;</string>
 
     <!-- ALERTS -->
     <string name="alert_title_token_expired">Problema na autenticação!</string>
