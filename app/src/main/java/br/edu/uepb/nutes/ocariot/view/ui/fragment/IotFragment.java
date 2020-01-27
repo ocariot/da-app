@@ -55,6 +55,7 @@ import br.edu.uepb.nutes.ocariot.data.repository.remote.ocariot.OcariotNetReposi
 import br.edu.uepb.nutes.ocariot.service.HRManager;
 import br.edu.uepb.nutes.ocariot.service.HRManagerCallback;
 import br.edu.uepb.nutes.ocariot.utils.AlertMessage;
+import br.edu.uepb.nutes.ocariot.utils.ConnectionUtils;
 import br.edu.uepb.nutes.ocariot.utils.DateUtils;
 import br.edu.uepb.nutes.simpleblescanner.SimpleBleScanner;
 import br.edu.uepb.nutes.simpleblescanner.SimpleScannerCallback;
@@ -82,9 +83,9 @@ public class IotFragment extends Fragment implements View.OnClickListener, HRMan
     private ObjectAnimator heartAnimation;
     private int minHR;
     private int maxHR;
-    private int avgHR;
     private int sumHR;
     private int totalHR;
+    private DecimalFormat df = new DecimalFormat("#.#");
 
     // We need this variable to lock and unlock loading more.
     // We should not charge more when a request has already been made.
@@ -197,7 +198,7 @@ public class IotFragment extends Fragment implements View.OnClickListener, HRMan
     public void onResume() {
         super.onResume();
         loadDataOcariot();
-        if (bluetoothIsAvailable()) {
+        if (ConnectionUtils.isBluetoothAvailable()) {
             mBoxEnableBluetooth.setVisibility(View.GONE);
             if (!hasLocationPermissions()) {
                 requestLocationPermission();
@@ -212,7 +213,7 @@ public class IotFragment extends Fragment implements View.OnClickListener, HRMan
     public void onStop() {
         super.onStop();
         mContext.unregisterReceiver(mBluetoothReceiver);
-        mScanner.stopScan();
+        if (ConnectionUtils.isBluetoothAvailable()) mScanner.stopScan();
     }
 
     @Override
@@ -285,16 +286,15 @@ public class IotFragment extends Fragment implements View.OnClickListener, HRMan
             mBoxNoData.setVisibility(View.GONE);
             mBoxWeight.setVisibility(View.VISIBLE);
 
-            Weight lastWeight = weights.get(0);
-            DecimalFormat df = new DecimalFormat("#.#");
-            mWeight.setText(Html.fromHtml(df.format(lastWeight.getValue())
+
+            mWeight.setText(Html.fromHtml(df.format(weights.get(0).getValue())
                     .concat("<small>")
-                    .concat(lastWeight.getUnit())
+                    .concat(weights.get(0).getUnit())
                     .concat("</small>"))
             );
 
-            if (lastWeight.getBodyFat() != null) {
-                mBodyFat.setText(Html.fromHtml(df.format(lastWeight.getBodyFat())
+            if (weights.get(0).getBodyFat() != null) {
+                mBodyFat.setText(Html.fromHtml(df.format(weights.get(0).getBodyFat())
                         .concat("<small>%</small>"))
                 );
             } else {
@@ -304,10 +304,9 @@ public class IotFragment extends Fragment implements View.OnClickListener, HRMan
             double weightSum = 0d;
             for (Weight weight : weights) weightSum += weight.getValue();
 
-            double average = weightSum / weights.size();
-            mWeightAverage.setText(Html.fromHtml(df.format(average)
+            mWeightAverage.setText(Html.fromHtml(df.format(weightSum / weights.size())
                     .concat("<small>")
-                    .concat(lastWeight.getUnit())
+                    .concat(weights.get(0).getUnit())
                     .concat("</small>"))
             );
             mBoxNoData.setVisibility(View.GONE);
@@ -359,21 +358,27 @@ public class IotFragment extends Fragment implements View.OnClickListener, HRMan
         Objects.requireNonNull(getActivity())
                 .runOnUiThread(() -> {
                     // Update chart
-                    addEntry((float) hr);
+                    try {
+                        addEntry((float) hr);
 
-                    if (heartAnimation.isPaused() || !heartAnimation.isRunning()) {
-                        heartAnimation.start();
-                        ImageViewCompat.setImageTintList(mHeartImage, ColorStateList.valueOf(
-                                getResources().getColor(R.color.colorDanger)));
-                        mBoxHR.setVisibility(View.VISIBLE);
-                        mBoxHRSummary.setVisibility(View.VISIBLE);
+                        if (heartAnimation.isPaused() || !heartAnimation.isRunning()) {
+                            heartAnimation.start();
+                            ImageViewCompat.setImageTintList(mHeartImage, ColorStateList.valueOf(
+                                    getResources().getColor(R.color.colorDanger)));
+                            mBoxHR.setVisibility(View.VISIBLE);
+                            mBoxHRSummary.setVisibility(View.VISIBLE);
+                        }
+                        mHR.setText(String.valueOf(hr));
+
+                        // Update summary
+                        if (totalHR > 0) {
+                            mMinHRTextView.setText(String.valueOf(minHR));
+                            mMaxHRTextView.setText(String.valueOf(maxHR));
+                            mAvgHRTextView.setText(String.valueOf(sumHR / totalHR));
+                        }
+                    } catch (RuntimeException e) {
+                        Timber.d("Error adding chart entry: %s", e.getMessage());
                     }
-                    mHR.setText(String.valueOf(hr));
-
-                    // Update summary
-                    mMinHRTextView.setText(String.valueOf(minHR));
-                    mMaxHRTextView.setText(String.valueOf(maxHR));
-                    mAvgHRTextView.setText(String.valueOf(avgHR));
                 });
     }
 
@@ -400,6 +405,7 @@ public class IotFragment extends Fragment implements View.OnClickListener, HRMan
 
         // enable touch gestures
         mChart.setTouchEnabled(true);
+        mChart.animateX(1500);
 
         // enable scaling and dragging
         mChart.setDragEnabled(true);
@@ -482,16 +488,6 @@ public class IotFragment extends Fragment implements View.OnClickListener, HRMan
     }
 
     /**
-     * check if bluetooth is enabled.
-     *
-     * @return boolean
-     */
-    private boolean bluetoothIsAvailable() {
-        return BluetoothAdapter.getDefaultAdapter() != null &&
-                BluetoothAdapter.getDefaultAdapter().isEnabled();
-    }
-
-    /**
      * Checks whether the location permission was given.
      *
      * @return boolean
@@ -524,7 +520,7 @@ public class IotFragment extends Fragment implements View.OnClickListener, HRMan
             requestLocationPermission();
             return;
         }
-        if (bluetoothIsAvailable()) {
+        if (ConnectionUtils.isBluetoothAvailable()) {
             mScanner.stopScan();
             mScanner.startScan(mScannerCallback);
         }
@@ -563,7 +559,6 @@ public class IotFragment extends Fragment implements View.OnClickListener, HRMan
             sumHR += heartRate;
             minHR = heartRate < minHR ? heartRate : minHR;
             maxHR = heartRate > maxHR ? heartRate : maxHR;
-            avgHR = sumHR / totalHR;
         }
         updateViewHR(heartRate, timestamp);
     }
@@ -571,6 +566,7 @@ public class IotFragment extends Fragment implements View.OnClickListener, HRMan
     @Override
     public void onConnected(@NonNull BluetoothDevice device) {
         Timber.d("onConnected(): %s", device.getName());
+        device.createBond();
     }
 
     @Override
@@ -580,5 +576,9 @@ public class IotFragment extends Fragment implements View.OnClickListener, HRMan
         ImageViewCompat.setImageTintList(mHeartImage, ColorStateList.valueOf(
                 getResources().getColor(R.color.colorLineDivider)));
         mBoxHR.setVisibility(View.GONE);
+        if (ConnectionUtils.isBluetoothAvailable()) {
+            mScanner.stopScan();
+            mScanner.startScan(mScannerCallback);
+        }
     }
 }

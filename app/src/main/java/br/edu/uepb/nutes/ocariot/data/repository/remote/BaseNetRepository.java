@@ -1,5 +1,7 @@
 package br.edu.uepb.nutes.ocariot.data.repository.remote;
 
+import android.annotation.SuppressLint;
+
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -14,6 +16,8 @@ import javax.net.ssl.X509TrustManager;
 
 import br.edu.uepb.nutes.ocariot.BuildConfig;
 import br.edu.uepb.nutes.ocariot.OcariotApp;
+import br.edu.uepb.nutes.ocariot.exception.ConnectivityException;
+import br.edu.uepb.nutes.ocariot.utils.ConnectionUtils;
 import okhttp3.Cache;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -39,8 +43,11 @@ public abstract class BaseNetRepository {
             HttpLoggingInterceptor logging = new HttpLoggingInterceptor(s -> Timber.tag("OkHttp").d(s));
             logging.level(HttpLoggingInterceptor.Level.BODY);
             this.addInterceptor(logging);
-            this.addInterceptor(new NetworkConnectionInterceptor());
         }
+        this.addInterceptor(chain -> {
+            if (!ConnectionUtils.isNetworkAvailable(OcariotApp.getContext())) throw new ConnectivityException();
+            return chain.proceed(chain.request().newBuilder().build());
+        });
     }
 
     protected Retrofit provideRetrofit(String baseUrl) {
@@ -79,11 +86,13 @@ public abstract class BaseNetRepository {
             // Create a trust manager that does not validate certificate chains
             final TrustManager[] trustAllCerts = new TrustManager[]{
                     new X509TrustManager() {
+                        @SuppressLint("TrustAllX509TrustManager")
                         @Override
                         public void checkClientTrusted(X509Certificate[] chain, String authType) {
                             // Not implemented!
                         }
 
+                        @SuppressLint("TrustAllX509TrustManager")
                         @Override
                         public void checkServerTrusted(X509Certificate[] chain, String authType) {
                             // Not implemented!

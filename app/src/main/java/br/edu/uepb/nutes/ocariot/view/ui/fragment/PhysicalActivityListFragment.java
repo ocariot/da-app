@@ -197,7 +197,7 @@ public class PhysicalActivityListFragment extends Fragment {
                 ocariotRepository
                         .listActivities(
                                 appPref.getLastSelectedChild().getId(),
-                                "-start_time",
+                                "-end_time",
                                 1,
                                 100
                         )

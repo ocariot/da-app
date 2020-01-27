@@ -1,15 +1,14 @@
 package br.edu.uepb.nutes.ocariot.view.adapter;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.core.widget.ImageViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -69,13 +68,8 @@ public class ChildListAdapter extends BaseAdapter<Child> implements Filterable {
             }
 
             // Fitbit status
-            ColorStateList colorFitbitStatus = ColorStateList.valueOf(mContext.getResources()
-                    .getColor(R.color.colorFitbitInactive));
-            if (child.isFitbitAccessValid()) {
-                colorFitbitStatus = ColorStateList.valueOf(mContext.getResources()
-                        .getColor(R.color.colorFitbitActive));
-            }
-            ImageViewCompat.setImageTintList(h.fitBitStatus, colorFitbitStatus);
+            h.fitBitStatus.setChecked(false);
+            if (child.isFitbitAccessValid()) h.fitBitStatus.setChecked(true);
 
             // Gender
             if (child.getGender().equalsIgnoreCase("male")) {
@@ -143,8 +137,8 @@ public class ChildListAdapter extends BaseAdapter<Child> implements Filterable {
         @BindView(R.id.child_last_sync_tv)
         TextView lastSync;
 
-        @BindView(R.id.fitbit_status_img)
-        ImageView fitBitStatus;
+        @BindView(R.id.fitbit_status_cb)
+        CheckBox fitBitStatus;
 
         @BindView(R.id.gender_img)
         ImageView gender;
