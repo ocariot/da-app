@@ -21,7 +21,7 @@ public class Child extends User implements Comparable<Child> {
     private String gender;
 
     @SerializedName("age")
-    private int age;
+    private String age;
 
     @SerializedName("last_sync")
     private String lastSync;
@@ -48,11 +48,11 @@ public class Child extends User implements Comparable<Child> {
         this.gender = gender;
     }
 
-    public int getAge() {
+    public String getAge() {
         return age;
     }
 
-    public void setAge(int age) {
+    public void setAge(String age) {
         this.age = age;
     }
 

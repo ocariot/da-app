@@ -23,6 +23,7 @@ import br.edu.uepb.nutes.ocariot.data.model.ocariot.User;
 import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
 import br.edu.uepb.nutes.ocariot.data.repository.remote.ocariot.OcariotNetRepository;
 import br.edu.uepb.nutes.ocariot.utils.AlertMessage;
+import br.edu.uepb.nutes.ocariot.utils.ConnectionUtils;
 import br.edu.uepb.nutes.ocariot.utils.DateUtils;
 import br.edu.uepb.nutes.ocariot.utils.DialogLoading;
 import br.edu.uepb.nutes.ocariot.utils.FirebaseLogEvent;
@@ -348,26 +349,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
      * Force a new Fitbit sync.
      */
     private void fitBitSync() {
-        if (!mChild.isFitbitAccessValid()) {
-            mAlertMessage.show(mContext.getResources().getString(R.string.alert_title_no_token_fitbit),
-                    mContext.getResources().getString(R.string.alert_no_token_fitbit, mChild.getUsername()),
-                    R.color.colorDanger, R.drawable.ic_warning_dark, 15000, true,
-                    new AlertMessage.AlertMessageListener() {
-                        @Override
-                        public void onHideListener() {
-                            // not implemented!
-                        }
-
-                        @Override
-                        public void onClickListener() {
-                            if (mUserAccess.getSubjectType().equals(User.Type.FAMILY)) {
-                                return;
-                            }
-                            openFitbitAuth();
-                        }
-                    });
-            return;
-        }
+        if (!checkCanSync()) return;
 
         mDisposable.add(
                 OcariotNetRepository.getInstance()
@@ -375,7 +357,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                         .doOnSubscribe(disposable -> {
                             if (!mDialogSync.isVisible()) mDialogSync.show(getFragmentManager());
                         })
-                        .doAfterTerminate(() -> mDialogSync.close())
+                        .doFinally(() -> mDialogSync.close())
                         .subscribe(
                                 fitBitSync -> {
                                     mChild.setLastSync(DateUtils.getCurrentDatetimeUTC());
@@ -390,6 +372,32 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                                 }
                         )
         );
+    }
+
+    private boolean checkCanSync() {
+        if (!mChild.isFitbitAccessValid()) {
+            mAlertMessage.show(mContext.getResources().getString(R.string.alert_title_no_token_fitbit),
+                    mContext.getResources().getString(R.string.alert_no_token_fitbit, mChild.getUsername()),
+                    R.color.colorDanger, R.drawable.ic_warning_dark, 15000, true,
+                    new AlertMessage.AlertMessageListener() {
+                        @Override
+                        public void onHideListener() {
+                            // not implemented!
+                        }
+
+                        @Override
+                        public void onClickListener() {
+                            if (mUserAccess.getSubjectType().equals(User.Type.FAMILY)) return;
+                            openFitbitAuth();
+                        }
+                    });
+            return false;
+        } else if (!ConnectionUtils.isNetworkAvailable(mContext)) {
+            mAlertMessage.show(R.string.title_connection_error, R.string.error_connection,
+                    R.color.colorDanger, R.drawable.ic_warning_dark);
+            return false;
+        }
+        return true;
     }
 
     /**

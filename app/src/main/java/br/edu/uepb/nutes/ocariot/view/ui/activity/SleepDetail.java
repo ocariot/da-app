@@ -163,7 +163,7 @@ public class SleepDetail extends AppCompatActivity {
         mActionBar.setHomeAsUpIndicator(R.drawable.ic_close_dark);
 
         if (sleep.getStartTime() != null) {
-            mActionBar.setTitle(DateUtils.convertDateTimeUTCToLocale(sleep.getStartTime(),
+            mActionBar.setTitle(DateUtils.convertDateTimeUTCToLocale(sleep.getEndTime(),
                     getString(R.string.date_time_abb4), null));
         }
         mActionBar.setSubtitle(appPref.getLastSelectedChild().getUsername());

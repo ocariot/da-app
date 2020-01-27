@@ -77,12 +77,12 @@ public final class DateUtils {
     public static String convertDateTimeToUTC(String datetime) {
         if (datetime == null) return null;
 
-        Date dateUTC = null;
+        Date dateUTC;
         DateFormat formatUTC = new SimpleDateFormat(DateUtils.DATE_FORMAT_DATE_TIME, Locale.getDefault());
 
         try {
             dateUTC = formatUTC.parse(datetime);
-            formatUTC.setTimeZone(TimeZone.getTimeZone("UTC"));
+            if (datetime.contains("Z")) formatUTC.setTimeZone(TimeZone.getTimeZone("UTC"));
         } catch (ParseException e) {
             return "";
         }
@@ -103,13 +103,13 @@ public final class DateUtils {
         if (timezone == null) timezone = TimeZone.getDefault();
         if (formatDate == null) formatDate = DateUtils.DATE_FORMAT_DATE_TIME;
 
-        Date dateUTC = null;
+        Date dateUTC;
         DateFormat formatLocale = new SimpleDateFormat(formatDate, Locale.getDefault());
         formatLocale.setTimeZone(timezone);
 
         try {
             DateFormat utcFormat = new SimpleDateFormat(DateUtils.DATE_FORMAT_DATE_TIME, Locale.getDefault());
-            utcFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+            if (datetime.contains("Z")) utcFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
             dateUTC = utcFormat.parse(datetime);
         } catch (ParseException e) {
             return "";
