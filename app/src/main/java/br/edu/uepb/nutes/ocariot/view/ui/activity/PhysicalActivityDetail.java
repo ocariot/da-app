@@ -22,7 +22,6 @@ import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper
 import br.edu.uepb.nutes.ocariot.utils.DateUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import timber.log.Timber;
 
 /**
  * A fragment to see the details of a physical physicalActivity.
@@ -115,6 +114,58 @@ public class PhysicalActivityDetail extends AppCompatActivity {
         populateView(physicalActivity);
     }
 
+    private void initToolbar() {
+        ActionBar mActionBar = getSupportActionBar();
+        if (mActionBar == null) return;
+
+        mActionBar.setDisplayHomeAsUpEnabled(true);
+        mActionBar.setDisplayShowTitleEnabled(true);
+        mActionBar.setHomeAsUpIndicator(R.drawable.ic_close_dark);
+        mActionBar.setTitle(physicalActivity.getName());
+        mActionBar.setSubtitle(childSeelcted.getUsername());
+    }
+
+    private void populateView(PhysicalActivity a) {
+        dateStartDetailsTextView.setText(DateUtils.convertDateTimeUTCToLocale(a.getStartTime(),
+                getResources().getString(R.string.date_time_abb3), null));
+
+        rangeDurationTextView.setText(getResources().getString(
+                R.string.activity_range_time,
+                DateUtils.convertDateTimeUTCToLocale(a.getStartTime(), getString(R.string.hour_format2)),
+                DateUtils.convertDateTimeUTCToLocale(a.getEndTime(), getString(R.string.hour_format2))
+        ));
+
+        int duration = (int) (a.getDuration() / (60 * 1000));
+        durationTextView.setText(getResources().getString(R.string.duration_min, duration));
+        stepsTextView.setText(String.valueOf(a.getSteps()));
+        caloriesTextView.setText(String.valueOf(a.getCalories()));
+
+        if (duration > 0) {
+            caloriesMinuteTextView.setText(String.valueOf(a.getCalories() / duration));
+        }
+
+        // levels
+        populateLevels(a.getLevels());
+
+        // heart rate
+        boxHRZones.setVisibility(View.GONE);
+        if (a.getHeartRate() != null && a.getHeartRate().getAverage() > 0) {
+            boxHRZones.setVisibility(View.VISIBLE);
+            avgHeartRate.setText(String.valueOf(a.getHeartRate().getAverage()));
+        }
+
+        // distance
+        if (a.getDistance() != null && a.getDistance() > 0) {
+            double distance = a.getDistance() / 1000;
+            double distanceRest = a.getDistance() % 1000;
+            if (distanceRest > 0) {
+                distanceTextView.setText(String.format(Locale.getDefault(), "%.2f", distance));
+            } else {
+                distanceTextView.setText(String.format(Locale.getDefault(), "%d", (int) distance));
+            }
+        }
+    }
+
     private void populateLevels(List<ActivityLevel> levels) {
         boxLevels.setVisibility(View.GONE);
         if (levels == null || levels.isEmpty()) return;
@@ -177,57 +228,5 @@ public class PhysicalActivityDetail extends AppCompatActivity {
                     break;
             }
         }
-    }
-
-    private void populateView(PhysicalActivity a) {
-        dateStartDetailsTextView.setText(DateUtils.convertDateTimeUTCToLocale(a.getStartTime(),
-                getResources().getString(R.string.date_time_abb3), null));
-
-        rangeDurationTextView.setText(getResources().getString(
-                R.string.activity_range_time,
-                DateUtils.convertDateTimeUTCToLocale(a.getStartTime(), getString(R.string.hour_format2)),
-                DateUtils.convertDateTimeUTCToLocale(a.getEndTime(), getString(R.string.hour_format2))
-        ));
-
-        int duration = (int) (a.getDuration() / (60 * 1000));
-        durationTextView.setText(getResources().getString(R.string.duration_min, duration));
-        stepsTextView.setText(String.valueOf(a.getSteps()));
-        caloriesTextView.setText(String.valueOf(a.getCalories()));
-
-        if (duration > 0) {
-            caloriesMinuteTextView.setText(String.valueOf(a.getCalories() / duration));
-        }
-
-        // levels
-        populateLevels(a.getLevels());
-
-        // heart rate
-        boxHRZones.setVisibility(View.GONE);
-        if (a.getHeartRate() != null && a.getHeartRate().getAverage() > 0) {
-            boxHRZones.setVisibility(View.VISIBLE);
-            avgHeartRate.setText(String.valueOf(a.getHeartRate().getAverage()));
-        }
-
-        // distance
-        if (a.getDistance() != null && a.getDistance() > 0) {
-            double distance = a.getDistance() / 1000;
-            double distanceRest = a.getDistance() % 1000;
-            if (distanceRest > 0) {
-                distanceTextView.setText(String.format(Locale.getDefault(), "%.2f", distance));
-            } else {
-                distanceTextView.setText(String.format(Locale.getDefault(), "%d", (int) distance));
-            }
-        }
-    }
-
-    private void initToolbar() {
-        ActionBar mActionBar = getSupportActionBar();
-        if (mActionBar == null) return;
-
-        mActionBar.setDisplayHomeAsUpEnabled(true);
-        mActionBar.setDisplayShowTitleEnabled(true);
-        mActionBar.setHomeAsUpIndicator(R.drawable.ic_close_dark);
-        mActionBar.setTitle(physicalActivity.getName());
-        mActionBar.setSubtitle(childSeelcted.getUsername());
     }
 }

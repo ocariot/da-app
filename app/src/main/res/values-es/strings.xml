@@ -53,7 +53,7 @@
     <string name="img_desc_clock">Imagen del reloj</string>
     <string name="img_desc_calories">Imagen de calória</string>
     <string name="hr_avg">Frecuencia cardíaca media</string>
-    <string name="activity_range_time">%s en %s</string>
+    <string name="activity_range_time">%s - %s</string>
     <string name="img_desc_distance">Imagen de distancia</string>
 
     <!-- SLEEP -->

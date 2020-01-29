@@ -54,7 +54,7 @@
     <string name="img_desc_clock">Clock image</string>
     <string name="img_desc_calories">Calories image</string>
     <string name="hr_avg">Average Heart Rate</string>
-    <string name="activity_range_time">%s at %s</string>
+    <string name="activity_range_time">%s - %s</string>
     <string name="img_desc_distance">Distance image</string>
 
     <!-- SLEEP -->

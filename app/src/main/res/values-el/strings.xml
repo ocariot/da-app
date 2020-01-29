@@ -53,7 +53,7 @@
     <string name="img_desc_clock">Απεικόνιση ρολογιού</string>
     <string name="img_desc_calories">Απεικόνιση θερμίδων</string>
     <string name="hr_avg">Μέσος καρδιακός ρυθμός</string>
-    <string name="activity_range_time">%s στο %s</string>
+    <string name="activity_range_time">%s - %s</string>
     <string name="img_desc_distance">Απεικόνιση Απόστασης</string>
 
     <!-- SLEEP -->
