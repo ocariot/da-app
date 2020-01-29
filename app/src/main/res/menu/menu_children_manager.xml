@@ -6,10 +6,11 @@
         android:icon="@drawable/ic_action_search"
         android:orderInCategory="50"
         android:title="@string/action_search"
-        app:showAsAction="always"
-        app:actionViewClass="androidx.appcompat.widget.SearchView" />
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        app:showAsAction="always" />
 
     <item
+        android:id="@+id/action_sort"
         android:icon="@drawable/ic_action_sort_dark"
         android:orderInCategory="100"
         android:title="@string/img_sort"

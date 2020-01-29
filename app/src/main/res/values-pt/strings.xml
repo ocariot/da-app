@@ -45,10 +45,10 @@
     <string name="calories">Calorias</string>
     <string name="steps">Passos</string>
     <string name="levels">Níveis</string>
-    <string name="level_sedentary">Sedentary: %d min</string>
-    <string name="level_lightly">Lightly: %d min</string>
-    <string name="level_fairly">Fairly: %d min</string>
-    <string name="level_very">Very: %d min</string>
+    <string name="level_sedentary">Sedentário: %d min</string>
+    <string name="level_lightly">Levemente: %d min</string>
+    <string name="level_fairly">Bastante: %d min</string>
+    <string name="level_very">Muito: %d min</string>
     <string name="img_desc_activity">Imagem da atividade</string>
     <string name="img_desc_clock">Imagem do relógio</string>
     <string name="img_desc_calories">Imagem da caloria</string>
@@ -64,7 +64,6 @@
     <string name="img_desc_heart">Imagem do Coração</string>
 
     <!-- FORMAT DATES -->
-    <string name="date_format1">yyyy-MM-dd</string>
     <string name="date_time_abb1">dd MMMM \'às\' HH:mm</string>
     <string name="date_time_abb3">EEEE, dd MMMM, yyyy</string>
     <string name="date_time_abb4">EEE, dd MMMM, yyyy</string>

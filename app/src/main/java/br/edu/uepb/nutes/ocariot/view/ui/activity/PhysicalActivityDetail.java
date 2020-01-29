@@ -1,6 +1,7 @@
 package br.edu.uepb.nutes.ocariot.view.ui.activity;
 
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -9,16 +10,19 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Locale;
 
 import br.edu.uepb.nutes.ocariot.R;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.ActivityLevel;
+import br.edu.uepb.nutes.ocariot.data.model.ocariot.Child;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.PhysicalActivity;
 import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
 import br.edu.uepb.nutes.ocariot.utils.DateUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 /**
  * A fragment to see the details of a physical physicalActivity.
@@ -30,9 +34,6 @@ public class PhysicalActivityDetail extends AppCompatActivity {
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
-
-    @BindView(R.id.activity_date_tv)
-    TextView dateStartTextView;
 
     @BindView(R.id.activity_date_start_details_tv)
     TextView dateStartDetailsTextView;
@@ -52,17 +53,30 @@ public class PhysicalActivityDetail extends AppCompatActivity {
     @BindView(R.id.activity_calories_min_tv)
     TextView caloriesMinuteTextView;
 
-    @BindView(R.id.activity_title_level_sedentary_tv)
+    @BindView(R.id.sedentary_Level_value_tv)
     TextView sedentaryTextView;
 
-    @BindView(R.id.activity_title_level_fairly_tv)
+    @BindView(R.id.fairly_Level_value_tv)
     TextView fairlyTextView;
 
-    @BindView(R.id.activity_title_level_lightly_tv)
+    @BindView(R.id.lightly_Level_value_tv)
     TextView lightlyTextView;
 
-    @BindView(R.id.activity_title_level_very_tv)
+    @BindView(R.id.very_Level_value_tv)
     TextView veryTextView;
+
+    @BindView(R.id.sedentary_Level_tv)
+    TextView sedentaryBarTextView;
+
+    @BindView(R.id.fairly_Level_tv)
+    TextView fairlyBarTextView;
+
+    @BindView(R.id.lightly_Level_tv)
+    TextView lightlyBarTextView;
+
+    @BindView(R.id.very_Level_tv)
+    TextView veryBarTextView;
+
 
     @BindView(R.id.hr_avg_tv)
     TextView avgHeartRate;
@@ -77,7 +91,7 @@ public class PhysicalActivityDetail extends AppCompatActivity {
     RelativeLayout boxHRZones;
 
     private PhysicalActivity physicalActivity;
-    private AppPreferencesHelper appPref;
+    private Child childSeelcted;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -86,7 +100,7 @@ public class PhysicalActivityDetail extends AppCompatActivity {
         ButterKnife.bind(this);
         setSupportActionBar(mToolbar);
 
-        appPref = AppPreferencesHelper.getInstance();
+        childSeelcted = AppPreferencesHelper.getInstance().getLastSelectedChild();
 
         if (getIntent() != null) {
             physicalActivity = getIntent().getParcelableExtra(ACTIVITY_DETAIL);
@@ -109,24 +123,55 @@ public class PhysicalActivityDetail extends AppCompatActivity {
         sedentaryTextView.setVisibility(View.VISIBLE);
         fairlyTextView.setVisibility(View.VISIBLE);
         lightlyTextView.setVisibility(View.VISIBLE);
+        sedentaryTextView.setText(getString(R.string.level_sedentary, 0));
+        lightlyTextView.setText(getString(R.string.level_lightly, 0));
+        fairlyTextView.setText(getString(R.string.level_fairly, 0));
+        veryTextView.setText(getString(R.string.level_very, 0));
+
+        DecimalFormat df = new DecimalFormat("#");
+
+        float total = 0;
+        int durationMax = Integer.MIN_VALUE;
+        for (ActivityLevel level : levels) {
+            int duration = level.getDuration() / 60000;
+            total += duration;
+            if (duration > durationMax) durationMax = duration;
+        }
+        if (total == 0) return;
+
+        int offsetBase = 500;
+        DisplayMetrics displaymetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        if (displaymetrics.widthPixels <= 768) offsetBase = 400;
 
         for (ActivityLevel activityLevel : levels) {
+            if (activityLevel.getDuration() == 0) continue;
+
+            int duration = activityLevel.getDuration() / 60000;
+            double percent = (duration / total) * 100;
+
+            int widthBar = (duration * (offsetBase / durationMax)) + 50;
+
             switch (activityLevel.getName()) {
                 case ActivityLevel.SEDENTARY_LEVEL:
-                    sedentaryTextView.setText(getResources().getString(
-                            R.string.level_sedentary, activityLevel.getDuration() / 60000));
-                    break;
-                case ActivityLevel.FAIRLY_LEVEL:
-                    fairlyTextView.setText(getResources().getString(
-                            R.string.level_fairly, activityLevel.getDuration() / 60000));
+                    sedentaryTextView.setText(getString(R.string.level_sedentary, duration));
+                    sedentaryBarTextView.setText(df.format(percent).concat("%"));
+                    sedentaryBarTextView.getLayoutParams().width = widthBar;
                     break;
                 case ActivityLevel.LIGHTLY_LEVEL:
-                    lightlyTextView.setText(getResources().getString(
-                            R.string.level_lightly, activityLevel.getDuration() / 60000));
+                    lightlyTextView.setText(getString(R.string.level_lightly, duration));
+                    lightlyBarTextView.setText(df.format(percent).concat("%"));
+                    lightlyBarTextView.getLayoutParams().width = widthBar;
+                    break;
+                case ActivityLevel.FAIRLY_LEVEL:
+                    fairlyTextView.setText(getString(R.string.level_fairly, duration));
+                    fairlyBarTextView.setText(df.format(percent).concat("%"));
+                    fairlyBarTextView.getLayoutParams().width = widthBar;
                     break;
                 case ActivityLevel.VERY_LEVEL:
-                    veryTextView.setText(getResources().getString(
-                            R.string.level_very, activityLevel.getDuration() / 60000));
+                    veryTextView.setText(getString(R.string.level_very, duration));
+                    veryBarTextView.setText(df.format(percent).concat("%"));
+                    veryBarTextView.getLayoutParams().width = widthBar;
                     break;
                 default:
                     break;
@@ -135,8 +180,6 @@ public class PhysicalActivityDetail extends AppCompatActivity {
     }
 
     private void populateView(PhysicalActivity a) {
-        dateStartTextView.setText(DateUtils.convertDateTimeUTCToLocale(a.getStartTime(),
-                getResources().getString(R.string.date_format1), null));
         dateStartDetailsTextView.setText(DateUtils.convertDateTimeUTCToLocale(a.getStartTime(),
                 getResources().getString(R.string.date_time_abb3), null));
 
@@ -185,6 +228,6 @@ public class PhysicalActivityDetail extends AppCompatActivity {
         mActionBar.setDisplayShowTitleEnabled(true);
         mActionBar.setHomeAsUpIndicator(R.drawable.ic_close_dark);
         mActionBar.setTitle(physicalActivity.getName());
-        mActionBar.setSubtitle(appPref.getLastSelectedChild().getUsername());
+        mActionBar.setSubtitle(childSeelcted.getUsername());
     }
 }

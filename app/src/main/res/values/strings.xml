@@ -65,7 +65,6 @@
     <string name="img_desc_heart">Heart image</string>
 
     <!-- FORMAT DATES -->
-    <string name="date_format1">yyyy-MM-dd</string>
     <string name="date_time_abb1">MMMM dd \'at\' HH:mm</string>
     <string name="date_time_abb3">EEEE, MMMM dd, yyyy</string>
     <string name="date_time_abb4">EEE, MMMM dd, yyyy</string>
