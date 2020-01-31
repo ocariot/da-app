@@ -360,7 +360,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                         .doFinally(() -> mDialogSync.close())
                         .subscribe(
                                 fitBitSync -> {
-                                    mChild.setLastSync(DateUtils.getCurrentDatetimeUTC());
+                                    mChild.setLastSync(DateUtils.getCurrentDatetime());
                                     appPref.addLastSelectedChild(mChild);
                                     updateViewLastSync();
                                     showAlertResultSync(true);

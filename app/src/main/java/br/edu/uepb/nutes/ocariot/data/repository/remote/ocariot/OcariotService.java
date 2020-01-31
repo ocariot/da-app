@@ -58,7 +58,7 @@ public interface OcariotService {
             @Query("limit") int limit
     );
 
-    @GET("/v1/children/{child_id}/weights?sort=-timestamp")
+    @GET("/v1/children/{child_id}/weights")
     Single<List<Weight>> listhWeights(
             @Path("child_id") String childId,
             @Query("timestamp") String startDate,

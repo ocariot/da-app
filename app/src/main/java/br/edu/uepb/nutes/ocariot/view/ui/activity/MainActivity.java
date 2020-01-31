@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -71,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements
     private int lastViewIndex;
     private AlertMessage mAlertMessage;
     private UserAccess mUserAccess;
+    private long backPressed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +98,18 @@ public class MainActivity extends AppCompatActivity implements
     protected void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (backPressed + 2000 > System.currentTimeMillis()) {
+            super.onBackPressed();
+            this.finishAffinity();
+        } else {
+            Toast.makeText(getBaseContext(),
+                    getString(R.string.alert_back_confirm), Toast.LENGTH_SHORT).show();
+        }
+        backPressed = System.currentTimeMillis();
     }
 
     @Override

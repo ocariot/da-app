@@ -56,7 +56,6 @@ import br.edu.uepb.nutes.ocariot.service.HRManager;
 import br.edu.uepb.nutes.ocariot.service.HRManagerCallback;
 import br.edu.uepb.nutes.ocariot.utils.AlertMessage;
 import br.edu.uepb.nutes.ocariot.utils.ConnectionUtils;
-import br.edu.uepb.nutes.ocariot.utils.DateUtils;
 import br.edu.uepb.nutes.simpleblescanner.SimpleBleScanner;
 import br.edu.uepb.nutes.simpleblescanner.SimpleScannerCallback;
 import butterknife.BindView;
@@ -266,8 +265,8 @@ public class IotFragment extends Fragment implements View.OnClickListener, HRMan
                 ocariotRepository
                         .listWeights(
                                 appPref.getLastSelectedChild().getId(),
-                                "gte:".concat(DateUtils.addMonths(DateUtils.getCurrentDatetimeUTC(), -12)),
-                                "lt:".concat(DateUtils.addDaysToDatetimeString(DateUtils.getCurrentDatetimeUTC(), 1)),
+                                null,
+                                null,
                                 "-timestamp"
                         )
                         .doOnSubscribe(disposable -> loading(true))

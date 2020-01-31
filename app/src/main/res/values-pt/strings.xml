@@ -41,7 +41,7 @@
     <string name="km">km</string>
     <string name="cals_min">cals/min</string>
     <string name="min">min</string>
-    <string name="duration_min">%d min</string>
+    <string name="duration_min">%s min</string>
     <string name="calories">Calorias</string>
     <string name="steps">Passos</string>
     <string name="levels">Níveis</string>
@@ -64,7 +64,7 @@
     <string name="img_desc_heart">Imagem do Coração</string>
 
     <!-- FORMAT DATES -->
-    <string name="date_time_abb1">dd MMMM \'às\' HH:mm</string>
+    <string name="date_time_abb1">EEE, dd MMMM, yyyy \'às\' HH:mm</string>
     <string name="date_time_abb3">EEEE, dd MMMM, yyyy</string>
     <string name="date_time_abb4">EEE, dd MMMM, yyyy</string>
     <string name="date_time_abb5">EEE, dd/MM/yyyy \'às\' HH:mm:ss</string>
@@ -130,6 +130,7 @@
     <string name="alert_access_blocked">Desculpe, este aplicativo permite apenas acesso a família, educador ou profissional de saúde&#8230;</string>
     <string name="alert_revoke_fitbit_success">Acesso Fitbit revogado com sucesso. Não será mais possível executar a sincronização dos dados.</string>
     <string name="alert_enable_bluetooth">Se você deseja que os dados de Frequência Cardíaca (Polar OH1) sejam exibidos automaticamente nesta tela, clique aqui para ativar o Bluetooth&#8230;</string>
+    <string name="alert_back_confirm">Toque novamente para sair!</string>
 
     <!--  MENU  -->
     <string name="action_sort_username">Nome de usuário</string>
