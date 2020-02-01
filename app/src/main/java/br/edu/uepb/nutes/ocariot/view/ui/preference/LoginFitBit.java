@@ -55,6 +55,9 @@ public class LoginFitBit {
      * Initialize settings to obtain authorization code.
      */
     private void initConfig() {
+        if (appPref.getFitbitAppData() == null || appPref.getFitbitAppData().getClientId() == null
+                || appPref.getFitbitAppData().getClientSecret() == null) return;
+
         String clientId = appPref.getFitbitAppData().getClientId();
         clientSecret = appPref.getFitbitAppData().getClientSecret();
 

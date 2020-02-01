@@ -41,7 +41,7 @@
     <string name="km">km</string>
     <string name="cals_min">Θερμίδες/Λεπτό</string>
     <string name="min">Λεπτά</string>
-    <string name="duration_min">%d Λεπτά</string>
+    <string name="duration_min">%s Λεπτά</string>
     <string name="calories">Θερμίδες</string>
     <string name="steps">Βήματα</string>
     <string name="levels">Επίπεδα</string>
@@ -53,7 +53,7 @@
     <string name="img_desc_clock">Απεικόνιση ρολογιού</string>
     <string name="img_desc_calories">Απεικόνιση θερμίδων</string>
     <string name="hr_avg">Μέσος καρδιακός ρυθμός</string>
-    <string name="activity_range_time">%s στο %s</string>
+    <string name="activity_range_time">%s - %s</string>
     <string name="img_desc_distance">Απεικόνιση Απόστασης</string>
 
     <!-- SLEEP -->
@@ -64,8 +64,7 @@
     <string name="img_desc_heart">Απεικόνιση καρδιάς</string>
 
     <!-- FORMAT DATES -->
-    <string name="date_format1">yyyy-MM-dd</string>
-    <string name="date_time_abb1">dd MMMM \'στο\' HH:mm</string>
+    <string name="date_time_abb1">EEE, MMMM dd, yyyy \'στο\' HH:mm</string>
     <string name="date_time_abb3">EEEE, MMMM dd, yyyy</string>
     <string name="date_time_abb4">EEE, MMMM dd, yyyy</string>
     <string name="date_time_abb5">EEE, dd/MM/yyyy \'στο\' HH:mm:ss</string>
@@ -131,6 +130,7 @@
     <string name="alert_access_blocked">Λυπούμαστε, αυτή η εφαρμογή δεν υποστηρίζει αυτον τον τύπο χρηστη. Επιτρέπονται μόνο οικογένειες, εκπαιδευτικοί και επαγγελματίες υγείας&#8230;</string>
     <string name="alert_revoke_fitbit_success">Η πρόσβαση Fitbit ακυρώθηκε με επιτυχία. Δεν θα είστε πλέον σε θέση να πραγματοποιήσετε συγχρονισμό δεδομένων.</string>
     <string name="alert_enable_bluetooth">Αν θέλετε να εμφανίζονται αυτόματα τα δεδομένα της καρδιακής συχνότητας (Polar OH1) σε αυτήν την οθόνη, κάντε κλικ εδώ για να ενεργοποιήσετε το Bluetooth&#8230;</string>
+    <string name="alert_back_confirm">Πατήστε ξανά για έξοδο!</string>
 
     <!--  MENU  -->
     <string name="action_sort_username">Όνομα χρήστη</string>

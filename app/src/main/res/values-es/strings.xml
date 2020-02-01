@@ -41,7 +41,7 @@
     <string name="km">km</string>
     <string name="cals_min">cals/min</string>
     <string name="min">min</string>
-    <string name="duration_min">%d min</string>
+    <string name="duration_min">%s min</string>
     <string name="calories">Calorías</string>
     <string name="steps">Pasos</string>
     <string name="levels">Niveles</string>
@@ -53,7 +53,7 @@
     <string name="img_desc_clock">Imagen del reloj</string>
     <string name="img_desc_calories">Imagen de calória</string>
     <string name="hr_avg">Frecuencia cardíaca media</string>
-    <string name="activity_range_time">%s en %s</string>
+    <string name="activity_range_time">%s - %s</string>
     <string name="img_desc_distance">Imagen de distancia</string>
 
     <!-- SLEEP -->
@@ -64,8 +64,7 @@
     <string name="img_desc_heart">Imagen del corazón</string>
 
     <!-- FORMAT DATES -->
-    <string name="date_format1">yyyy-MM-dd</string>
-    <string name="date_time_abb1">dd MMMM \'en\' HH:mm</string>
+    <string name="date_time_abb1">EEE, MMMM dd, yyyy \'en\' HH:mm</string>
     <string name="date_time_abb3">EEEE, MMMM dd, yyyy</string>
     <string name="date_time_abb4">EEE, MMMM dd, yyyy</string>
     <string name="date_time_abb5">EEE, dd/MM/yyyy \'en\' HH:mm:ss</string>
@@ -131,6 +130,7 @@
     <string name="alert_access_blocked">Lo sentimos, esta aplicación sólo permite el acceso a la familia, educador o profesional de la salud&#8230;</string>
     <string name="alert_revoke_fitbit_success">Acceso a Fitbit revocado correctamente. Ya no podrá realizar la sincronización de datos.</string>
     <string name="alert_enable_bluetooth">Si desea que sus datos de frecuencia cardíaca (Polar OH1) se muestren automáticamente en esta pantalla, haga clic aquí para habilitar Bluetooth&#8230;</string>
+    <string name="alert_back_confirm">Toque de nuevo para salir!</string>
 
     <!--  MENU  -->
     <string name="action_sort_username">Nombre de usuario</string>

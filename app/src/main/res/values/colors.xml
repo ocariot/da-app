@@ -9,11 +9,13 @@
 
     <color name="colorDanger">#a94442</color>
     <color name="colorPurple">#7c608f</color>
+    <color name="colorOrange">#f5a33b</color>
+    <color name="colorGreen">#8bc34a</color>
+    <color name="colorRed">#c7605e</color>
 
     <color name="colorBlackLight">#757575</color>
 
     <color name="colorLineDivider">#e2e2e2</color>
     <color name="colorInputText">#d3d3d3</color>
     <color name="colorBackgroundNavigation">#f0f0f0</color>
-
 </resources>

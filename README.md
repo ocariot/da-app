@@ -7,21 +7,18 @@
 
 Native Android application responsible for OCARIoT platform data acquisition. The application acts as an external services access token manager. Currently, only Fitbit service is available.
 
-**Main Features:**
-- Fitbit access token management:
-  - The educator and the qualified professional can grant the OCARIoT platform permission to collect Fitbit data from children who have privileges to manage their data according to the consent of those responsible;
-  - Support to request collection of Fitbit data from the child at any time, automatically saving to the OCARIoT platform;
-  - Revocation of permission to collect Fitbit data;
-
-- Display of data saved on the OCARIoT platform:
-  - Physical activity;
-  - Sleep;
-  - Weight.
-  
-- Display of heart rate data collected in real time. Supported devices:
-  - Polar OH;
-  - Polar H10.
-
+**MAIN FEATURES:**
+  - **Fitbit access token management:**
+    - The Educator and the Health Professional can grant the OCARIoT platform permission to collect Fitbit data from children who have privileges to manage their data according to the consent of those responsible;
+    - Support to request collection of Fitbit data from the child at any time, automatically saving to the OCARIoT platform;
+    - Revocation of permission to collect Fitbit data.
+  - **Display of data saved on the OCARIoT platform:**
+    - Physical activity;
+    - Sleep;
+    - Weight.
+  - **Display of heart rate data collected in real time. Supported devices:**
+    - Polar OH1;
+    - H10.
 
 ## Prerequisites
 - Android SDK v28
@@ -39,7 +36,7 @@ Native Android application responsible for OCARIoT platform data acquisition. Th
    - Change the values of the variables you find necessary according to your development and production environment.
 3. **Open project in Android Studio:**
    - From the Android Studio menu, click File > Open.
-     - Alternatively, on the "Welcome" screen, click > Open an existing Android Studio project.
+   - Alternatively, on the "Welcome" screen, click > Open an existing Android Studio project.
    - Select the project folder and click OK.
 
 ## Generating signed APK
@@ -88,7 +85,7 @@ From Android Studio:
 
 #####
 
-<img align="left" src="https://i.imgur.com/GITTjts.png" width="200" />
+<img align="left" src="https://i.imgur.com/5j3YeNy.png" width="200" />
 <img align="left" src="https://i.imgur.com/GugwblV.png" width="200" />
 <img align="left" src="https://i.imgur.com/VSiuJNT.png" width="200" />
 <img src="https://i.imgur.com/VzM9jQU.png" width="200" />

@@ -35,6 +35,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.disposables.CompositeDisposable;
 import retrofit2.HttpException;
+import timber.log.Timber;
 
 import static android.view.inputmethod.InputMethodManager.HIDE_NOT_ALWAYS;
 
@@ -227,7 +228,7 @@ public class LoginActivity extends AppCompatActivity {
                 .doAfterTerminate(this::openMainActivity)
                 .subscribe(
                         fitBitAppData -> appPref.addFitbitAppData(fitBitAppData),
-                        err -> alertMessage.handleError(err)
+                        Timber::e
                 )
         );
     }

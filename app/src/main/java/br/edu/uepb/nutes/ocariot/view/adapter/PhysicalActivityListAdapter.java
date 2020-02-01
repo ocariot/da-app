@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Locale;
 
@@ -27,6 +28,7 @@ import butterknife.ButterKnife;
  */
 public class PhysicalActivityListAdapter extends BaseAdapter<PhysicalActivity> {
     private final Context mContext;
+    private final DecimalFormat df = new DecimalFormat("#.##");
 
     public PhysicalActivityListAdapter(Context context) {
         this.mContext = context;
@@ -51,8 +53,11 @@ public class PhysicalActivityListAdapter extends BaseAdapter<PhysicalActivity> {
             h.name.setText(activity.getName());
             h.dateStart.setText(DateUtils.convertDateTimeUTCToLocale(activity.getStartTime(),
                     mContext.getResources().getString(R.string.date_time_abb1), null));
-            int duration = (int) (activity.getDuration() / (60 * 1000));
-            h.duration.setText(String.valueOf(duration));
+
+            double duration = activity.getDuration() / 60000D;
+            if (duration >= 1) h.duration.setText(String.valueOf((int) duration));
+            else h.duration.setText(df.format((duration)));
+
             h.calories.setText(String.valueOf(activity.getCalories()));
 
             populateImgByName(h.image, activity.getName());

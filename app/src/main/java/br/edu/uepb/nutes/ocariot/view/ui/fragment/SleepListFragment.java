@@ -230,6 +230,8 @@ public class SleepListFragment extends Fragment {
             mSkeletonScreen.hide();
             itShouldLoadMore = true;
             return;
+        } else {
+            mSkeletonScreen.show();
         }
         if (mAdapter.itemsIsEmpty()) mSkeletonScreen.show();
         itShouldLoadMore = false;

@@ -52,6 +52,7 @@ import io.reactivex.disposables.CompositeDisposable;
 public class ChildrenManagerActivity extends AppCompatActivity {
     public static final String EXTRA_IS_FIRST_OPEN = "extra_is_first_open";
     private static final String KEY_SORT_SELECTED = "key_sort_selected";
+    private static final int SELECTED_CHILD = 5;
 
     private ChildListAdapter mAdapter;
     private AppPreferencesHelper appPref;
@@ -96,10 +97,6 @@ public class ChildrenManagerActivity extends AppCompatActivity {
         isFirstOpen = getIntent().getBooleanExtra(EXTRA_IS_FIRST_OPEN, false);
 
         mChildUsername.setVisibility(View.GONE);
-
-        mToolbar.setTitle(getResources().getString(R.string.title_children));
-        setSupportActionBar(mToolbar);
-        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         appPref = AppPreferencesHelper.getInstance();
         userAccess = appPref.getUserAccessOcariot();
@@ -164,8 +161,15 @@ public class ChildrenManagerActivity extends AppCompatActivity {
      * Initialize components
      */
     private void initComponents() {
+        initToolbar();
         initRecyclerView();
         initDataSwipeRefresh();
+    }
+
+    private void initToolbar() {
+        mToolbar.setTitle(getResources().getString(R.string.title_children));
+        setSupportActionBar(mToolbar);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
     }
 
     /**
@@ -372,6 +376,8 @@ public class ChildrenManagerActivity extends AppCompatActivity {
             mSkeletonScreen.hide();
             itShouldLoadMore = true;
             return;
+        } else {
+            mSkeletonScreen.show();
         }
         if (mAdapter.itemsIsEmpty()) mSkeletonScreen.show();
         itShouldLoadMore = false;
@@ -408,19 +414,16 @@ public class ChildrenManagerActivity extends AppCompatActivity {
      * Show dialog confirm sign out in app.
      */
     private void openDialogSignOut() {
-        runOnUiThread(() -> {
-            AlertDialog.Builder mDialog = new AlertDialog.Builder(this);
-            mDialog.setMessage(R.string.dialog_confirm_sign_out)
-                    .setPositiveButton(R.string.title_yes, (dialog, which) -> {
-                                if (appPref.removeSession()) {
-                                    Intent intent = new Intent(this, LoginActivity.class);
-                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
-                                            Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                    startActivity(intent);
-                                }
+        runOnUiThread(() -> new AlertDialog.Builder(this)
+                .setMessage(R.string.dialog_confirm_sign_out)
+                .setPositiveButton(R.string.title_yes, (dialog, which) -> {
+                            if (appPref.removeSession()) {
+                                startActivity(new Intent(this, LoginActivity.class)
+                                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
+                                                Intent.FLAG_ACTIVITY_CLEAR_TASK));
                             }
-                    ).setNegativeButton(R.string.title_no, null)
-                    .create().show();
-        });
+                        }
+                ).setNegativeButton(R.string.title_no, null)
+                .create().show());
     }
 }
