@@ -284,7 +284,8 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     /**
-     * Open children manager activity.
+     *  Open children manager activity.
+     * @param isFirst boolean
      */
     private void openChildrenManagerActivity(boolean isFirst) {
         Intent it = new Intent(this, ChildrenManagerActivity.class);

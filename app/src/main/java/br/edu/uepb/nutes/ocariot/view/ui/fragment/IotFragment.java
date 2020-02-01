@@ -197,6 +197,7 @@ public class IotFragment extends Fragment implements View.OnClickListener, HRMan
     public void onResume() {
         super.onResume();
         loadDataOcariot();
+
         if (ConnectionUtils.isBluetoothAvailable()) {
             mBoxEnableBluetooth.setVisibility(View.GONE);
             if (!hasLocationPermissions()) {
