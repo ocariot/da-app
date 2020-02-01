@@ -9,16 +9,16 @@ Native Android application responsible for OCARIoT platform data acquisition. Th
 
 **MAIN FEATURES:**
   - **Fitbit access token management:**
-    - The Educator and the Health Professional can grant the OCARIoT platform permission to collect Fitbit data from children who have privileges to manage their data according to the consent of those responsible;
-    - Support to request collection of Fitbit data from the child at any time, automatically saving to the OCARIoT platform;
-    - Revocation of permission to collect Fitbit data.
+    - The Educator and the Health Professional can grant the OCARIoT platform permission to collect Fitbit data from children who have privileges to manage their data according to the consent of those responsible;
+    - Support to request collection of Fitbit data from the child at any time, automatically saving to the OCARIoT platform;
+    - Revocation of permission to collect Fitbit data.
   - **Display of data saved on the OCARIoT platform:**
-    - Physical activity;
-    - Sleep;
-    - Weight.
+    - Physical activity;
+    - Sleep;
+    - Weight.
   - **Display of heart rate data collected in real time. Supported devices:**
-    - Polar OH1;
-    - H10.
+    - Polar OH1;
+    - H10.
 
 ## Prerequisites
 - Android SDK v28
