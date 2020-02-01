@@ -15,6 +15,7 @@ import java.util.TimeZone;
  */
 public final class DateUtils {
     private static final String DATE_FORMAT_DATE_TIME = "yyyy-MM-dd'T'HH:mm:ss";
+    private static final String DATE_FORMAT_DATE_TIME_UTC = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
     private static final String DATE_FORMAT = "yyyy-MM-dd";
 
     private DateUtils() {
@@ -146,8 +147,18 @@ public final class DateUtils {
      * @return String
      */
     public static String getCurrentDatetimeUTC() {
-        SimpleDateFormat format = new SimpleDateFormat(DateUtils.DATE_FORMAT_DATE_TIME, Locale.getDefault());
+        SimpleDateFormat format = new SimpleDateFormat(DateUtils.DATE_FORMAT_DATE_TIME_UTC, Locale.getDefault());
         format.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return format.format(new Date());
+    }
+
+    /**
+     * Retrieve the current date according to timezone UTC.
+     *
+     * @return String
+     */
+    public static String getCurrentDatetime() {
+        SimpleDateFormat format = new SimpleDateFormat(DateUtils.DATE_FORMAT_DATE_TIME, Locale.getDefault());
         return format.format(new Date());
     }
 

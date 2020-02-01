@@ -31,6 +31,8 @@ import butterknife.ButterKnife;
 public class PhysicalActivityDetail extends AppCompatActivity {
     public static final String ACTIVITY_DETAIL = "activity_detail";
 
+    private final DecimalFormat df = new DecimalFormat("#.##");
+
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
 
@@ -135,13 +137,18 @@ public class PhysicalActivityDetail extends AppCompatActivity {
                 DateUtils.convertDateTimeUTCToLocale(a.getEndTime(), getString(R.string.hour_format2))
         ));
 
-        int duration = (int) (a.getDuration() / (60 * 1000));
-        durationTextView.setText(getResources().getString(R.string.duration_min, duration));
+        double duration = a.getDuration() / 60000D;
+        if (duration >= 1) {
+            durationTextView.setText(getResources().getString(R.string.duration_min, String.valueOf((int) duration)));
+        } else {
+            durationTextView.setText(getResources().getString(R.string.duration_min, df.format(duration)));
+        }
+
         stepsTextView.setText(String.valueOf(a.getSteps()));
-        caloriesTextView.setText(String.valueOf(a.getCalories()));
+        caloriesTextView.setText(String.valueOf(Integer.valueOf(a.getCalories())));
 
         if (duration > 0) {
-            caloriesMinuteTextView.setText(String.valueOf(a.getCalories() / duration));
+            caloriesMinuteTextView.setText(String.valueOf((int) (a.getCalories() / duration)));
         }
 
         // levels
@@ -179,7 +186,7 @@ public class PhysicalActivityDetail extends AppCompatActivity {
         fairlyTextView.setText(getString(R.string.level_fairly, 0));
         veryTextView.setText(getString(R.string.level_very, 0));
 
-        DecimalFormat df = new DecimalFormat("#");
+        DecimalFormat decimalFormat = new DecimalFormat("#");
 
         float total = 0;
         int durationMax = Integer.MIN_VALUE;
@@ -206,22 +213,22 @@ public class PhysicalActivityDetail extends AppCompatActivity {
             switch (activityLevel.getName()) {
                 case ActivityLevel.SEDENTARY_LEVEL:
                     sedentaryTextView.setText(getString(R.string.level_sedentary, duration));
-                    sedentaryBarTextView.setText(df.format(percent).concat("%"));
+                    sedentaryBarTextView.setText(decimalFormat.format(percent).concat("%"));
                     sedentaryBarTextView.getLayoutParams().width = widthBar;
                     break;
                 case ActivityLevel.LIGHTLY_LEVEL:
                     lightlyTextView.setText(getString(R.string.level_lightly, duration));
-                    lightlyBarTextView.setText(df.format(percent).concat("%"));
+                    lightlyBarTextView.setText(decimalFormat.format(percent).concat("%"));
                     lightlyBarTextView.getLayoutParams().width = widthBar;
                     break;
                 case ActivityLevel.FAIRLY_LEVEL:
                     fairlyTextView.setText(getString(R.string.level_fairly, duration));
-                    fairlyBarTextView.setText(df.format(percent).concat("%"));
+                    fairlyBarTextView.setText(decimalFormat.format(percent).concat("%"));
                     fairlyBarTextView.getLayoutParams().width = widthBar;
                     break;
                 case ActivityLevel.VERY_LEVEL:
                     veryTextView.setText(getString(R.string.level_very, duration));
-                    veryBarTextView.setText(df.format(percent).concat("%"));
+                    veryBarTextView.setText(decimalFormat.format(percent).concat("%"));
                     veryBarTextView.getLayoutParams().width = widthBar;
                     break;
                 default:

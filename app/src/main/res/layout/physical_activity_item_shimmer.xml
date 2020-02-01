@@ -3,16 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="90dp"
-    android:background="@android:color/transparent">
+    android:background="@android:color/transparent"
+    android:padding="@dimen/default_padding">
 
     <View
         android:id="@+id/img_phy"
         android:layout_width="45dp"
         android:layout_height="50dp"
-        android:layout_marginLeft="@dimen/default_padding"
-        android:layout_marginTop="@dimen/default_padding"
-        android:layout_marginRight="@dimen/default_padding"
-        android:layout_marginBottom="@dimen/default_padding"
         android:background="@color/light_transparent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
