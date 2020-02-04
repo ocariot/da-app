@@ -135,7 +135,8 @@
     <string name="alert_no_token_fitbit">To collect Fitbit data from child \"%s\", you must first provide authorization to collect the data.</string>
     <string name="alert_access_blocked">Sorry, this app only allows access to family, educator or health professional.&#8230;</string>
     <string name="alert_revoke_fitbit_success">Fitbit access successfully revoked. You will no longer be able to perform data synchronization.</string>
-    <string name="alert_enable_bluetooth">If you want your Heart Rate (Polar OH1) data to be automatically displayed on this screen, click here to enable Bluetooth&#8230;</string>
+    <string name="alert_enable_bluetooth">If you want your Heart Rate (Polar OH1, H10&#8230;) data to be automatically displayed on this screen, click here to enable Bluetooth&#8230;</string>
+    <string name="alert_enable_location">If you want your Heart Rate (Polar OH1, H10&#8230;) data to be displayed automatically on this screen, you must grant access to your location. Click here to grant&#8230;</string>
     <string name="alert_back_confirm">Tap again to exit!</string>
 
     <!-- MENU -->

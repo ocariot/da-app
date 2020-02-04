@@ -13,8 +13,10 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -139,6 +141,12 @@ public class IotFragment extends Fragment implements View.OnClickListener, HRMan
     @BindView(R.id.alert_enable_bluetooth)
     FrameLayout mBoxEnableBluetooth;
 
+    @BindView(R.id.alert_enable_location)
+    FrameLayout mBoxEnableLocation;
+
+    @BindView(R.id.box_hr_progress_bar)
+    LinearLayout mBoxHRLoading;
+
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -174,7 +182,6 @@ public class IotFragment extends Fragment implements View.OnClickListener, HRMan
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_iot, container, false);
         ButterKnife.bind(this, view);
-
         return view;
     }
 
@@ -200,10 +207,15 @@ public class IotFragment extends Fragment implements View.OnClickListener, HRMan
 
         if (ConnectionUtils.isBluetoothAvailable()) {
             mBoxEnableBluetooth.setVisibility(View.GONE);
+
             if (!hasLocationPermissions()) {
                 requestLocationPermission();
                 return;
+            } else {
+                mBoxEnableLocation.setVisibility(View.GONE);
             }
+            if (mHRManager.isConnected()) mBoxHRLoading.setVisibility(View.GONE);
+            else mBoxHRLoading.setVisibility(View.VISIBLE);
             mScanner.stopScan();
             mScanner.startScan(mScannerCallback);
         }
@@ -230,6 +242,7 @@ public class IotFragment extends Fragment implements View.OnClickListener, HRMan
         initChart();
         initAnimation();
         mBoxEnableBluetooth.setOnClickListener(this);
+        mBoxEnableLocation.setOnClickListener(this);
     }
 
     /**
@@ -484,6 +497,15 @@ public class IotFragment extends Fragment implements View.OnClickListener, HRMan
         if (v.getId() == R.id.alert_enable_bluetooth) {
             startActivityForResult(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE),
                     REQUEST_ENABLE_BLUETOOTH);
+        } else if (v.getId() == R.id.alert_enable_location) {
+            startActivity(
+                    new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                            Uri.fromParts(
+                                    "package",
+                                    Objects.requireNonNull(getActivity()).getPackageName(),
+                                    null
+                            ))
+            );
         }
     }
 
@@ -505,6 +527,12 @@ public class IotFragment extends Fragment implements View.OnClickListener, HRMan
      * Request Location permission.
      */
     private void requestLocationPermission() {
+        if (!shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
+            if (mBoxEnableBluetooth.getVisibility() == View.GONE) {
+                mBoxEnableLocation.setVisibility(View.VISIBLE);
+            }
+            return;
+        }
         ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()),
                 new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_ENABLE_LOCATION);
     }
@@ -517,10 +545,10 @@ public class IotFragment extends Fragment implements View.OnClickListener, HRMan
         if ((requestCode == REQUEST_ENABLE_LOCATION) &&
                 (grantResults.length > 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED)) {
             Toast.makeText(mContext, R.string.message_permission_location, Toast.LENGTH_LONG).show();
-            requestLocationPermission();
             return;
         }
         if (ConnectionUtils.isBluetoothAvailable()) {
+            mBoxEnableLocation.setVisibility(View.GONE);
             mScanner.stopScan();
             mScanner.startScan(mScannerCallback);
         }
@@ -537,10 +565,12 @@ public class IotFragment extends Fragment implements View.OnClickListener, HRMan
                 switch (state) {
                     case BluetoothAdapter.STATE_OFF:
                         mBoxEnableBluetooth.setVisibility(View.VISIBLE);
+                        mBoxHRLoading.setVisibility(View.GONE);
                         break;
                     case BluetoothAdapter.STATE_ON:
                         Timber.d("BluetoothAdapter.STATE_ON");
                         mBoxEnableBluetooth.setVisibility(View.GONE);
+                        mBoxHRLoading.setVisibility(View.VISIBLE);
                         if (!hasLocationPermissions()) requestLocationPermission();
                         mScanner.stopScan();
                         mScanner.startScan(mScannerCallback);
@@ -560,13 +590,13 @@ public class IotFragment extends Fragment implements View.OnClickListener, HRMan
             minHR = heartRate < minHR ? heartRate : minHR;
             maxHR = heartRate > maxHR ? heartRate : maxHR;
         }
+        mBoxHRLoading.setVisibility(View.GONE);
         updateViewHR(heartRate, timestamp);
     }
 
     @Override
     public void onConnected(@NonNull BluetoothDevice device) {
         Timber.d("onConnected(): %s", device.getName());
-        device.createBond();
     }
 
     @Override
@@ -577,6 +607,7 @@ public class IotFragment extends Fragment implements View.OnClickListener, HRMan
                 getResources().getColor(R.color.colorLineDivider)));
         mBoxHR.setVisibility(View.GONE);
         if (ConnectionUtils.isBluetoothAvailable()) {
+            mBoxHRLoading.setVisibility(View.VISIBLE);
             mScanner.stopScan();
             mScanner.startScan(mScannerCallback);
         }

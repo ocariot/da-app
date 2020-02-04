@@ -129,7 +129,8 @@
     <string name="alert_no_token_fitbit">Για να συλλέξετε δεδομένα Fitbit από τα παιδια \"%s\", πρέπει πρώτα να δώσετε εξουσιοδότηση για τη συλλογή των δεδομένων.</string>
     <string name="alert_access_blocked">Λυπούμαστε, αυτή η εφαρμογή δεν υποστηρίζει αυτον τον τύπο χρηστη. Επιτρέπονται μόνο οικογένειες, εκπαιδευτικοί και επαγγελματίες υγείας&#8230;</string>
     <string name="alert_revoke_fitbit_success">Η πρόσβαση Fitbit ακυρώθηκε με επιτυχία. Δεν θα είστε πλέον σε θέση να πραγματοποιήσετε συγχρονισμό δεδομένων.</string>
-    <string name="alert_enable_bluetooth">Αν θέλετε να εμφανίζονται αυτόματα τα δεδομένα της καρδιακής συχνότητας (Polar OH1) σε αυτήν την οθόνη, κάντε κλικ εδώ για να ενεργοποιήσετε το Bluetooth&#8230;</string>
+    <string name="alert_enable_bluetooth">Αν θέλετε να εμφανίζονται αυτόματα τα δεδομένα της καρδιακής συχνότητας (Polar OH1, H10&#8230;) σε αυτήν την οθόνη, κάντε κλικ εδώ για να ενεργοποιήσετε το Bluetooth&#8230;</string>
+    <string name="alert_enable_location">If you want your Heart Rate (Polar OH1, H10&#8230;) data to be displayed automatically on this screen, you must grant access to your location. Click here to grant&#8230;</string>
     <string name="alert_back_confirm">Πατήστε ξανά για έξοδο!</string>
 
     <!--  MENU  -->

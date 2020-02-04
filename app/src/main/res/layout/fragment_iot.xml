@@ -30,6 +30,24 @@
                 android:textColor="@android:color/white" />
         </FrameLayout>
 
+        <FrameLayout
+            android:id="@+id/alert_enable_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorWarning"
+            android:orientation="vertical"
+            android:padding="@dimen/default_padding"
+            android:visibility="visible">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:gravity="center"
+                android:text="@string/alert_enable_location"
+                android:textColor="@android:color/white" />
+        </FrameLayout>
+
         <include
             android:id="@+id/box_no_data"
             layout="@layout/no_data"
@@ -153,6 +171,21 @@
                 android:contentDescription="@string/img_desc_heart"
                 android:src="@drawable/heart"
                 android:tint="@color/colorLineDivider" />
+
+            <LinearLayout
+                android:id="@+id/box_hr_progress_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <ProgressBar
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_marginTop="5dp"/>
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/box_hr"
