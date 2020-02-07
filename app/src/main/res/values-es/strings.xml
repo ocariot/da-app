@@ -129,7 +129,8 @@
     <string name="alert_no_token_fitbit">Para recopilar datos de Fitbit del niño \"%s\", primero debe proporcionar autorización.</string>
     <string name="alert_access_blocked">Lo sentimos, esta aplicación sólo permite el acceso a la familia, educador o profesional de la salud&#8230;</string>
     <string name="alert_revoke_fitbit_success">Acceso a Fitbit revocado correctamente. Ya no podrá realizar la sincronización de datos.</string>
-    <string name="alert_enable_bluetooth">Si desea que sus datos de frecuencia cardíaca (Polar OH1) se muestren automáticamente en esta pantalla, haga clic aquí para habilitar Bluetooth&#8230;</string>
+    <string name="alert_enable_bluetooth">Si desea que sus datos de frecuencia cardíaca (Polar OH1, H10&#8230;) se muestren automáticamente en esta pantalla, haga clic aquí para habilitar Bluetooth&#8230;</string>
+    <string name="alert_enable_location">Si desea que sus datos de frecuencia cardíaca (Polar OH1, H10&#8230;) se muestren automáticamente en esta pantalla, debe otorgar acceso a su ubicación. Haga clic aquí para otorgar&#8230;</string>
     <string name="alert_back_confirm">Toque de nuevo para salir!</string>
 
     <!--  MENU  -->
