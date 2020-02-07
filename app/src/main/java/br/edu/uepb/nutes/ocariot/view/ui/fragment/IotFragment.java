@@ -211,9 +211,8 @@ public class IotFragment extends Fragment implements View.OnClickListener, HRMan
             if (!hasLocationPermissions()) {
                 requestLocationPermission();
                 return;
-            } else {
-                mBoxEnableLocation.setVisibility(View.GONE);
             }
+            mBoxEnableLocation.setVisibility(View.GONE);
             if (mHRManager.isConnected()) mBoxHRLoading.setVisibility(View.GONE);
             else mBoxHRLoading.setVisibility(View.VISIBLE);
             mScanner.stopScan();
@@ -570,8 +569,8 @@ public class IotFragment extends Fragment implements View.OnClickListener, HRMan
                     case BluetoothAdapter.STATE_ON:
                         Timber.d("BluetoothAdapter.STATE_ON");
                         mBoxEnableBluetooth.setVisibility(View.GONE);
-                        mBoxHRLoading.setVisibility(View.VISIBLE);
                         if (!hasLocationPermissions()) requestLocationPermission();
+                        else mBoxHRLoading.setVisibility(View.VISIBLE);
                         mScanner.stopScan();
                         mScanner.startScan(mScannerCallback);
                         break;
