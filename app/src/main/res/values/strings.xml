@@ -77,7 +77,7 @@
     <string name="key_signout" translatable="false">key_signout</string>
     <string name="key_sync_data" translatable="false">key_sync_data</string>
     <string name="key_children" translatable="false">key_children_manager</string>
-    <string name="settings_summary_version" translatable="false">1.10.1</string>
+    <string name="settings_summary_version" translatable="false">1.10.2</string>
     <string name="login_with_fitbit">Provide access to Fitbit</string>
     <string name="login_do_not_user_fitbit">Do not currently use Fitbit</string>
     <string name="settings_title">Settings</string>
@@ -135,7 +135,8 @@
     <string name="alert_no_token_fitbit">To collect Fitbit data from child \"%s\", you must first provide authorization to collect the data.</string>
     <string name="alert_access_blocked">Sorry, this app only allows access to family, educator or health professional.&#8230;</string>
     <string name="alert_revoke_fitbit_success">Fitbit access successfully revoked. You will no longer be able to perform data synchronization.</string>
-    <string name="alert_enable_bluetooth">If you want your Heart Rate (Polar OH1) data to be automatically displayed on this screen, click here to enable Bluetooth&#8230;</string>
+    <string name="alert_enable_bluetooth">If you want your Heart Rate (Polar OH1, H10&#8230;) data to be automatically displayed on this screen, click here to enable Bluetooth&#8230;</string>
+    <string name="alert_enable_location">If you want your Heart Rate (Polar OH1, H10&#8230;) data to be displayed automatically on this screen, you must grant access to your location. Click here to grant&#8230;</string>
     <string name="alert_back_confirm">Tap again to exit!</string>
 
     <!-- MENU -->
