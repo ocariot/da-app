@@ -368,6 +368,17 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                                 },
                                 err -> {
                                     Timber.e(err);
+                                    if (err instanceof HttpException) {
+                                        HttpException httpEx = ((HttpException) err);
+                                        if (httpEx.code() == 429) {
+                                            mAlertMessage.show(
+                                                    R.string.title_error,
+                                                    R.string.sync_limit_exceeded,
+                                                    R.color.colorWarning,
+                                                    R.drawable.ic_sad_dark);
+                                            return;
+                                        }
+                                    }
                                     showAlertResultSync(false);
                                 }
                         )

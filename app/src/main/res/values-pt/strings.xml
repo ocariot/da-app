@@ -99,7 +99,7 @@
     <string name="error_500">Ocorreu um erro na comunicação com o servidor. Por favor, tente novamente mais tarde&#8230;</string>
     <string name="error_403">Você não tem permissão para a funcionalidade que está tentando acessar. Por favor, entre em contato com o administrador&#8230;</string>
     <string name="error_400">Não foi possível executar a operação. Por favor, tente novamente mais tarde&#8230;</string>
-    <string name="error_400_1">Não foi possível concluir a operação. Tente novamente e certifique-se de fornecer acesso aos dados de atividade, sono, frequência cardíaca e peso.</string>
+    <string name="error_400_1">Não foi possível concluir a operação. Tente novamente e certifique-se de fornecer permissão aos dados de atividade, sono, frequência cardíaca e peso.</string>
 
     <!-- MESSAGES -->
     <string name="message_no_data_display">Não há dados para exibir!</string>
@@ -121,6 +121,7 @@
     <string name="sync_data_fitbit_success">Os dados Fitbit da criança "%s" foram sincronizados com sucesso com a plataforma OCARIoT.</string>
     <string name="last_sync_date_time">Última sinc: %s</string>
     <string name="fitbit_get_access_token_error">Ocorreu um erro ao tentar recuperar o token de acesso Fitbit.\nPor favor, tente mais tarde&#8230;</string>
+    <string name="sync_limit_exceeded">Limite de sincronização por hora excedido para o filho \"%s\". Por favor, tente novamente mais tarde&#8230;</string>
 
     <!-- ALERTS -->
     <string name="alert_title_token_expired">Problema na autenticação!</string>

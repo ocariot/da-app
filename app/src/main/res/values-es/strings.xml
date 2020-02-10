@@ -121,6 +121,7 @@
     <string name="sync_data_fitbit_success">Los datos de Fitbit para el niño \"%s\" se sincronizaron correctamente con la plataforma OCARIoT.</string>
     <string name="last_sync_date_time">Última sinc: %s</string>
     <string name="fitbit_get_access_token_error">Se produjo un error al intentar recuperar el token de acceso de Fitbit.\nInténtelo de nuevo más tarde&#8230;</string>
+    <string name="sync_limit_exceeded">Límite de sincronización por hora excedido para el niño \"%s\". Por favor, inténtelo de nuevo más tarde&#8230;</string>
 
     <!-- ALERTS -->
     <string name="alert_title_token_expired">¡Problema de autenticacion!</string>
