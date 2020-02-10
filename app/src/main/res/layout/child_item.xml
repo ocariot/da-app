@@ -8,19 +8,10 @@
     android:orientation="horizontal"
     android:padding="@dimen/default_padding">
 
-    <ImageView
-        android:id="@+id/gender_img"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:contentDescription="@null"
-        android:src="@null" />
-
     <TextView
         android:id="@+id/name_child"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/gender_img"
-        android:layout_marginStart="40dp"
         android:layout_marginTop="-2dp"
         android:text="B0001"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -32,7 +23,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/name_child"
-        android:layout_marginStart="40dp"
         android:layout_marginTop="2dp"
         android:text="@string/last_sync_date_time"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"

@@ -6,7 +6,6 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -71,15 +70,6 @@ public class ChildListAdapter extends BaseAdapter<Child> implements Filterable {
             h.fitBitStatus.setChecked(false);
             if (child.isFitbitAccessValid()) h.fitBitStatus.setChecked(true);
 
-            // Gender
-            if (child.getGender().equalsIgnoreCase("male")) {
-                h.gender.setImageDrawable(mContext.getResources()
-                        .getDrawable(R.drawable.ic_action_gender_male));
-            } else {
-                h.gender.setImageDrawable(mContext.getResources()
-                        .getDrawable(R.drawable.ic_action_gender_female));
-            }
-
             // OnClick Item
             h.mView.setOnClickListener(v -> {
                 if (mListener != null) mListener.onItemClick(child);
@@ -139,9 +129,6 @@ public class ChildListAdapter extends BaseAdapter<Child> implements Filterable {
 
         @BindView(R.id.fitbit_status_cb)
         CheckBox fitBitStatus;
-
-        @BindView(R.id.gender_img)
-        ImageView gender;
 
         ViewHolderChild(View view) {
             super(view);
