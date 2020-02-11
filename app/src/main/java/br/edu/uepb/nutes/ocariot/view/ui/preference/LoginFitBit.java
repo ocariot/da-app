@@ -19,8 +19,10 @@ import net.openid.appauth.ResponseTypeValues;
 import java.util.Objects;
 
 import br.edu.uepb.nutes.ocariot.BuildConfig;
+import br.edu.uepb.nutes.ocariot.R;
 import br.edu.uepb.nutes.ocariot.data.model.common.UserAccess;
 import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
+import br.edu.uepb.nutes.ocariot.utils.AlertMessage;
 import io.reactivex.Single;
 
 /**
@@ -43,10 +45,12 @@ public class LoginFitBit {
     private AuthorizationRequest mAuthRequest;
     private AppPreferencesHelper appPref;
     private String clientSecret;
+    private AlertMessage mAlertMessage;
 
     public LoginFitBit(Context context) {
         this.mContext = context;
         appPref = AppPreferencesHelper.getInstance();
+        mAlertMessage = new AlertMessage(context);
 
         initConfig();
     }
@@ -55,8 +59,7 @@ public class LoginFitBit {
      * Initialize settings to obtain authorization code.
      */
     private void initConfig() {
-        if (appPref.getFitbitAppData() == null || appPref.getFitbitAppData().getClientId() == null
-                || appPref.getFitbitAppData().getClientSecret() == null) return;
+        if (!clientFibitIsValid()) return;
 
         String clientId = appPref.getFitbitAppData().getClientId();
         clientSecret = appPref.getFitbitAppData().getClientSecret();
@@ -87,6 +90,15 @@ public class LoginFitBit {
      * from the {@link AuthorizationService}.
      */
     public void doAuthorizationCode() {
+        if (!clientFibitIsValid()) {
+            mAlertMessage.show(
+                    R.string.title_error,
+                    R.string.error_configs_fitbit,
+                    R.color.colorDanger,
+                    R.drawable.ic_sad_dark);
+            return;
+        }
+
         mAuthService = new AuthorizationService(mContext);
 
         Intent intent = new Intent(mContext, SettingsActivity.class);
@@ -133,5 +145,15 @@ public class LoginFitBit {
 
                     emitter.onSuccess(userAccess);
                 }));
+    }
+
+    /**
+     * Checks whether fitbit client id and password are available.
+     *
+     * @return boolean
+     */
+    private boolean clientFibitIsValid() {
+        return !(appPref.getFitbitAppData() == null || appPref.getFitbitAppData().getClientId() == null
+                || appPref.getFitbitAppData().getClientSecret() == null);
     }
 }
