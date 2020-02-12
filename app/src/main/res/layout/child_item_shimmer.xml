@@ -1,19 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/default_padding"
-    android:background="@android:color/transparent">
-
-    <View
-        android:id="@+id/img_gender"
-        android:layout_width="30dp"
-        android:layout_height="40dp"
-        android:background="@color/light_transparent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    android:background="@android:color/transparent"
+    android:padding="@dimen/default_padding">
 
     <View
         android:id="@+id/tv_username"
@@ -22,19 +14,17 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="220dp"
         android:background="@color/light_transparent"
-        app:layout_constraintLeft_toRightOf="@+id/img_gender"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/img_gender" />
+        tools:ignore="MissingConstraints" />
 
     <View
         android:layout_width="0dp"
         android:layout_height="12dp"
+        android:layout_marginTop="7dp"
         android:layout_marginEnd="70dp"
-        android:layout_marginTop="25dp"
         android:background="@color/light_transparent"
-        app:layout_constraintBottom_toBottomOf="@+id/img_gender"
         app:layout_constraintLeft_toLeftOf="@+id/tv_username"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/img_gender" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_username" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
