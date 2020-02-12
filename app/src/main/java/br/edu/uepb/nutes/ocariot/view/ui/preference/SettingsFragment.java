@@ -255,7 +255,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     private void openDialogRevokeFitBit() {
         getActivity().runOnUiThread(() -> new AlertDialog.Builder(mContext)
                 .setMessage(mContext.getResources()
-                .getString(R.string.dialog_confirm_revoke_fitbit, mChild.getUsername()))
+                        .getString(R.string.dialog_confirm_revoke_fitbit, mChild.getUsername()))
                 .setPositiveButton(R.string.title_yes, (dialog, which) -> revokeFitBitAuth())
                 .setNegativeButton(R.string.title_no, null)
                 .create()
@@ -473,6 +473,10 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
      * Open CustomTab for Fitbit authorization.
      */
     private void openFitbitAuth() {
+        if (!loginFitBit.clientFibitIsValid()) {
+            Alerter.hide();
+            return;
+        }
         mListener.onPrefClick(getResources().getString(R.string.key_fitibit));
         loginFitBit.doAuthorizationCode();
     }

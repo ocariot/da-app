@@ -2,7 +2,8 @@ package br.edu.uepb.nutes.ocariot.data.repository.local.pref;
 
 import android.content.SharedPreferences;
 
-import com.securepreferences.SecurePreferences;
+import androidx.security.crypto.EncryptedSharedPreferences;
+import androidx.security.crypto.MasterKeys;
 
 import br.edu.uepb.nutes.ocariot.BuildConfig;
 import br.edu.uepb.nutes.ocariot.OcariotApp;
@@ -29,8 +30,18 @@ public class AppPreferencesHelper implements PreferencesHelper {
     private SharedPreferences mPrefs;
 
     private AppPreferencesHelper() {
-        mPrefs = new SecurePreferences(OcariotApp.getAppContext(), "",
-                BuildConfig.PREFERENCES_FILENAME);
+        try {
+            String masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC);
+            mPrefs = EncryptedSharedPreferences.create(
+                    BuildConfig.PREFERENCES_FILENAME,
+                    masterKeyAlias,
+                    OcariotApp.getContext(),
+                    EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                    EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+            );
+        } catch (Exception err) {
+            Timber.e(err);
+        }
     }
 
     public static synchronized AppPreferencesHelper getInstance() {
@@ -139,7 +150,8 @@ public class AppPreferencesHelper implements PreferencesHelper {
 
     @Override
     public boolean removeSession() {
-        return mPrefs.edit().clear().commit();
+        return mPrefs.edit().putString(PREF_KEY_AUTH_OCARIOT, null).commit() &&
+                mPrefs.edit().putString(PREF_KEY_LAST_SELECTED_CHILD, null).commit();
     }
 
     @Override

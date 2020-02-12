@@ -241,6 +241,7 @@ public class ChildrenManagerActivity extends AppCompatActivity {
      * Otherwise it displays from the remote server.
      */
     private void loadChildren() {
+        if(userAccess == null) return;
         if (userAccess.getSubjectType().equalsIgnoreCase(User.Type.FAMILY)) {
             mDisposable.add(
                     ocariotRepository

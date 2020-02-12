@@ -19,6 +19,8 @@ import androidx.appcompat.widget.AppCompatEditText;
 
 import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.flaviofaria.kenburnsview.RandomTransitionGenerator;
+import com.tapadoo.alerter.Alert;
+import com.tapadoo.alerter.Alerter;
 
 import java.util.Objects;
 
@@ -170,6 +172,8 @@ public class LoginActivity extends AppCompatActivity {
      * Login in server.
      */
     private void login() {
+        Alerter.hide(); // close alert message
+
         // close keyboard
         if (getCurrentFocus() != null) {
             InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);

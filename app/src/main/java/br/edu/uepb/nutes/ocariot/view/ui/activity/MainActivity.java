@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements
     private AlertMessage mAlertMessage;
     private UserAccess mUserAccess;
     private long backPressed;
+    private LoginFitBit loginFitBit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements
         sleepListFragment = SleepListFragment.newInstance();
         iotFragment = IotFragment.newInstance();
         mAlertMessage = new AlertMessage(this);
+        loginFitBit = new LoginFitBit(this);
         mUserAccess = appPref.getUserAccessOcariot();
 
         mBottomNavigationView.setOnNavigationItemSelectedListener(this);
@@ -203,7 +205,15 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onClickFitBit() {
-        new LoginFitBit(this).doAuthorizationCode();
+        if (!loginFitBit.clientFibitIsValid()) {
+            mAlertMessage.show(
+                    R.string.title_error,
+                    R.string.error_configs_fitbit,
+                    R.color.colorDanger,
+                    R.drawable.ic_sad_dark);
+            return;
+        }
+        loginFitBit.doAuthorizationCode();
     }
 
     @Override
