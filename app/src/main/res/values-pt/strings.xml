@@ -122,6 +122,7 @@
     <string name="last_sync_date_time">Última sinc: %s</string>
     <string name="fitbit_get_access_token_error">Ocorreu um erro ao tentar recuperar o token de acesso Fitbit.\nPor favor, tente mais tarde&#8230;</string>
     <string name="sync_limit_exceeded">Limite de sincronização por hora excedido para o filho \"%s\". Por favor, tente novamente mais tarde&#8230;</string>
+    <string name="sync_access_token_error">Foi identificado um erro com o token de acesso Fitbit da criança \"%s\". Pode ter sido expirado ou revogado.\nPor favor, fornecça novamente um novo acesso.</string>
 
     <!-- ALERTS -->
     <string name="alert_title_token_expired">Problema na autenticação!</string>

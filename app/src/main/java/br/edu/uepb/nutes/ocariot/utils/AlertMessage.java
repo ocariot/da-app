@@ -35,6 +35,10 @@ public class AlertMessage {
         alerter.show();
     }
 
+    public void show(String title, String text, int backgroundColor, int icon) {
+        show(title, text, backgroundColor, icon, 15000, false, null);
+    }
+
     public void show(int title, int text, int backgroundColor, int icon, int duration,
                      boolean enableVibration, AlertMessageListener listener) {
         show(mContext.getResources().getString(title), mContext.getResources().getString(text),

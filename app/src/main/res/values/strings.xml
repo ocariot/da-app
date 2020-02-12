@@ -128,6 +128,7 @@
     <string name="last_sync_date_time">Last sync: %s</string>
     <string name="fitbit_get_access_token_error">An error occurred while trying to retrieve Fitbit access token.\nPlease try later&#8230;</string>
     <string name="sync_limit_exceeded">Synchronization limit per hour exceeded for child \"%s\". Please try again later&#8230;</string>
+    <string name="sync_access_token_error">An error was identified with the child Fitbit access token \"%s\". It may have been expired or revoked.\nPlease provide new access again.</string>
 
     <!-- ALERTS -->
     <string name="alert_title_token_expired">Authentication problem!"</string>

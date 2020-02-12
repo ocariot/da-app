@@ -11,14 +11,18 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.SwitchPreference;
 
+import com.google.gson.Gson;
 import com.tapadoo.alerter.Alerter;
 
 import net.openid.appauth.AuthorizationException;
 import net.openid.appauth.AuthorizationResponse;
 
+import java.io.IOException;
+
 import br.edu.uepb.nutes.ocariot.R;
 import br.edu.uepb.nutes.ocariot.data.model.common.UserAccess;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.Child;
+import br.edu.uepb.nutes.ocariot.data.model.ocariot.ResponseError;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.User;
 import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
 import br.edu.uepb.nutes.ocariot.data.repository.remote.ocariot.OcariotNetRepository;
@@ -362,18 +366,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                                 },
                                 err -> {
                                     Timber.e(err);
-                                    if (err instanceof HttpException) {
-                                        HttpException httpEx = ((HttpException) err);
-                                        if (httpEx.code() == 429) {
-                                            mAlertMessage.show(
-                                                    R.string.title_error,
-                                                    R.string.sync_limit_exceeded,
-                                                    R.color.colorWarning,
-                                                    R.drawable.ic_sad_dark);
-                                            return;
-                                        }
-                                    }
-                                    showAlertResultSync(false);
+                                    syncErrorHandler(err);
                                 }
                         )
         );
@@ -418,11 +411,11 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                         .revokeFitBitAuth(mChild.getId())
                         .doOnSubscribe(disposable -> dialog.show(getFragmentManager()))
                         .doOnTerminate(dialog::close)
-                        .subscribe(this::revokeSuccess, err -> {
+                        .subscribe(this::revokeSuccessMessage, err -> {
                             if (err instanceof HttpException) {
                                 HttpException httpEx = ((HttpException) err);
                                 if (httpEx.code() == 400) {
-                                    revokeSuccess();
+                                    revokeSuccessMessage();
                                     return;
                                 }
                             }
@@ -431,17 +424,30 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         );
     }
 
-    private void revokeSuccess() {
+    /**
+     * Displays successfully token revocation message.
+     */
+    private void revokeSuccessMessage() {
+        if (removeFitbitAccess()) {
+            mAlertMessage.show(
+                    R.string.title_success,
+                    R.string.alert_revoke_fitbit_success,
+                    R.color.colorAccent,
+                    R.drawable.ic_action_check_dark);
+        }
+    }
+
+    /**
+     * Remove Fitbit Access from child saved in session
+     * and update the view.
+     *
+     * @return boolean
+     */
+    private boolean removeFitbitAccess() {
         FirebaseLogEvent.fitbitAuthRevoke();
         switchPrefFitBit.setChecked(false);
         mChild.setFitBitAccess(null);
-        appPref.addLastSelectedChild(mChild);
-
-        mAlertMessage.show(
-                R.string.title_success,
-                R.string.alert_revoke_fitbit_success,
-                R.color.colorAccent,
-                R.drawable.ic_action_check_dark);
+        return appPref.addLastSelectedChild(mChild);
     }
 
     /**
@@ -467,6 +473,59 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
             });
         }
         alerter.show();
+    }
+
+    /**
+     * Sync error manager handler.
+     *
+     * @param error {@link Throwable}
+     */
+    private void syncErrorHandler(Throwable error) {
+        if (error instanceof HttpException) {
+            try {
+                HttpException httpEx = ((HttpException) error);
+                ResponseError responseError = new Gson().fromJson(
+                        httpEx.response().errorBody().string(), ResponseError.class
+                );
+                if (httpEx.code() == 429 || responseError.getCode() == 1429) {
+                    mAlertMessage.show(
+                            mContext.getResources().getString(R.string.title_error),
+                            mContext.getResources()
+                                    .getString(R.string.sync_limit_exceeded, mChild.getUsername()),
+                            R.color.colorWarning,
+                            R.drawable.ic_sad_dark);
+                    return;
+                }
+                if (responseError.getCode() == 1011 || responseError.getCode() == 1012
+                        || responseError.getCode() == 1021) {
+                    removeFitbitAccess();
+                    mAlertMessage.show(
+                            mContext.getResources().getString(R.string.title_error),
+                            mContext.getResources()
+                                    .getString(R.string.sync_access_token_error, mChild.getUsername()),
+                            R.color.colorWarning,
+                            R.drawable.ic_sad_dark, 15000, true,
+                            new AlertMessage.AlertMessageListener() {
+                                @Override
+                                public void onHideListener() {
+                                    // not implemented!
+                                }
+
+                                @Override
+                                public void onClickListener() {
+                                    if (mUserAccess.getSubjectType().equals(User.Type.FAMILY)) {
+                                        return;
+                                    }
+                                    openFitbitAuth();
+                                }
+                            });
+                    return;
+                }
+                showAlertResultSync(false);
+            } catch (IOException err) {
+                Timber.e(err);
+            }
+        }
     }
 
     /**
