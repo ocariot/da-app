@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.tapadoo.alerter.Alerter;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -141,6 +142,7 @@ public class MainActivity extends AppCompatActivity implements
     protected void onStop() {
         super.onStop();
         EventBus.getDefault().unregister(this);
+        Alerter.hide();
     }
 
     @Override
@@ -284,7 +286,8 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     /**
-     *  Open children manager activity.
+     * Open children manager activity.
+     *
      * @param isFirst boolean
      */
     private void openChildrenManagerActivity(boolean isFirst) {

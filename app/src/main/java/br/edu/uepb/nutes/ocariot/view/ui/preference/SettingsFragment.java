@@ -84,7 +84,6 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         initEvents();
         // Initialize configuration for return of Fitbit authentication and authorization.
         initResultAuthFitBit();
-        Alerter.hide();
     }
 
     private void initEvents() {
@@ -115,6 +114,12 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+        Alerter.hide();
+    }
+
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
 
@@ -142,9 +147,10 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     @Override
     public boolean onPreferenceClick(Preference preference) {
         if (preference.getKey().equals(getString(R.string.key_fitibit))) {
-            if (!fitbitValidConfigs()) {
+            if (!loginFitBit.clientFibitIsValid()) {
                 mAlertMessage.show(R.string.title_error, R.string.error_configs_fitbit,
                         R.color.colorDanger, R.drawable.ic_warning_dark);
+                switchPrefFitBit.setChecked(!switchPrefFitBit.isChecked());
                 return true;
             }
 
@@ -187,22 +193,14 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
      * Updates key preference equal to "key_sync_data" with last sync date.
      */
     private void updateViewLastSync() {
-        new Handler().post(() -> {
-            Preference prefSync = findPreference(getString(R.string.key_sync_data));
-            prefSync.setSummary(getResources().getString(R.string.synchronization_data)
-                    .concat("\n\n")
-                    .concat(getResources().getString(R.string.last_sync_date_time, mChild.getLastSync() != null ?
-                            DateUtils.convertDateTimeUTCToLocale(mChild.getLastSync(),
-                                    getResources().getString(R.string.date_time_abb5), null) : "--")
-                    )
-            );
-        });
-    }
-
-    private boolean fitbitValidConfigs() {
-        if (appPref.getFitbitAppData() == null) return false;
-        return appPref.getFitbitAppData().getClientId() != null &&
-                appPref.getFitbitAppData().getClientSecret() != null;
+        new Handler().post(() -> findPreference(getString(R.string.key_sync_data))
+                .setSummary(getResources().getString(R.string.synchronization_data)
+                        .concat("\n\n")
+                        .concat(getResources().getString(R.string.last_sync_date_time, mChild.getLastSync() != null ?
+                                DateUtils.convertDateTimeUTCToLocale(mChild.getLastSync(),
+                                        getResources().getString(R.string.date_time_abb5), null) : "--")
+                        )
+                ));
     }
 
     /**
@@ -255,36 +253,32 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
      * Open dialog confirm revoke FitBit.
      */
     private void openDialogRevokeFitBit() {
-        getActivity().runOnUiThread(() -> {
-            AlertDialog.Builder mDialog = new AlertDialog.Builder(mContext);
-            mDialog.setMessage(mContext.getResources()
-                    .getString(R.string.dialog_confirm_revoke_fitbit, mChild.getUsername()))
-                    .setPositiveButton(R.string.title_yes, (dialog, which) -> revokeFitBitAuth())
-                    .setNegativeButton(R.string.title_no, null)
-                    .create()
-                    .show();
-        });
+        getActivity().runOnUiThread(() -> new AlertDialog.Builder(mContext)
+                .setMessage(mContext.getResources()
+                .getString(R.string.dialog_confirm_revoke_fitbit, mChild.getUsername()))
+                .setPositiveButton(R.string.title_yes, (dialog, which) -> revokeFitBitAuth())
+                .setNegativeButton(R.string.title_no, null)
+                .create()
+                .show());
     }
 
     /**
      * Show dialog confirm sign out in app.
      */
     private void openDialogSignOut() {
-        getActivity().runOnUiThread(() -> {
-            AlertDialog.Builder mDialog = new AlertDialog.Builder(mContext);
-            mDialog.setMessage(R.string.dialog_confirm_sign_out)
-                    .setPositiveButton(R.string.title_yes, (dialog, which) -> {
-                                if (appPref.removeSession()) {
-                                    Intent intent = new Intent(getActivity(), LoginActivity.class);
-                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
-                                            Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                    startActivity(intent);
-                                }
+        getActivity().runOnUiThread(() -> new AlertDialog.Builder(mContext)
+                .setMessage(R.string.dialog_confirm_sign_out)
+                .setPositiveButton(R.string.title_yes, (dialog, which) -> {
+                            if (appPref.removeSession()) {
+                                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
+                                        Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
                             }
-                    ).setNegativeButton(R.string.title_no, null)
-                    .create()
-                    .show();
-        });
+                        }
+                ).setNegativeButton(R.string.title_no, null)
+                .create()
+                .show());
     }
 
     /**

@@ -152,7 +152,7 @@ public class LoginFitBit {
      *
      * @return boolean
      */
-    private boolean clientFibitIsValid() {
+    public boolean clientFibitIsValid() {
         return !(appPref.getFitbitAppData() == null || appPref.getFitbitAppData().getClientId() == null
                 || appPref.getFitbitAppData().getClientSecret() == null);
     }

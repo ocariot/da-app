@@ -10,6 +10,7 @@ import br.edu.uepb.nutes.ocariot.data.model.common.UserAccess;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.Child;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.FitBitAppData;
 import br.edu.uepb.nutes.ocariot.exception.LocalPreferenceException;
+import timber.log.Timber;
 
 /**
  * Class to perform operations on the device's shared preference.
@@ -85,30 +86,54 @@ public class AppPreferencesHelper implements PreferencesHelper {
 
     @Override
     public String getOcariotURL() {
-        return mPrefs.getString(PREF_KEY_OCARIOT_API, null);
+        try {
+            return mPrefs.getString(PREF_KEY_OCARIOT_API, null);
+        } catch (ClassCastException | NullPointerException ex) {
+            Timber.e(ex);
+            return null;
+        }
     }
 
     @Override
     public boolean changedOcariotUrl() {
-        return mPrefs.getBoolean(PREF_KEY_CHANGED_OCARIOT_API, false);
+        try {
+            return mPrefs.getBoolean(PREF_KEY_CHANGED_OCARIOT_API, false);
+        } catch (ClassCastException | NullPointerException ex) {
+            Timber.e(ex);
+            return false;
+        }
     }
 
     @Override
     public UserAccess getUserAccessOcariot() {
-        String userAccess = mPrefs.getString(PREF_KEY_AUTH_OCARIOT, null);
-        return UserAccess.jsonDeserialize(userAccess);
+        try {
+            String userAccess = mPrefs.getString(PREF_KEY_AUTH_OCARIOT, null);
+            return UserAccess.jsonDeserialize(userAccess);
+        } catch (ClassCastException | NullPointerException ex) {
+            Timber.e(ex);
+        }
+        return null;
     }
 
     @Override
     public Child getLastSelectedChild() {
-        String user = mPrefs.getString(PREF_KEY_LAST_SELECTED_CHILD, null);
-        return Child.jsonDeserialize(user);
+        try {
+            String user = mPrefs.getString(PREF_KEY_LAST_SELECTED_CHILD, null);
+            return Child.jsonDeserialize(user);
+        } catch (ClassCastException | NullPointerException ex) {
+            Timber.e(ex);
+        }
+        return null;
     }
 
     @Override
     public FitBitAppData getFitbitAppData() {
-        String fitbitAppData = mPrefs.getString(PREF_KEY_FITBIT_DATA, null);
-        if (fitbitAppData != null) return FitBitAppData.jsonDeserialize(fitbitAppData);
+        try {
+            String fitbitAppData = mPrefs.getString(PREF_KEY_FITBIT_DATA, null);
+            if (fitbitAppData != null) return FitBitAppData.jsonDeserialize(fitbitAppData);
+        } catch (ClassCastException | NullPointerException ex) {
+            Timber.e(ex);
+        }
         return null;
     }
 
@@ -120,13 +145,23 @@ public class AppPreferencesHelper implements PreferencesHelper {
     @Override
     public boolean getBoolean(String key) {
         checkKey(key);
-        return mPrefs.getBoolean(key, false);
+        try {
+            return mPrefs.getBoolean(key, false);
+        } catch (ClassCastException | NullPointerException ex) {
+            Timber.e(ex);
+            return false;
+        }
     }
 
     @Override
     public int getInt(String key) {
         checkKey(key);
-        return mPrefs.getInt(key, -1);
+        try {
+            return mPrefs.getInt(key, -1);
+        } catch (ClassCastException | NumberFormatException | NullPointerException ex) {
+            Timber.e(ex);
+            return -1;
+        }
     }
 
     private void checkKey(String key) {
