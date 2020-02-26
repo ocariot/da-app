@@ -1,10 +1,8 @@
 package br.edu.uepb.nutes.ocariot.view.ui.preference;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.Preference;
@@ -130,15 +128,6 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         if (context instanceof OnClickSettingsListener) {
             mListener = (OnClickSettingsListener) context;
         } else throw new ClassCastException();
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            mListener = (OnClickSettingsListener) activity;
-        }
     }
 
     @Override

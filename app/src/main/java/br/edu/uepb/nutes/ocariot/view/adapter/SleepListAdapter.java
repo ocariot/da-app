@@ -80,12 +80,15 @@ public class SleepListAdapter extends BaseAdapter<Sleep> {
             h.mView.setOnClickListener(v -> {
                 if (mListener != null) mListener.onItemClick(sleep);
             });
+
+            // call Animation function
+            setAnimation(h.mView, position);
         }
     }
 
     @Override
     public void clearAnimation(RecyclerView.ViewHolder holder) {
-        // Not implemented!
+        ((SleepListAdapter.ViewHolderSleep) holder).clearAnimation();
     }
 
     class ViewHolderSleep extends RecyclerView.ViewHolder {
@@ -107,6 +110,10 @@ public class SleepListAdapter extends BaseAdapter<Sleep> {
             super(view);
             ButterKnife.bind(this, view);
             mView = view.getRootView();
+        }
+
+        void clearAnimation() {
+            mView.clearAnimation();
         }
     }
 }

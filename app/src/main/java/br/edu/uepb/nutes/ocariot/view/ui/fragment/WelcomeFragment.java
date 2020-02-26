@@ -104,10 +104,7 @@ public class WelcomeFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if (!(context instanceof OnClickWelcomeListener)) {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnClickWelcomeListener");
-        }
+        if (!(context instanceof OnClickWelcomeListener)) return;
         mListener = (OnClickWelcomeListener) context;
     }
 

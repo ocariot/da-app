@@ -79,6 +79,9 @@ public class PhysicalActivityListAdapter extends BaseAdapter<PhysicalActivity> {
             h.mView.setOnClickListener(v -> {
                 if (mListener != null) mListener.onItemClick(activity);
             });
+
+            // call Animation function
+            setAnimation(h.mView, position);
         }
     }
 
@@ -106,7 +109,7 @@ public class PhysicalActivityListAdapter extends BaseAdapter<PhysicalActivity> {
 
     @Override
     public void clearAnimation(RecyclerView.ViewHolder holder) {
-        // Not implemented!
+        ((PhysicalActivityListAdapter.ViewHolderActivity) holder).clearAnimation();
     }
 
     class ViewHolderActivity extends RecyclerView.ViewHolder {
@@ -137,6 +140,10 @@ public class PhysicalActivityListAdapter extends BaseAdapter<PhysicalActivity> {
             super(view);
             ButterKnife.bind(this, view);
             mView = view.getRootView();
+        }
+
+        void clearAnimation() {
+            mView.clearAnimation();
         }
     }
 }
