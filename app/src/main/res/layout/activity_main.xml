@@ -24,7 +24,7 @@
             android:layout_gravity="bottom"
             android:background="@color/colorBackgroundNavigation"
             app:itemBackground="@color/colorBackgroundNavigation"
-            app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"
+            app:layout_scrollFlags="scroll|enterAlways|snap"
             app:menu="@menu/navigation" />
 
         <FrameLayout
