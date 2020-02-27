@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
-    android:orientation="vertical"
     tools:context="br.edu.uepb.nutes.ocariot.view.ui.activity.LoginActivity">
 
     <com.flaviofaria.kenburnsview.KenBurnsView
@@ -15,12 +14,14 @@
         android:src="@drawable/children_back" />
 
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/scroll_login"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingTop="@dimen/default_padding"
-        android:scrollbarSize="2dp">
+        android:scrollbarSize="0dp">
 
         <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/box_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -154,4 +155,4 @@
 
     </androidx.core.widget.NestedScrollView>
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

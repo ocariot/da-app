@@ -41,7 +41,7 @@ import io.reactivex.disposables.CompositeDisposable;
  * @author Copyright (c) 2018, NUTES/UEPB
  */
 public class SleepListFragment extends Fragment {
-    private static final int LIMIT_PER_PAGE = 9;
+    private static final int LIMIT_PER_PAGE = 20;
     private static final int INITIAL_PAGE = 1;
     private int page = INITIAL_PAGE;
 

@@ -3,11 +3,12 @@ package br.edu.uepb.nutes.ocariot.view.ui.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.view.WindowManager;
+import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
@@ -16,11 +17,14 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatEditText;
+import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.core.widget.NestedScrollView;
 
 import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.flaviofaria.kenburnsview.RandomTransitionGenerator;
-import com.tapadoo.alerter.Alert;
 import com.tapadoo.alerter.Alerter;
+
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
 
 import java.util.Objects;
 
@@ -77,10 +81,18 @@ public class LoginActivity extends AppCompatActivity {
     @BindView(R.id.locale_hint_text)
     TextView localeText;
 
+    @BindView(R.id.scroll_login)
+    NestedScrollView scrollView;
+
+    @BindView(R.id.box_login)
+    LinearLayoutCompat boxLogin;
+
     private OcariotNetRepository ocariotRepository;
     private AppPreferencesHelper appPref;
     private CompositeDisposable mDisposable;
     private AlertMessage alertMessage;
+    private FrameLayout.LayoutParams layoutParams;
+    private boolean isScrolled = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,12 +100,16 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
 
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        KeyboardVisibilityEvent.setEventListener(this, isOpen -> {
+            if (isOpen) applyScroll();
+            else resetScrollView();
+        });
 
         appPref = AppPreferencesHelper.getInstance();
         mDisposable = new CompositeDisposable();
         alertMessage = new AlertMessage(this);
+        layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
 
         // Must be called before booting Ocariot Repository!!!
         initComponents();
@@ -150,6 +166,39 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mDisposable.dispose();
+    }
+
+    /**
+     * Apply scroll to view EditText
+     */
+    private void applyScroll() {
+        if (!isScrolled) {
+            layoutParams.setMargins(0, 0, 0, 400);
+            boxLogin.setLayoutParams(layoutParams);
+            isScrolled = true;
+        }
+        scrollView.smoothScrollTo(0, 400);
+    }
+
+    /**
+     * Reset scroll
+     */
+    private void resetScrollView() {
+        isScrolled = false;
+        layoutParams.setMargins(0, 0, 0, -400);
+        boxLogin.setLayoutParams(layoutParams);
+        scrollView.smoothScrollTo(0, 0);
+    }
+
+    /**
+     * Animation translation up
+     *
+     * @param view {@link View}
+     */
     private void slideUp(View view) {
         view.setVisibility(View.VISIBLE);
         TranslateAnimation animate = new TranslateAnimation(
@@ -160,12 +209,6 @@ public class LoginActivity extends AppCompatActivity {
         animate.setDuration(500);
         animate.setFillAfter(true);
         view.startAnimation(animate);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mDisposable.dispose();
     }
 
     /**
@@ -212,7 +255,10 @@ public class LoginActivity extends AppCompatActivity {
                                     R.string.title_login_failed,
                                     R.string.error_login_invalid,
                                     R.color.colorWarning,
-                                    R.drawable.ic_sad_dark
+                                    R.drawable.ic_sad_dark,
+                                    5000,
+                                    true,
+                                    null
                             );
                             return;
                         }
