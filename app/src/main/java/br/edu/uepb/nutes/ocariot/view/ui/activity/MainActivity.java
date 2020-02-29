@@ -13,6 +13,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -32,6 +33,7 @@ import br.edu.uepb.nutes.ocariot.data.model.ocariot.Sleep;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.User;
 import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
 import br.edu.uepb.nutes.ocariot.utils.AlertMessage;
+import br.edu.uepb.nutes.ocariot.utils.BottomNavigationViewBehavior;
 import br.edu.uepb.nutes.ocariot.utils.MessageEvent;
 import br.edu.uepb.nutes.ocariot.view.ui.fragment.IotFragment;
 import br.edu.uepb.nutes.ocariot.view.ui.fragment.PhysicalActivityListFragment;
@@ -75,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements
     private UserAccess mUserAccess;
     private long backPressed;
     private LoginFitBit loginFitBit;
+    private BottomNavigationViewBehavior bottomNavigationViewBehavior;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +98,10 @@ public class MainActivity extends AppCompatActivity implements
         mUserAccess = appPref.getUserAccessOcariot();
 
         mBottomNavigationView.setOnNavigationItemSelectedListener(this);
+
+        CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) mBottomNavigationView.getLayoutParams();
+        bottomNavigationViewBehavior = new BottomNavigationViewBehavior();
+        layoutParams.setBehavior(bottomNavigationViewBehavior);
     }
 
     @Override
@@ -132,12 +139,14 @@ public class MainActivity extends AppCompatActivity implements
         ) {
             replaceFragment(WelcomeFragment.newInstance());
             mBottomNavigationView.setVisibility(View.GONE);
+            bottomNavigationViewBehavior.slideDown(mBottomNavigationView);
         } else {
             mBottomNavigationView.setVisibility(View.VISIBLE);
             if (lastViewIndex == 1) loadSleepView();
             else if (lastViewIndex == 2) loadIotView();
             else loadPhysicalActivitiesView();
         }
+        bottomNavigationViewBehavior.slideUp(mBottomNavigationView);
     }
 
     @Override
@@ -220,6 +229,7 @@ public class MainActivity extends AppCompatActivity implements
     public void onDoNotLoginFitBitClick() {
         appPref.addBoolean(KEY_DO_NOT_LOGIN_FITBIT, true);
         mBottomNavigationView.setVisibility(View.VISIBLE);
+        mBottomNavigationView.invalidate();
         loadPhysicalActivitiesView();
     }
 
@@ -244,6 +254,9 @@ public class MainActivity extends AppCompatActivity implements
         Objects.requireNonNull(getSupportActionBar())
                 .setTitle(R.string.title_physical_activities);
         lastViewIndex = 0;
+
+        mBottomNavigationView.setVisibility(View.VISIBLE);
+        mBottomNavigationView.invalidate();
     }
 
     /**

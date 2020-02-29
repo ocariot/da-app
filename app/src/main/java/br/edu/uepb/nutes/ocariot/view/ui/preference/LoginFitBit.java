@@ -135,7 +135,7 @@ public class LoginFitBit {
     }
 
     /**
-     * Checks whether fitbit client id and password are available.
+     * Checks whether Fitbit client id and password are available.
      *
      * @return boolean
      */

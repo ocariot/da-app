@@ -41,6 +41,10 @@ import io.reactivex.disposables.CompositeDisposable;
  * @author Copyright (c) 2018, NUTES/UEPB
  */
 public class SleepListFragment extends Fragment {
+    private static final int LIMIT_PER_PAGE = 20;
+    private static final int INITIAL_PAGE = 1;
+    private int page = INITIAL_PAGE;
+
     private SleepListAdapter mAdapter;
     private OcariotNetRepository ocariotRepository;
     private AppPreferencesHelper appPref;
@@ -124,7 +128,7 @@ public class SleepListFragment extends Fragment {
     public void onResume() {
         super.onResume();
         userAccess = appPref.getUserAccessOcariot();
-        loadDataOcariot();
+        loadDataOcariot(true);
     }
 
     @Override
@@ -168,6 +172,21 @@ public class SleepListFragment extends Fragment {
             }
         });
 
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                // Recycle view scrolling downwards...
+                // this if statement detects when user reaches the end of recyclerView, this is only time we should load more
+                // here we are now allowed to load more, but we need to be careful
+                // we must check if itShouldLoadMore variable is true [unlocked]
+                if (dy > 0 && !recyclerView.canScrollVertically(RecyclerView.FOCUS_DOWN)
+                        && itShouldLoadMore) {
+                    loadDataOcariot(false);
+                }
+            }
+        });
+
         mSkeletonScreen = Skeleton.bind(mRecyclerView)
                 .adapter(mAdapter)
                 .load(R.layout.sleep_item_shimmer)
@@ -181,7 +200,7 @@ public class SleepListFragment extends Fragment {
      */
     private void initDataSwipeRefresh() {
         mDataSwipeRefresh.setOnRefreshListener(() -> {
-            if (itShouldLoadMore) loadDataOcariot();
+            if (itShouldLoadMore) loadDataOcariot(true);
         });
     }
 
@@ -189,15 +208,23 @@ public class SleepListFragment extends Fragment {
      * Load data in OCARIoT Server.
      * If there is no internet connection, we can display the local database.
      * Otherwise it displays from the remote server.
+     *
+     * @param isInit boolean
      */
-    private void loadDataOcariot() {
+    private void loadDataOcariot(boolean isInit) {
         if (userAccess == null) return;
+
+        if (isInit) {
+            page = INITIAL_PAGE;
+            mAdapter.clearItems();
+        }
 
         mDisposable.add(
                 ocariotRepository
-                        .listSleep(appPref.getLastSelectedChild().getId(), "-start_time", 1, 100)
-                        .doOnSubscribe(disposable -> loading(true))
-                        .doAfterTerminate(() -> loading(false))
+                        .listSleep(appPref.getLastSelectedChild().getId(),
+                                "-end_time", page, LIMIT_PER_PAGE)
+                        .doOnSubscribe(disposable -> loading(true, isInit))
+                        .doAfterTerminate(() -> loading(false, isInit))
                         .subscribe(this::populateViewSleep, error -> mAlertMessage.handleError(error))
         );
     }
@@ -209,13 +236,14 @@ public class SleepListFragment extends Fragment {
      */
     private void populateViewSleep(final List<Sleep> sleepList) {
         Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
-            if (sleepList.isEmpty()) {
-                mNoData.setVisibility(View.VISIBLE);
-                return;
+            if (sleepList != null && !sleepList.isEmpty()) {
+                mNoData.setVisibility(View.GONE);
+                mAdapter.addItems(sleepList);
+                itShouldLoadMore = true;
+                page++;
+            } else if (mAdapter.itemsIsEmpty()) {
+            mNoData.setVisibility(View.VISIBLE);
             }
-            mAdapter.clearItems();
-            mAdapter.addItems(sleepList);
-            mNoData.setVisibility(View.GONE);
         });
     }
 
@@ -223,17 +251,22 @@ public class SleepListFragment extends Fragment {
      * Enable/Disable display loading data.
      *
      * @param enabled boolean
+     * @param isInit  boolean
      */
-    private void loading(final boolean enabled) {
-        mDataSwipeRefresh.setRefreshing(false);
+    private void loading(final boolean enabled, boolean isInit) {
         if (!enabled) {
-            mSkeletonScreen.hide();
+            if (isInit) mSkeletonScreen.hide();
+            mDataSwipeRefresh.setRefreshing(false);
             itShouldLoadMore = true;
             return;
-        } else {
-            mSkeletonScreen.show();
         }
-        if (mAdapter.itemsIsEmpty()) mSkeletonScreen.show();
+
+        if (isInit) {
+            mDataSwipeRefresh.setRefreshing(false);
+            mSkeletonScreen.show();
+        } else {
+            mDataSwipeRefresh.setRefreshing(true);
+        }
         itShouldLoadMore = false;
     }
 

@@ -34,7 +34,12 @@ Native Android application responsible for OCARIoT platform data acquisition. Th
 2. **Set up the environment:**
    - Make a copy of the `gradle.properties.example` file in the `/app` directory named `gradle.properties` _(This file will not be tracked by git because it is in .gitignore)_.
    - Change the values of the variables you find necessary according to your development and production environment.
-3. **Open project in Android Studio:**
+
+3. **Add the Firebase Android configuration file:**
+   - Sign in to Firebase, then open your project and click [Download](https://support.google.com/firebase/answer/7015592) `google-services.json` to obtain your Firebase Android config file.
+   - Move your config file into the module _(app-level)_ directory of your app.
+
+4. **Open project in Android Studio:**
    - From the Android Studio menu, click File > Open.
    - Alternatively, on the "Welcome" screen, click > Open an existing Android Studio project.
    - Select the project folder and click OK.
