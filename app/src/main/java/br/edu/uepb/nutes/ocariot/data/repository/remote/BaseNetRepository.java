@@ -76,11 +76,10 @@ public abstract class BaseNetRepository {
     }
 
     private OkHttpClient.Builder getUnsafeOkHttpClient() {
-        Timber.d("OkHttpClient initialized!");
         OkHttpClient.Builder client = new OkHttpClient.Builder()
-                .connectTimeout(1, TimeUnit.MINUTES)
-                .readTimeout(1, TimeUnit.MINUTES)
-                .writeTimeout(1, TimeUnit.MINUTES);
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .writeTimeout(30, TimeUnit.SECONDS);
 
         try {
             // Create a trust manager that does not validate certificate chains

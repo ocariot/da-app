@@ -41,7 +41,7 @@ import io.reactivex.disposables.CompositeDisposable;
  * @author Copyright (c) 2018, NUTES/UEPB
  */
 public class PhysicalActivityListFragment extends Fragment {
-    private static final int LIMIT_PER_PAGE = 20;
+    private static final int LIMIT_PER_PAGE = 15;
     private static final int INITIAL_PAGE = 1;
     private int page = INITIAL_PAGE;
 
@@ -87,7 +87,7 @@ public class PhysicalActivityListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mContext = Objects.requireNonNull(getActivity()).getApplicationContext();
+        mContext = requireActivity().getApplicationContext();
 
         ocariotRepository = OcariotNetRepository.getInstance();
         appPref = AppPreferencesHelper.getInstance();
@@ -235,7 +235,7 @@ public class PhysicalActivityListFragment extends Fragment {
      * @param activities {@link List<PhysicalActivity>}
      */
     private void populateViewActivities(final List<PhysicalActivity> activities) {
-        Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
+        requireActivity().runOnUiThread(() -> {
             if (activities != null && !activities.isEmpty()) {
                 mNoData.setVisibility(View.GONE);
                 mAdapter.addItems(activities);

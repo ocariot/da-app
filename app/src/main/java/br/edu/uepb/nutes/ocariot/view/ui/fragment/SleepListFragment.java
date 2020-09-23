@@ -41,7 +41,7 @@ import io.reactivex.disposables.CompositeDisposable;
  * @author Copyright (c) 2018, NUTES/UEPB
  */
 public class SleepListFragment extends Fragment {
-    private static final int LIMIT_PER_PAGE = 20;
+    private static final int LIMIT_PER_PAGE = 15;
     private static final int INITIAL_PAGE = 1;
     private int page = INITIAL_PAGE;
 
@@ -89,7 +89,7 @@ public class SleepListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mContext = Objects.requireNonNull(getActivity()).getApplicationContext();
+        mContext = requireActivity().getApplicationContext();
         ocariotRepository = OcariotNetRepository.getInstance();
         appPref = AppPreferencesHelper.getInstance();
 
@@ -235,7 +235,7 @@ public class SleepListFragment extends Fragment {
      * @param sleepList {@link List<Sleep>}
      */
     private void populateViewSleep(final List<Sleep> sleepList) {
-        Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
+        requireActivity().runOnUiThread(() -> {
             if (sleepList != null && !sleepList.isEmpty()) {
                 mNoData.setVisibility(View.GONE);
                 mAdapter.addItems(sleepList);

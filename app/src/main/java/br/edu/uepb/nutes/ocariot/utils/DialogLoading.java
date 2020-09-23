@@ -1,9 +1,5 @@
 package br.edu.uepb.nutes.ocariot.utils;
 
-import android.app.DialogFragment;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,9 +7,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+
+import java.util.Objects;
 
 import br.edu.uepb.nutes.ocariot.R;
-import timber.log.Timber;
 
 /**
  * Dialog Loading.
@@ -60,7 +60,7 @@ public class DialogLoading extends DialogFragment {
         View view = inflater.inflate(R.layout.dialog_fragment, container, false);
         TextView message = view.findViewById(R.id.loading_message);
 
-        getDialog().setCanceledOnTouchOutside(false);
+        Objects.requireNonNull(getDialog()).setCanceledOnTouchOutside(false);
         getDialog().setCancelable(false);
         getDialog().setTitle(getArguments().getString(TITLE));
         message.setText(getArguments().getString(MESSAGE));
@@ -78,16 +78,7 @@ public class DialogLoading extends DialogFragment {
         Fragment dialogFragment = fragmentManager.findFragmentByTag(DIALOG_TAG);
 
         if (dialogFragment == null) {
-            this.show(fragmentManager, DIALOG_TAG);
-        }
-    }
-
-    @Override
-    public void show(FragmentManager manager, String tag) {
-        try {
-            super.show(manager, tag);
-        } catch (IllegalStateException e) {
-            Timber.d(e);
+            super.show(fragmentManager, DIALOG_TAG);
         }
     }
 

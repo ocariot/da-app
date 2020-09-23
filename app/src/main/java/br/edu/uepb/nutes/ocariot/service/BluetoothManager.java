@@ -32,10 +32,6 @@ public abstract class BluetoothManager extends BleManager<BluetoothManagerCallba
 
     DataReceivedCallback dataReceivedCallback = (device, data) -> mCallbacks.measurementReceiver(device, data);
 
-    public void disconnectDevice() {
-        disconnect();
-    }
-
     abstract void initializeCharacteristic();
 
     abstract void setCharacteristicWrite(BluetoothGatt gatt);

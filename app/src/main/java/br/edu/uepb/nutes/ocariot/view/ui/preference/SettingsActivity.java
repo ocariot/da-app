@@ -1,10 +1,11 @@
 package br.edu.uepb.nutes.ocariot.view.ui.preference;
 
 import android.os.Bundle;
-import android.preference.PreferenceFragment;
 import android.view.MenuItem;
 
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import br.edu.uepb.nutes.ocariot.R;
 import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
@@ -14,7 +15,7 @@ import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper
  *
  * @author Copyright (c) 2018, NUTES/UEPB
  */
-public class SettingsActivity extends BaseSettingsActivity implements
+public class SettingsActivity extends AppCompatActivity implements
         SettingsFragment.OnClickSettingsListener {
     private AppPreferencesHelper appPref;
     private ActionBar actionBar;
@@ -63,9 +64,9 @@ public class SettingsActivity extends BaseSettingsActivity implements
         }
     }
 
-    private void replaceFragment(PreferenceFragment fragment) {
+    private void replaceFragment(Fragment fragment) {
         if (fragment != null) {
-            getFragmentManager()
+            getSupportFragmentManager()
                     .beginTransaction()
                     .replace(android.R.id.content, fragment)
                     .commit();
