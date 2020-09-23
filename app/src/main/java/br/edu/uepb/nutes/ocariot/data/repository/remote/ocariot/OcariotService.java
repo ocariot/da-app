@@ -28,9 +28,6 @@ public interface OcariotService {
     @POST("/v1/auth")
     Single<UserAccess> authUser(@Body Child user);
 
-    @GET("/v1/children/{child_id}")
-    Single<Child> getChildById(@Path("child_id") String childId);
-
     @GET("/v1/families/{family_id}/children")
     Single<List<Child>> getFamilyChildrenById(@Path("family_id") String familyId);
 

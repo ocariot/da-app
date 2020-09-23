@@ -99,10 +99,7 @@ public class Child extends User implements Parcelable, Comparable<Child> {
 
     public boolean isFitbitAccessValid() {
         if (this.fitbitStatus == null) return false;
-        return fitbitStatus.equalsIgnoreCase(UserAccess.TokenStatus.VALID) ||
-                fitbitStatus.equalsIgnoreCase(UserAccess.TokenStatus.EXPIRED) ||
-                fitbitStatus.equalsIgnoreCase(UserAccess.TokenStatus.RATE_LIMIT) ||
-                fitbitStatus.equalsIgnoreCase(UserAccess.TokenStatus.INVALID_CLIENT);
+        return fitbitStatus.equalsIgnoreCase(UserAccess.TokenStatus.VALID);
     }
 
     /**

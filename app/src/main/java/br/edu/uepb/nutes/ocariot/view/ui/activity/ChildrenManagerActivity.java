@@ -52,7 +52,6 @@ import io.reactivex.disposables.CompositeDisposable;
 public class ChildrenManagerActivity extends AppCompatActivity {
     public static final String EXTRA_IS_FIRST_OPEN = "extra_is_first_open";
     private static final String KEY_SORT_SELECTED = "key_sort_selected";
-    private static final int SELECTED_CHILD = 5;
 
     private ChildListAdapter mAdapter;
     private AppPreferencesHelper appPref;
@@ -241,7 +240,7 @@ public class ChildrenManagerActivity extends AppCompatActivity {
      * Otherwise it displays from the remote server.
      */
     private void loadChildren() {
-        if(userAccess == null) return;
+        if (userAccess == null) return;
         if (userAccess.getSubjectType().equalsIgnoreCase(User.Type.FAMILY)) {
             mDisposable.add(
                     ocariotRepository

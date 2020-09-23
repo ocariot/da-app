@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -12,25 +12,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/frame_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/navigation"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_gravity="bottom"
-            android:background="@color/colorBackgroundNavigation"
-            app:itemBackground="@color/colorBackgroundNavigation"
-            app:layout_scrollFlags="scroll|enterAlways|snap"
-            app:menu="@menu/navigation" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="@drawable/bottom_nav_shadow" />
 
-        <FrameLayout
-            android:id="@+id/frame_content"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/navigation" />
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
-</LinearLayout>
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:elevation="8dp"
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/navigation" />
+</androidx.appcompat.widget.LinearLayoutCompat>

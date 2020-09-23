@@ -116,12 +116,6 @@ public class OcariotNetRepository extends BaseNetRepository {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Single<Child> getChildById(String childId) {
-        return ocariotService.getChildById(childId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
-    }
-
     public Single<List<Child>> getChildrenOfFamily(String familyId) {
         return ocariotService.getFamilyChildrenById(familyId)
                 .subscribeOn(Schedulers.io())
@@ -151,7 +145,6 @@ public class OcariotNetRepository extends BaseNetRepository {
                 if (!children.contains(child)) children.add(child);
             }
         }
-        Timber.d("TOTAL CHILDREN: %d", children.size());
         return children;
     }
 

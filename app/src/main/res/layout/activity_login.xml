@@ -76,15 +76,15 @@
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/locale_hint_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
-                android:text="Piltos in brazil!"
-                android:textColor="@android:color/white" />
+                android:textColor="@android:color/white"
+                tools:text="Pilots in brazil!" />
 
             <!-- Login progress -->
             <androidx.core.widget.ContentLoadingProgressBar
@@ -114,8 +114,7 @@
                     android:inputType="text"
                     android:maxLines="1"
                     android:singleLine="true"
-                    android:textColor="#FFF"
-                    tools:ignore="UnusedAttribute" />
+                    android:textColor="#FFF" />
 
             </com.google.android.material.textfield.TextInputLayout>
 

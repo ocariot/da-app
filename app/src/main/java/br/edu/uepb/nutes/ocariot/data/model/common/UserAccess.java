@@ -209,7 +209,7 @@ public class UserAccess implements Parcelable {
         return new Gson().toJson(this);
     }
 
-    public class TokenStatus {
+    public static class TokenStatus {
         private TokenStatus() {
             throw new IllegalStateException("Utility class. Does not allow inheritance or instances to be created!");
         }

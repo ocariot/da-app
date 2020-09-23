@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:padding="@dimen/default_padding">
 
     <ProgressBar
@@ -19,9 +20,9 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/progressBar"
         android:layout_alignParentTop="true"
-        android:paddingEnd="0dp"
-        android:paddingStart="10dp"
         android:layout_toEndOf="@+id/progressBar"
         android:gravity="center_vertical"
-        android:text="@null" />
-</RelativeLayout>
+        android:paddingStart="10dp"
+        android:paddingEnd="0dp"
+        tools:text="@string/synchronizing_data_fitbit" />
+</androidx.appcompat.widget.LinearLayoutCompat>

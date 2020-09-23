@@ -5,9 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.Preference;
-import android.preference.PreferenceFragment;
-import android.preference.SwitchPreference;
+
+import androidx.preference.Preference;
+import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.SwitchPreference;
 
 import com.google.gson.Gson;
 import com.tapadoo.alerter.Alerter;
@@ -15,7 +16,10 @@ import com.tapadoo.alerter.Alerter;
 import net.openid.appauth.AuthorizationException;
 import net.openid.appauth.AuthorizationResponse;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
+import java.util.Objects;
 
 import br.edu.uepb.nutes.ocariot.R;
 import br.edu.uepb.nutes.ocariot.data.model.common.UserAccess;
@@ -41,7 +45,7 @@ import timber.log.Timber;
  *
  * @author Copyright (c) 2018, NUTES/UEPB
  */
-public class SettingsFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener {
+public class SettingsFragment extends PreferenceFragmentCompat implements Preference.OnPreferenceClickListener {
     private SwitchPreference switchPrefFitBit;
     private LoginFitBit loginFitBit;
     private OnClickSettingsListener mListener;
@@ -52,10 +56,6 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     private AlertMessage mAlertMessage;
     private Child mChild;
     private UserAccess mUserAccess;
-
-    public SettingsFragment() {
-        // Empty constructor required!
-    }
 
     /**
      * Use this factory method to create a new instance of
@@ -68,8 +68,8 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     }
 
     @Override
-    public void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+        setPreferencesFromResource(R.xml.preferences, rootKey);
         mContext = getActivity();
         appPref = AppPreferencesHelper.getInstance();
         loginFitBit = new LoginFitBit(mContext);
@@ -78,9 +78,9 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         mUserAccess = appPref.getUserAccessOcariot();
 
         if (mUserAccess.getSubjectType().equals(User.Type.FAMILY)) {
-            addPreferencesFromResource(R.xml.preferences_family);
+            setPreferencesFromResource(R.xml.preferences_family, rootKey);
         } else {
-            addPreferencesFromResource(R.xml.preferences);
+            setPreferencesFromResource(R.xml.preferences, rootKey);
         }
 
         initEvents();
@@ -88,9 +88,10 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         initResultAuthFitBit();
     }
 
+
     private void initEvents() {
         // FitBit
-        switchPrefFitBit = (SwitchPreference) findPreference(getString(R.string.key_fitibit));
+        switchPrefFitBit = findPreference(getString(R.string.key_fitibit));
         if (switchPrefFitBit != null) {
             switchPrefFitBit.setOnPreferenceClickListener(this);
         }
@@ -122,7 +123,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NotNull Context context) {
         super.onAttach(context);
 
         if (context instanceof OnClickSettingsListener) {
@@ -140,7 +141,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     @Override
     public boolean onPreferenceClick(Preference preference) {
         if (preference.getKey().equals(getString(R.string.key_fitibit))) {
-            if (!loginFitBit.clientFibitIsValid()) {
+            if (loginFitBit.isInvalidClientFitbit()) {
                 mAlertMessage.show(R.string.title_error, R.string.error_configs_fitbit,
                         R.color.colorDanger, R.drawable.ic_warning_dark);
                 switchPrefFitBit.setChecked(!switchPrefFitBit.isChecked());
@@ -205,8 +206,12 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
      * it means that some authorization problem has occurred
      */
     private void initResultAuthFitBit() {
-        AuthorizationResponse authFitBitResponse = AuthorizationResponse.fromIntent(getActivity().getIntent());
-        AuthorizationException authFitBitException = AuthorizationException.fromIntent(getActivity().getIntent());
+        AuthorizationResponse authFitBitResponse = AuthorizationResponse.fromIntent(
+                requireActivity().getIntent()
+        );
+        AuthorizationException authFitBitException = AuthorizationException.fromIntent(
+                requireActivity().getIntent()
+        );
 
         if (authFitBitException != null) {
             switchPrefFitBit.setChecked(false);
@@ -246,7 +251,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
      * Open dialog confirm revoke FitBit.
      */
     private void openDialogRevokeFitBit() {
-        getActivity().runOnUiThread(() -> new AlertDialog.Builder(mContext)
+        requireActivity().runOnUiThread(() -> new AlertDialog.Builder(mContext)
                 .setMessage(mContext.getResources()
                         .getString(R.string.dialog_confirm_revoke_fitbit, mChild.getUsername()))
                 .setPositiveButton(R.string.title_yes, (dialog, which) -> revokeFitBitAuth())
@@ -259,7 +264,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
      * Show dialog confirm sign out in app.
      */
     private void openDialogSignOut() {
-        getActivity().runOnUiThread(() -> new AlertDialog.Builder(mContext)
+        requireActivity().runOnUiThread(() -> new AlertDialog.Builder(mContext)
                 .setMessage(R.string.dialog_confirm_sign_out)
                 .setPositiveButton(R.string.title_yes, (dialog, which) -> {
                             if (appPref.removeSession()) {
@@ -306,7 +311,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         mDisposable.add(
                 OcariotNetRepository.getInstance()
                         .publishFitBitAuth(mChild.getId(), userAccess, null)
-                        .doOnSubscribe(disposable -> mDialogSync.show(getFragmentManager()))
+                        .doOnSubscribe(disposable -> mDialogSync.show(getParentFragmentManager()))
                         .subscribe(() -> {
                                     mChild.setFitBitAccess(userAccess);
                                     appPref.addLastSelectedChild(mChild);
@@ -342,7 +347,8 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                 OcariotNetRepository.getInstance()
                         .fitBitSync(mChild.getId())
                         .doOnSubscribe(disposable -> {
-                            if (!mDialogSync.isVisible()) mDialogSync.show(getFragmentManager());
+                            if (!mDialogSync.isVisible())
+                                mDialogSync.show(getParentFragmentManager());
                         })
                         .doFinally(() -> mDialogSync.close())
                         .subscribe(
@@ -398,7 +404,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         mDisposable.add(
                 OcariotNetRepository.getInstance()
                         .revokeFitBitAuth(mChild.getId())
-                        .doOnSubscribe(disposable -> dialog.show(getFragmentManager()))
+                        .doOnSubscribe(disposable -> dialog.show(getParentFragmentManager()))
                         .doOnTerminate(dialog::close)
                         .subscribe(this::revokeSuccessMessage, err -> {
                             if (err instanceof HttpException) {
@@ -445,7 +451,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
      * @param isSuccess boolean
      */
     private void showAlertResultSync(boolean isSuccess) {
-        Alerter alerter = Alerter.create(getActivity())
+        Alerter alerter = Alerter.create(requireActivity())
                 .setDuration(30000)
                 .enableSwipeToDismiss()
                 .setTitle(isSuccess ? R.string.title_success : R.string.title_error)
@@ -474,7 +480,9 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
             try {
                 HttpException httpEx = ((HttpException) error);
                 ResponseError responseError = new Gson().fromJson(
-                        httpEx.response().errorBody().string(), ResponseError.class
+                        Objects.requireNonNull(
+                                Objects.requireNonNull(httpEx.response()).errorBody()
+                        ).string(), ResponseError.class
                 );
                 if (httpEx.code() == 429 || responseError.getCode() == 1429) {
                     mAlertMessage.show(
@@ -521,7 +529,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
      * Open CustomTab for Fitbit authorization.
      */
     private void openFitbitAuth() {
-        if (!loginFitBit.clientFibitIsValid()) {
+        if (loginFitBit.isInvalidClientFitbit()) {
             Alerter.hide();
             return;
         }
