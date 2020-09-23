@@ -48,7 +48,6 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 import java.text.DecimalFormat;
 import java.util.List;
-import java.util.Objects;
 
 import br.edu.uepb.nutes.ocariot.R;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.Weight;
@@ -162,7 +161,7 @@ public class IotFragment extends Fragment implements View.OnClickListener, HRMan
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mContext = Objects.requireNonNull(getActivity()).getApplicationContext();
+        mContext = requireActivity().getApplicationContext();
         ocariotRepository = OcariotNetRepository.getInstance();
         appPref = AppPreferencesHelper.getInstance();
 
@@ -289,7 +288,7 @@ public class IotFragment extends Fragment implements View.OnClickListener, HRMan
     }
 
     private void populateView(List<Weight> weights) {
-        Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
+        requireActivity().runOnUiThread(() -> {
             if (weights.isEmpty()) {
                 mBoxNoData.setVisibility(View.VISIBLE);
                 mBoxWeight.setVisibility(View.GONE);
@@ -367,31 +366,31 @@ public class IotFragment extends Fragment implements View.OnClickListener, HRMan
     private void updateViewHR(int hr, String timestamp) {
         Timber.d("HR: %d -> %s", hr, timestamp);
         if (getActivity() == null) return;
-        Objects.requireNonNull(getActivity())
-                .runOnUiThread(() -> {
-                    // Update chart
-                    try {
-                        addEntry((float) hr);
+        requireActivity().runOnUiThread(() -> {
+            // Update chart
+            try {
+                addEntry((float) hr);
 
-                        if (heartAnimation.isPaused() || !heartAnimation.isRunning()) {
-                            heartAnimation.start();
-                            ImageViewCompat.setImageTintList(mHeartImage, ColorStateList.valueOf(
-                                    getResources().getColor(R.color.colorDanger)));
-                            mBoxHR.setVisibility(View.VISIBLE);
-                            mBoxHRSummary.setVisibility(View.VISIBLE);
-                        }
-                        mHR.setText(String.valueOf(hr));
+                if (heartAnimation.isPaused() || !heartAnimation.isRunning()) {
+                    heartAnimation.start();
+                    ImageViewCompat.setImageTintList(mHeartImage, ColorStateList.valueOf(
+                            ContextCompat.getColor(requireContext(), R.color.colorDanger)
+                    ));
+                    mBoxHR.setVisibility(View.VISIBLE);
+                    mBoxHRSummary.setVisibility(View.VISIBLE);
+                }
+                mHR.setText(String.valueOf(hr));
 
-                        // Update summary
-                        if (totalHR > 0) {
-                            mMinHRTextView.setText(String.valueOf(minHR));
-                            mMaxHRTextView.setText(String.valueOf(maxHR));
-                            mAvgHRTextView.setText(String.valueOf(sumHR / totalHR));
-                        }
-                    } catch (RuntimeException e) {
-                        Timber.d("Error adding chart entry: %s", e.getMessage());
-                    }
-                });
+                // Update summary
+                if (totalHR > 0) {
+                    mMinHRTextView.setText(String.valueOf(minHR));
+                    mMaxHRTextView.setText(String.valueOf(maxHR));
+                    mAvgHRTextView.setText(String.valueOf(sumHR / totalHR));
+                }
+            } catch (RuntimeException e) {
+                Timber.d("Error adding chart entry: %s", e.getMessage());
+            }
+        });
     }
 
     private void initChart() {
@@ -501,7 +500,7 @@ public class IotFragment extends Fragment implements View.OnClickListener, HRMan
                     new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
                             Uri.fromParts(
                                     "package",
-                                    Objects.requireNonNull(getActivity()).getPackageName(),
+                                    requireActivity().getPackageName(),
                                     null
                             ))
             );
@@ -532,7 +531,7 @@ public class IotFragment extends Fragment implements View.OnClickListener, HRMan
             }
             return;
         }
-        ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()),
+        ActivityCompat.requestPermissions(requireActivity(),
                 new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_ENABLE_LOCATION);
     }
 
@@ -586,8 +585,8 @@ public class IotFragment extends Fragment implements View.OnClickListener, HRMan
         if (heartRate > 0) {
             totalHR++;
             sumHR += heartRate;
-            minHR = heartRate < minHR ? heartRate : minHR;
-            maxHR = heartRate > maxHR ? heartRate : maxHR;
+            minHR = Math.min(heartRate, minHR);
+            maxHR = Math.max(heartRate, maxHR);
         }
         mBoxHRLoading.setVisibility(View.GONE);
         updateViewHR(heartRate, timestamp);
@@ -603,7 +602,8 @@ public class IotFragment extends Fragment implements View.OnClickListener, HRMan
         Timber.d("onDisconnected(): %s", device.getName());
         heartAnimation.pause();
         ImageViewCompat.setImageTintList(mHeartImage, ColorStateList.valueOf(
-                getResources().getColor(R.color.colorLineDivider)));
+                ContextCompat.getColor(requireContext(), R.color.colorLineDivider)
+        ));
         mBoxHR.setVisibility(View.GONE);
         if (ConnectionUtils.isBluetoothAvailable()) {
             mBoxHRLoading.setVisibility(View.VISIBLE);

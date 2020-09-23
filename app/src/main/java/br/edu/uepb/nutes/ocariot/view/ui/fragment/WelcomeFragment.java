@@ -1,6 +1,8 @@
 package br.edu.uepb.nutes.ocariot.view.ui.fragment;
 
+import android.app.ActionBar;
 import android.content.Context;
+import android.graphics.text.LineBreaker;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,21 +12,15 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
-
-import java.util.Objects;
 
 import br.edu.uepb.nutes.ocariot.R;
 import br.edu.uepb.nutes.ocariot.data.model.ocariot.Child;
 import br.edu.uepb.nutes.ocariot.data.repository.local.pref.AppPreferencesHelper;
 import br.edu.uepb.nutes.ocariot.utils.DateUtils;
-import br.edu.uepb.nutes.ocariot.view.ui.activity.MainActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static android.text.Layout.JUSTIFICATION_MODE_INTER_WORD;
 
 public class WelcomeFragment extends Fragment {
     @BindView(R.id.fitbit_button)
@@ -77,8 +73,8 @@ public class WelcomeFragment extends Fragment {
                 child.getUsername())
         );
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            mInstructions.setJustificationMode(JUSTIFICATION_MODE_INTER_WORD);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            mInstructions.setJustificationMode(LineBreaker.JUSTIFICATION_MODE_INTER_WORD);
         }
 
         if (child.getLastSync() == null) {
@@ -122,8 +118,10 @@ public class WelcomeFragment extends Fragment {
     }
 
     private void initToolBar() {
-        ActionBar mActionBar = ((MainActivity) Objects.requireNonNull(getActivity())).getSupportActionBar();
-        Objects.requireNonNull(mActionBar).setTitle(R.string.app_name);
+        ActionBar mActionBar = requireActivity().getActionBar();
+        if (mActionBar == null) return;
+
+        mActionBar.setTitle(R.string.app_name);
         mActionBar.setDisplayHomeAsUpEnabled(false);
     }
 

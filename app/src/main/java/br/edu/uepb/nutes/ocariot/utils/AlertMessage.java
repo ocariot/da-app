@@ -52,7 +52,6 @@ public class AlertMessage {
 
     public void handleError(Throwable error) {
         if (error instanceof ConnectivityException) {
-            Timber.d(error);
             showError(R.string.title_connection_error, R.string.error_connection);
             return;
         }

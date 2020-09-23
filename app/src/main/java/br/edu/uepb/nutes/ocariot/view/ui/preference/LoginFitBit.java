@@ -55,7 +55,7 @@ public class LoginFitBit {
      * Initialize settings to obtain authorization code.
      */
     private void initConfig() {
-        if (!clientFibitIsValid()) return;
+        if (isInvalidClientFitbit()) return;
 
         String clientId = appPref.getFitbitAppData().getClientId();
         clientSecret = appPref.getFitbitAppData().getClientSecret();
@@ -139,8 +139,8 @@ public class LoginFitBit {
      *
      * @return boolean
      */
-    public boolean clientFibitIsValid() {
-        return !(appPref.getFitbitAppData() == null || appPref.getFitbitAppData().getClientId() == null
-                || appPref.getFitbitAppData().getClientSecret() == null);
+    public boolean isInvalidClientFitbit() {
+        return appPref.getFitbitAppData() == null || appPref.getFitbitAppData().getClientId() == null
+                || appPref.getFitbitAppData().getClientSecret() == null;
     }
 }

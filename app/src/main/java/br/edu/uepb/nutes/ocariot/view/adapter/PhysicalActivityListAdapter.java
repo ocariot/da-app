@@ -86,24 +86,30 @@ public class PhysicalActivityListAdapter extends BaseAdapter<PhysicalActivity> {
     }
 
     private void populateImgByName(ImageView img, String name) {
-        if (name.equals(ActivityType.WALK)) {
-            img.setImageResource(R.drawable.ic_walk);
-        } else if (name.equals(ActivityType.RUN)) {
-            img.setImageResource(R.drawable.ic_run);
-        } else if (name.equals(ActivityType.BIKE)
-                || name.equals(ActivityType.MOUNTAIN_BIKING)
-                || name.equals(ActivityType.OUTDOOR_BIKE)) {
-            img.setImageResource(R.drawable.ic_bike);
-        } else if (name.equals(ActivityType.WORKOUT)) {
-            img.setImageResource(R.drawable.ic_workout);
-        } else if (name.equals(ActivityType.FITSTAR_PERSONAL)) {
-            img.setImageResource(R.drawable.ic_star);
-        } else if (name.equals(ActivityType.SWIM)) {
-            img.setImageResource(R.drawable.ic_swimming);
-        } else if (name.equals(ActivityType.SPORT)) {
-            img.setImageResource(R.drawable.ic_sport);
-        } else {
-            img.setImageResource(R.drawable.ic_workout);
+        switch (name) {
+            case ActivityType.WALK:
+                img.setImageResource(R.drawable.ic_walk);
+                break;
+            case ActivityType.RUN:
+                img.setImageResource(R.drawable.ic_run);
+                break;
+            case ActivityType.BIKE:
+            case ActivityType.MOUNTAIN_BIKING:
+            case ActivityType.OUTDOOR_BIKE:
+                img.setImageResource(R.drawable.ic_bike);
+                break;
+            case ActivityType.FITSTAR_PERSONAL:
+                img.setImageResource(R.drawable.ic_star);
+                break;
+            case ActivityType.SWIM:
+                img.setImageResource(R.drawable.ic_swimming);
+                break;
+            case ActivityType.SPORT:
+                img.setImageResource(R.drawable.ic_sport);
+                break;
+            default:
+                img.setImageResource(R.drawable.ic_workout);
+                break;
         }
     }
 

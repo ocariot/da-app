@@ -3,7 +3,7 @@ package br.edu.uepb.nutes.ocariot.data.repository.local.pref;
 import android.content.SharedPreferences;
 
 import androidx.security.crypto.EncryptedSharedPreferences;
-import androidx.security.crypto.MasterKeys;
+import androidx.security.crypto.MasterKey;
 
 import br.edu.uepb.nutes.ocariot.BuildConfig;
 import br.edu.uepb.nutes.ocariot.OcariotApp;
@@ -31,11 +31,15 @@ public class AppPreferencesHelper implements PreferencesHelper {
 
     private AppPreferencesHelper() {
         try {
-            String masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC);
+            MasterKey masterKey = new MasterKey
+                    .Builder(OcariotApp.getContext(), MasterKey.DEFAULT_MASTER_KEY_ALIAS)
+                    .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+                    .build();
+
             mPrefs = EncryptedSharedPreferences.create(
-                    BuildConfig.PREFERENCES_FILENAME,
-                    masterKeyAlias,
                     OcariotApp.getContext(),
+                    BuildConfig.PREFERENCES_FILENAME,
+                    masterKey,
                     EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
                     EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
             );

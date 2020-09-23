@@ -4,6 +4,8 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" group="da-app/app" />
       <module fileurl="file://$PROJECT_DIR$/da-app.iml" filepath="$PROJECT_DIR$/da-app.iml" group="da-app" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/da-app-app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/da-app-app.iml" group="da-app/app" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ocariot-da-app.iml" filepath="$PROJECT_DIR$/.idea/modules/ocariot-da-app.iml" group="da-app" />
     </modules>
   </component>
 </project>
